@@ -6,11 +6,11 @@ require 'stack_master/version'
 Gem::Specification.new do |spec|
   spec.name          = "stack_master"
   spec.version       = StackMaster::VERSION
-  spec.authors       = ["Steve Hodgkiss"]
-  spec.email         = ["steve@hodgkiss.me"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.authors       = ["Steve Hodgkiss", "Glen Stampoultzis"]
+  spec.email         = ["steve@hodgkiss.me", "gstamp@gmail.com"]
+  spec.summary       = %q{AWS Stack Management}
+  spec.description   = %q{}
+  spec.homepage      = "https://github.com/envato/stack_master"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
