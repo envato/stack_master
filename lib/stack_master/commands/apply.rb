@@ -4,7 +4,8 @@ module StackMaster
       include Command
       include Commander::UI
 
-      def initialize(region_or_alias, stack_name)
+      def initialize(config, region_or_alias, stack_name)
+        @config = config
         @region_or_alias = region_or_alias
         @stack_name = stack_name
       end

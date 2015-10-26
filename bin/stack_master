@@ -13,6 +13,8 @@ class StackMasterCLI
     program :version, '0.0.1'
     program :description, 'AWS Stack Management'
 
+    global_option '-c', '--config FILE', 'Config file to use'
+
     command :apply do |c|
       c.syntax = 'stack_master apply [region] [stack_name]'
       c.summary = ''
@@ -22,11 +24,19 @@ class StackMasterCLI
         unless args.size == 2
           say "Invalid arguments. stack_master apply [region] [stack_name]"
         end
-        StackMaster::Commands::Apply.perform(*args)
+        config = load_config(options.config)
+        StackMaster::Commands::Apply.perform(config, *args)
       end
     end
 
     run!
+  end
+
+  def load_config(file)
+    StackMaster::ConfigLoader.load!(file || 'stackmaster.yml')
+  rescue Errno::ENOENT => e
+    say "Failed to load config file stackmaster.yml"
+    exit 1
   end
 end
 
