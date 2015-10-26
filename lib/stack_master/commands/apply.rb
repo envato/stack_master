@@ -37,12 +37,20 @@ module StackMaster
       end
 
       def update_stack
-        cf.update_stack(
+        cf.update_stack(stack_options)
+      end
+
+      def create_stack
+        cf.create_stack(stack_options)
+      end
+
+      def stack_options
+        {
           stack_name: @stack_name,
           template_body: stack_definition.template_body,
           parameters: stack_definition.aws_parameters,
           capabilities: ['CAPABILITY_IAM']
-        )
+        }
       end
     end
   end

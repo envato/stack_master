@@ -16,6 +16,7 @@ RSpec.describe StackMaster::Commands::Apply do
     allow(StackMaster::Stack).to receive(:find).with(region, stack_name).and_return(stack)
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
     allow(cf).to receive(:update_stack)
+    allow(cf).to receive(:create_stack)
   end
 
   def apply
@@ -39,5 +40,18 @@ RSpec.describe StackMaster::Commands::Apply do
   end
 
   context 'the stack does not exist' do
+    let(:stack) { nil }
+
+    it 'calls the create stack API method' do
+      apply
+      expect(cf).to have_received(:create_stack).with(
+        stack_name: stack_name,
+        template_body: stack_definition.template_body,
+        parameters: [
+          { parameter_key: 'param_1', parameter_value: 'hello' }
+        ],
+        capabilities: ['CAPABILITY_IAM']
+      )
+    end
   end
 end
