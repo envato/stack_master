@@ -11,10 +11,17 @@ module StackMaster
       end
 
       def perform
-        if stack_exists?
-          update_stack
+        # TODO: Add diff
+
+        print "Continue and apply the stack (y/n)? "
+        if STDIN.getch.chomp == 'y'
+          if stack_exists?
+            update_stack
+          else
+            create_stack
+          end
         else
-          create_stack
+          puts "Stack update aborted"
         end
       end
 
