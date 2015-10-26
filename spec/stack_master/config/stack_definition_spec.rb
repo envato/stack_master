@@ -25,6 +25,7 @@ RSpec.describe StackMaster::Config::StackDefinition do
         expect(stack_definition.parameters).to eq({})
       end
     end
+
     context "stack parameter file" do
       before do
         allow(File).to receive(:exists?).with('/base_dir/parameters/stack_name.yml').and_return(true)
@@ -36,6 +37,7 @@ RSpec.describe StackMaster::Config::StackDefinition do
         expect(stack_definition.parameters).to eq({ 'param1' => 'value1' })
       end
     end
+
     context "region parameter file" do
       before do
         allow(File).to receive(:exists?).with('/base_dir/parameters/stack_name.yml').and_return(false)
@@ -47,6 +49,7 @@ RSpec.describe StackMaster::Config::StackDefinition do
         expect(stack_definition.parameters).to eq({ 'param2' => 'value2' })
       end
     end
+
     context "stack and region parameter file" do
       before do
         allow(File).to receive(:exists?).with('/base_dir/parameters/stack_name.yml').and_return(true)
@@ -71,5 +74,4 @@ RSpec.describe StackMaster::Config::StackDefinition do
       expect(stack_definition.template_body).to eq('body')
     end
   end
-
 end
