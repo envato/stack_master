@@ -6,8 +6,10 @@ RSpec.describe StackMaster::ConfigLoader do
       region: 'us_east_1',
       stack_name: 'myapp_vpc',
       template: 'myapp_vpc.json',
-      tags: { 'environment' => 'production' }
+      tags: { 'environment' => 'production' },
+      base_dir: File.expand_path('spec/fixtures')
     )
-    expect(loaded_config.find_stack('us_east_1', 'myapp_vpc')).to eq(myapp_vpc_definition)
+    stack = loaded_config.find_stack('us_east_1', 'myapp_vpc')
+    expect(stack).to eq(myapp_vpc_definition)
   end
 end

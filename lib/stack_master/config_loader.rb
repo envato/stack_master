@@ -9,8 +9,9 @@ module StackMaster
     end
 
     def load
-      stack_definitions = Config::StackDefinitions.new
       config = YAML.load(File.read(@config_file))
+      base_dir = File.dirname(File.expand_path(@config_file))
+      stack_definitions = Config::StackDefinitions.new(base_dir)
       stack_definitions.load(config.fetch('stacks'))
       stack_definitions
     end

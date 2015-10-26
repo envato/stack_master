@@ -1,14 +1,15 @@
 module StackMaster
   module Config
     class StackDefinitions
-      def initialize
+      def initialize(base_dir)
+        @base_dir = base_dir
         @stacks = []
       end
 
       def load(stacks)
         stacks.each do |region, stacks_for_region|
           stacks_for_region.each do |stack_name, attributes|
-            @stacks << StackDefinition.new(attributes.merge('region' => region, 'stack_name' => stack_name))
+            @stacks << StackDefinition.new(attributes.merge('region' => region, 'stack_name' => stack_name, 'base_dir' => @base_dir))
           end
         end
       end
