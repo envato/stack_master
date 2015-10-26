@@ -6,7 +6,6 @@ RSpec.describe StackMaster::Config::StackDefinition do
       stack_name: stack_name,
       template: template,
       tags: tags,
-      parameter_files: parameter_files,
       base_dir: base_dir)
   end
 
@@ -14,7 +13,6 @@ RSpec.describe StackMaster::Config::StackDefinition do
   let(:stack_name) { 'stack_name' }
   let(:template) { 'template.json' }
   let(:tags) { {'environment' => 'production'} }
-  let(:parameter_files) { nil }
   let(:base_dir) { '/base_dir' }
 
   describe "#aws_tags" do

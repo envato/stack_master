@@ -8,7 +8,6 @@ module StackMaster
         attribute :stack_name, String
         attribute :template, String
         attribute :tags, Hash
-        attribute :parameter_files, Array[String]
         attribute :base_dir, String
       end
 

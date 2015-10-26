@@ -13,5 +13,3 @@ stacks:
       template: myapp_vpc.rb
     myapp_web:
       template: myapp_web
-      parameter_files:
-        - myapp_web.yml
