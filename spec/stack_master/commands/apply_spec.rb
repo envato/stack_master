@@ -50,6 +50,11 @@ RSpec.describe StackMaster::Commands::Apply do
         parameters: [
           { parameter_key: 'param_1', parameter_value: 'hello' }
         ],
+        tags: [
+          {
+            key: 'environment',
+            value: 'production'
+          }],
         capabilities: ['CAPABILITY_IAM']
       )
     end

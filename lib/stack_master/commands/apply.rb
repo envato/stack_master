@@ -41,7 +41,7 @@ module StackMaster
       end
 
       def create_stack
-        cf.create_stack(stack_options)
+        cf.create_stack(stack_options.merge(tags: stack_definition.aws_tags))
       end
 
       def stack_options

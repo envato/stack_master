@@ -34,6 +34,14 @@ module StackMaster
       def parameter_file_path
         File.join(base_dir, 'parameters', "#{stack_name}.yml")
       end
+
+      def aws_tags
+        return [] if tags.nil?
+        tags.inject([]) do |aws_tags, (key, value)|
+          aws_tags << { key: key, value: value }
+          aws_tags
+        end
+      end
     end
   end
 end
