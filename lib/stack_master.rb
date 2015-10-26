@@ -1,6 +1,7 @@
 require "commander"
 require "yaml"
 require "virtus"
+require "aws-sdk"
 
 require "stack_master/version"
 require "stack_master/config_loader"
