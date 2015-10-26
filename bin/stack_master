@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'commander'
+require 'pry'
+require 'stack_master'
+
+class StackMasterCLI
+  include Commander::Methods
+
+  def run
+    program :name, 'StackMaster'
+    program :version, '0.0.1'
+    program :description, 'AWS Stack Management'
+
+    command :apply do |c|
+      c.syntax = 'stack_master apply [region] [stack_name]'
+      c.summary = ''
+      c.description = ''
+      c.example 'description', 'Create or update a stack'
+      c.action do |args, options|
+        unless args.size == 2
+          say "Invalid arguments. stack_master apply [region] [stack_name]"
+        end
+        StackMaster::Commands::Apply.perform(*args)
+      end
+    end
+
+    run!
+  end
+end
+
+StackMasterCLI.new.run if $0 == __FILE__
