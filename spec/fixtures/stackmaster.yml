@@ -1,5 +1,5 @@
 stacks:
-  us_east_1:
+  us-east-1:
     myapp_vpc:
       template: myapp_vpc.json
       tags:
@@ -8,7 +8,7 @@ stacks:
       template: myapp_web.rb
       tags:
         environment: production
-  ap_southeast_2:
+  ap-southeast-2:
     myapp_vpc:
       template: myapp_vpc.rb
     myapp_web:

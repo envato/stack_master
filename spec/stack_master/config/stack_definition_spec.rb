@@ -29,8 +29,58 @@ RSpec.describe StackMaster::Config::StackDefinition do
     end
   end
 
+  describe "#parameters" do
+    context "no parameter file" do
+      before do
+        allow(File).to receive(:exists?).and_return(false)
+      end
+
+      it "returns empty parameters" do
+        expect(stack_definition.parameters).to eq({})
+      end
+    end
+    context "stack parameter file" do
+      before do
+        allow(File).to receive(:exists?).with('/base_dir/parameters/stack_name.yml').and_return(true)
+        allow(File).to receive(:exists?).with('/base_dir/parameters/us-east-1/stack_name.yml').and_return(false)
+        allow(File).to receive(:read).with('/base_dir/parameters/stack_name.yml').and_return("param1: value1")
+      end
+
+      it "returns params from stack_name.yml" do
+        expect(stack_definition.parameters).to eq({ 'param1' => 'value1' })
+      end
+    end
+    context "region parameter file" do
+      before do
+        allow(File).to receive(:exists?).with('/base_dir/parameters/stack_name.yml').and_return(false)
+        allow(File).to receive(:exists?).with('/base_dir/parameters/us-east-1/stack_name.yml').and_return(true)
+        allow(File).to receive(:read).with('/base_dir/parameters/us-east-1/stack_name.yml').and_return("param2: value2")
+      end
+
+      it "returns params from the region base stack_name.yml" do
+        expect(stack_definition.parameters).to eq({ 'param2' => 'value2' })
+      end
+    end
+    context "stack and region parameter file" do
+      before do
+        allow(File).to receive(:exists?).with('/base_dir/parameters/stack_name.yml').and_return(true)
+        allow(File).to receive(:exists?).with('/base_dir/parameters/us-east-1/stack_name.yml').and_return(true)
+        allow(File).to receive(:read).with('/base_dir/parameters/stack_name.yml').and_return("param1: value1\nparam2: valueX")
+        allow(File).to receive(:read).with('/base_dir/parameters/us-east-1/stack_name.yml').and_return("param2: value2")
+      end
+
+      it "returns params from the region base stack_name.yml" do
+        expect(stack_definition.parameters).to eq({
+                                                    'param1' => 'value1',
+                                                    'param2' => 'value2'
+                                                  })
+      end
+    end
+  end
+
   describe "#aws_parameters" do
     before do
+      allow(File).to receive(:exists?).and_return(true, false)
       allow(File).to receive(:read).with('/base_dir/parameters/stack_name.yml').and_return(yaml_params)
     end
     let(:yaml_params) { <<EOF }
