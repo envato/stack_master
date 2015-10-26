@@ -31,20 +31,12 @@ module StackMaster
       end
 
       def aws_parameters
-        parameters.inject([]) do |params, (key, value)|
-          params << { parameter_key: key, parameter_value: value }
-          params
-        end
+        Utils.hash_to_aws_parameters(parameters)
       end
 
       def aws_tags
-        return [] if tags.nil?
-        tags.inject([]) do |aws_tags, (key, value)|
-          aws_tags << { key: key, value: value }
-          aws_tags
-        end
+        Utils.hash_to_aws_tags(tags)
       end
-
 
       private
 

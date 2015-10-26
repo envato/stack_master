@@ -15,20 +15,6 @@ RSpec.describe StackMaster::Config::StackDefinition do
   let(:tags) { {'environment' => 'production'} }
   let(:base_dir) { '/base_dir' }
 
-  describe "#aws_tags" do
-    it "converts the tags attribute to aws format" do
-      expect(stack_definition.aws_tags).to eq( [{key: 'environment', value: 'production'} ])
-    end
-
-    context "tags is nil" do
-      let(:tags) { nil }
-
-      it "returns nil" do
-        expect(stack_definition.aws_tags).to eq([])
-      end
-    end
-  end
-
   describe "#parameters" do
     context "no parameter file" do
       before do
@@ -75,22 +61,6 @@ RSpec.describe StackMaster::Config::StackDefinition do
                                                     'param2' => 'value2'
                                                   })
       end
-    end
-  end
-
-  describe "#aws_parameters" do
-    before do
-      allow(File).to receive(:exists?).and_return(true, false)
-      allow(File).to receive(:read).with('/base_dir/parameters/stack_name.yml').and_return(yaml_params)
-    end
-    let(:yaml_params) { <<EOF }
-param1: value1
-param2: value2
-EOF
-
-    it "loads the parameter file and returns the parameters" do
-      expect(stack_definition.aws_parameters).to eq([{parameter_key: 'param1', parameter_value: 'value1'},
-                                                     {parameter_key: 'param2', parameter_value: 'value2'}])
     end
   end
 
