@@ -32,7 +32,7 @@ class StackMasterCLI
   end
 
   def load_config(file)
-    stack_file = file || 'stackmaster.yml'
+    stack_file = file || 'stack_master.yml'
     StackMaster::ConfigLoader.load!(stack_file)
   rescue Errno::ENOENT => e
     say "Failed to load config file #{stack_file}"
