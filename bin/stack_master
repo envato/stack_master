@@ -33,11 +33,12 @@ class StackMasterCLI
       c.syntax = 'stack_master init [region] [stack_name]'
       c.summary = ''
       c.description = ''
+      c.option('--overwrite', 'Overwrite existing files')
       c.action do |args, options|
         unless args.size == 2
           say "Invalid arguments. stack_master init [region] [stack_name]"
         else
-          StackMaster::Commands::Init.perform(*args)
+          StackMaster::Commands::Init.perform(options.overwrite, *args)
         end
       end
     end

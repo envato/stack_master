@@ -3,24 +3,43 @@ module StackMaster
     class Init
       include Command
 
-      def initialize(region, stack_name)
+      def initialize(overwrite, region, stack_name)
+        @overwrite = overwrite
         @region = region
         @stack_name = stack_name
       end
 
       def perform
-        create_stack_master_yml
-        create_stack_json_yml
-        create_parameters_yml
+        if check_files
+          create_stack_master_yml
+          create_stack_json_yml
+          create_parameters_yml
+        end
       end
 
       private
 
+      def check_files
+        @stack_master_filename = "stack_master.yml"
+        @stack_json_filename = "templates/#{@stack_name}.json"
+        @parameters_filename = File.join("parameters", "#{underscored_stack_name}.yml")
+        @region_parameters_filename = File.join("parameters", @region, "#{underscored_stack_name}.yml")
+
+        if !@overwrite
+          [@stack_master_filename, @stack_json_filename, @parameters_filename, @region_parameters_filename].each do |filename|
+            if File.exists?(filename)
+              STDERR.puts("Aborting: #{filename} already exists. Use --overwrite to force overwriting file.")
+              return false
+            end
+          end
+        end
+        true
+      end
+
       def create_stack_json_yml
-        filename = "templates/#{@stack_name}.json"
-        puts "Writing #{filename}"
-        FileUtils.mkdir_p(File.dirname(filename))
-        IO.write(filename, stack_json_output)
+        puts "Writing #{@stack_json_filename}"
+        FileUtils.mkdir_p(File.dirname(@stack_json_filename))
+        IO.write(@stack_json_filename, stack_json_output)
       end
 
       def stack_json_output
@@ -32,8 +51,8 @@ module StackMaster
       end
 
       def create_stack_master_yml
-        puts "Writing stack_master.yml"
-        IO.write("stack_master.yml", stack_master_yml_output)
+        puts "Writing #{@stack_master_filename}"
+        IO.write("#{@stack_master_filename}", stack_master_yml_output)
       end
 
       def stack_master_yml_output
@@ -45,13 +64,11 @@ module StackMaster
       end
 
       def create_parameters_yml
-        stack_file = File.join("parameters", "#{underscored_stack_name}.yml")
-        region_stack_file = File.join("parameters", @region, "#{underscored_stack_name}.yml")
-        puts "Writing #{stack_file}"
-        puts "Writing #{region_stack_file}"
+        puts "Writing #{@parameters_filename}"
+        puts "Writing #{@region_parameters_filename}"
         FileUtils.mkdir_p("parameters/#{@region}")
-        IO.write(stack_file, parameter_stack_name_yml_output)
-        IO.write(region_stack_file, parameter_region_yml_output)
+        IO.write(@parameters_filename, parameter_stack_name_yml_output)
+        IO.write(@region_parameters_filename, parameter_region_yml_output)
       end
 
       def parameter_stack_name_yml_output
