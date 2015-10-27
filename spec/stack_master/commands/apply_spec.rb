@@ -1,7 +1,7 @@
 RSpec.describe StackMaster::Commands::Apply do
   let(:cf) { instance_double(Aws::CloudFormation::Client) }
   let(:region) { 'us-east-1' }
-  let(:stack_name) { 'myapp_vpc' }
+  let(:stack_name) { 'myapp-vpc' }
   let(:config) { double(find_stack: stack_definition) }
   let(:stack_definition) { StackMaster::Config::StackDefinition.new(
       region: 'us_east_1',
