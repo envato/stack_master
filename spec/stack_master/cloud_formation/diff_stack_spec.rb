@@ -15,7 +15,7 @@ RSpec.describe StackMaster::CloudFormation::DiffStack do
   describe "#perform" do
     context "entirely new stack" do
       before do
-        allow(StackMaster::Stack).to receive(:find).with(cf,"myapp_vpc").and_return nil
+        allow(StackMaster::Stack).to receive(:find).with('us-east-1', "myapp_vpc").and_return nil
         allow(stack_definition).to receive(:template_body).and_return("new stack body")
       end
 
@@ -26,7 +26,7 @@ RSpec.describe StackMaster::CloudFormation::DiffStack do
 
     context "stack update" do
       before do
-        allow(StackMaster::Stack).to receive(:find).with(cf,"myapp_vpc").and_return stack
+        allow(StackMaster::Stack).to receive(:find).with('us-east-1', "myapp_vpc").and_return stack
         allow(stack).to receive(:template_body).and_return "{}"
         allow(stack_definition).to receive(:parameters).and_return []
         allow(stack_definition).to receive(:template_body).and_return "{\"a\": 1}"

@@ -9,12 +9,13 @@ module StackMaster
       end
 
       def perform
+        resolved_parameters = JSON.pretty_generate(sort_params(ParameterResolver.resolve(@stack_definition.region, @stack_definition.parameters)))
         if current_stack
           text_diff('Stack', JSON.pretty_generate(current_stack.template_hash), JSON.pretty_generate(JSON.parse(@stack_definition.template_body)), context: @context, include_diff_info: true)
-          text_diff('Parameters', JSON.pretty_generate(sort_params(current_stack.parameters)), JSON.pretty_generate(sort_params(@stack_definition.parameters)))
+          text_diff('Parameters', JSON.pretty_generate(sort_params(current_stack.parameters)), resolved_parameters)
         else
           text_diff('Stack', '', @stack_definition.template_body)
-          text_diff('Parameters', '', JSON.pretty_generate(sort_params(@stack_definition.parameters)))
+          text_diff('Parameters', '', resolved_parameters)
           puts "No stack found"
         end
       end
@@ -26,7 +27,7 @@ module StackMaster
       end
 
       def current_stack
-        @current_stack ||= StackMaster::Stack.find(@cf, @stack_definition.stack_name)
+        @current_stack ||= StackMaster::Stack.find(@stack_definition.region, @stack_definition.stack_name)
       end
 
       def text_diff(thing, current, proposed, diff_opts = {})

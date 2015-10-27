@@ -20,14 +20,7 @@ module StackMaster
       end
 
       def parameters
-        parameter_files.reduce({}) do |hash, file_name|
-          if File.exists?(file_name)
-            parameters = YAML.load(File.read(file_name))
-          else
-            parameters = {}
-          end
-          hash.merge(parameters)
-        end
+        @parameters ||= ParameterLoader.load(parameter_files)
       end
 
       def aws_parameters
@@ -41,15 +34,19 @@ module StackMaster
       private
 
       def region_parameter_file_path
-        File.join(base_dir, 'parameters', "#{region}", "#{stack_name}.yml")
+        File.join(base_dir, 'parameters', "#{region}", "#{underscored_stack_name}.yml")
       end
 
       def default_parameter_file_path
-        File.join(base_dir, 'parameters', "#{stack_name}.yml")
+        File.join(base_dir, 'parameters', "#{underscored_stack_name}.yml")
       end
 
       def parameter_files
         [ default_parameter_file_path, region_parameter_file_path ]
+      end
+
+      def underscored_stack_name
+        stack_name.gsub('-', '_')
       end
     end
   end
