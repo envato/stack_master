@@ -12,19 +12,12 @@ module StackMaster
 
       def perform
         diff_stack
-        print "Continue and apply the stack (y/n)? "
-        answer = STDIN.getch.chomp
-        puts
-        if answer == 'y'
-          if stack_exists?
-            update_stack
-          else
-            create_stack
-          end
-          StackEvents::Streamer.stream(@stack_name, @region, io: STDOUT)
-        else
+        unless ask?("Continue and apply the stack (y/n)? ")
           puts "Stack update aborted"
+          return
         end
+        create_or_update_stack
+        tail_stack_events
       end
 
       private
@@ -49,6 +42,14 @@ module StackMaster
         StackMaster::CloudFormation::DiffStack.perform(cf, stack_definition)
       end
 
+      def create_or_update_stack
+        if stack_exists?
+          update_stack
+        else
+          create_stack
+        end
+      end
+
       def update_stack
         cf.update_stack(stack_options)
       end
@@ -64,6 +65,17 @@ module StackMaster
           parameters: stack_definition.aws_parameters,
           capabilities: ['CAPABILITY_IAM']
         }
+      end
+
+      def tail_stack_events
+        StackEvents::Streamer.stream(@stack_name, @region, io: STDOUT)
+      end
+
+      def ask?(question)
+        print question
+        answer = STDIN.getch.chomp
+        puts
+        answer == 'y'
       end
     end
   end
