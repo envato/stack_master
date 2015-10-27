@@ -39,7 +39,7 @@ module StackMaster
       end
 
       def diff_stack
-        StackMaster::CloudFormation::DiffStack.perform(cf, stack_definition)
+        StackMaster::StackDiffer.perform(stack_definition)
       end
 
       def create_or_update_stack

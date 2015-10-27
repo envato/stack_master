@@ -6,6 +6,7 @@ require "diffy"
 require "colorize"
 require 'active_support/core_ext/string'
 require "erb"
+require 'sparkle_formation'
 
 require "stack_master/version"
 require "stack_master/stack"
@@ -22,7 +23,9 @@ require "stack_master/config/stack_definitions"
 require "stack_master/command"
 require "stack_master/commands/apply"
 require "stack_master/commands/init"
+require "stack_master/commands/diff"
 require "stack_master/cloud_formation/diff_stack"
+require "stack_master/stack_differ"
 
 module StackMaster
   def self.base_dir

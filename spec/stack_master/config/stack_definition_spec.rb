@@ -15,10 +15,21 @@ RSpec.describe StackMaster::Config::StackDefinition do
   let(:base_dir) { '/base_dir' }
 
   describe "#template_body" do
-    it "reads from the template file path" do
-      expect(File).to receive(:read).with('/base_dir/templates/template.json').and_return('body')
+    context 'json template' do
+      it "reads from the template file path" do
+        expect(File).to receive(:read).with('/base_dir/templates/template.json').and_return('body')
 
-      expect(stack_definition.template_body).to eq('body')
+        expect(stack_definition.template_body).to eq('body')
+      end
+    end
+
+    context 'sparkleformation template' do
+      let(:template) { 'template.rb' }
+
+      it 'compiles with sparkleformation' do
+        expect(SparkleFormation).to receive(:compile).with('/base_dir/templates/template.rb').and_return({})
+        expect(stack_definition.template_body).to eq("{\n}")
+      end
     end
   end
 end
