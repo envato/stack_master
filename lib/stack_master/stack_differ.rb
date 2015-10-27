@@ -8,7 +8,7 @@ module StackMaster
     end
 
     def perform
-      resolved_parameters = JSON.pretty_generate(sort_params(ParameterResolver.resolve(@stack_definition.region, @stack_definition.parameters)))
+      resolved_parameters = JSON.pretty_generate(sort_params(@stack_definition.parameters))
       if current_stack
         text_diff('Stack', JSON.pretty_generate(current_stack.template_hash), JSON.pretty_generate(JSON.parse(@stack_definition.template_body)), context: @context, include_diff_info: true)
         text_diff('Parameters', JSON.pretty_generate(sort_params(current_stack.parameters)), resolved_parameters)

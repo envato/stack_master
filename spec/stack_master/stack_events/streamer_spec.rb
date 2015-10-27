@@ -6,7 +6,7 @@ RSpec.describe StackMaster::StackEvents::Streamer do
   ] }
   let(:events_second_call) {
     events_first_call + [
-      OpenStruct.new(event_id: '4', resource_status: 'UPDATE_COMPLETE', resource_type: 'AWS::CloudFormation::Stack', logical_id: stack_name, timestamp: Time.now)
+      OpenStruct.new(event_id: '4', resource_status: 'UPDATE_COMPLETE', resource_type: 'AWS::CloudFormation::Stack', logical_resource_id: stack_name, timestamp: Time.now)
     ]
   }
   let(:stack_name) { 'stack-name' }

@@ -6,8 +6,8 @@ module StackMaster
 
       def initialize(config, region, stack_name)
         @config = config
-        @region = region
-        @stack_name = stack_name
+        @region = region.gsub('_', '-')
+        @stack_name = stack_name.gsub('_', '-')
       end
 
       def perform

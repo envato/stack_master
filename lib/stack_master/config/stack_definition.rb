@@ -1,5 +1,5 @@
 module StackMaster
-  module Config
+  class Config
     class StackDefinition
       include Virtus.value_object(strict: true, required: false)
 
@@ -24,7 +24,7 @@ module StackMaster
       end
 
       def parameters
-        @parameters ||= ParameterLoader.load(parameter_files)
+        @parameters ||= ParameterResolver.resolve(region, ParameterLoader.load(parameter_files))
       end
 
       def aws_parameters

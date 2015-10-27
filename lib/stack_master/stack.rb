@@ -5,7 +5,7 @@ module StackMaster
     attribute :stack_name, String
     attribute :region, String
     attribute :stack_id, String
-    attribute :parameters, Array[Hash]
+    attribute :parameters, Hash
     attribute :template_body, String
     attribute :outputs, Array
 
