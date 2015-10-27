@@ -24,7 +24,6 @@ require "stack_master/command"
 require "stack_master/commands/apply"
 require "stack_master/commands/init"
 require "stack_master/commands/diff"
-require "stack_master/cloud_formation/diff_stack"
 require "stack_master/stack_differ"
 
 module StackMaster
