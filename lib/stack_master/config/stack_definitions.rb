@@ -20,7 +20,8 @@ module StackMaster
 
       def find_stack(region, stack_name)
         @stacks.find do |s|
-          s.region == region && s.stack_name == stack_name
+          (s.region == region || s.region == region.gsub('_', '-')) &&
+            (s.stack_name == stack_name || s.stack_name == stack_name.gsub('_', '-'))
         end
       end
 
