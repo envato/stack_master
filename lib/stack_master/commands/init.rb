@@ -24,9 +24,7 @@ module StackMaster
       end
 
       def stack_json_output
-        renderer = ERB.new(File.read(stack_json_template))
-        binding = InitBinding.new(region: @region, stack_name: @stack_name).get_binding
-        renderer.result(binding)
+        render ERB.new(File.read(stack_json_template))
       end
 
       def stack_json_template
@@ -39,9 +37,7 @@ module StackMaster
       end
 
       def stack_master_yml_output
-        renderer = ERB.new(File.read(stack_master_template))
-        binding = InitBinding.new(region: @region, stack_name: @stack_name).get_binding
-        renderer.result(binding)
+        render ERB.new(File.read(stack_master_template))
       end
 
       def stack_master_template
@@ -76,6 +72,11 @@ module StackMaster
 
       def underscored_stack_name
         @stack_name.gsub('-', '_')
+      end
+
+      def render(renderer)
+        binding = InitBinding.new(region: @region, stack_name: @stack_name).get_binding
+        renderer.result(binding)
       end
 
       class InitBinding
