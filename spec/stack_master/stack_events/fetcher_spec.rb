@@ -1,9 +1,9 @@
-RSpec.describe StackMaster::StackEventFetcher do
+RSpec.describe StackMaster::StackEvents::Fetcher do
   let(:cf) { Aws::CloudFormation::Client.new }
 
   before do
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
-    allow(StackMaster::StackEventStreamer).to receive(:stream)
+    allow(StackMaster::StackEvents::Streamer).to receive(:stream)
   end
 
   context 'with 2 stack events' do
@@ -17,7 +17,7 @@ RSpec.describe StackMaster::StackEventFetcher do
     end
 
     it 'returns stack events' do
-      events = StackMaster::StackEventFetcher.fetch('blah', 'us-east-1')
+      events = StackMaster::StackEvents::Fetcher.fetch('blah', 'us-east-1')
       expect(events.count).to eq 2
     end
   end
@@ -36,7 +36,7 @@ RSpec.describe StackMaster::StackEventFetcher do
     end
 
     it 'returns all the stack events combined' do
-      events = StackMaster::StackEventFetcher.fetch('blah', 'us-east-1')
+      events = StackMaster::StackEvents::Fetcher.fetch('blah', 'us-east-1')
       expect(events.count).to eq 3
     end
   end
@@ -58,7 +58,7 @@ RSpec.describe StackMaster::StackEventFetcher do
     end
 
     it 'only returns events after the timestamp' do
-      events = StackMaster::StackEventFetcher.fetch('blah', 'us-east-1', from: three_pm)
+      events = StackMaster::StackEvents::Fetcher.fetch('blah', 'us-east-1', from: three_pm)
       expect(events.map(&:event_id)).to eq ['2']
     end
   end
