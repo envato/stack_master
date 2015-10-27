@@ -11,11 +11,17 @@ RSpec.describe StackMaster::Stack do
   context 'when the stack exists in AWS' do
     before do
       cf.stub_responses(:describe_stacks, stacks: [{ stack_id: stack_id, stack_name: stack_name, creation_time: Time.now, stack_status: 'UPDATE_COMPLETE'}])
+      cf.stub_responses(:get_template, template_body: "{}")
     end
 
     it 'returns a stack object with a stack_id' do
       stack = StackMaster::Stack.find(region, stack_name)
       expect(stack.stack_id).to eq stack_id
+    end
+
+    it "returns a template body" do
+      stack = StackMaster::Stack.find(region, stack_name)
+      expect(stack.template_body).to eq "{}"
     end
   end
 
