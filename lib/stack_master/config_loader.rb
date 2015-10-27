@@ -1,6 +1,6 @@
 module StackMaster
   class ConfigLoader
-    def self.load!(config_file = 'stackmaster.yml')
+    def self.load!(config_file = 'stack_master.yml')
       new(config_file).load
     end
 

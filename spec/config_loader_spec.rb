@@ -1,5 +1,5 @@
 RSpec.describe StackMaster::ConfigLoader do
-  subject(:loaded_config) { StackMaster::ConfigLoader.load!('spec/fixtures/stackmaster.yml') }
+  subject(:loaded_config) { StackMaster::ConfigLoader.load!('spec/fixtures/stack_master.yml') }
 
   it 'returns an object that can find stack definitions' do
     myapp_vpc_definition = StackMaster::Config::StackDefinition.new(
