@@ -34,15 +34,19 @@ module StackMaster
       private
 
       def region_parameter_file_path
-        File.join(base_dir, 'parameters', "#{region}", "#{stack_name}.yml")
+        File.join(base_dir, 'parameters', "#{region}", "#{underscored_stack_name}.yml")
       end
 
       def default_parameter_file_path
-        File.join(base_dir, 'parameters', "#{stack_name}.yml")
+        File.join(base_dir, 'parameters', "#{underscored_stack_name}.yml")
       end
 
       def parameter_files
         [ default_parameter_file_path, region_parameter_file_path ]
+      end
+
+      def underscored_stack_name
+        stack_name.gsub('-', '_')
       end
     end
   end
