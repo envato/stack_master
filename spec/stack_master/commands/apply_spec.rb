@@ -17,6 +17,7 @@ RSpec.describe StackMaster::Commands::Apply do
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
     allow(cf).to receive(:update_stack)
     allow(cf).to receive(:create_stack)
+    allow(StackMaster::CloudFormation::DiffStack).to receive(:perform).with(cf, stack_definition)
     allow(STDOUT).to receive(:print)
     allow(STDIN).to receive(:getch).and_return('y')
   end

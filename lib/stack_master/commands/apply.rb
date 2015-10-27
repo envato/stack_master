@@ -11,8 +11,7 @@ module StackMaster
       end
 
       def perform
-        # TODO: Add diff
-
+        diff_stack
         print "Continue and apply the stack (y/n)? "
         if STDIN.getch.chomp == 'y'
           if stack_exists?
@@ -41,6 +40,10 @@ module StackMaster
 
       def stack_exists?
         !stack.nil?
+      end
+
+      def diff_stack
+        StackMaster::CloudFormation::DiffStack.perform(cf, stack_definition)
       end
 
       def update_stack
