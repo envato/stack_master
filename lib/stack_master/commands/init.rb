@@ -10,10 +10,28 @@ module StackMaster
 
       def perform
         create_stack_master_yml
+        create_stack_json_yml
         create_parameters_yml
       end
 
       private
+
+      def create_stack_json_yml
+        filename = "templates/#{@stack_name}.json"
+        puts "Writing #{filename}"
+        FileUtils.mkdir_p(File.dirname(filename))
+        IO.write(filename, stack_json_output)
+      end
+
+      def stack_json_output
+        renderer = ERB.new(File.read(stack_json_template))
+        binding = InitBinding.new(region: @region, stack_name: @stack_name).get_binding
+        renderer.result(binding)
+      end
+
+      def stack_json_template
+        File.join(StackMaster.base_dir, "ymltemplates", "stack.json.erb")
+      end
 
       def create_stack_master_yml
         puts "Writing stack_master.yml"
@@ -27,10 +45,37 @@ module StackMaster
       end
 
       def stack_master_template
-        File.join(StackMaster.base_dir, "templates", "stack_master.yml.erb")
+        File.join(StackMaster.base_dir, "ymltemplates", "stack_master.yml.erb")
       end
 
       def create_parameters_yml
+        stack_file = File.join("parameters", "#{underscored_stack_name}.yml")
+        region_stack_file = File.join("parameters", @region, "#{underscored_stack_name}.yml")
+        puts "Writing #{stack_file}"
+        puts "Writing #{region_stack_file}"
+        FileUtils.mkdir_p("parameters/#{@region}")
+        IO.write(stack_file, parameter_stack_name_yml_output)
+        IO.write(region_stack_file, parameter_region_yml_output)
+      end
+
+      def parameter_stack_name_yml_output
+        File.read(parameter_stack_name_template)
+      end
+
+      def parameter_region_yml_output
+        File.read(parameter_region_template)
+      end
+
+      def parameter_stack_name_template
+        File.join(StackMaster.base_dir, "ymltemplates", "parameter_stack_name.yml")
+      end
+
+      def parameter_region_template
+        File.join(StackMaster.base_dir, "ymltemplates", "parameter_region.yml")
+      end
+
+      def underscored_stack_name
+        @stack_name.gsub('-', '_')
       end
 
       class InitBinding
