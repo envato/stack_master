@@ -1,6 +1,5 @@
-RSpec.describe StackMaster::CloudFormation::DiffStack do
-  subject(:stack_master) { described_class.new(cf, stack_definition) }
-  let(:cf) { Aws::CloudFormation::Client.new }
+RSpec.describe StackMaster::StackDiffer do
+  subject(:stack_master) { described_class.new(stack_definition) }
   let(:stack_definition) do
     StackMaster::Config::StackDefinition.new(
       region: 'us-east-1',
@@ -10,7 +9,7 @@ RSpec.describe StackMaster::CloudFormation::DiffStack do
       base_dir: File.expand_path('spec/fixtures')
     )
   end
-  let(:stack) { StackMaster::Stack.new(stack_name: 'myapp_vpc', region: 'us-east-1', stack_id: 123, cf: cf) }
+  let(:stack) { StackMaster::Stack.new(stack_name: 'myapp_vpc', region: 'us-east-1', stack_id: 123) }
 
   describe "#perform" do
     context "entirely new stack" do

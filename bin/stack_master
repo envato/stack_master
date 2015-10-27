@@ -28,6 +28,20 @@ class StackMasterCLI
       end
     end
 
+    command :diff do |c|
+      c.syntax = 'stack_master diff [region] [stack_name]'
+      c.summary = ''
+      c.description = ''
+      c.example 'description', 'Diff a stack'
+      c.action do |args, options|
+        unless args.size == 2
+          say "Invalid arguments. stack_master diff [region] [stack_name]"
+        end
+        config = load_config(options.config)
+        StackMaster::Commands::Diff.perform(config, *args)
+      end
+    end
+
     run!
   end
 
