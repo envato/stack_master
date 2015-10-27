@@ -28,7 +28,7 @@ module StackMaster
       end
 
       def stack_json_template
-        File.join(StackMaster.base_dir, "ymltemplates", "stack.json.erb")
+        File.join(StackMaster.base_dir, "stacktemplates", "stack.json.erb")
       end
 
       def create_stack_master_yml
@@ -41,7 +41,7 @@ module StackMaster
       end
 
       def stack_master_template
-        File.join(StackMaster.base_dir, "ymltemplates", "stack_master.yml.erb")
+        File.join(StackMaster.base_dir, "stacktemplates", "stack_master.yml.erb")
       end
 
       def create_parameters_yml
@@ -63,11 +63,11 @@ module StackMaster
       end
 
       def parameter_stack_name_template
-        File.join(StackMaster.base_dir, "ymltemplates", "parameter_stack_name.yml")
+        File.join(StackMaster.base_dir, "stacktemplates", "parameter_stack_name.yml")
       end
 
       def parameter_region_template
-        File.join(StackMaster.base_dir, "ymltemplates", "parameter_region.yml")
+        File.join(StackMaster.base_dir, "stacktemplates", "parameter_region.yml")
       end
 
       def underscored_stack_name
