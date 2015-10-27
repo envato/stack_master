@@ -20,14 +20,7 @@ module StackMaster
       end
 
       def parameters
-        parameter_files.reduce({}) do |hash, file_name|
-          if File.exists?(file_name)
-            parameters = YAML.load(File.read(file_name))
-          else
-            parameters = {}
-          end
-          hash.merge(parameters)
-        end
+        @parameters ||= ParameterLoader.load(parameter_files)
       end
 
       def aws_parameters
