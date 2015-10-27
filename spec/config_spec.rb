@@ -1,5 +1,5 @@
-RSpec.describe StackMaster::ConfigLoader do
-  subject(:loaded_config) { StackMaster::ConfigLoader.load!('spec/fixtures/stack_master.yml') }
+RSpec.describe StackMaster::Config do
+  subject(:loaded_config) { StackMaster::Config.load!('spec/fixtures/stack_master.yml') }
   let(:myapp_vpc_definition) {
     StackMaster::Config::StackDefinition.new(
       region: 'us-east-1',

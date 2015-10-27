@@ -1,6 +1,8 @@
 module StackMaster
-  module Config
+  class Config
     class StackDefinitions
+      attr_reader :stacks
+
       def initialize(base_dir)
         @base_dir = base_dir
         @stacks = []

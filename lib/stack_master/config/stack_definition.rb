@@ -1,5 +1,5 @@
 module StackMaster
-  module Config
+  class Config
     class StackDefinition
       include Virtus.value_object(strict: true, required: false)
 
