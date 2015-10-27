@@ -5,6 +5,7 @@ require "aws-sdk"
 require "diffy"
 require "colorize"
 require 'active_support/core_ext/string'
+require 'sparkle_formation'
 
 require "stack_master/version"
 require "stack_master/stack"
