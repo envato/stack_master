@@ -20,6 +20,7 @@ RSpec.describe StackMaster::Commands::Apply do
     allow(StackMaster::CloudFormation::DiffStack).to receive(:perform).with(cf, stack_definition)
     allow(STDOUT).to receive(:print)
     allow(STDIN).to receive(:getch).and_return('y')
+    allow(StackMaster::StackEvents::Streamer).to receive(:stream)
   end
 
   def apply
@@ -39,6 +40,11 @@ RSpec.describe StackMaster::Commands::Apply do
         ],
         capabilities: ['CAPABILITY_IAM']
       )
+    end
+
+    it 'streams events' do
+      apply
+      expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT)
     end
   end
 
@@ -60,6 +66,11 @@ RSpec.describe StackMaster::Commands::Apply do
           }],
         capabilities: ['CAPABILITY_IAM']
       )
+    end
+
+    it 'streams events' do
+      apply
+      expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT)
     end
   end
 end

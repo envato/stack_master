@@ -13,12 +13,15 @@ module StackMaster
       def perform
         diff_stack
         print "Continue and apply the stack (y/n)? "
-        if STDIN.getch.chomp == 'y'
+        answer = STDIN.getch.chomp
+        puts
+        if answer == 'y'
           if stack_exists?
             update_stack
           else
             create_stack
           end
+          StackEvents::Streamer.stream(@stack_name, @region, io: STDOUT)
         else
           puts "Stack update aborted"
         end

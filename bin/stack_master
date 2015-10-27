@@ -2,7 +2,6 @@
 
 require 'rubygems'
 require 'commander'
-require 'pry'
 require 'stack_master'
 
 class StackMasterCLI
@@ -41,4 +40,4 @@ class StackMasterCLI
   end
 end
 
-StackMasterCLI.new.run if $0 == __FILE__
+StackMasterCLI.new.run
