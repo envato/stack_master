@@ -22,5 +22,13 @@ module StackMaster
     def finish_state?(state)
       FINISH_STATES.include?(state)
     end
+
+    def failure_state?(state)
+      FAILURE_STATES.include?(state)
+    end
+
+    def success_state?(state)
+      SUCCESS_STATES.include?(state)
+    end
   end
 end

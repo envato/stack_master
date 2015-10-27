@@ -24,4 +24,10 @@ RSpec.describe StackMaster::StackEvents::Streamer do
       events << event
     end
   end
+
+  it 'streams events to an io object' do
+    io = StringIO.new
+    StackMaster::StackEvents::Streamer.stream(stack_name, region, sleep_between_fetches: 0, io: io)
+    expect(io.string).to include('UPDATE_COMPLETE')
+  end
 end

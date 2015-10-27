@@ -5,7 +5,7 @@ module StackMaster
         new(*args, &block).stream
       end
 
-      def initialize(stack_name, region, from: Time.now, break_on_finish_state: true, sleep_between_fetches: 1, &block)
+      def initialize(stack_name, region, from: Time.now, break_on_finish_state: true, sleep_between_fetches: 1, io: nil, &block)
         @stack_name = stack_name
         @region = region
         @block = block
@@ -13,6 +13,7 @@ module StackMaster
         @from = from
         @break_on_finish_state = break_on_finish_state
         @sleep_between_fetches = sleep_between_fetches
+        @io = io
       end
 
       def stream
@@ -21,6 +22,7 @@ module StackMaster
             events = Fetcher.fetch(@stack_name, @region, from: @from)
             unseen_events(events).each do |event|
               @block.call(event) if @block
+              print_event(event) if @io
               if @break_on_finish_state && StackStates.finish_state?(event.resource_status)
                 throw :halt
               end
@@ -39,6 +41,20 @@ module StackMaster
             @seen_events << event.event_id
             unseen_events << event
           end
+        end
+      end
+
+      def print_event(event)
+        @io.puts "#{event.timestamp} #{event.logical_resource_id} #{event.resource_type} #{event.resource_status} #{event.resource_status_reason}".colorize(event_colour(event))
+      end
+
+      def event_colour(event)
+        if StackStates.failure_state?(event.resource_status)
+          :red
+        elsif StackStates.success_state?(event.resource_status)
+          :green
+        else
+          :yellow
         end
       end
     end
