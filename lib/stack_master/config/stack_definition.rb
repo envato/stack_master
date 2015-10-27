@@ -24,7 +24,7 @@ module StackMaster
       end
 
       def parameters
-        @parameters ||= ParameterLoader.load(parameter_files)
+        @parameters ||= ParameterResolver.resolve(region, ParameterLoader.load(parameter_files))
       end
 
       def aws_parameters
