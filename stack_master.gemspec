@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "commander"
   spec.add_dependency "virtus"
   spec.add_dependency "aws-sdk"
+  spec.add_dependency "colorize"
 end

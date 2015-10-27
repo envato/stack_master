@@ -2,6 +2,7 @@ require "commander"
 require "yaml"
 require "virtus"
 require "aws-sdk"
+require "colorize"
 
 require "stack_master/version"
 require "stack_master/stack"
