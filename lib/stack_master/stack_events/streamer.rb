@@ -61,7 +61,7 @@ module StackMaster
       def finish_state?(event)
         StackStates.finish_state?(event.resource_status) &&
           event.resource_type == 'AWS::CloudFormation::Stack' &&
-          event.logical_id == @stack_name
+          event.logical_resource_id == @stack_name
       end
     end
   end
