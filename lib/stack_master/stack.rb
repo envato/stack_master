@@ -7,6 +7,7 @@ module StackMaster
     attribute :stack_id, String
     attribute :parameters, Array[Hash]
     attribute :template_body, String
+    attribute :outputs, Array
 
     def template_hash
       @template_hash ||= JSON.parse(template_body)
@@ -20,8 +21,9 @@ module StackMaster
         params_hash
       end
       template_body ||= cf.get_template(stack_name: stack_name).template_body
+      outputs = cf_stack.outputs
 
-      new(region: region, stack_name: stack_name, stack_id: cf_stack.stack_id, parameters: parameters, template_body: template_body)
+      new(region: region, stack_name: stack_name, stack_id: cf_stack.stack_id, parameters: parameters, template_body: template_body, outputs: outputs)
     rescue Aws::CloudFormation::Errors::ValidationError
       nil
     end
