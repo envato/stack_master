@@ -23,7 +23,7 @@ module StackMaster
             unseen_events(events).each do |event|
               @block.call(event) if @block
               print_event(event) if @io
-              if @break_on_finish_state && StackStates.finish_state?(event.resource_status)
+              if @break_on_finish_state && finish_state?(event)
                 throw :halt
               end
             end
@@ -56,6 +56,12 @@ module StackMaster
         else
           :yellow
         end
+      end
+
+      def finish_state?(event)
+        StackStates.finish_state?(event.resource_status) &&
+          event.resource_type == 'AWS::CloudFormation::Stack' &&
+          event.logical_id == @stack_name
       end
     end
   end
