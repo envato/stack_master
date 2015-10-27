@@ -4,6 +4,7 @@ module StackMaster
 
     def initialize(stack_definition)
       @stack_definition = stack_definition
+      @context = 7
     end
 
     def perform
