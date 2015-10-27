@@ -3,6 +3,7 @@ require "yaml"
 require "virtus"
 require "aws-sdk"
 require "colorize"
+require 'active_support/core_ext/string'
 
 require "stack_master/version"
 require "stack_master/stack"
