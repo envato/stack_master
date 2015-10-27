@@ -7,7 +7,6 @@ module StackMaster
     attribute :stack_id, String
     attribute :parameters, Array[Hash]
     attribute :template_body, String
-    #attribute :cf, Aws::CloudFormation::Client
 
     def template_hash
       @template_hash ||= JSON.parse(template_body)
