@@ -9,10 +9,7 @@ module StackMaster
       end
 
       def perform
-        puts "Region\tStack Name"
-        @config.stack_definitions.stacks.each do |stack_definition|
-          puts "#{stack_definition.region}\t#{stack_definition.stack_name}"
-        end
+        tp @config.stack_definitions.stacks, :region, :stack_name
       end
     end
   end

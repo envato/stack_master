@@ -4,6 +4,7 @@ require "virtus"
 require "aws-sdk"
 require "diffy"
 require "colorize"
+require "table_print"
 require 'active_support/core_ext/string'
 require 'sparkle_formation'
 
