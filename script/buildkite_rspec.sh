@@ -18,4 +18,4 @@ echo
 echo "+++ Running rspec"
 echo
 
-time ./bin/rspec
+time bundle exec rspec
