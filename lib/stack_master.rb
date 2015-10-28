@@ -7,6 +7,7 @@ require "colorize"
 require "table_print"
 require 'active_support/core_ext/string'
 require 'sparkle_formation'
+require 'dotgpg'
 
 require "stack_master/version"
 require "stack_master/stack"
@@ -16,6 +17,7 @@ require "stack_master/stack_states"
 require "stack_master/parameter_loader"
 require "stack_master/parameter_resolver"
 require "stack_master/parameter_resolvers/stack_output"
+require "stack_master/parameter_resolvers/secret"
 require "stack_master/utils"
 require "stack_master/config"
 require "stack_master/config/stack_definition"

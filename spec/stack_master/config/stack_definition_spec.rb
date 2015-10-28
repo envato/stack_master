@@ -13,4 +13,11 @@ RSpec.describe StackMaster::Config::StackDefinition do
   let(:template) { 'template.json' }
   let(:tags) { {'environment' => 'production'} }
   let(:base_dir) { '/base_dir' }
+
+  it 'has default and region specific parameter file locations' do
+    expect(stack_definition.parameter_files).to eq([
+      "/base_dir/parameters/#{stack_name}.yml",
+      "/base_dir/parameters/#{region}/#{stack_name}.yml"
+    ])
+  end
 end
