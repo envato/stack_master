@@ -2,18 +2,19 @@ module StackMaster
   class StackDiffer
     include Command
 
-    def initialize(stack_definition)
-      @stack_definition = stack_definition
+    def initialize(proposed_stack, stack)
+      @proposed_stack = proposed_stack
+      @stack = stack
       @context = 7
     end
 
     def perform
-      resolved_parameters = JSON.pretty_generate(sort_params(@stack_definition.parameters))
-      if current_stack
-        text_diff('Stack', JSON.pretty_generate(current_stack.template_hash), JSON.pretty_generate(JSON.parse(@stack_definition.template_body)), context: @context, include_diff_info: true)
-        text_diff('Parameters', JSON.pretty_generate(sort_params(current_stack.parameters)), resolved_parameters)
+      resolved_parameters = JSON.pretty_generate(sort_params(@proposed_stack.parameters))
+      if @stack
+        text_diff('Stack', JSON.pretty_generate(@stack.template_hash), JSON.pretty_generate(JSON.parse(@proposed_stack.template_body)), context: @context, include_diff_info: true)
+        text_diff('Parameters', JSON.pretty_generate(sort_params(@stack.parameters)), resolved_parameters)
       else
-        text_diff('Stack', '', @stack_definition.template_body)
+        text_diff('Stack', '', JSON.pretty_generate(JSON.parse(@proposed_stack.template_body)))
         text_diff('Parameters', '', resolved_parameters)
         puts "No stack found"
       end
@@ -23,10 +24,6 @@ module StackMaster
 
     def sort_params(hash)
       hash.sort.to_h
-    end
-
-    def current_stack
-      @current_stack ||= StackMaster::Stack.find(@stack_definition.region, @stack_definition.stack_name)
     end
 
     def text_diff(thing, current, proposed, diff_opts = {})
