@@ -1,7 +1,7 @@
 RSpec.describe StackMaster::ParameterResolvers::Secret do
   let(:base_dir) { '/base_dir' }
   let(:config) { double(base_dir: base_dir) }
-  let(:stack_definition) { double }
+  let(:stack_definition) { double(secret_file: secrets_file_name) }
   subject(:resolve_secret) { StackMaster::ParameterResolvers::Secret.new(config, stack_definition, value).resolve }
   let(:value) { 'my_file/my_secret_key' }
   let(:secrets_file_name) { "my_file.yml.gpg" }
@@ -34,7 +34,7 @@ EOF
     end
 
     context 'the secret key does not exist' do
-      let(:value) { 'my_file/unknown_secret' }
+      let(:value) { 'unknown_secret' }
 
       it 'raises a secret not found error' do
         expect {
@@ -44,7 +44,7 @@ EOF
     end
 
     context 'the secret key exists' do
-      let(:value) { 'my_file/secret_key_2' }
+      let(:value) { 'secret_key_2' }
 
       it 'returns the secret' do
         expect(resolve_secret).to eq('secret_value_2')

@@ -10,9 +10,8 @@ module StackMaster
       end
 
       def resolve
-        secret_file_name_without_ext, secret_key = @value.split('/')
-        secret_file_name = "#{secret_file_name_without_ext}.yml.gpg"
-        @secret_path_relative_to_base = File.join('secrets', secret_file_name)
+        secret_key = @value
+        @secret_path_relative_to_base = File.join('secrets', @stack_definition.secret_file)
         @secret_file_path = File.join(@config.base_dir, @secret_path_relative_to_base)
         raise ArgumentError, "Could not find secret file at #{@secret_file_path}" unless File.exist?(@secret_file_path)
         secrets_hash.fetch(secret_key) do
