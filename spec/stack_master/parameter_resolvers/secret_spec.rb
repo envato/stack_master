@@ -1,7 +1,7 @@
 RSpec.describe StackMaster::ParameterResolvers::Secret do
   let(:base_dir) { '/base_dir' }
   let(:config) { double(base_dir: base_dir) }
-  let(:stack_definition) { double(secret_file: secrets_file_name) }
+  let(:stack_definition) { double(secret_file: secrets_file_name, stack_name: 'mystack', region: 'us-east-1') }
   subject(:resolve_secret) { StackMaster::ParameterResolvers::Secret.new(config, stack_definition, value).resolve }
   let(:value) { 'my_file/my_secret_key' }
   let(:secrets_file_name) { "my_file.yml.gpg" }
@@ -16,6 +16,18 @@ RSpec.describe StackMaster::ParameterResolvers::Secret do
       expect {
         resolve_secret
       }.to raise_error(ArgumentError, /#{file_path}/)
+    end
+  end
+
+  context 'no secret file is specified for the stack definition' do
+    before do
+      allow(stack_definition).to receive(:secret_file).and_return(nil)
+    end
+
+    it 'raises an ArgumentError with the location of the expected secret file' do
+      expect {
+        resolve_secret
+      }.to raise_error(ArgumentError, /No secret_file defined/)
     end
   end
 
