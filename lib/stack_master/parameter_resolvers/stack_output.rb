@@ -4,9 +4,9 @@ module StackMaster
       StackNotFound = Class.new(StandardError)
       StackOutputNotFound = Class.new(StandardError)
 
-      def initialize(config, region, value)
+      def initialize(config, stack_definition, value)
         @config = config
-        @region = region
+        @stack_definition = stack_definition
         @value = value
         @stacks = {}
       end
@@ -14,7 +14,7 @@ module StackMaster
       def resolve
         validate_value!
         stack_name, output_name = @value.split('/')
-        stack = @stacks.fetch(stack_name) { Stack.find(@region, stack_name) }
+        stack = @stacks.fetch(stack_name) { Stack.find(@stack_definition.region, stack_name) }
         if stack
           output = stack.outputs.find { |output| output.output_key == output_name.camelize }
           if output
@@ -30,7 +30,7 @@ module StackMaster
       private
 
       def cf
-        @cf ||= Aws::CloudFormation::Client.new(region: @region)
+        @cf ||= Aws::CloudFormation::Client.new(region: @stack_definition.region)
       end
 
       def validate_value!
