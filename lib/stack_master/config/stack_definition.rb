@@ -9,6 +9,7 @@ module StackMaster
         attribute :template, String
         attribute :tags, Hash
         attribute :base_dir, String
+        attribute :secret_file, String
       end
 
       def template_file_path

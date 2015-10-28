@@ -1,6 +1,8 @@
 RSpec.describe StackMaster::ParameterResolver do
+  let(:config) { double }
+
   def resolve(params)
-    StackMaster::ParameterResolver.resolve('us-east-1', params)
+    StackMaster::ParameterResolver.resolve(config, 'us-east-1', params)
   end
 
   it 'returns the same value for strings' do
@@ -22,7 +24,7 @@ RSpec.describe StackMaster::ParameterResolver do
   context 'when given a proper resolve hash' do
     let(:my_resolver) {
       Class.new do
-        def initialize(region, value)
+        def initialize(config, region, value)
           @value = value
         end
 

@@ -6,7 +6,7 @@ module StackMaster
       new(config, base_dir)
     end
 
-    attr_accessor :stack_definitions
+    attr_accessor :stack_definitions, :base_dir
 
     def initialize(config, base_dir)
       @config = config

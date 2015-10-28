@@ -3,12 +3,13 @@ module StackMaster
     ResolverNotFound = Class.new(StandardError)
     InvalidParameter = Class.new(StandardError)
 
-    def self.resolve(region, parameters)
-      new(region, parameters).resolve
+    def self.resolve(config, stack_definition, parameters)
+      new(config, stack_definition, parameters).resolve
     end
 
-    def initialize(region, parameters)
-      @region = region
+    def initialize(config, stack_definition, parameters)
+      @config = config
+      @stack_definition = stack_definition
       @parameters = parameters
       @resolvers = {}
     end
@@ -28,7 +29,7 @@ module StackMaster
       raise InvalidParameter, parameter_value unless parameter_value.keys.size == 1
       resolver_class_name = parameter_value.keys.first.to_s.camelize
       value = parameter_value.values.first
-      resolver_class(resolver_class_name).new(@region, value).resolve
+      resolver_class(resolver_class_name).new(@config, @stack_definition, value).resolve
     end
 
     def resolver_class(class_name)
