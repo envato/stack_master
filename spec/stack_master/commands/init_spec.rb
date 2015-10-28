@@ -1,6 +1,6 @@
 RSpec.describe StackMaster::Commands::Init do
 
-  subject(:init_command) { described_class.new(region, stack_name) }
+  subject(:init_command) { described_class.new(false, region, stack_name) }
   let(:region) { "us-east-1" }
   let(:stack_name) { "test-stack" }
 
