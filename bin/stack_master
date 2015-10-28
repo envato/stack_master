@@ -56,6 +56,18 @@ class StackMasterCLI
       end
     end
 
+    command :validate do |c|
+      c.syntax = 'stack_master validate [region] [stack_name]'
+      c.summary = ''
+      c.description = ''
+      c.example 'description', 'Validate a stack'
+      c.action do |args, options|
+        say "Invalid arguments. stack_master validate [region] [stack_name]" and return unless args.size == 2
+        config = load_config(options.config)
+        StackMaster::Commands::Validate.perform(config, *args)
+      end
+    end
+
     run!
   end
 
