@@ -11,7 +11,7 @@ module StackMaster
       end
 
       def perform
-        diff_stack
+        diff_stacks
         unless ask?("Continue and apply the stack (y/n)? ")
           puts "Stack update aborted"
           return
@@ -34,12 +34,16 @@ module StackMaster
         @stack ||= Stack.find(@region, @stack_name)
       end
 
+      def proposed_stack
+        @proposed_stack ||= Stack.generate(stack_definition, @config)
+      end
+
       def stack_exists?
         !stack.nil?
       end
 
-      def diff_stack
-        StackMaster::StackDiffer.perform(stack_definition)
+      def diff_stacks
+        StackDiffer.perform(proposed_stack, stack)
       end
 
       def create_or_update_stack
@@ -55,14 +59,14 @@ module StackMaster
       end
 
       def create_stack
-        cf.create_stack(stack_options.merge(tags: stack_definition.aws_tags))
+        cf.create_stack(stack_options.merge(tags: proposed_stack.aws_tags))
       end
 
       def stack_options
         {
           stack_name: @stack_name,
-          template_body: stack_definition.template_body,
-          parameters: stack_definition.aws_parameters,
+          template_body: proposed_stack.template_body,
+          parameters: proposed_stack.aws_parameters,
           capabilities: ['CAPABILITY_IAM']
         }
       end

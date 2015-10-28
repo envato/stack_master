@@ -11,13 +11,15 @@ RSpec.describe StackMaster::Commands::Apply do
       base_dir: File.expand_path('spec/fixtures')
     )
   }
+  let(:proposed_stack) { StackMaster::Stack.new(template_body: '{}', tags: { 'environment' => 'production' } , parameters: { 'param_1' => 'hello' } ) }
 
   before do
     allow(StackMaster::Stack).to receive(:find).with(region, stack_name).and_return(stack)
+    allow(StackMaster::Stack).to receive(:generate).with(stack_definition, config).and_return(proposed_stack)
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
     allow(cf).to receive(:update_stack)
     allow(cf).to receive(:create_stack)
-    allow(StackMaster::StackDiffer).to receive(:perform).with(stack_definition)
+    allow(StackMaster::StackDiffer).to receive(:perform).with(proposed_stack, stack)
     allow(STDOUT).to receive(:print)
     allow(STDIN).to receive(:getch).and_return('y')
     allow(StackMaster::StackEvents::Streamer).to receive(:stream)
@@ -34,7 +36,7 @@ RSpec.describe StackMaster::Commands::Apply do
       apply
       expect(cf).to have_received(:update_stack).with(
         stack_name: stack_name,
-        template_body: stack_definition.template_body,
+        template_body: proposed_stack.template_body,
         parameters: [
           { parameter_key: 'param_1', parameter_value: 'hello' }
         ],
@@ -55,7 +57,7 @@ RSpec.describe StackMaster::Commands::Apply do
       apply
       expect(cf).to have_received(:create_stack).with(
         stack_name: stack_name,
-        template_body: stack_definition.template_body,
+        template_body: proposed_stack.template_body,
         parameters: [
           { parameter_key: 'param_1', parameter_value: 'hello' }
         ],
