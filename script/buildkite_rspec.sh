@@ -6,7 +6,7 @@ echo
 echo "--- Cleaning up working tree"
 echo
 
-time ./script/builkite/clean.sh
+time ./script/buildkite/clean.sh
 
 echo
 echo "--- Bundling"
