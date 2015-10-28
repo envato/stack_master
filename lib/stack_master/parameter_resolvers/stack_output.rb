@@ -4,7 +4,8 @@ module StackMaster
       StackNotFound = Class.new(StandardError)
       StackOutputNotFound = Class.new(StandardError)
 
-      def initialize(region, value)
+      def initialize(config, region, value)
+        @config = config
         @region = region
         @value = value
         @stacks = {}

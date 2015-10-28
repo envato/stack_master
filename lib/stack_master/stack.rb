@@ -33,7 +33,7 @@ module StackMaster
 
     def self.generate(stack_definition, config)
       parameter_hash = ParameterLoader.load(stack_definition.parameter_files)
-      parameters = ParameterResolver.resolve(stack_definition.region, parameter_hash)
+      parameters = ParameterResolver.resolve(config, stack_definition.region, parameter_hash)
       template_body = TemplateCompiler.compile(stack_definition.template_file_path)
       new(region: stack_definition.region,
           stack_name: stack_definition.stack_name,

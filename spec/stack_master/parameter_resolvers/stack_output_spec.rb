@@ -1,9 +1,10 @@
 RSpec.describe StackMaster::ParameterResolvers::StackOutput do
   let(:region) { 'us-east-1' }
   let(:stack_name) { 'my-stack' }
+  let(:config) { double }
 
   def resolve(value)
-    described_class.new('us-east-1', value).resolve
+    described_class.new(config, 'us-east-1', value).resolve
   end
 
   subject(:resolved_value) { resolve(value) }
