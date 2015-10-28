@@ -4,7 +4,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
   let(:config) { double }
 
   def resolve(value)
-    described_class.new(config, 'us-east-1', value).resolve
+    described_class.new(config, double(region: 'us-east-1'), value).resolve
   end
 
   subject(:resolved_value) { resolve(value) }
