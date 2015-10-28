@@ -9,7 +9,6 @@ RSpec.describe StackMaster::TemplateCompiler do
 
       before do
         allow(File).to receive(:read).with(template_file_path).and_return('body')
-
       end
 
       it "reads from the template file path" do
