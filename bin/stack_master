@@ -14,6 +14,8 @@ class StackMasterCLI
 
     global_option '-c', '--config FILE', 'Config file to use'
 
+    default_command :list_stacks
+
     command :apply do |c|
       c.syntax = 'stack_master apply [region] [stack_name]'
       c.summary = ''
@@ -39,6 +41,18 @@ class StackMasterCLI
         end
         config = load_config(options.config)
         StackMaster::Commands::Diff.perform(config, *args)
+      end
+    end
+
+    command :list_stacks do |c|
+      c.syntax = 'stack_master list_stacks'
+      c.summary = ''
+      c.description = ''
+      c.example 'description', 'List of all stacks'
+      c.action do |args, options|
+        say "Invalid arguments." if args.size > 0
+        config = load_config(options.config)
+        StackMaster::Commands::ListStacks.perform(config)
       end
     end
 
