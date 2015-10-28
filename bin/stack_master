@@ -24,9 +24,24 @@ class StackMasterCLI
       c.action do |args, options|
         unless args.size == 2
           say "Invalid arguments. stack_master apply [region] [stack_name]"
+        else
+          config = load_config(options.config)
+          StackMaster::Commands::Apply.perform(config, *args)
         end
-        config = load_config(options.config)
-        StackMaster::Commands::Apply.perform(config, *args)
+      end
+    end
+
+    command :init do |c|
+      c.syntax = 'stack_master init [region] [stack_name]'
+      c.summary = ''
+      c.description = ''
+      c.option('--overwrite', 'Overwrite existing files')
+      c.action do |args, options|
+        unless args.size == 2
+          say "Invalid arguments. stack_master init [region] [stack_name]"
+        else
+          StackMaster::Commands::Init.perform(options.overwrite, *args)
+        end
       end
     end
 
