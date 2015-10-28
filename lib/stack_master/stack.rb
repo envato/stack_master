@@ -8,9 +8,12 @@ module StackMaster
     attribute :parameters, Hash
     attribute :template_body, String
     attribute :outputs, Array
+    attribute :tags, Hash
 
     def template_hash
-      @template_hash ||= JSON.parse(template_body)
+      if template_body
+        @template_hash ||= JSON.parse(template_body)
+      end
     end
 
     def self.find(region, stack_name)
@@ -26,6 +29,17 @@ module StackMaster
       new(region: region, stack_name: stack_name, stack_id: cf_stack.stack_id, parameters: parameters, template_body: template_body, outputs: outputs)
     rescue Aws::CloudFormation::Errors::ValidationError
       nil
+    end
+
+    def self.generate(stack_definition, config)
+      parameter_hash = ParameterLoader.load(stack_definition.parameter_files)
+      parameters = ParameterResolver.resolve(stack_definition.region, parameter_hash)
+      template_body = TemplateCompiler.compile(stack_definition.template_file_path)
+      new(region: stack_definition.region,
+          stack_name: stack_definition.stack_name,
+          tags: stack_definition.tags,
+          parameters: parameters,
+          template_body: template_body)
     end
   end
 end
