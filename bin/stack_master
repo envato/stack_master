@@ -52,7 +52,7 @@ class StackMasterCLI
       c.action do |args, options|
         say "Invalid arguments." if args.size > 0
         config = load_config(options.config)
-        StackMaster::Commands::ListStacks.perform(config, *args)
+        StackMaster::Commands::ListStacks.perform(config)
       end
     end
 
