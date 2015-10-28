@@ -59,8 +59,8 @@ class StackMasterCLI
       end
     end
 
-    command :list_stacks do |c|
-      c.syntax = 'stack_master list_stacks'
+    command :list do |c|
+      c.syntax = 'stack_master list'
       c.summary = ''
       c.description = ''
       c.example 'description', 'List of all stacks'
