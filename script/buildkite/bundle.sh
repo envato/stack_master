@@ -2,4 +2,4 @@
 
 set -e -x
 
-bundle check || bundle --deployment --binstubs bin --path .bundle --without darwin,debugger,development
+bundle check || bundle --binstubs bin --path .bundle --without darwin,debugger,development
