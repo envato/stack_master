@@ -22,6 +22,7 @@ require "stack_master/config/stack_definitions"
 require "stack_master/command"
 require "stack_master/commands/apply"
 require "stack_master/commands/diff"
+require "stack_master/commands/list_stacks"
 require "stack_master/stack_differ"
 
 module StackMaster
