@@ -10,6 +10,7 @@ require "erb"
 require 'sparkle_formation'
 require 'dotgpg'
 
+require "stack_master/command"
 require "stack_master/version"
 require "stack_master/stack"
 require "stack_master/stack_events/fetcher"
@@ -26,12 +27,12 @@ require "stack_master/config"
 require "stack_master/config/stack_definition"
 require "stack_master/config/stack_definitions"
 require "stack_master/template_compiler"
-require "stack_master/command"
 require "stack_master/commands/apply"
 require "stack_master/commands/init"
 require "stack_master/commands/diff"
 require "stack_master/commands/list_stacks"
 require "stack_master/commands/validate"
+require "stack_master/commands/status"
 require "stack_master/stack_differ"
 require "stack_master/validator"
 
