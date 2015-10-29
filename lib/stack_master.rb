@@ -12,6 +12,8 @@ require 'dotgpg'
 
 require "stack_master/version"
 require "stack_master/stack"
+require "stack_master/aws_driver/cloud_formation"
+require "stack_master/test_driver/cloud_formation"
 require "stack_master/stack_events/fetcher"
 require "stack_master/stack_events/streamer"
 require "stack_master/stack_states"
@@ -41,4 +43,10 @@ module StackMaster
   def self.base_dir
     File.expand_path(File.join(File.dirname(__FILE__), ".."))
   end
+
+  class << self
+    attr_accessor :cloud_formation_driver
+  end
+  @cloud_formation_driver = AwsDriver::CloudFormation.new
 end
+
