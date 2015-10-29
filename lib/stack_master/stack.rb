@@ -42,12 +42,12 @@ module StackMaster
           template_body: template_body)
     end
 
-     def aws_parameters
-       Utils.hash_to_aws_parameters(parameters)
-     end
+    def aws_parameters
+      Utils.hash_to_aws_parameters(parameters)
+    end
 
-     def aws_tags
-       Utils.hash_to_aws_tags(tags)
-     end
+    def aws_tags
+      Utils.hash_to_aws_tags(tags)
+    end
   end
 end
