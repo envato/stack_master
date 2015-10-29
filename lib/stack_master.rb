@@ -38,6 +38,7 @@ require "stack_master/commands/list_stacks"
 require "stack_master/commands/validate"
 require "stack_master/stack_differ"
 require "stack_master/validator"
+require "stack_master/cli"
 
 module StackMaster
   def self.base_dir
