@@ -12,10 +12,6 @@ module StackMaster
     end
 
     def execute!
-      run
-    end
-
-    def run
       program :name, 'StackMaster'
       program :version, '0.0.1'
       program :description, 'AWS Stack Management'
