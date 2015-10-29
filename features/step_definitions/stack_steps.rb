@@ -5,16 +5,24 @@ Given(/^I stub the following stack events:$/) do |table|
   end
 end
 
+def extract_hash_from_kv_string(string)
+  string.to_s.split(',').inject({}) do |hash, kv|
+    key, value = kv.split('=')
+    hash[key] = value
+    hash
+  end
+end
+
+
 Given(/^I stub the following stacks:$/) do |table|
   table.hashes.each do |row|
     row.symbolize_keys!
-    params = row[:parameters].split(',').inject({}) do |hash, kv|
-      key, value = kv.split('=')
-      hash[key] = value
-      hash
+    row[:parameters] = StackMaster::Utils.hash_to_aws_parameters(extract_hash_from_kv_string(row[:parameters]))
+    outputs = extract_hash_from_kv_string(row[:outputs]).inject([]) do |array, (k, v)|
+      array << OpenStruct.new(output_key: k, output_value: v)
+      array
     end
-    aws_params = StackMaster::Utils.hash_to_aws_parameters(params)
-    row[:parameters] = aws_params
+    row[:outputs] = outputs
     StackMaster.cloud_formation_driver.add_stack(row)
   end
 end
