@@ -164,8 +164,8 @@ Feature: Apply command
       """
     And I stub the following stack events:
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-web  | myapp-web           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     And I stub the following stacks:
       | stack_id | stack_name | region    | outputs          |
       | 1        | myapp-vpc  | us-east-1 | VpcId=vpc-xxxxxx |
@@ -175,5 +175,5 @@ Feature: Apply command
       | +    "TestSg": {                                                               |
       | Parameters diff:                                                               |
       | "VpcId": "vpc-xxxxxx"                                                          |
-      | 2020-10-29 00:00:00 +1100 myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE |
+      | 2020-10-29 00:00:00 +1100 myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE |
     Then the exit status should be 0
