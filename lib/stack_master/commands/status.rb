@@ -37,7 +37,7 @@ module StackMaster
           different = true
         end
 
-        { region: region, stack_name: stack_name, stack_status: stack_status, different: different }
+        { region: region, stack_name: stack_name, stack_status: stack_status, different: different ? "Yes" : "No" }
       end
 
       def body_different?(proposed_stack, stack)

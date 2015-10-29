@@ -26,7 +26,7 @@ RSpec.describe StackMaster::Commands::Status do
       let(:proposed_stack1) { double(:proposed_stack1, template_body: "{}", parameters: {a: 1}) }
       let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", parameters: {a: 1}) }
       it "returns the status of call stacks" do
-        out = "REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT\n----------|------------|-----------------|----------\nus-east-1 | stack1     | UPDATE_COMPLETE | false    \nus-east-1 | stack2     | UPDATE_COMPLETE | true     \n"
+        out = "REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT\n----------|------------|-----------------|----------\nus-east-1 | stack1     | UPDATE_COMPLETE | No       \nus-east-1 | stack2     | UPDATE_COMPLETE | Yes      \n"
         expect { status.perform }.to output(out).to_stdout
       end
     end
@@ -37,7 +37,8 @@ RSpec.describe StackMaster::Commands::Status do
       let(:proposed_stack1) { double(:proposed_stack1, template_body: "{}", parameters: {a: 1}) }
       let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", parameters: {a: 1}) }
       it "returns the status of call stacks" do
-        expect { status.perform }.to output("REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT\n----------|------------|-----------------|----------\nus-east-1 | stack1     | UPDATE_COMPLETE | true     \nus-east-1 | stack2     | UPDATE_COMPLETE | false    \n").to_stdout
+        out = "REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT\n----------|------------|-----------------|----------\nus-east-1 | stack1     | UPDATE_COMPLETE | Yes      \nus-east-1 | stack2     | UPDATE_COMPLETE | No       \n"
+        expect { status.perform }.to output(out).to_stdout
       end
     end
   end
