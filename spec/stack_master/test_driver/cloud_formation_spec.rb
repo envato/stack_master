@@ -19,6 +19,6 @@ RSpec.describe StackMaster::TestDriver::CloudFormation do
 
   it 'sets and gets templates' do
     test_cf_driver.set_template('stack-1', 'blah')
-    expect(test_cf_driver.get_template(stack_name: 'stack-1')).to eq 'blah'
+    expect(test_cf_driver.get_template(stack_name: 'stack-1').template_body).to eq 'blah'
   end
 end
