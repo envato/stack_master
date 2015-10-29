@@ -34,13 +34,17 @@ module StackMaster
 
     class CloudFormation
       def initialize
-        @stacks = {}
-        @templates = {}
-        @stack_events = {}
+        reset
       end
 
       def set_region(region)
         @region = region
+      end
+
+      def reset
+        @stacks = {}
+        @templates = {}
+        @stack_events = {}
       end
 
       def describe_stacks(options = {})

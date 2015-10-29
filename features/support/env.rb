@@ -7,3 +7,7 @@ Aruba.configure do |config|
   config.command_launcher = :in_process
   config.main_class = StackMaster::CLI
 end
+
+Before do
+  StackMaster.cloud_formation_driver.reset
+end
