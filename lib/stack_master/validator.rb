@@ -9,7 +9,7 @@ module StackMaster
     def perform
       template_body = TemplateCompiler.compile(@stack_definition.template_file_path)
       cf.validate_template(template_body: template_body)
-      puts "Valid"
+      StackMaster.stdout.puts "Valid"
     rescue Aws::CloudFormation::Errors::ValidationError => e
       $stderr.puts "Validation Failed"
       $stderr.puts e.message

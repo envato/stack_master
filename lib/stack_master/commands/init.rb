@@ -28,7 +28,7 @@ module StackMaster
         if !@overwrite
           [@stack_master_filename, @stack_json_filename, @parameters_filename, @region_parameters_filename].each do |filename|
             if File.exists?(filename)
-              STDERR.puts("Aborting: #{filename} already exists. Use --overwrite to force overwriting file.")
+              StackMaster.stderr.puts("Aborting: #{filename} already exists. Use --overwrite to force overwriting file.")
               return false
             end
           end
@@ -37,7 +37,7 @@ module StackMaster
       end
 
       def create_stack_json_yml
-        puts "Writing #{@stack_json_filename}"
+        StackMaster.stdout.puts "Writing #{@stack_json_filename}"
         FileUtils.mkdir_p(File.dirname(@stack_json_filename))
         IO.write(@stack_json_filename, stack_json_output)
       end
@@ -51,7 +51,7 @@ module StackMaster
       end
 
       def create_stack_master_yml
-        puts "Writing #{@stack_master_filename}"
+        StackMaster.stdout.puts "Writing #{@stack_master_filename}"
         IO.write("#{@stack_master_filename}", stack_master_yml_output)
       end
 
@@ -64,8 +64,8 @@ module StackMaster
       end
 
       def create_parameters_yml
-        puts "Writing #{@parameters_filename}"
-        puts "Writing #{@region_parameters_filename}"
+        StackMaster.stdout.puts "Writing #{@parameters_filename}"
+        StackMaster.stdout.puts "Writing #{@region_parameters_filename}"
         FileUtils.mkdir_p("parameters/#{@region}")
         IO.write(@parameters_filename, parameter_stack_name_yml_output)
         IO.write(@region_parameters_filename, parameter_region_yml_output)

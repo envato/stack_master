@@ -13,7 +13,7 @@ module StackMaster
       def perform
         diff_stacks
         unless ask?("Continue and apply the stack (y/n)? ")
-          puts "Stack update aborted"
+          StackMaster.stdout.puts "Stack update aborted"
           return
         end
         create_or_update_stack
@@ -72,13 +72,17 @@ module StackMaster
       end
 
       def tail_stack_events
-        StackEvents::Streamer.stream(@stack_name, @region, io: STDOUT)
+        StackEvents::Streamer.stream(@stack_name, @region, io: StackMaster.stdout)
       end
 
       def ask?(question)
-        print question
-        answer = STDIN.getch.chomp
-        puts
+        StackMaster.stdout.print question
+        answer = if ENV['STUB_AWS']
+                   ENV['ANSWER']
+                 else
+                   STDIN.getch.chomp
+                 end
+        StackMaster.stdout.puts
         answer == 'y'
       end
     end

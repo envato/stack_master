@@ -41,16 +41,34 @@ require "stack_master/validator"
 require "stack_master/cli"
 
 module StackMaster
-  def self.base_dir
+  extend self
+
+  def base_dir
     File.expand_path(File.join(File.dirname(__FILE__), ".."))
   end
 
-  def self.cloud_formation_driver
+  def cloud_formation_driver
     @cloud_formation_driver ||= AwsDriver::CloudFormation.new
   end
 
-  def self.cloud_formation_driver=(value)
+  def cloud_formation_driver=(value)
     @cloud_formation_driver = value
+  end
+
+  def stdout
+    @stdout || $stdout
+  end
+
+  def stdout=(io)
+    @stdout = io
+  end
+
+  def stderr
+    @stderr || $stderr
+  end
+
+  def stderr=(io)
+    @stderr = io
   end
 end
 
