@@ -7,7 +7,7 @@ RSpec.describe StackMaster::Validator do
       stack_name: 'myapp_vpc',
       template: 'myapp_vpc.json',
       tags: { 'environment' => 'production' },
-      base_dir: File.expand_path('spec/fixtures')
+      base_dir: File.expand_path('spec/fixtures'),
     )
   end
   let(:cf) { Aws::CloudFormation::Client.new(region: "us-east-1") }
