@@ -45,6 +45,17 @@ RSpec.describe StackMaster::Stack do
         expect(stack).to be_nil
       end
     end
+
+    context 'when CF returns no stacks' do
+      before do
+        cf.stub_responses(:describe_stacks, stacks: [])
+      end
+
+      it 'returns nil' do
+        stack = StackMaster::Stack.find(region, stack_name)
+        expect(stack).to be_nil
+      end
+    end
   end
 
   describe '.generate' do

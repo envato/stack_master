@@ -13,15 +13,19 @@ require 'dotgpg'
 require "stack_master/command"
 require "stack_master/version"
 require "stack_master/stack"
+require "stack_master/aws_driver/cloud_formation"
+require "stack_master/test_driver/cloud_formation"
 require "stack_master/stack_events/fetcher"
 require "stack_master/stack_events/streamer"
 require "stack_master/stack_states"
 require "stack_master/sns_topic_finder"
+require "stack_master/security_group_finder"
 require "stack_master/parameter_loader"
 require "stack_master/parameter_resolver"
 require "stack_master/parameter_resolvers/stack_output"
 require "stack_master/parameter_resolvers/secret"
 require "stack_master/parameter_resolvers/sns_topic_name"
+require "stack_master/parameter_resolvers/security_group"
 require "stack_master/utils"
 require "stack_master/config"
 require "stack_master/config/stack_definition"
@@ -35,9 +39,37 @@ require "stack_master/commands/validate"
 require "stack_master/commands/status"
 require "stack_master/stack_differ"
 require "stack_master/validator"
+require "stack_master/cli"
 
 module StackMaster
-  def self.base_dir
+  extend self
+
+  def base_dir
     File.expand_path(File.join(File.dirname(__FILE__), ".."))
   end
+
+  def cloud_formation_driver
+    @cloud_formation_driver ||= AwsDriver::CloudFormation.new
+  end
+
+  def cloud_formation_driver=(value)
+    @cloud_formation_driver = value
+  end
+
+  def stdout
+    @stdout || $stdout
+  end
+
+  def stdout=(io)
+    @stdout = io
+  end
+
+  def stderr
+    @stderr || $stderr
+  end
+
+  def stderr=(io)
+    @stderr = io
+  end
 end
+

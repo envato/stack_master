@@ -19,3 +19,9 @@ echo "+++ Running rspec"
 echo
 
 time bundle exec rspec
+
+echo
+echo "+++ Running cucumber"
+echo
+
+time bundle exec cucumber

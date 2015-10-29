@@ -30,7 +30,7 @@ module StackMaster
       private
 
       def cf
-        @cf ||= Aws::CloudFormation::Client.new(region: @stack_definition.region)
+        @cf ||= StackMaster.cloud_formation_driver
       end
 
       def validate_value!
