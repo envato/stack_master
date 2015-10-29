@@ -16,7 +16,7 @@ module StackMaster
       else
         text_diff('Stack', '', JSON.pretty_generate(JSON.parse(@proposed_stack.template_body)))
         text_diff('Parameters', '', resolved_parameters)
-        puts "No stack found"
+        StackMaster.stdout.puts "No stack found"
       end
     end
 
@@ -28,18 +28,18 @@ module StackMaster
 
     def text_diff(thing, current, proposed, diff_opts = {})
       diff = Diffy::Diff.new(current, proposed, diff_opts).to_s
-      print "#{thing} diff: "
+      StackMaster.stdout.print "#{thing} diff: "
       if diff == ''
-        puts "No changes"
+        StackMaster.stdout.puts "No changes"
       else
-        puts
+        StackMaster.stdout.puts
         diff.each_line do |line|
           if line.start_with?('+')
-            print colorize(line, :green)
+            StackMaster.stdout.print colorize(line, :green)
           elsif line.start_with?('-')
-            print colorize(line, :red)
+            StackMaster.stdout.print colorize(line, :red)
           else
-            print line
+            StackMaster.stdout.print line
           end
         end
       end

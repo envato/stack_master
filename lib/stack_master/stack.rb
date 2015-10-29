@@ -17,8 +17,9 @@ module StackMaster
     end
 
     def self.find(region, stack_name)
-      cf = Aws::CloudFormation::Client.new(region: region)
+      cf = StackMaster.cloud_formation_driver
       cf_stack = cf.describe_stacks(stack_name: stack_name).stacks.first
+      return unless cf_stack
       parameters = cf_stack.parameters.inject({}) do |params_hash, param_struct|
         params_hash[param_struct.parameter_key] = param_struct.parameter_value
         params_hash

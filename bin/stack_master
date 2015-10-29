@@ -1,98 +1,10 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
-require 'commander'
 require 'stack_master'
 
-class StackMasterCLI
-  include Commander::Methods
-
-  def run
-    program :name, 'StackMaster'
-    program :version, '0.0.1'
-    program :description, 'AWS Stack Management'
-
-    global_option '-c', '--config FILE', 'Config file to use'
-
-    default_command :list_stacks
-
-    command :apply do |c|
-      c.syntax = 'stack_master apply [region] [stack_name]'
-      c.summary = ''
-      c.description = ''
-      c.example 'description', 'Create or update a stack'
-      c.action do |args, options|
-        unless args.size == 2
-          say "Invalid arguments. stack_master apply [region] [stack_name]"
-        else
-          config = load_config(options.config)
-          StackMaster::Commands::Apply.perform(config, *args)
-        end
-      end
-    end
-
-    command :init do |c|
-      c.syntax = 'stack_master init [region] [stack_name]'
-      c.summary = ''
-      c.description = ''
-      c.option('--overwrite', 'Overwrite existing files')
-      c.action do |args, options|
-        unless args.size == 2
-          say "Invalid arguments. stack_master init [region] [stack_name]"
-        else
-          StackMaster::Commands::Init.perform(options.overwrite, *args)
-        end
-      end
-    end
-
-    command :diff do |c|
-      c.syntax = 'stack_master diff [region] [stack_name]'
-      c.summary = ''
-      c.description = ''
-      c.example 'description', 'Diff a stack'
-      c.action do |args, options|
-        unless args.size == 2
-          say "Invalid arguments. stack_master diff [region] [stack_name]"
-        end
-        config = load_config(options.config)
-        StackMaster::Commands::Diff.perform(config, *args)
-      end
-    end
-
-    command :list do |c|
-      c.syntax = 'stack_master list'
-      c.summary = ''
-      c.description = ''
-      c.example 'description', 'List of all stacks'
-      c.action do |args, options|
-        say "Invalid arguments." if args.size > 0
-        config = load_config(options.config)
-        StackMaster::Commands::ListStacks.perform(config)
-      end
-    end
-
-    command :validate do |c|
-      c.syntax = 'stack_master validate [region] [stack_name]'
-      c.summary = ''
-      c.description = ''
-      c.example 'description', 'Validate a stack'
-      c.action do |args, options|
-        say "Invalid arguments. stack_master validate [region] [stack_name]" and return unless args.size == 2
-        config = load_config(options.config)
-        StackMaster::Commands::Validate.perform(config, *args)
-      end
-    end
-
-    run!
-  end
-
-  def load_config(file)
-    stack_file = file || 'stack_master.yml'
-    StackMaster::Config.load!(stack_file)
-  rescue Errno::ENOENT => e
-    say "Failed to load config file #{stack_file}"
-    exit 1
-  end
+if ENV['STUB_AWS'] == 'true'
+  require 'stack_master/testing'
 end
 
-StackMasterCLI.new.run
+StackMaster::CLI.new(ARGV.dup).execute!
