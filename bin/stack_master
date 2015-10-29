@@ -22,12 +22,7 @@ class StackMasterCLI
       c.description = ''
       c.example 'description', 'Create or update a stack'
       c.action do |args, options|
-        unless args.size == 2
-          say "Invalid arguments. stack_master apply [region] [stack_name]"
-        else
-          config = load_config(options.config)
-          StackMaster::Commands::Apply.perform(config, *args)
-        end
+        execute_stack_command(StackMaster::Commands::Apply, args, options)
       end
     end
 
@@ -51,11 +46,7 @@ class StackMasterCLI
       c.description = ''
       c.example 'description', 'Diff a stack'
       c.action do |args, options|
-        unless args.size == 2
-          say "Invalid arguments. stack_master diff [region] [stack_name]"
-        end
-        config = load_config(options.config)
-        StackMaster::Commands::Diff.perform(config, *args)
+        execute_stack_command(StackMaster::Commands::Diff, args, options)
       end
     end
 
@@ -77,9 +68,7 @@ class StackMasterCLI
       c.description = ''
       c.example 'description', 'Validate a stack'
       c.action do |args, options|
-        say "Invalid arguments. stack_master validate [region] [stack_name]" and return unless args.size == 2
-        config = load_config(options.config)
-        StackMaster::Commands::Validate.perform(config, *args)
+        execute_stack_command(StackMaster::Commands::Validate, args, options)
       end
     end
 
@@ -93,6 +82,22 @@ class StackMasterCLI
     say "Failed to load config file #{stack_file}"
     exit 1
   end
+
+  def normalize_region_and_stack_name(args)
+    args.map { |a| a.gsub('_', '-') }
+  end
+
+  def execute_stack_command(command, args, options)
+    region, stack_name = normalize_region_and_stack_name(args)
+    StackMaster.cloud_formation_driver.set_region(region)
+    say "Invalid arguments. stack_master #{command.name.split('::').last.downcase} [region] [stack_name]" and return unless args.size == 2
+    config = load_config(options.config)
+    command.perform(config, region, stack_name)
+  end
+end
+
+if ENV['STUB_AWS'] == 'true'
+  require 'stack_master/testing'
 end
 
 StackMasterCLI.new.run
