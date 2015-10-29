@@ -54,7 +54,8 @@ module StackMaster
       end
 
       def get_template(options)
-        @templates[options[:stack_name]] || nil
+        template_body = @templates[options[:stack_name]] || nil
+        OpenStruct.new(template_body: template_body)
       end
 
       def describe_stack_events(options)
