@@ -7,4 +7,4 @@ if ENV['STUB_AWS'] == 'true'
   require 'stack_master/testing'
 end
 
-StackMasterCLI.new(ARGV.dup).execute!
+StackMaster::CLI.new(ARGV.dup).execute!
