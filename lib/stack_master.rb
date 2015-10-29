@@ -44,9 +44,12 @@ module StackMaster
     File.expand_path(File.join(File.dirname(__FILE__), ".."))
   end
 
-  class << self
-    attr_accessor :cloud_formation_driver
+  def self.cloud_formation_driver
+    @cloud_formation_driver ||= AwsDriver::CloudFormation.new
   end
-  @cloud_formation_driver = AwsDriver::CloudFormation.new
+
+  def self.cloud_formation_driver=(value)
+    @cloud_formation_driver = value
+  end
 end
 
