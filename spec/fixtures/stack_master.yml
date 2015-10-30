@@ -1,15 +1,32 @@
+stack_defaults:
+  tags:
+    application: my-awesome-blog
+region_defaults:
+  us_east_1:
+    tags:
+      environment: production
+    notification_arns:
+      - test_arn
+    secret_file: production.yml.gpg
+    stack_policy_file: my_policy.json
+  ap-southeast-2:
+    tags:
+      environment: staging
+    notification_arns:
+      - test_arn_3
+    secret_file: staging.yml.gpg
 stacks:
   us-east-1:
     myapp_vpc:
       template: myapp_vpc.json
-      tags:
-        environment: production
+      notification_arns:
+        - test_arn_2
     myapp_web:
       template: myapp_web.rb
-      tags:
-        environment: production
   ap-southeast-2:
     myapp_vpc:
       template: myapp_vpc.rb
+      notification_arns:
+        - test_arn_4
     myapp_web:
       template: myapp_web

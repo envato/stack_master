@@ -79,7 +79,9 @@ module StackMaster
       end
 
       def create_stack(options)
-        true
+        stack_name = options.fetch(:stack_name)
+        add_stack(options)
+        @stack_policies[stack_name] = options[:stack_policy_body]
       end
 
       def validate_template(options)
