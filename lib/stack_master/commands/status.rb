@@ -14,10 +14,6 @@ module StackMaster
 
       private
 
-      def cf(region)
-        Aws::CloudFormation::Client.new(region: region)
-      end
-
       def sort_params(hash)
         hash.sort.to_h
       end
@@ -26,8 +22,9 @@ module StackMaster
         region = stack_definition.region
         stack_name = stack_definition.stack_name
         begin
-          cloud_formation = cf(region)
-          stack_events = cloud_formation.describe_stack_events({stack_name: stack_name}).stack_events
+          driver = StackMaster.cloud_formation_driver
+          driver.set_region(region)
+          stack_events = driver.describe_stack_events({stack_name: stack_name}).stack_events
           stack_status = stack_events.first.resource_status
           stack = Stack.find(region, stack_name)
           proposed_stack = Stack.generate(stack_definition, @config)
