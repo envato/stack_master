@@ -18,7 +18,7 @@ RSpec.describe StackMaster::Stack do
         ]
       }
       before do
-        cf.stub_responses(:describe_stacks, stacks: [{ stack_id: stack_id, stack_name: stack_name, creation_time: Time.now, stack_status: 'UPDATE_COMPLETE', parameters: parameters}])
+        cf.stub_responses(:describe_stacks, stacks: [{ stack_id: stack_id, stack_name: stack_name, creation_time: Time.now, stack_status: 'UPDATE_COMPLETE', parameters: parameters, notification_arns: ['test_arn']}])
         cf.stub_responses(:get_template, template_body: "{}")
       end
 
@@ -32,6 +32,10 @@ RSpec.describe StackMaster::Stack do
 
       it 'parses parameters into a hash' do
         expect(stack.parameters).to eq({'param1' => 'value1', 'param2' => 'value2'})
+      end
+
+      it 'sets notification_arns' do
+        expect(stack.notification_arns).to eq(['test_arn'])
       end
     end
 
@@ -60,7 +64,7 @@ RSpec.describe StackMaster::Stack do
 
   describe '.generate' do
     let(:tags) { { 'tag1' => 'value1' } }
-    let(:stack_definition) { StackMaster::Config::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name) }
+    let(:stack_definition) { StackMaster::Config::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name, notification_arns: ['test_arn']) }
     let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
     subject(:stack) { StackMaster::Stack.generate(stack_definition, config) }
     let(:parameter_hash) { { 'db_password' => { 'secret' => 'db_password' } } }
@@ -92,6 +96,10 @@ RSpec.describe StackMaster::Stack do
 
     it 'compiles the template body' do
       expect(stack.template_body).to eq template_body
+    end
+
+    it 'has notification_arns' do
+      expect(stack.notification_arns).to eq ['test_arn']
     end
   end
 end
