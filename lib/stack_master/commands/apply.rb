@@ -67,7 +67,9 @@ module StackMaster
           stack_name: @stack_name,
           template_body: proposed_stack.template_body,
           parameters: proposed_stack.aws_parameters,
-          capabilities: ['CAPABILITY_IAM']
+          capabilities: ['CAPABILITY_IAM'],
+          notification_arns: proposed_stack.notification_arns,
+          stack_policy_body: proposed_stack.stack_policy_body
         }
       end
 

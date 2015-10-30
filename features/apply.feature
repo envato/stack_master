@@ -112,7 +112,7 @@ Feature: Apply command
       | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     And I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
-      | 1        | myapp-vpc  | KeyName=my-key | us-east-1 |
+      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
     And I stub a template for the stack "myapp-vpc":
       """
       {
@@ -176,4 +176,70 @@ Feature: Apply command
       | Parameters diff:                                                               |
       | "VpcId": "vpc-xxxxxx"                                                          |
       | 2020-10-29 00:00:00 +1100 myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE |
+    Then the exit status should be 0
+
+  Scenario: Create a stack with a notification ARN and a stack update policy
+    Given a file named "stack_master.yml" with:
+      """
+      stacks:
+        us_east_1:
+          myapp_vpc:
+            template: myapp_vpc.rb
+            notification_arns:
+              - test_arn
+            stack_policy_file: no_rds_replacement.json
+      """
+    And a file named "policies/no_rds_replacement.json" with:
+      """
+      {}
+      """
+    And I set the environment variables to:
+      | variable | value |
+      | ANSWER   | y     |
+    And I stub the following stack events:
+      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    And I stub the following stacks:
+      | stack_id | stack_name | parameters       | region    |
+      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub a template for the stack "myapp-vpc":
+      """
+      {
+        "Description": "Test template",
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Parameters": {
+          "KeyName": {
+            "Description": "Key Name",
+            "Type": "String"
+          }
+        },
+        "Resources": {
+          "TestSg": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+              "GroupDescription": "Test SG",
+              "VpcId": {
+                "Ref": "VpcId"
+              }
+            }
+          },
+          "TestSg2": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+              "GroupDescription": "Test SG 2",
+              "VpcId": {
+                "Ref": "VpcId"
+              }
+            }
+          }
+        }
+      }
+      """
+    When I run `stack_master apply us-east-1 myapp-vpc --trace` interactively
+    Then the stack "myapp-vpc" should have a policy with the following:
+      """
+      {}
+      """
+    And the stack "myapp-vpc" should contain this notification ARN "test_arn"
     Then the exit status should be 0

@@ -8,8 +8,10 @@ module StackMaster
         attribute :stack_name, String
         attribute :template, String
         attribute :tags, Hash
+        attribute :notification_arns, Array[String]
         attribute :base_dir, String
         attribute :secret_file, String
+        attribute :stack_policy_file, String
       end
 
       def template_file_path
@@ -18,6 +20,10 @@ module StackMaster
 
       def parameter_files
         [ default_parameter_file_path, region_parameter_file_path ]
+      end
+
+      def stack_policy_file_path
+        File.join(base_dir, 'policies', stack_policy_file) if stack_policy_file
       end
 
       private

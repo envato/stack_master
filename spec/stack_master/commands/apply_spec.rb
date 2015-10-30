@@ -3,15 +3,10 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:region) { 'us-east-1' }
   let(:stack_name) { 'myapp-vpc' }
   let(:config) { double(find_stack: stack_definition) }
-  let(:stack_definition) { StackMaster::Config::StackDefinition.new(
-      region: 'us_east_1',
-      stack_name: 'myapp_vpc',
-      template: 'myapp_vpc.json',
-      tags: { 'environment' => 'production' },
-      base_dir: File.expand_path('spec/fixtures')
-    )
-  }
-  let(:proposed_stack) { StackMaster::Stack.new(template_body: '{}', tags: { 'environment' => 'production' } , parameters: { 'param_1' => 'hello' } ) }
+  let(:notification_arn) { 'test_arn' }
+  let(:stack_definition) { StackMaster::Config::StackDefinition.new(base_dir: '/base_dir') }
+  let(:proposed_stack) { StackMaster::Stack.new(template_body: '{}', tags: { 'environment' => 'production' } , parameters: { 'param_1' => 'hello' }, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
+  let(:stack_policy_body) { '{}' }
 
   before do
     allow(StackMaster::Stack).to receive(:find).with(region, stack_name).and_return(stack)
@@ -40,7 +35,9 @@ RSpec.describe StackMaster::Commands::Apply do
         parameters: [
           { parameter_key: 'param_1', parameter_value: 'hello' }
         ],
-        capabilities: ['CAPABILITY_IAM']
+        capabilities: ['CAPABILITY_IAM'],
+        notification_arns: [notification_arn],
+        stack_policy_body: stack_policy_body
       )
     end
 
@@ -66,7 +63,9 @@ RSpec.describe StackMaster::Commands::Apply do
             key: 'environment',
             value: 'production'
           }],
-        capabilities: ['CAPABILITY_IAM']
+        capabilities: ['CAPABILITY_IAM'],
+        notification_arns: [notification_arn],
+        stack_policy_body: stack_policy_body
       )
     end
 
