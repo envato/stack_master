@@ -1,21 +1,41 @@
 module StackMaster
   class StackDiffer
-    include Command
-
-    def initialize(proposed_stack, stack)
+    def initialize(proposed_stack, current_stack)
       @proposed_stack = proposed_stack
-      @stack = stack
-      @context = 7
-      @diff = DiffHelper.new(@proposed_stack, @stack)
+      @current_stack = current_stack
     end
 
-    def perform
-      if @stack
-        text_diff('Stack', @diff.current_template, @diff.proposed_template, context: @context, include_diff_info: true)
-        text_diff('Parameters', @diff.current_parameters, @diff.proposed_parameters)
+    def proposed_template
+      JSON.pretty_generate(JSON.parse(@proposed_stack.template_body))
+    end
+
+    def current_template
+      JSON.pretty_generate(@current_stack.template_hash)
+    end
+
+    def current_parameters
+      JSON.pretty_generate(sort_params(@current_stack.parameters))
+    end
+
+    def proposed_parameters
+      JSON.pretty_generate(sort_params(@proposed_stack.parameters))
+    end
+
+    def body_different?
+      Diffy::Diff.new(current_template, proposed_template, {}).to_s != ''
+    end
+
+    def params_different?
+      Diffy::Diff.new(current_parameters, proposed_parameters, {}).to_s != ''
+    end
+
+    def output_diff
+      if @current_stack
+        text_diff('Stack', current_template, proposed_template, context: @context, include_diff_info: true)
+        text_diff('Parameters', current_parameters, proposed_parameters)
       else
-        text_diff('Stack', '', @diff.proposed_template)
-        text_diff('Parameters', '', @diff.proposed_parameters)
+        text_diff('Stack', '', proposed_template)
+        text_diff('Parameters', '', proposed_parameters)
         StackMaster.stdout.puts "No stack found"
       end
     end
@@ -41,6 +61,10 @@ module StackMaster
       end
     end
 
+    def sort_params(hash)
+      hash.sort.to_h
+    end
+
     def colorize(text, color)
       if colorize?
         text.colorize(color)
@@ -52,6 +76,5 @@ module StackMaster
     def colorize?
       ENV.fetch('COLORIZE') { 'true' } == 'true'
     end
-
   end
 end

@@ -13,7 +13,6 @@ require 'dotgpg'
 require "stack_master/command"
 require "stack_master/version"
 require "stack_master/stack"
-require "stack_master/diff_helper"
 require "stack_master/aws_driver/cloud_formation"
 require "stack_master/test_driver/cloud_formation"
 require "stack_master/stack_events/fetcher"

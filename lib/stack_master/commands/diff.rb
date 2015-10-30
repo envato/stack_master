@@ -11,7 +11,7 @@ module StackMaster
       end
 
       def perform
-        StackDiffer.perform(proposed_stack, stack)
+        StackMaster::StackDiffer.new(proposed_stack, stack).output_diff
       end
 
       private

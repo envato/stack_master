@@ -28,8 +28,8 @@ module StackMaster
           stack_status = stack_events.first.resource_status
           stack = Stack.find(region, stack_name)
           proposed_stack = Stack.generate(stack_definition, @config)
-          diff_helper = StackMaster::DiffHelper.new(proposed_stack, stack)
-          different = diff_helper.body_different? || diff_helper.params_different?
+          differ = StackMaster::StackDiffer.new(proposed_stack, stack)
+          different = differ.body_different? || differ.params_different?
         rescue Aws::CloudFormation::Errors::ValidationError
           stack_status = "missing"
           different = true
