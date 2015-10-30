@@ -113,7 +113,7 @@ Feature: Status command
     And the output should contain all of these lines:
       | REGION    \| STACK_NAME \| STACK_STATUS    \| DIFFERENT |
       | ----------\|------------\|-----------------\|---------- |
-      | us-east-1 \| stack1     \| CREATE_COMPLETE \| No        |
+      | us-east-1 \| stack1     \| CREATE_COMPLETE \| Yes       |
       | us-east-1 \| stack2     \| CREATE_COMPLETE \| No        |
       
     Then the exit status should be 0
