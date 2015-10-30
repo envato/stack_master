@@ -10,7 +10,8 @@ RSpec.describe StackMaster::Config do
       notification_arns: ['test_arn', 'test_arn_2'],
       base_dir: base_dir,
       secret_file: 'production.yml.gpg',
-      stack_policy_file: 'my_policy.json'
+      stack_policy_file: 'my_policy.json',
+      additional_parameter_lookup_dirs: ['production']
     )
   }
 
@@ -68,7 +69,8 @@ RSpec.describe StackMaster::Config do
       notification_arns: ['test_arn_3', 'test_arn_4'],
       template: 'myapp_vpc.rb',
       base_dir: base_dir,
-      secret_file: 'staging.yml.gpg'
+      secret_file: 'staging.yml.gpg',
+      additional_parameter_lookup_dirs: ['staging']
     ))
   end
 end
