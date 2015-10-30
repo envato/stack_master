@@ -50,6 +50,13 @@ RSpec.describe StackMaster::Config do
     })
   end
 
+  it 'loads region_aliases' do
+    expect(loaded_config.region_aliases).to eq(
+      'production' => 'us-east-1',
+      'staging' => 'ap-southeast-2'
+    )
+  end
+
   it 'deep merges stack attributes' do
     expect(loaded_config.find_stack('ap-southeast-2', 'myapp-vpc')).to eq(StackMaster::Config::StackDefinition.new(
       stack_name: 'myapp-vpc',
