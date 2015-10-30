@@ -87,15 +87,13 @@ module StackMaster
       exit 1
     end
 
-    def normalize_region_and_stack_name(args)
-      args.map { |a| a.gsub('_', '-') }
-    end
-
     def execute_stack_command(command, args, options)
-      region, stack_name = normalize_region_and_stack_name(args)
-      StackMaster.cloud_formation_driver.set_region(region)
       say "Invalid arguments. stack_master #{command.name.split('::').last.downcase} [region] [stack_name]" and return unless args.size == 2
       config = load_config(options.config)
+      aliased_region, stack_name = args
+      region = Utils.underscore_to_hyphen(config.unalias_region(aliased_region))
+      stack_name = Utils.underscore_to_hyphen(stack_name)
+      StackMaster.cloud_formation_driver.set_region(region)
       command.perform(config, region, stack_name)
     end
   end
