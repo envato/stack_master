@@ -8,7 +8,7 @@ module StackMaster
       end
 
       def perform
-        tp.set :io, $stdout
+        tp.set :io, StackMaster.stdout
         tp @config.stack_definitions.stacks.map { |stack_definition| get_status(stack_definition) }
       end
 
