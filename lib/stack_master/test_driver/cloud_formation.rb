@@ -45,6 +45,7 @@ module StackMaster
         @stacks = {}
         @templates = {}
         @stack_events = {}
+        @stack_policies = {}
       end
 
       def describe_stacks(options = {})
@@ -63,7 +64,7 @@ module StackMaster
       end
 
       def get_stack_policy(options)
-        OpenStruct.new(stack_policy_body: nil)
+        OpenStruct.new(stack_policy_body: @stack_policies[options.fetch(:stack_name)])
       end
 
       def describe_stack_events(options)
@@ -72,7 +73,9 @@ module StackMaster
       end
 
       def update_stack(options)
-        true
+        stack_name = options.fetch(:stack_name)
+        @stacks[stack_name].attributes = options
+        @stack_policies[stack_name] = options[:stack_policy_body]
       end
 
       def create_stack(options)
