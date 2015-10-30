@@ -6,25 +6,21 @@ module StackMaster
       @proposed_stack = proposed_stack
       @stack = stack
       @context = 7
+      @diff = DiffHelper.new(@proposed_stack, @stack)
     end
 
     def perform
-      resolved_parameters = JSON.pretty_generate(sort_params(@proposed_stack.parameters))
       if @stack
-        text_diff('Stack', JSON.pretty_generate(@stack.template_hash), JSON.pretty_generate(JSON.parse(@proposed_stack.template_body)), context: @context, include_diff_info: true)
-        text_diff('Parameters', JSON.pretty_generate(sort_params(@stack.parameters)), resolved_parameters)
+        text_diff('Stack', @diff.current_template, @diff.proposed_template, context: @context, include_diff_info: true)
+        text_diff('Parameters', @diff.current_parameters, @diff.proposed_parameters)
       else
-        text_diff('Stack', '', JSON.pretty_generate(JSON.parse(@proposed_stack.template_body)))
-        text_diff('Parameters', '', resolved_parameters)
+        text_diff('Stack', '', @diff.proposed_template)
+        text_diff('Parameters', '', @diff.proposed_parameters)
         StackMaster.stdout.puts "No stack found"
       end
     end
 
     private
-
-    def sort_params(hash)
-      hash.sort.to_h
-    end
 
     def text_diff(thing, current, proposed, diff_opts = {})
       diff = Diffy::Diff.new(current, proposed, diff_opts).to_s
@@ -56,5 +52,6 @@ module StackMaster
     def colorize?
       ENV.fetch('COLORIZE') { 'true' } == 'true'
     end
+
   end
 end

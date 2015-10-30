@@ -28,7 +28,8 @@ module StackMaster
           stack_status = stack_events.first.resource_status
           stack = Stack.find(region, stack_name)
           proposed_stack = Stack.generate(stack_definition, @config)
-          different = body_different?(proposed_stack, stack) || params_different?(proposed_stack, stack)
+          diff_helper = StackMaster::DiffHelper.new(proposed_stack, stack)
+          different = diff_helper.body_different? || diff_helper.params_different?
         rescue Aws::CloudFormation::Errors::ValidationError
           stack_status = "missing"
           different = true
@@ -37,17 +38,6 @@ module StackMaster
         { region: region, stack_name: stack_name, stack_status: stack_status, different: different ? "Yes" : "No" }
       end
 
-      def body_different?(proposed_stack, stack)
-        body1 = JSON.pretty_generate(stack.template_hash)
-        body2 = JSON.pretty_generate(JSON.parse(proposed_stack.template_body))
-        Diffy::Diff.new(body1, body2, {}).to_s != ''
-      end
-
-      def params_different?(proposed_stack, stack)
-        params1 = JSON.pretty_generate(sort_params(proposed_stack.parameters))
-        params2 = JSON.pretty_generate(sort_params(stack.parameters))
-        Diffy::Diff.new(params1, params2, {}).to_s != ''
-      end
     end
   end
 end
