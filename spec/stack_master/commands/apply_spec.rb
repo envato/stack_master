@@ -4,8 +4,9 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:stack_name) { 'myapp-vpc' }
   let(:config) { double(find_stack: stack_definition) }
   let(:notification_arn) { 'test_arn' }
-  let(:stack_definition) { StackMaster::Config::StackDefinition.new() }
-  let(:proposed_stack) { StackMaster::Stack.new(template_body: '{}', tags: { 'environment' => 'production' } , parameters: { 'param_1' => 'hello' }, notification_arns: [notification_arn] ) }
+  let(:stack_definition) { StackMaster::Config::StackDefinition.new(base_dir: '/base_dir') }
+  let(:proposed_stack) { StackMaster::Stack.new(template_body: '{}', tags: { 'environment' => 'production' } , parameters: { 'param_1' => 'hello' }, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
+  let(:stack_policy_body) { '{}' }
 
   before do
     allow(StackMaster::Stack).to receive(:find).with(region, stack_name).and_return(stack)
@@ -35,7 +36,8 @@ RSpec.describe StackMaster::Commands::Apply do
           { parameter_key: 'param_1', parameter_value: 'hello' }
         ],
         capabilities: ['CAPABILITY_IAM'],
-        notification_arns: [notification_arn]
+        notification_arns: [notification_arn],
+        stack_policy_body: stack_policy_body
       )
     end
 
@@ -62,7 +64,8 @@ RSpec.describe StackMaster::Commands::Apply do
             value: 'production'
           }],
         capabilities: ['CAPABILITY_IAM'],
-        notification_arns: [notification_arn]
+        notification_arns: [notification_arn],
+        stack_policy_body: stack_policy_body
       )
     end
 

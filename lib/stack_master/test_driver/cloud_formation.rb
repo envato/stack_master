@@ -62,6 +62,10 @@ module StackMaster
         OpenStruct.new(template_body: template_body)
       end
 
+      def get_stack_policy(options)
+        OpenStruct.new(stack_policy_body: nil)
+      end
+
       def describe_stack_events(options)
         events = @stack_events[options.fetch(:stack_name)] || []
         OpenStruct.new(stack_events: events, next_token: nil)
