@@ -1,19 +1,26 @@
+require 'deep_merge/rails_compat'
+require 'active_support/core_ext/object/deep_dup'
+
 module StackMaster
   class Config
     class StackDefinitions
       attr_reader :stacks
 
-      def initialize(base_dir)
+      def initialize(base_dir, stack_defaults, region_defaults)
         @base_dir = base_dir
+        @stack_defaults = stack_defaults
+        @region_defaults = region_defaults
         @stacks = []
       end
 
       def load(stacks)
         stacks.each do |region, stacks_for_region|
+          region = underscore_to_hyphen(region)
           stacks_for_region.each do |stack_name, attributes|
-            stack_attributes = attributes.merge(
-              'region' => underscore_to_hyphen(region),
-              'stack_name' => underscore_to_hyphen(stack_name),
+            stack_name = underscore_to_hyphen(stack_name)
+            stack_attributes = stack_defaults(region).deeper_merge(attributes).merge(
+              'region' => region,
+              'stack_name' => stack_name,
               'base_dir' => @base_dir)
             @stacks << StackDefinition.new(stack_attributes)
           end
@@ -31,6 +38,11 @@ module StackMaster
 
       def underscore_to_hyphen(string)
         string.gsub('_', '-')
+      end
+
+      def stack_defaults(region)
+        region_defaults = @region_defaults.fetch(region, {}).deep_dup
+        @stack_defaults.deep_dup.deeper_merge(region_defaults)
       end
     end
   end
