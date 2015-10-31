@@ -30,7 +30,14 @@ module StackMaster
       stack_policy_body ||= cf.get_stack_policy(stack_name: stack_name).stack_policy_body
       outputs = cf_stack.outputs
 
-      new(region: region, stack_name: stack_name, stack_id: cf_stack.stack_id, parameters: parameters, template_body: template_body, outputs: outputs, notification_arns: cf_stack.notification_arns, stack_policy_body: stack_policy_body)
+      new(region: region,
+          stack_name: stack_name,
+          stack_id: cf_stack.stack_id,
+          parameters: parameters,
+          template_body: template_body,
+          outputs: outputs,
+          notification_arns: cf_stack.notification_arns,
+          stack_policy_body: stack_policy_body)
     rescue Aws::CloudFormation::Errors::ValidationError
       nil
     end
