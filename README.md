@@ -97,7 +97,7 @@ the resolved values will be different.
 The stack output resolver looks up outputs from other stacks in the same
 region. The expected format is `[stack-name]/[OutputName]`.
 
-```
+```yaml
 vpc_id:
   stack_output: my-vpc-stack/VpcId
 ```
@@ -111,7 +111,7 @@ the secret file. A common use case for this is to store database passwords.
 
 stack_master.yml:
 
-```
+```yaml
 stacks:
   us-east-1:
     my_app:
@@ -121,13 +121,13 @@ stacks:
 
 secrets/production.yml.gpg, when decrypted:
 
-```
+```yaml
 db_password: my-password
 ```
 
 parameters/my_app.yml:
 
-```
+```yaml
 db_password:
   secret: db_password
 ```
@@ -136,7 +136,7 @@ db_password:
 
 Looks up a security group by name and returns the ARN.
 
-```
+```yaml
 ssh_sg:
   security_group: SSHSecurityGroup
 ```
@@ -145,7 +145,7 @@ ssh_sg:
 
 Looks up an SNS topic by name and returns the ARN.
 
-```
+```yaml
 notification_topic:
   sns_topic: PagerDuty
 ```
@@ -155,10 +155,10 @@ stack's template and parameters. After you accept the changes it will
 
 ## Commands
 
-```
+```bash
 stack_master init # initialises a directory structure and stack_master.yml file
-stack_master apply [region_or_alias] [stack_name] # Create or update a stack
-stack_master diff [region_or_alias] [stack_name] # Display a stack tempalte and parameter diff
+stack_master apply [region-or-alias] [stack-name] # Create or update a stack
+stack_master diff [region-or-alias] [stack-name] # Display a stack tempalte and parameter diff
 stack_master list # lists stack definitions
 stack_master status # shows the status of stacks and wehether the local version differs from what is live
 ```
