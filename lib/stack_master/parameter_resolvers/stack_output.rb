@@ -13,7 +13,7 @@ module StackMaster
       def resolve(value)
         validate_value!(value)
         stack_name, output_name = value.split('/')
-        stack = @stacks.fetch(stack_name) { @stacks[stack_name] = Stack.find(@stack_definition.region, stack_name) }
+        stack = find_stack(stack_name)
         if stack
           output = stack.outputs.find { |output| output.output_key == output_name.camelize }
           if output
@@ -36,6 +36,17 @@ module StackMaster
         if !value.is_a?(String) || !value.include?('/')
           raise ArgumentError, 'Stack output values must be in the form of stack-name/output-name'
         end
+      end
+
+      def find_stack(stack_name)
+        @stacks.fetch(stack_name) do
+          cf_stack = cf.describe_stacks(stack_name: stack_name).stacks.first
+          @stacks[stack_name] = cf_stack
+        end
+      end
+
+      def cf
+        @cf ||= StackMaster.cloud_formation_driver
       end
     end
   end

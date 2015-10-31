@@ -3,6 +3,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
   let(:stack_name) { 'my-stack' }
   let(:config) { double }
   let(:resolver) { described_class.new(config, double(region: 'us-east-1')) }
+  let(:cf) { Aws::CloudFormation::Client.new }
 
   def resolve(value)
     resolver.resolve(value)
@@ -32,29 +33,29 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
 
   context 'when given a valid string value' do
     let(:value) { 'my-stack/MyOutput' }
-    let(:stack) { double(outputs: outputs) }
-    let(:outputs) { {} }
+    let(:stacks) { [{ stack_name: 'blah', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs}] }
+    let(:outputs) { [] }
 
     before do
-      allow(StackMaster::Stack).to receive(:find).with(region, stack_name).and_return(stack)
+      allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
+      cf.stub_responses(:describe_stacks, stacks: stacks)
     end
 
     context 'the stack and output exist' do
-      let(:outputs) { [OpenStruct.new(output_key: 'MyOutput', output_value: 'myresolvedvalue')] }
+      let(:outputs) { [{output_key: 'MyOutput', output_value: 'myresolvedvalue'}] }
 
       it 'resolves the value' do
         expect(resolved_value).to eq 'myresolvedvalue'
       end
 
       it 'caches stacks for the lifetime of the instance' do
-        expect(StackMaster::Stack).to receive(:find).once.with(region, stack_name).and_return(stack)
         resolver.resolve(value)
         resolver.resolve(value)
       end
     end
 
     context "the stack doesn't exist" do
-      let(:stack) { nil }
+      let(:stacks) { nil }
 
       it 'resolves the value' do
         expect {
