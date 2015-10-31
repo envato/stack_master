@@ -10,6 +10,10 @@ A tool for applying updates to your project's CloudFormation stacks.
 
 ## Installation
 
+System-wide: `gem install stack_master`
+
+With bundler:
+
 - Add `gem 'stack_master'` to your Gemfile.
 - Run `bundle install`
 - Run `bundle exec stack_master init` to generate a directory structure and stack_master.yml file
