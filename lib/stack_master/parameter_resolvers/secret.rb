@@ -3,14 +3,13 @@ module StackMaster
     class Secret
       SecretNotFound = Class.new(StandardError)
 
-      def initialize(config, stack_definition, value)
+      def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition
-        @value = value
       end
 
-      def resolve
-        secret_key = @value
+      def resolve(value)
+        secret_key = value
         raise ArgumentError, "No secret_file defined for stack definition #{@stack_definition.stack_name} in #{@stack_definition.region}" unless !@stack_definition.secret_file.nil?
         raise ArgumentError, "Could not find secret file at #{secret_file_path}" unless File.exist?(secret_file_path)
         secrets_hash.fetch(secret_key) do

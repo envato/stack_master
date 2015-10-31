@@ -2,9 +2,10 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
   let(:region) { 'us-east-1' }
   let(:stack_name) { 'my-stack' }
   let(:config) { double }
+  let(:resolver) { described_class.new(config, double(region: 'us-east-1')) }
 
   def resolve(value)
-    described_class.new(config, double(region: 'us-east-1'), value).resolve
+    resolver.resolve(value)
   end
 
   subject(:resolved_value) { resolve(value) }
@@ -32,6 +33,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
   context 'when given a valid string value' do
     let(:value) { 'my-stack/MyOutput' }
     let(:stack) { double(outputs: outputs) }
+    let(:outputs) { {} }
 
     before do
       allow(StackMaster::Stack).to receive(:find).with(region, stack_name).and_return(stack)
@@ -42,6 +44,12 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
 
       it 'resolves the value' do
         expect(resolved_value).to eq 'myresolvedvalue'
+      end
+
+      it 'caches stacks for the lifetime of the instance' do
+        expect(StackMaster::Stack).to receive(:find).once.with(region, stack_name).and_return(stack)
+        resolver.resolve(value)
+        resolver.resolve(value)
       end
     end
 

@@ -3,15 +3,14 @@ module StackMaster
     class SnsTopicName
       TopicNotFound = Class.new(StandardError)
 
-      def initialize(config, stack_definition, value)
+      def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition
-        @value = value
         @stacks = {}
       end
 
-      def resolve
-        sns_topic_finder.find(@value)
+      def resolve(value)
+        sns_topic_finder.find(value)
       rescue StackMaster::SnsTopicFinder::TopicNotFound => e
         raise TopicNotFound.new(e.message)
       end

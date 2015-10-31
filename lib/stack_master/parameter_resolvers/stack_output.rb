@@ -4,17 +4,16 @@ module StackMaster
       StackNotFound = Class.new(StandardError)
       StackOutputNotFound = Class.new(StandardError)
 
-      def initialize(config, stack_definition, value)
+      def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition
-        @value = value
         @stacks = {}
       end
 
-      def resolve
-        validate_value!
-        stack_name, output_name = @value.split('/')
-        stack = @stacks.fetch(stack_name) { Stack.find(@stack_definition.region, stack_name) }
+      def resolve(value)
+        validate_value!(value)
+        stack_name, output_name = value.split('/')
+        stack = @stacks.fetch(stack_name) { @stacks[stack_name] = Stack.find(@stack_definition.region, stack_name) }
         if stack
           output = stack.outputs.find { |output| output.output_key == output_name.camelize }
           if output
@@ -23,7 +22,7 @@ module StackMaster
             raise StackOutputNotFound, "Stack exists (#{stack_name}), but output does not: #{output_name}"
           end
         else
-          raise StackNotFound, "Stack in StackOutput not found: #{@value}"
+          raise StackNotFound, "Stack in StackOutput not found: #{value}"
         end
       end
 
@@ -33,8 +32,8 @@ module StackMaster
         @cf ||= StackMaster.cloud_formation_driver
       end
 
-      def validate_value!
-        if !@value.is_a?(String) || !@value.include?('/')
+      def validate_value!(value)
+        if !value.is_a?(String) || !value.include?('/')
           raise ArgumentError, 'Stack output values must be in the form of stack-name/output-name'
         end
       end
