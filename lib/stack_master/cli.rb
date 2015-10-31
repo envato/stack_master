@@ -18,7 +18,7 @@ module StackMaster
 
       global_option '-c', '--config FILE', 'Config file to use'
 
-      default_command :list_stacks
+      default_command :list
 
       command :apply do |c|
         c.syntax = 'stack_master apply [region] [stack_name]'
