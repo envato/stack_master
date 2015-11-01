@@ -1,5 +1,19 @@
 RSpec.describe StackMaster::ParameterResolver do
   let(:config) { double }
+  let(:my_resolver) {
+    Class.new do
+      def initialize(config, region)
+      end
+
+      def resolve(value)
+        value.to_i * 5
+      end
+    end
+  }
+  before do
+    stub_const('StackMaster::ParameterResolvers::MyResolver', my_resolver)
+  end
+
 
   def resolve(params)
     StackMaster::ParameterResolver.resolve(config, 'us-east-1', params)
@@ -22,22 +36,6 @@ RSpec.describe StackMaster::ParameterResolver do
   end
 
   context 'when given a proper resolve hash' do
-    let(:my_resolver) {
-      Class.new do
-        def initialize(config, region, value)
-          @value = value
-        end
-
-        def resolve
-          @value.to_i * 5
-        end
-      end
-    }
-
-    before do
-      stub_const('StackMaster::ParameterResolvers::MyResolver', my_resolver)
-    end
-
     it 'returns the value returned by the resolver as the parameter value' do
       expect(resolve(param: { my_resolver: 2 })).to eq(param: 10)
     end
@@ -48,6 +46,13 @@ RSpec.describe StackMaster::ParameterResolver do
       expect {
         resolve(param: { my_unknown_resolver: 2 })
       }.to raise_error StackMaster::ParameterResolver::ResolverNotFound
+    end
+  end
+
+  context 'resolver class caching' do
+    it "uses the same instance of the resolver for the duration of the resolve run" do
+      expect(my_resolver).to receive(:new).once.and_call_original
+      expect(resolve(param: { my_resolver: 2 }, param2: { my_resolver: 2 })).to eq(param: 10, param2: 10)
     end
   end
 end

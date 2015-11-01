@@ -29,13 +29,13 @@ module StackMaster
       raise InvalidParameter, parameter_value unless parameter_value.keys.size == 1
       resolver_class_name = parameter_value.keys.first.to_s.camelize
       value = parameter_value.values.first
-      resolver_class(resolver_class_name).new(@config, @stack_definition, value).resolve
+      resolver_class(resolver_class_name).resolve(value)
     end
 
     def resolver_class(class_name)
       @resolvers.fetch(class_name) do
         begin
-          Kernel.const_get("StackMaster::ParameterResolvers::#{class_name}")
+          @resolvers[class_name] = Kernel.const_get("StackMaster::ParameterResolvers::#{class_name}").new(@config, @stack_definition)
         rescue NameError
           raise ResolverNotFound, class_name
         end

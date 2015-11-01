@@ -12,6 +12,7 @@ module StackMaster
         attribute :base_dir, String
         attribute :secret_file, String
         attribute :stack_policy_file, String
+        attribute :additional_parameter_lookup_dirs, Array[String]
       end
 
       def template_file_path
@@ -19,7 +20,7 @@ module StackMaster
       end
 
       def parameter_files
-        [ default_parameter_file_path, region_parameter_file_path ]
+        [ default_parameter_file_path, region_parameter_file_path ] + additional_parameter_lookup_file_paths
       end
 
       def stack_policy_file_path
@@ -27,6 +28,12 @@ module StackMaster
       end
 
       private
+
+      def additional_parameter_lookup_file_paths
+        additional_parameter_lookup_dirs.map do |a|
+          File.join(base_dir, 'parameters', a, "#{underscored_stack_name}.yml")
+        end
+      end
 
       def region_parameter_file_path
         File.join(base_dir, 'parameters', "#{region}", "#{underscored_stack_name}.yml")
