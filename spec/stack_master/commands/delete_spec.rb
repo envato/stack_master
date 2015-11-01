@@ -1,6 +1,6 @@
 RSpec.describe StackMaster::Commands::Delete do
 
-  subject(:delete) { described_class.new(nil, stack_name, region) }
+  subject(:delete) { described_class.new(stack_name, region) }
   let(:cf) { Aws::CloudFormation::Client.new }
   let(:region) { 'us-east-1' }
   let(:stack_name) { 'mystack' }

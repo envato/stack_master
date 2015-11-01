@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry"
   spec.add_development_dependency "cucumber"
   spec.add_development_dependency "aruba"
+  spec.add_development_dependency "timecop"
   spec.add_dependency "commander"
   spec.add_dependency "virtus"
   spec.add_dependency "aws-sdk"
