@@ -51,7 +51,11 @@ module StackMaster
       def describe_stacks(options = {})
         stack_name = options[:stack_name]
         stacks = if stack_name
-          [@stacks[stack_name]]
+          if @stacks[stack_name]
+            [@stacks[stack_name]]
+          else
+            raise Aws::CloudFormation::Errors::ValidationError.new('', 'Stack does not exist')
+          end
         else
           @stacks.values
         end
@@ -82,6 +86,11 @@ module StackMaster
         stack_name = options.fetch(:stack_name)
         add_stack(options)
         @stack_policies[stack_name] = options[:stack_policy_body]
+      end
+
+      def delete_stack(options)
+        stack_name = options.fetch(:stack_name)
+        @stacks.delete(stack_name)
       end
 
       def validate_template(options)
