@@ -16,5 +16,16 @@ module StackMaster
         aws_tags
       end
     end
+
+    def underscore_to_hyphen(string)
+      string.to_s.gsub('_', '-')
+    end
+
+    def underscore_keys_to_hyphen(hash)
+      hash.inject({}) do |hash, (key, value)|
+        hash[underscore_to_hyphen(key)] = value
+        hash
+      end
+    end
   end
 end

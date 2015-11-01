@@ -18,6 +18,10 @@ module StackMaster
         cf.get_template(options)
       end
 
+      def get_stack_policy(options)
+        cf.get_stack_policy(options)
+      end
+
       def describe_stack_events(options)
         cf.describe_stack_events(options)
       end

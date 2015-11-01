@@ -18,13 +18,11 @@ module StackMaster
 
       global_option '-c', '--config FILE', 'Config file to use'
 
-      default_command :list_stacks
-
       command :apply do |c|
         c.syntax = 'stack_master apply [region] [stack_name]'
-        c.summary = ''
-        c.description = ''
-        c.example 'description', 'Create or update a stack'
+        c.summary = 'Creates or updates a stack'
+        c.description = "Creates or updates a stack. Shows a diff of the proposed stack's template and parameters. Tails stack events until CloudFormation has completed."
+        c.example 'update a stack named myapp-vpc in us-east-1', 'stack_master apply us-east-1 myapp-vpc'
         c.action do |args, options|
           execute_stack_command(StackMaster::Commands::Apply, args, options)
         end
@@ -32,8 +30,8 @@ module StackMaster
 
       command :init do |c|
         c.syntax = 'stack_master init [region] [stack_name]'
-        c.summary = ''
-        c.description = ''
+        c.summary = 'Initialises the expected directory structure and stack_master.yml file'
+        c.description = 'Initialises the expected directory structure and stack_master.yml file'
         c.option('--overwrite', 'Overwrite existing files')
         c.action do |args, options|
           unless args.size == 2
@@ -46,9 +44,9 @@ module StackMaster
 
       command :diff do |c|
         c.syntax = 'stack_master diff [region] [stack_name]'
-        c.summary = ''
-        c.description = ''
-        c.example 'description', 'Diff a stack'
+        c.summary = "Shows a diff of the proposed stack's template and parameters"
+        c.description = "Shows a diff of the proposed stack's template and parameters"
+        c.example 'diff a stack named myapp-vpc in us-east-1', 'stack_master diff us-east-1 myapp-vpc'
         c.action do |args, options|
           execute_stack_command(StackMaster::Commands::Diff, args, options)
         end
@@ -56,9 +54,8 @@ module StackMaster
 
       command :list do |c|
         c.syntax = 'stack_master list'
-        c.summary = ''
-        c.description = ''
-        c.example 'description', 'List of all stacks'
+        c.summary = 'List stack definitions'
+        c.description = 'List stack definitions'
         c.action do |args, options|
           say "Invalid arguments." if args.size > 0
           config = load_config(options.config)
@@ -68,11 +65,23 @@ module StackMaster
 
       command :validate do |c|
         c.syntax = 'stack_master validate [region] [stack_name]'
-        c.summary = ''
-        c.description = ''
-        c.example 'description', 'Validate a stack'
+        c.summary = 'Validate a template'
+        c.description = 'Validate a template'
+        c.example 'validate a stack named myapp-vpc in us-east-1', 'stack_master validate us-east-1 myapp-vpc'
         c.action do |args, options|
           execute_stack_command(StackMaster::Commands::Validate, args, options)
+        end
+      end
+
+      command :status do |c|
+        c.syntax = 'stack_master status'
+        c.summary = ''
+        c.description = ''
+        c.example 'description', 'Check the status of all stack definitions'
+        c.action do |args, options|
+          say "Invalid arguments. stack_master status" and return unless args.size == 0
+          config = load_config(options.config)
+          StackMaster::Commands::Status.perform(config)
         end
       end
 
@@ -97,16 +106,22 @@ module StackMaster
       exit 1
     end
 
-    def normalize_region_and_stack_name(args)
-      args.map { |a| a.gsub('_', '-') }
-    end
-
     def execute_stack_command(command, args, options)
-      region, stack_name = normalize_region_and_stack_name(args)
-      StackMaster.cloud_formation_driver.set_region(region)
-      say "Invalid arguments. stack_master #{command.name.split('::').last.downcase} [region] [stack_name]" and return unless args.size == 2
+      unless args.size == 2
+        say "Invalid arguments. stack_master #{command.name.split('::').last.downcase} [region] [stack_name]"
+        return
+      end
       config = load_config(options.config)
-      command.perform(config, region, stack_name)
+      aliased_region, stack_name = args
+      region = Utils.underscore_to_hyphen(config.unalias_region(aliased_region))
+      stack_name = Utils.underscore_to_hyphen(stack_name)
+      StackMaster.cloud_formation_driver.set_region(region)
+      stack_definition ||= config.find_stack(region, stack_name)
+      if stack_definition.nil?
+        say "Could not find stack definition #{stack_name} in region #{region}"
+        return
+      end
+      command.perform(config, stack_definition)
     end
   end
 end

@@ -1,14 +1,13 @@
 module StackMaster
   module ParameterResolvers
     class SecurityGroup
-      def initialize(config, stack_definition, value)
+      def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition
-        @value = value
       end
 
-      def resolve
-        security_group_finder.find(@value)
+      def resolve(value)
+        security_group_finder.find(value)
       end
 
       private

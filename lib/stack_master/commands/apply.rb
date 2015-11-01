@@ -5,10 +5,9 @@ module StackMaster
       include Commander::UI
       include StackMaster::Prompter
 
-      def initialize(config, region, stack_name)
+      def initialize(config, stack_definition)
         @config = config
-        @region = region.gsub('_', '-')
-        @stack_name = stack_name.gsub('_', '-')
+        @stack_definition = stack_definition
       end
 
       def perform
@@ -27,16 +26,12 @@ module StackMaster
         @cf ||= StackMaster.cloud_formation_driver
       end
 
-      def stack_definition
-        @stack_definition ||= @config.find_stack(@region, @stack_name)
-      end
-
       def stack
-        @stack ||= Stack.find(@region, @stack_name)
+        @stack ||= Stack.find(@stack_definition.region, @stack_definition.stack_name)
       end
 
       def proposed_stack
-        @proposed_stack ||= Stack.generate(stack_definition, @config)
+        @proposed_stack ||= Stack.generate(@stack_definition, @config)
       end
 
       def stack_exists?
@@ -44,7 +39,7 @@ module StackMaster
       end
 
       def diff_stacks
-        StackDiffer.perform(proposed_stack, stack)
+        StackDiffer.new(proposed_stack, stack).output_diff
       end
 
       def create_or_update_stack
@@ -65,15 +60,17 @@ module StackMaster
 
       def stack_options
         {
-          stack_name: @stack_name,
+          stack_name: @stack_definition.stack_name,
           template_body: proposed_stack.template_body,
           parameters: proposed_stack.aws_parameters,
-          capabilities: ['CAPABILITY_IAM']
+          capabilities: ['CAPABILITY_IAM'],
+          notification_arns: proposed_stack.notification_arns,
+          stack_policy_body: proposed_stack.stack_policy_body
         }
       end
 
       def tail_stack_events
-        StackEvents::Streamer.stream(@stack_name, @region, io: StackMaster.stdout)
+        StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout)
       end
     end
   end

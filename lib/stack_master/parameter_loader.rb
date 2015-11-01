@@ -7,7 +7,10 @@ module StackMaster
         else
           {}
         end
-        hash.merge(parameters)
+        parameters.each do |key, value|
+          hash[key.camelize] = value
+        end
+        hash
       end
     end
   end

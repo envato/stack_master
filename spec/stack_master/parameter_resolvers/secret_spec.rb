@@ -2,7 +2,7 @@ RSpec.describe StackMaster::ParameterResolvers::Secret do
   let(:base_dir) { '/base_dir' }
   let(:config) { double(base_dir: base_dir) }
   let(:stack_definition) { double(secret_file: secrets_file_name, stack_name: 'mystack', region: 'us-east-1') }
-  subject(:resolve_secret) { StackMaster::ParameterResolvers::Secret.new(config, stack_definition, value).resolve }
+  subject(:resolve_secret) { StackMaster::ParameterResolvers::Secret.new(config, stack_definition).resolve(value) }
   let(:value) { 'my_file/my_secret_key' }
   let(:secrets_file_name) { "my_file.yml.gpg" }
   let(:file_path) { "#{base_dir}/secrets/#{secrets_file_name}" }
