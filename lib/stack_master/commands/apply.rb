@@ -3,6 +3,7 @@ module StackMaster
     class Apply
       include Command
       include Commander::UI
+      include StackMaster::Prompter
 
       def initialize(config, region, stack_name)
         @config = config
@@ -73,17 +74,6 @@ module StackMaster
 
       def tail_stack_events
         StackEvents::Streamer.stream(@stack_name, @region, io: StackMaster.stdout)
-      end
-
-      def ask?(question)
-        StackMaster.stdout.print question
-        answer = if ENV['STUB_AWS']
-                   ENV['ANSWER']
-                 else
-                   STDIN.getch.chomp
-                 end
-        StackMaster.stdout.puts
-        answer == 'y'
       end
     end
   end
