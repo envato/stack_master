@@ -38,7 +38,7 @@ module StackMaster
       end
 
       def diff_stacks
-        StackDiffer.perform(proposed_stack, stack)
+        StackDiffer.new(proposed_stack, stack).output_diff
       end
 
       def create_or_update_stack

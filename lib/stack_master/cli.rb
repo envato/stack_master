@@ -73,6 +73,18 @@ module StackMaster
         end
       end
 
+      command :status do |c|
+        c.syntax = 'stack_master status'
+        c.summary = ''
+        c.description = ''
+        c.example 'description', 'Check the status of all stack definitions'
+        c.action do |args, options|
+          say "Invalid arguments. stack_master status" and return unless args.size == 0
+          config = load_config(options.config)
+          StackMaster::Commands::Status.perform(config)
+        end
+      end
+
       run!
     end
 
