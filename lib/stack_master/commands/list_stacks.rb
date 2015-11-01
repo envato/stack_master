@@ -9,7 +9,7 @@ module StackMaster
       end
 
       def perform
-        tp @config.stack_definitions.stacks, :region, :stack_name
+        tp @config.stacks, :region, :stack_name
       end
     end
   end

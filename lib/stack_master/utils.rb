@@ -18,7 +18,7 @@ module StackMaster
     end
 
     def underscore_to_hyphen(string)
-      string.gsub('_', '-')
+      string.to_s.gsub('_', '-')
     end
 
     def underscore_keys_to_hyphen(hash)

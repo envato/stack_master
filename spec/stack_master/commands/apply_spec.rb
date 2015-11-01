@@ -4,7 +4,7 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:stack_name) { 'myapp-vpc' }
   let(:config) { double(find_stack: stack_definition) }
   let(:notification_arn) { 'test_arn' }
-  let(:stack_definition) { StackMaster::Config::StackDefinition.new(base_dir: '/base_dir') }
+  let(:stack_definition) { StackMaster::Config::StackDefinition.new(base_dir: '/base_dir', region: region, stack_name: stack_name) }
   let(:proposed_stack) { StackMaster::Stack.new(template_body: '{}', tags: { 'environment' => 'production' } , parameters: { 'param_1' => 'hello' }, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
   let(:stack_policy_body) { '{}' }
 
@@ -21,7 +21,7 @@ RSpec.describe StackMaster::Commands::Apply do
   end
 
   def apply
-    StackMaster::Commands::Apply.perform(config, region, stack_name)
+    StackMaster::Commands::Apply.perform(config, stack_definition)
   end
 
   context 'the stack exist' do

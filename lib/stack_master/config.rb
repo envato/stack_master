@@ -9,7 +9,7 @@ module StackMaster
       new(config, base_dir)
     end
 
-    attr_accessor :stack_definitions,
+    attr_accessor :stacks,
                   :base_dir,
                   :stack_defaults,
                   :region_defaults,

@@ -56,7 +56,7 @@ Feature: Region aliases
       | ANSWER   | y     |
 
   Scenario: Create a stack using region aliases
-    When I run `stack_master apply ap-southeast-2 myapp-vpc --trace` interactively
+    When I run `stack_master apply staging myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | +    "Vpc": {                                                                  |

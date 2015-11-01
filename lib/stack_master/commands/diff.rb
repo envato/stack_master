@@ -4,10 +4,9 @@ module StackMaster
       include Command
       include Commander::UI
 
-      def initialize(config, region, stack_name)
+      def initialize(config, stack_definition)
         @config = config
-        @region = region.gsub('_', '-')
-        @stack_name = stack_name.gsub('_', '-')
+        @stack_definition = stack_definition
       end
 
       def perform
