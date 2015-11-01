@@ -8,6 +8,7 @@ module StackMaster
       def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition
+        @from_time = Time.now
       end
 
       def perform
@@ -70,7 +71,7 @@ module StackMaster
       end
 
       def tail_stack_events
-        StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout)
+        StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout, from: @from_time)
       end
     end
   end

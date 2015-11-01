@@ -4,10 +4,10 @@ module StackMaster
       include Command
       include StackMaster::Prompter
 
-      def initialize(config, region, stack_name)
-        @config = config
+      def initialize(region, stack_name)
         @region = region
         @stack_name = stack_name
+        @from_time = Time.now
       end
 
       def perform
@@ -42,7 +42,7 @@ module StackMaster
       end
 
       def tail_stack_events
-        StackEvents::Streamer.stream(@stack_name, @region, io: StackMaster.stdout)
+        StackEvents::Streamer.stream(@stack_name, @region, io: StackMaster.stdout, from: @from_time)
       end
 
     end
