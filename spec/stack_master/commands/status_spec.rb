@@ -1,7 +1,6 @@
 RSpec.describe StackMaster::Commands::Status do
   subject(:status) { described_class.new(config) }
-  let(:config) { instance_double(StackMaster::Config, stack_definitions: stack_definitions) }
-  let(:stack_definitions) { instance_double(StackMaster::Config::StackDefinitions, stacks: stacks) }
+  let(:config) { instance_double(StackMaster::Config, stacks: stacks) }
   let(:stacks) { [stack_definition_1, stack_definition_2] }
   let(:stack_definition_1) { double(:stack_definition_1, region: 'us-east-1', stack_name: 'stack1') }
   let(:stack_definition_2) { double(:stack_definition_2, region: 'us-east-1', stack_name: 'stack2') }

@@ -9,7 +9,7 @@ module StackMaster
 
       def perform
         tp.set :io, StackMaster.stdout
-        tp @config.stack_definitions.stacks.map { |stack_definition| get_status(stack_definition) }
+        tp @config.stacks.map { |stack_definition| get_status(stack_definition) }
       end
 
       private
