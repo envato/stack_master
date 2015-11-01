@@ -6,6 +6,10 @@ module StackMaster
         @cf = nil
       end
 
+      def delete_stack(options)
+        cf.delete_stack(options)
+      end
+
       def describe_stacks(options)
         cf.describe_stacks(options)
       end
