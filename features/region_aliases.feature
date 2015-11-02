@@ -61,6 +61,6 @@ Feature: Region aliases
       | Stack diff:                                                                    |
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
-      | "KeyName": "my-key"                                                            |
+      | KeyName: my-key                                                                |
       | 2020-10-29 00:00:00 +1100 myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE |
     Then the exit status should be 0

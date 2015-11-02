@@ -14,11 +14,11 @@ module StackMaster
     end
 
     def current_parameters
-      JSON.pretty_generate(sort_params(@current_stack.parameters))
+      YAML.dump(sort_params(@current_stack.parameters))
     end
 
     def proposed_parameters
-      JSON.pretty_generate(sort_params(@proposed_stack.parameters))
+      YAML.dump(sort_params(@proposed_stack.parameters))
     end
 
     def body_different?
