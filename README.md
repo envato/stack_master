@@ -98,8 +98,8 @@ the resolved values will be different.
 
 ### Stack Output
 
-The stack output resolver looks up outputs from other stacks in the same
-region. The expected format is `[stack-name]/[OutputName]`.
+The stack output parameter resolver looks up outputs from other stacks in the
+same region. The expected format is `[stack-name]/[OutputName]`.
 
 ```yaml
 vpc_id:
@@ -108,10 +108,10 @@ vpc_id:
 
 ### Secret
 
-The secret resolver expects a `secret_file` to be defined in the stack
-definition which is a GPG encrypted YAML file. Once decrypted and parses, the
-value provided to the secret resolver is used to lookup the associated key in
-the secret file. A common use case for this is to store database passwords.
+The secret parameters resolver expects a `secret_file` to be defined in the
+stack definition which is a GPG encrypted YAML file. Once decrypted and parsed,
+the value provided to the secret resolver is used to lookup the associated key
+in the secret file. A common use case for this is to store database passwords.
 
 stack_master.yml:
 
@@ -153,9 +153,6 @@ Looks up an SNS topic by name and returns the ARN.
 notification_topic:
   sns_topic: PagerDuty
 ```
-
-When applying changes to a stack, you'll see a diff of the proposed and current
-stack's template and parameters. After you accept the changes it will
 
 ## Commands
 
