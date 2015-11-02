@@ -9,6 +9,7 @@ module StackMaster
       Commander::Runner.instance_variable_set('@singleton', Commander::Runner.new(argv))
       StackMaster.stdout = @stdout
       StackMaster.stderr = @stderr
+      TablePrint::Config.io = StackMaster.stdout
     end
 
     def execute!
@@ -25,6 +26,15 @@ module StackMaster
         c.example 'update a stack named myapp-vpc in us-east-1', 'stack_master apply us-east-1 myapp-vpc'
         c.action do |args, options|
           execute_stack_command(StackMaster::Commands::Apply, args, options)
+        end
+      end
+
+      command :outputs do |c|
+        c.syntax = 'stack_master outputs [region] [stack_name]'
+        c.summary = 'Displays outputs for a stack'
+        c.description = "Displays outputs for a stack"
+        c.action do |args, options|
+          execute_stack_command(StackMaster::Commands::Outputs, args, options)
         end
       end
 
