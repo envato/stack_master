@@ -14,6 +14,10 @@ module StackMaster
         cf.describe_stacks(options)
       end
 
+      def describe_stack_resources(options)
+        cf.describe_stack_resources(options)
+      end
+
       def get_template(options)
         cf.get_template(options)
       end
