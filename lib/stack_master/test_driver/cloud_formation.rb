@@ -77,7 +77,8 @@ module StackMaster
       end
 
       def describe_stack_resources(options = {})
-        OpenStruct.new(stack_resources: @stack_resources[options.fetch(:stack_name)] || [])
+        @stacks.fetch(options.fetch(:stack_name)) { raise Aws::CloudFormation::Errors::ValidationError.new('', 'Stack does not exist') }
+        OpenStruct.new(stack_resources: @stack_resources[options.fetch(:stack_name)])
       end
 
       def get_template(options)

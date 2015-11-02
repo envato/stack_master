@@ -10,8 +10,8 @@ module StackMaster
       end
 
       def perform
-        if stack_resources.any?
-          tp stack_resources, :logical_resource_id, :physical_resource_id, :resource_type, :timestamp, :resource_status, :resource_status_reason, :description
+        if stack_resources
+          tp stack_resources, :logical_resource_id, :resource_type, :timestamp, :resource_status, :resource_status_reason, :description
         else
           StackMaster.stdout.puts "Stack doesn't exist"
         end
@@ -21,6 +21,8 @@ module StackMaster
 
       def stack_resources
         @stack_resources = cf.describe_stack_resources(stack_name: @stack_definition.stack_name).stack_resources
+      rescue Aws::CloudFormation::Errors::ValidationError
+        nil
       end
 
       def cf
