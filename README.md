@@ -161,7 +161,7 @@ stack_master init # initialises a directory structure and stack_master.yml file
 stack_master apply [region-or-alias] [stack-name] # Create or update a stack
 stack_master diff [region-or-alias] [stack-name] # Display a stack tempalte and parameter diff
 stack_master list # lists stack definitions
-stack_master status # shows the status of stacks and wehether the local version differs from what is live
+stack_master status # Displays the status of each stacks
 ```
 
 ## Applying updates
