@@ -30,11 +30,7 @@ Feature: Apply command
         resources.vpc do
           type 'AWS::EC2::VPC'
           properties do
-            cidr_block('Fn::FindInMap' => '10.200.0.0/16')
-            tags _array(
-              { Key: 'Name', Value: 'myapp-vpc' },
-              { Key: 'network', Value: 'public' }
-            )
+            cidr_block '10.200.0.0/16'
           end
         end
 

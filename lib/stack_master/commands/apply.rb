@@ -5,7 +5,7 @@ module StackMaster
       include Commander::UI
       include StackMaster::Prompter
 
-      def initialize(config, stack_definition)
+      def initialize(config, stack_definition, options = {})
         @config = config
         @stack_definition = stack_definition
         @from_time = Time.now

@@ -4,7 +4,7 @@ module StackMaster
       include Command
       include Commander::UI
 
-      def initialize(config, stack_definition)
+      def initialize(config, stack_definition, options = {})
         @config = config
         @stack_definition = stack_definition
       end
