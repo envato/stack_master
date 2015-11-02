@@ -12,7 +12,7 @@ region_defaults:
       - test_arn
     secret_file: production.yml.gpg
     stack_policy_file: my_policy.json
-  ap-southeast-2:
+  staging:
     tags:
       environment: staging
     notification_arns:

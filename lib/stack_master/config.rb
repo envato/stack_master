@@ -19,13 +19,13 @@ module StackMaster
       @config = config
       @base_dir = base_dir
       @stack_defaults = config.fetch('stack_defaults', {})
-      @region_defaults = Utils.underscore_keys_to_hyphen(config.fetch('region_defaults', {}))
       @region_aliases = Utils.underscore_keys_to_hyphen(config.fetch('region_aliases', {}))
       @region_to_aliases = @region_aliases.inject({}) do |hash, (key, value)|
         hash[value] ||= []
         hash[value] << key
         hash
       end
+      @region_defaults = normalise_region_defaults(config.fetch('region_defaults', {}))
       @stacks = []
       load_config
     end
@@ -73,6 +73,14 @@ module StackMaster
     def build_stack_defaults(region)
       region_defaults = @region_defaults.fetch(region, {}).deep_dup
       @stack_defaults.deep_dup.deeper_merge(region_defaults)
+    end
+
+    def normalise_region_defaults(region_defaults)
+      region_defaults.inject({}) do |normalised_aliases, (region_or_alias, value)|
+        region = unalias_region(region_or_alias)
+        normalised_aliases[Utils.underscore_to_hyphen(region)] = value
+        normalised_aliases
+      end
     end
   end
 end
