@@ -14,11 +14,11 @@ module StackMaster
     end
 
     def current_parameters
-      sort_params(@current_stack.parameters).to_yaml
+      YAML.dump(sort_params(@current_stack.parameters))
     end
 
     def proposed_parameters
-      sort_params(@proposed_stack.parameters).to_yaml
+      YAML.dump(sort_params(@proposed_stack.parameters))
     end
 
     def body_different?
