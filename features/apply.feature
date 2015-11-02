@@ -83,7 +83,7 @@ Feature: Apply command
       | Stack diff:                                                                    |
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
-      | "KeyName": "my-key"                                                            |
+      | KeyName: my-key                                                                |
       | 2020-10-29 00:00:00 +1100 myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE |
     Then the exit status should be 0
 
@@ -93,11 +93,11 @@ Feature: Apply command
       | ANSWER   | n     |
     When I run `stack_master apply us-east-1 myapp-vpc --trace` interactively
     And the output should contain all of these lines:
-      | Stack diff:                                                                    |
-      | +    "Vpc": {                                                                  |
-      | Parameters diff:                                                               |
-      | "KeyName": "my-key"                                                            |
-      | aborted                                                                        |
+      | Stack diff:      |
+      | +    "Vpc": {    |
+      | Parameters diff: |
+      | KeyName: my-key  |
+      | aborted          |
     And the output should not contain all of these lines:
       | 2020-10-29 00:00:00 +1100 myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE |
     Then the exit status should be 0
@@ -174,7 +174,7 @@ Feature: Apply command
       | Stack diff:                                                                    |
       | +    "TestSg": {                                                               |
       | Parameters diff:                                                               |
-      | "VpcId": "vpc-xxxxxx"                                                          |
+      | VpcId: vpc-xxxxxx                                                              |
       | 2020-10-29 00:00:00 +1100 myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE |
     Then the exit status should be 0
 
