@@ -73,4 +73,9 @@ RSpec.describe StackMaster::Config do
       additional_parameter_lookup_dirs: ['staging']
     ))
   end
+
+  it 'allows region aliases in region defaults' do
+    config = StackMaster::Config.new({'region_aliases' => { 'production' => 'us-east-1' }, 'region_defaults' => { 'production' => { 'secret_file' => 'production.yml.gpg' }}, 'stacks' => {}}, '/base')
+    expect(config.region_defaults).to eq('us-east-1' => { 'secret_file' => 'production.yml.gpg' })
+  end
 end
