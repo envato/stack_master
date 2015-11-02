@@ -42,8 +42,10 @@ RSpec.describe StackMaster::Commands::Apply do
     end
 
     it 'streams events' do
-      apply
-      expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT)
+      Timecop.freeze(Time.local(1990)) do
+        apply
+        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
+      end
     end
   end
 
@@ -70,8 +72,10 @@ RSpec.describe StackMaster::Commands::Apply do
     end
 
     it 'streams events' do
-      apply
-      expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT)
+      Timecop.freeze(Time.local(1990)) do
+        apply
+        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
+      end
     end
   end
 end

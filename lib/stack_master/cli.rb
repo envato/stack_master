@@ -85,6 +85,21 @@ module StackMaster
         end
       end
 
+      command :delete do |c|
+        c.syntax = 'stack_master delete [region] [stack_name]'
+        c.summary = ''
+        c.description = ''
+        c.example 'description', 'Delete a stack'
+        c.action do |args, options|
+          unless args.size == 2
+            say "Invalid arguments. stack_master delete [region] [stack_name]"
+            return
+          end
+          StackMaster.cloud_formation_driver.set_region(args[0])
+          StackMaster::Commands::Delete.perform(*args)
+        end
+      end
+
       run!
     end
 

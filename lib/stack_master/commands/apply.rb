@@ -3,10 +3,12 @@ module StackMaster
     class Apply
       include Command
       include Commander::UI
+      include StackMaster::Prompter
 
       def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition
+        @from_time = Time.now
       end
 
       def perform
@@ -69,18 +71,7 @@ module StackMaster
       end
 
       def tail_stack_events
-        StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout)
-      end
-
-      def ask?(question)
-        StackMaster.stdout.print question
-        answer = if ENV['STUB_AWS']
-                   ENV['ANSWER']
-                 else
-                   STDIN.getch.chomp
-                 end
-        StackMaster.stdout.puts
-        answer == 'y'
+        StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout, from: @from_time)
       end
     end
   end
