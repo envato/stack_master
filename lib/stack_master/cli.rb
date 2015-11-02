@@ -52,6 +52,19 @@ module StackMaster
         end
       end
 
+      command :events do |c|
+        c.syntax = 'stack_master events [region] [stack_name]'
+        c.summary = "Shows events for a stack"
+        c.description = "Shows events for a stack"
+        c.example 'show events for myapp-vpc in us-east-1', 'stack_master events us-east-1 myapp-vpc'
+        c.option '--number Integer', Integer, 'Number of recent events to show'
+        c.option '--all', 'Show all events'
+        c.option '--tail', 'Tail events'
+        c.action do |args, options|
+          execute_stack_command(StackMaster::Commands::Events, args, options)
+        end
+      end
+
       command :list do |c|
         c.syntax = 'stack_master list'
         c.summary = 'List stack definitions'
@@ -126,7 +139,7 @@ module StackMaster
         say "Could not find stack definition #{stack_name} in region #{region}"
         return
       end
-      command.perform(config, stack_definition)
+      command.perform(config, stack_definition, options)
     end
   end
 end
