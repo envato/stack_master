@@ -31,7 +31,7 @@ module StackMaster
 
     def output_diff
       if @current_stack
-        text_diff('Stack', current_template, proposed_template, context: @context, include_diff_info: true)
+        text_diff('Stack', current_template, proposed_template, context: 7, include_diff_info: true)
         text_diff('Parameters', current_parameters, proposed_parameters)
       else
         text_diff('Stack', '', proposed_template)
