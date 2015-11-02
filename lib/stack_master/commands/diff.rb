@@ -20,7 +20,7 @@ module StackMaster
       end
 
       def stack
-        @stack ||= Stack.find(@region, @stack_name)
+        @stack ||= Stack.find(@stack_definition.region, @stack_definition.stack_name)
       end
 
       def proposed_stack
