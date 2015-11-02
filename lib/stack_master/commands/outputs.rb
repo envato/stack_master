@@ -4,7 +4,7 @@ module StackMaster
       include Command
       include Commander::UI
 
-      def initialize(config, stack_definition)
+      def initialize(config, stack_definition, options = {})
         @config = config
         @stack_definition = stack_definition
       end
@@ -13,7 +13,7 @@ module StackMaster
         if stack
           tp stack.outputs, :output_key, :output_value, :description
         else
-          StackMaster.stdout.puts "Stack doesn't exist yet"
+          StackMaster.stdout.puts "Stack doesn't exist"
         end
       end
 
