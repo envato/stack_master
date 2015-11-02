@@ -75,7 +75,7 @@ stacks:
 Parameters are loaded from multiple YAML files, merged from the following lookup paths:
 
 - parameters/[stack_name].yml
-- parameters/[region]/[stack_name].yml
+- parameters/[underscored_region]/[stack_name].yml
 - parameters/[region_alias]/[stack_name].yml
 
 A simple parameter file could look like this:
@@ -157,9 +157,12 @@ notification_topic:
 ## Commands
 
 ```bash
+stack_master help # Display up to date docs on command
 stack_master init # initialises a directory structure and stack_master.yml file
 stack_master apply [region-or-alias] [stack-name] # Create or update a stack
 stack_master diff [region-or-alias] [stack-name] # Display a stack tempalte and parameter diff
+stack_master delete [region-or-alias] [stack-name] # Delete a stack
+stack_master events [region-or-alias] [stack-name] # Display events
 stack_master list # lists stack definitions
 stack_master status # Displays the status of each stacks
 ```
