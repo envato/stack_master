@@ -172,7 +172,7 @@ The apply command does the following:
 - Displays a diff of the current stack (what is on CF currently), and the local proposed stack.
 - Asks if the update should continue.
 - If yes, the API call is made to update or create the stack.
-- Stack events are outputted until an end state is reached.
+- Stack events are outputted until CloudFormation has finished applying the changes.
 
 Screenshots:
 
