@@ -43,8 +43,11 @@ module StackMaster
 
       def tail_stack_events
         StackEvents::Streamer.stream(@stack_name, @region, io: StackMaster.stdout, from: @from_time)
+        StackMaster.stdout.puts "Stack deleted"
+      rescue Aws::CloudFormation::Errors::ValidationError
+        # Unfortunately the stack as a tendency of going away before we get the final delete event.
+        StackMaster.stdout.puts "Stack deleted"
       end
-
     end
   end
 end
