@@ -10,7 +10,7 @@ module StackMaster
       end
 
       def print_event(event)
-        @io.puts "#{event.timestamp} #{event.logical_resource_id} #{event.resource_type} #{event.resource_status} #{event.resource_status_reason}".colorize(event_colour(event))
+        @io.puts "#{event.timestamp.localtime} #{event.logical_resource_id} #{event.resource_type} #{event.resource_status} #{event.resource_status_reason}".colorize(event_colour(event))
       end
 
       def event_colour(event)
