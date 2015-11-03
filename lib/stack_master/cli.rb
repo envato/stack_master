@@ -20,7 +20,7 @@ module StackMaster
       global_option '-c', '--config FILE', 'Config file to use'
 
       command :apply do |c|
-        c.syntax = 'stack_master apply [region] [stack_name]'
+        c.syntax = 'stack_master apply [region_or_alias] [stack_name]'
         c.summary = 'Creates or updates a stack'
         c.description = "Creates or updates a stack. Shows a diff of the proposed stack's template and parameters. Tails stack events until CloudFormation has completed."
         c.example 'update a stack named myapp-vpc in us-east-1', 'stack_master apply us-east-1 myapp-vpc'
@@ -30,7 +30,7 @@ module StackMaster
       end
 
       command :outputs do |c|
-        c.syntax = 'stack_master outputs [region] [stack_name]'
+        c.syntax = 'stack_master outputs [region_or_alias] [stack_name]'
         c.summary = 'Displays outputs for a stack'
         c.description = "Displays outputs for a stack"
         c.action do |args, options|
@@ -39,7 +39,7 @@ module StackMaster
       end
 
       command :init do |c|
-        c.syntax = 'stack_master init [region] [stack_name]'
+        c.syntax = 'stack_master init [region_or_alias] [stack_name]'
         c.summary = 'Initialises the expected directory structure and stack_master.yml file'
         c.description = 'Initialises the expected directory structure and stack_master.yml file'
         c.option('--overwrite', 'Overwrite existing files')
@@ -53,7 +53,7 @@ module StackMaster
       end
 
       command :diff do |c|
-        c.syntax = 'stack_master diff [region] [stack_name]'
+        c.syntax = 'stack_master diff [region_or_alias] [stack_name]'
         c.summary = "Shows a diff of the proposed stack's template and parameters"
         c.description = "Shows a diff of the proposed stack's template and parameters"
         c.example 'diff a stack named myapp-vpc in us-east-1', 'stack_master diff us-east-1 myapp-vpc'
@@ -63,7 +63,7 @@ module StackMaster
       end
 
       command :events do |c|
-        c.syntax = 'stack_master events [region] [stack_name]'
+        c.syntax = 'stack_master events [region_or_alias] [stack_name]'
         c.summary = "Shows events for a stack"
         c.description = "Shows events for a stack"
         c.example 'show events for myapp-vpc in us-east-1', 'stack_master events us-east-1 myapp-vpc'
@@ -87,7 +87,7 @@ module StackMaster
       end
 
       command :validate do |c|
-        c.syntax = 'stack_master validate [region] [stack_name]'
+        c.syntax = 'stack_master validate [region_or_alias] [stack_name]'
         c.summary = 'Validate a template'
         c.description = 'Validate a template'
         c.example 'validate a stack named myapp-vpc in us-east-1', 'stack_master validate us-east-1 myapp-vpc'
@@ -98,8 +98,8 @@ module StackMaster
 
       command :status do |c|
         c.syntax = 'stack_master status'
-        c.summary = ''
-        c.description = ''
+        c.summary = 'Check the current status stacks.'
+        c.description = 'Checks the status of all stacks defined in the stack_master.yml file. Warning this operation can be somewhat slow.'
         c.example 'description', 'Check the status of all stack definitions'
         c.action do |args, options|
           say "Invalid arguments. stack_master status" and return unless args.size == 0
@@ -110,8 +110,8 @@ module StackMaster
 
       command :delete do |c|
         c.syntax = 'stack_master delete [region] [stack_name]'
-        c.summary = ''
-        c.description = ''
+        c.summary = 'Delete an existing stack'
+        c.description = 'Deletes a stack. The stack does not necessarily have to appear in the stack_master.yml file.'
         c.example 'description', 'Delete a stack'
         c.action do |args, options|
           unless args.size == 2
