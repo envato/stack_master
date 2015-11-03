@@ -32,6 +32,19 @@ module StackMaster
       attribute :resource_properties, String
     end
 
+    class StackResource
+      include Virtus.model
+      attribute :stack_name, String
+      attribute :stack_id, String
+      attribute :logical_resource_id, String
+      attribute :physical_resource_id, String
+      attribute :resource_type, String
+      attribute :timestamp, Time
+      attribute :resource_status, String
+      attribute :resource_status_reason, String
+      attribute :description, String
+    end
+
     class CloudFormation
       def initialize
         reset
@@ -45,6 +58,7 @@ module StackMaster
         @stacks = {}
         @templates = {}
         @stack_events = {}
+        @stack_resources = {}
         @stack_policies = {}
       end
 
@@ -60,6 +74,11 @@ module StackMaster
           @stacks.values
         end
         OpenStruct.new(stacks: stacks, next_token: nil)
+      end
+
+      def describe_stack_resources(options = {})
+        @stacks.fetch(options.fetch(:stack_name)) { raise Aws::CloudFormation::Errors::ValidationError.new('', 'Stack does not exist') }
+        OpenStruct.new(stack_resources: @stack_resources[options.fetch(:stack_name)])
       end
 
       def get_template(options)
@@ -99,6 +118,11 @@ module StackMaster
 
       def add_stack(stack)
         @stacks[stack.fetch(:stack_name)] = Stack.new(stack)
+      end
+
+      def add_stack_resource(options)
+        @stack_resources[options.fetch(:stack_name)] ||= []
+        @stack_resources[options.fetch(:stack_name)] << StackResource.new(options)
       end
 
       def set_template(stack_name, template)

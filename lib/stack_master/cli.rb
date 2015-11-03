@@ -75,6 +75,15 @@ module StackMaster
         end
       end
 
+      command :resources do |c|
+        c.syntax = 'stack_master resources [region] [stack_name]'
+        c.summary = "Shows stack resources"
+        c.description = "Shows stack resources"
+        c.action do |args, options|
+          execute_stack_command(StackMaster::Commands::Resources, args, options)
+        end
+      end
+
       command :list do |c|
         c.syntax = 'stack_master list'
         c.summary = 'List stack definitions'

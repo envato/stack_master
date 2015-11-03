@@ -5,6 +5,13 @@ Given(/^I stub the following stack events:$/) do |table|
   end
 end
 
+Given(/^I stub the following stack resources:$/) do |table|
+  table.hashes.each do |row|
+    row.symbolize_keys!
+    StackMaster.cloud_formation_driver.add_stack_resource(row)
+  end
+end
+
 def extract_hash_from_kv_string(string)
   string.to_s.split(',').inject({}) do |hash, kv|
     key, value = kv.split('=')
