@@ -73,10 +73,10 @@ RSpec.describe StackMaster::Stack do
     let(:stack_definition) { StackMaster::Config::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name, notification_arns: ['test_arn'], stack_policy_file: 'no_replace_rds.json') }
     let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
     subject(:stack) { StackMaster::Stack.generate(stack_definition, config) }
-    let(:parameter_hash) { { 'db_password' => { 'secret' => 'db_password' } } }
-    let(:resolved_parameters) { { 'db_password' => 'sdfgjkdhlfjkghdflkjghdflkjg' } }
+    let(:parameter_hash) { { 'DbPassword' => { 'secret' => 'db_password' } } }
+    let(:resolved_parameters) { { 'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium' } }
     let(:template_file_name) { 'template.rb' }
-    let(:template_body) { '{}' }
+    let(:template_body) { '{"Parameters": { "VpcId": { "Description": "VPC ID" }, "InstanceType": { "Description": "Instance Type", "Default": "t2.micro" }} }' }
     let(:stack_policy_body) { '{}' }
 
     before do
@@ -112,6 +112,14 @@ RSpec.describe StackMaster::Stack do
 
     it 'has the stack policy' do
       expect(stack.stack_policy_body).to eq stack_policy_body
+    end
+
+    it 'extracts default template parameters' do
+      expect(stack.template_default_parameters).to eq('VpcId' => nil, 'InstanceType' => 't2.micro')
+    end
+
+    it 'exposes parameters with defaults taken into account' do
+      expect(stack.parameters_with_defaults).to eq('DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium', 'VpcId' => nil)
     end
   end
 
