@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = StackMaster::VERSION
   spec.authors       = ["Steve Hodgkiss", "Glen Stampoultzis"]
   spec.email         = ["steve@hodgkiss.me", "gstamp@gmail.com"]
-  spec.summary       = %q{AWS Stack Management}
+  spec.summary       = %q{StackMaster is a sure-footed way of creating, updating and keeping track of Amazon (AWS) CloudFormation stacks.}
   spec.description   = %q{}
   spec.homepage      = "https://github.com/envato/stack_master"
   spec.license       = "MIT"
