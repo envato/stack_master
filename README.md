@@ -179,9 +179,9 @@ The apply command does the following:
 - If yes, the API call is made to update or create the stack.
 - Stack events are outputted until CloudFormation has finished applying the changes.
 
-Screenshots:
+Demo:
 
-[TODO]
+![Alt text](/apply_demo.gif?raw=true "Apply Demo")
 
 ## Maintainers
 
