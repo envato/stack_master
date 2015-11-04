@@ -1,0 +1,2 @@
+VpcId:
+  stack_output: myapp-vpc/VpcId
