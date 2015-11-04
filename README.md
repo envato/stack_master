@@ -81,7 +81,7 @@ stacks:
 Parameters are loaded from multiple YAML files, merged from the following lookup paths:
 
 - parameters/[stack_name].yml
-- parameters/[underscored_region]/[stack_name].yml
+- parameters/[region]/[stack_name].yml
 - parameters/[region_alias]/[stack_name].yml
 
 A simple parameter file could look like this:
