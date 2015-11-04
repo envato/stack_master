@@ -9,6 +9,7 @@ require 'active_support/core_ext/string'
 require "erb"
 require 'sparkle_formation'
 require 'dotgpg'
+require 'ruby-progressbar'
 
 require "stack_master/ctrl_c"
 require "stack_master/command"
