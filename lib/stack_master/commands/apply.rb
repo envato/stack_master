@@ -9,6 +9,7 @@ module StackMaster
         @config = config
         @stack_definition = stack_definition
         @from_time = Time.now
+        @updating = false
       end
 
       def perform
@@ -17,8 +18,12 @@ module StackMaster
           StackMaster.stdout.puts "Stack update aborted"
           return
         end
-        create_or_update_stack
-        tail_stack_events
+        begin
+          create_or_update_stack
+          tail_stack_events
+        rescue StackMaster::CtrlC
+          cancel
+        end
       end
 
       private
@@ -43,6 +48,14 @@ module StackMaster
         StackDiffer.new(proposed_stack, stack).output_diff
       end
 
+      def cancel
+        if @updating
+          StackMaster.stdout.puts "Attempting to cancel stack update"
+          cf.cancel_update_stack({stack_name: @stack_definition.stack_name})
+          tail_stack_events
+        end
+      end
+
       def create_or_update_stack
         if stack_exists?
           update_stack
@@ -52,6 +65,7 @@ module StackMaster
       end
 
       def update_stack
+        @updating = true
         cf.update_stack(stack_options)
       end
 

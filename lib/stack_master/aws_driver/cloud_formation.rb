@@ -14,6 +14,10 @@ module StackMaster
         cf.describe_stacks(options)
       end
 
+      def cancel_update_stack(options)
+        cf.cancel_update_stack(options)
+      end
+
       def describe_stack_resources(options)
         cf.describe_stack_resources(options)
       end
