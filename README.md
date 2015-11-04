@@ -1,12 +1,17 @@
-# StackMaster
+![StackMaster](/logo.png?raw=true)
 
-A tool for applying updates to your project's CloudFormation stacks.
+StackMaster is a sure-fotted way of creating, updating and keeping track of
+Amazon (AWS) CloudFormation stacks.
 
-## Features
+- See the changes you are making to a stack before you apply them
+- Connect stacks
+- Keep secrets secret
+- Customise stacks in different environments
+- Apply descriptive labels to regions
 
-- Synchronous visibility into stack updates.
-- Stack template and parameter diffing.
-- Parameter resolvers to reference outputs from another stack, or secrets from a gpg file.
+StackMaster provides an easy command line interface to managing CloudFormation
+stacks defined with templates specified in either the
+[SparkleFormation](http://www.sparkleformation.io) DSL or standard JSON format.
 
 ## Installation
 
@@ -158,14 +163,15 @@ notification_topic:
 ## Commands
 
 ```bash
-stack_master help # Display up to date docs on command
-stack_master init # initialises a directory structure and stack_master.yml file
+stack_master help # Display up to date docs on the commands available
+stack_master init # Initialises a directory structure and stack_master.yml file
+stack_master list # Lists stack definitions
 stack_master apply [region-or-alias] [stack-name] # Create or update a stack
 stack_master diff [region-or-alias] [stack-name] # Display a stack tempalte and parameter diff
 stack_master delete [region-or-alias] [stack-name] # Delete a stack
-stack_master events [region-or-alias] [stack-name] # Display event for a stack
+stack_master events [region-or-alias] [stack-name] # Display events for a stack
 stack_master outputs [region-or-alias] [stack-name] # Display outputs for a stack
-stack_master list # lists stack definitions
+stack_master resources [region-or-alias] [stack-name] # Display outputs for a stack
 stack_master status # Displays the status of each stacks
 ```
 
@@ -173,15 +179,16 @@ stack_master status # Displays the status of each stacks
 
 The apply command does the following:
 
-- Resolves the proposed stack json, parameters etc.
-- Displays a diff of the current stack (what is on CF currently), and the local proposed stack.
+- Builds the proposed stack json and resolves parameters.
+- Fetches the current state of the stack from CloudFormation.
+- Displays a diff of the current stack and the proposed stack.
 - Asks if the update should continue.
 - If yes, the API call is made to update or create the stack.
-- Stack events are outputted until CloudFormation has finished applying the changes.
+- Stack events are displayed until CloudFormation has finished applying the changes.
 
 Demo:
 
-![Alt text](/apply_demo.gif?raw=true "Apply Demo")
+![Apply Demo](/apply_demo.gif?raw=true)
 
 ## Maintainers
 
