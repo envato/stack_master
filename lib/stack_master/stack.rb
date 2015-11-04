@@ -21,8 +21,12 @@ module StackMaster
       end
     end
 
-    def compressed_template_body
-      @compressed_template_body ||= JSON.dump(template_hash)
+    def maybe_compressed_template_body
+      if template_body.size > MAX_TEMPLATE_SIZE
+        @compressed_template_body ||= JSON.dump(template_hash)
+      else
+        template_body
+      end
     end
 
     def self.find(region, stack_name)
@@ -67,7 +71,7 @@ module StackMaster
     end
 
     def too_big?
-      compressed_template_body.size > MAX_TEMPLATE_SIZE
+      maybe_compressed_template_body.size > MAX_TEMPLATE_SIZE
     end
 
     def aws_parameters
