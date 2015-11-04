@@ -2,7 +2,7 @@ RSpec.describe StackMaster::Validator do
 
   subject(:validator) { described_class.new(stack_definition) }
   let(:stack_definition) do
-    StackMaster::Config::StackDefinition.new(
+    StackMaster::StackDefinition.new(
       region: 'us-east-1',
       stack_name: 'myapp_vpc',
       template: 'myapp_vpc.json',

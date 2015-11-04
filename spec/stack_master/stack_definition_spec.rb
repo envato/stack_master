@@ -1,6 +1,6 @@
-RSpec.describe StackMaster::Config::StackDefinition do
+RSpec.describe StackMaster::StackDefinition do
   subject(:stack_definition) do
-    StackMaster::Config::StackDefinition.new(
+    StackMaster::StackDefinition.new(
       region: region,
       stack_name: stack_name,
       template: template,

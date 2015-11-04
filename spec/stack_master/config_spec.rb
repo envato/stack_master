@@ -2,7 +2,7 @@ RSpec.describe StackMaster::Config do
   subject(:loaded_config) { StackMaster::Config.load!('spec/fixtures/stack_master.yml') }
   let(:base_dir) { File.expand_path('spec/fixtures') }
   let(:myapp_vpc_definition) {
-    StackMaster::Config::StackDefinition.new(
+    StackMaster::StackDefinition.new(
       region: 'us-east-1',
       stack_name: 'myapp-vpc',
       template: 'myapp_vpc.json',
@@ -59,7 +59,7 @@ RSpec.describe StackMaster::Config do
   end
 
   it 'deep merges stack attributes' do
-    expect(loaded_config.find_stack('ap-southeast-2', 'myapp-vpc')).to eq(StackMaster::Config::StackDefinition.new(
+    expect(loaded_config.find_stack('ap-southeast-2', 'myapp-vpc')).to eq(StackMaster::StackDefinition.new(
       stack_name: 'myapp-vpc',
       region: 'ap-southeast-2',
       tags: {
