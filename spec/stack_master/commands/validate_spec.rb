@@ -5,7 +5,7 @@ RSpec.describe StackMaster::Commands::Validate do
   let(:region) { "us-east-1" }
   let(:stack_name) { "mystack" }
   let(:stack_definition) do
-    StackMaster::Config::StackDefinition.new(
+    StackMaster::StackDefinition.new(
       region: region,
       stack_name: stack_name,
       template: 'myapp_vpc.json',
