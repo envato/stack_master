@@ -1,0 +1,13 @@
+stack_defaults:
+  tags:
+    application: my-awesome-app
+region_defaults:
+  ap_southeast_2:
+    tags:
+      environment: production
+stacks:
+  ap_southeast_2:
+    myapp_vpc:
+      template: myapp_vpc.rb
+    myapp_web:
+      template: myapp_web.rb

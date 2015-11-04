@@ -21,8 +21,9 @@ With bundler:
 ## Configuration
 
 Stacks are defined inside a `stack_master.yml` YAML file. When running
-`stack_master`, it is assumed that this file will exist in the current
-working directory. Here's an example configuration file:
+`stack_master`, it is assumed that this file will exist in the current working
+directory, or that the file is passed in with `--config
+/path/to/stack_master.yml`.  Here's an example configuration file:
 
 ```
 region_aliases:
@@ -178,9 +179,9 @@ The apply command does the following:
 - If yes, the API call is made to update or create the stack.
 - Stack events are outputted until CloudFormation has finished applying the changes.
 
-Screenshots:
+Demo:
 
-[TODO]
+![Alt text](/apply_demo.gif?raw=true "Apply Demo")
 
 ## Maintainers
 
