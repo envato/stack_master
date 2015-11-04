@@ -5,7 +5,8 @@ module StackMaster
         SparkleFormation.sparkle_path = File.dirname(template_file_path)
         JSON.pretty_generate(SparkleFormation.compile(template_file_path))
       else
-        File.read(template_file_path)
+        # Parse the json and rewrite compressed
+        JSON.dump(JSON.parse(File.read(template_file_path)))
       end
     end
   end

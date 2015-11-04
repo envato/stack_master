@@ -8,11 +8,11 @@ RSpec.describe StackMaster::TemplateCompiler do
       let(:template_file_path) { '/base_dir/templates/template.json' }
 
       before do
-        allow(File).to receive(:read).with(template_file_path).and_return('body')
+        allow(File).to receive(:read).with(template_file_path).and_return('{ }')
       end
 
       it "reads from the template file path" do
-        expect(compile).to eq('body')
+        expect(compile).to eq('{}')
       end
     end
 
