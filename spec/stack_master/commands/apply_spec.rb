@@ -5,7 +5,8 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:config) { double(find_stack: stack_definition) }
   let(:notification_arn) { 'test_arn' }
   let(:stack_definition) { StackMaster::Config::StackDefinition.new(base_dir: '/base_dir', region: region, stack_name: stack_name) }
-  let(:proposed_stack) { StackMaster::Stack.new(template_body: '{}', tags: { 'environment' => 'production' } , parameters: { 'param_1' => 'hello' }, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
+  let(:template_body) { '{}' }
+  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, tags: { 'environment' => 'production' } , parameters: { 'param_1' => 'hello' }, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
   let(:stack_policy_body) { '{}' }
 
   before do
@@ -69,6 +70,13 @@ RSpec.describe StackMaster::Commands::Apply do
         notification_arns: [notification_arn],
         stack_policy_body: stack_policy_body
       )
+    end
+
+    context 'the stack is too large' do
+      let(:template_body) { ' ' * 60000 }
+      it 'exits with a message' do
+        expect { apply }.to output(/The stack is larger than the limit set by AWS/).to_stdout
+      end
     end
 
     it 'streams events' do

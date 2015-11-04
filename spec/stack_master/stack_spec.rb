@@ -114,4 +114,16 @@ RSpec.describe StackMaster::Stack do
       #expect(
     end
   end
+
+  describe '#too_big?' do
+    let(:big_stack) { described_class.new(template_body: ' ' * 60000) }
+    let(:little_stack) { described_class.new(template_body: ' ' * 1000) }
+
+    it 'returns true for big stacks' do
+      expect(big_stack.too_big?).to be_truthy
+    end
+    it 'returns false for small stacks' do
+      expect(little_stack.too_big?).to be_falsey
+    end
+  end
 end

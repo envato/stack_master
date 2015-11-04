@@ -19,6 +19,7 @@ module StackMaster
           return
         end
         begin
+          return if stack_too_big
           create_or_update_stack
           tail_stack_events
         rescue StackMaster::CtrlC
@@ -63,6 +64,15 @@ module StackMaster
           update_stack
         else
           create_stack
+        end
+      end
+
+      def stack_too_big
+        if proposed_stack.too_big?
+          StackMaster.stdout.puts 'The stack is larger than the limit set by AWS. See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
+          true
+        else
+          false
         end
       end
 
