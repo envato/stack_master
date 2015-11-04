@@ -10,6 +10,7 @@ require "erb"
 require 'sparkle_formation'
 require 'dotgpg'
 
+require "stack_master/ctrl_c"
 require "stack_master/command"
 require "stack_master/version"
 require "stack_master/stack"
