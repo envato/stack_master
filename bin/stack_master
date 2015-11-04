@@ -7,4 +7,10 @@ if ENV['STUB_AWS'] == 'true'
   require 'stack_master/testing'
 end
 
-StackMaster::CLI.new(ARGV.dup).execute!
+trap("SIGINT") { raise StackMaster::CtrlC }
+
+begin
+  StackMaster::CLI.new(ARGV.dup).execute!
+rescue StackMaster::CtrlC
+  StackMaster.stdout.puts "Exiting..."
+end
