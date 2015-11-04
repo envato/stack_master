@@ -115,9 +115,20 @@ RSpec.describe StackMaster::Stack do
     end
   end
 
+  describe "#compressed_template_body" do
+    let(:stack) { described_class.new(template_body: '{     }' ) }
+    subject(:compressed_template_body) do
+      stack.compressed_template_body
+    end
+
+    it "removes spaces from the json" do
+      expect(compressed_template_body).to eq("{}")
+    end
+  end
+
   describe '#too_big?' do
-    let(:big_stack) { described_class.new(template_body: ' ' * 60000) }
-    let(:little_stack) { described_class.new(template_body: ' ' * 1000) }
+    let(:big_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 60000}\"}") }
+    let(:little_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 1000}\"}") }
 
     it 'returns true for big stacks' do
       expect(big_stack.too_big?).to be_truthy

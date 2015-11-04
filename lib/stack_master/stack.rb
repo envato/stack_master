@@ -21,6 +21,10 @@ module StackMaster
       end
     end
 
+    def compressed_template_body
+      @compressed_template_body ||= JSON.dump(template_hash)
+    end
+
     def self.find(region, stack_name)
       cf = StackMaster.cloud_formation_driver
       cf_stack = cf.describe_stacks(stack_name: stack_name).stacks.first
@@ -63,7 +67,7 @@ module StackMaster
     end
 
     def too_big?
-      template_body.size > MAX_TEMPLATE_SIZE
+      compressed_template_body.size > MAX_TEMPLATE_SIZE
     end
 
     def aws_parameters
