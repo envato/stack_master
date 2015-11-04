@@ -111,7 +111,7 @@ RSpec.describe StackMaster::Stack do
     end
 
     it 'has the stack policy' do
-      #expect(
+      expect(stack.stack_policy_body).to eq stack_policy_body
     end
   end
 
