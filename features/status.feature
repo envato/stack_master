@@ -9,6 +9,8 @@ Feature: Status command
             template: stack1.json
           stack2:
             template: stack2.json
+          stack3:
+            template: stack3.json
       """
     And a directory named "parameters"
     And a file named "parameters/stack1.yml" with:
@@ -54,6 +56,11 @@ Feature: Status command
   "Outputs": {}
 }
       """
+    And a file named "templates/stack3.json" with:
+      """
+{
+}
+      """
     And I set the environment variables to:
       | variable | value |
       | STUB_AWS | true  |
@@ -63,9 +70,9 @@ Feature: Status command
       | variable | value |
       | ANSWER   | y     |
     And I stub the following stacks:
-      | stack_id | stack_name | parameters     | region    |
-      |        1 | stack1     | KeyName=my-key | us-east-1 |
-      |        2 | stack2     |                | us-east-1 |
+      | stack_id | stack_name | parameters     | region    | stack_status    |
+      |        1 | stack1     | KeyName=my-key | us-east-1 | CREATE_COMPLETE |
+      |        2 | stack2     |                | us-east-1 | UPDATE_COMPLETE |
     And I stub a template for the stack "stack1":
       """
 {
@@ -105,16 +112,13 @@ Feature: Status command
 }
       """
 
-    And I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type | timestamp           |
-      |        1 |        1 | stack1     | -                   | CREATE_COMPLETE | -             | 2020-10-29 00:00:00 |
-      |        1 |        1 | stack2     | -                   | CREATE_COMPLETE | -             | 2020-10-29 00:00:00 |
     When I run `stack_master status --trace` interactively
     And the output should contain all of these lines:
       | REGION    \| STACK_NAME \| STACK_STATUS    \| DIFFERENT |
       | ----------\|------------\|-----------------\|---------- |
       | us-east-1 \| stack1     \| CREATE_COMPLETE \| Yes       |
-      | us-east-1 \| stack2     \| CREATE_COMPLETE \| No        |
+      | us-east-1 \| stack2     \| UPDATE_COMPLETE \| No        |
+      | us-east-1 \| stack3     \|                 \| Yes       |
       
     Then the exit status should be 0
 

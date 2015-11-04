@@ -24,12 +24,16 @@ module StackMaster
         begin
           driver = StackMaster.cloud_formation_driver
           driver.set_region(region)
-          stack_events = driver.describe_stack_events({stack_name: stack_name}).stack_events
-          stack_status = stack_events.first.resource_status
           stack = Stack.find(region, stack_name)
-          proposed_stack = Stack.generate(stack_definition, @config)
-          differ = StackMaster::StackDiffer.new(proposed_stack, stack)
-          different = differ.body_different? || differ.params_different?
+          if stack
+            proposed_stack = Stack.generate(stack_definition, @config)
+            differ = StackMaster::StackDiffer.new(proposed_stack, stack)
+            different = differ.body_different? || differ.params_different?
+            stack_status = stack.stack_status
+          else
+            different = true
+            stack_status = nil
+          end
         rescue Aws::CloudFormation::Errors::ValidationError
           stack_status = "missing"
           different = true
