@@ -7,12 +7,24 @@ RSpec.describe StackMaster::TemplateCompiler do
     context 'json template' do
       let(:template_file_path) { '/base_dir/templates/template.json' }
 
-      before do
-        allow(File).to receive(:read).with(template_file_path).and_return('body')
+      context "small json template" do
+        before do
+          allow(File).to receive(:read).with(template_file_path).and_return('{ }')
+        end
+
+        it "reads from the template file path" do
+          expect(compile).to eq('{ }')
+        end
       end
 
-      it "reads from the template file path" do
-        expect(compile).to eq('body')
+      context 'extra big json template' do
+        before do
+          allow(File).to receive(:read).with(template_file_path).and_return("{ #{' ' * 60000} }")
+        end
+
+        it "reads from the template file path" do
+          expect(compile).to eq('{}')
+        end
       end
     end
 

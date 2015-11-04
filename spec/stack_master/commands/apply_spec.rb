@@ -73,9 +73,12 @@ RSpec.describe StackMaster::Commands::Apply do
     end
 
     context 'the stack is too large' do
-      let(:template_body) { ' ' * 60000 }
+      let(:big_string) { 'x' * 60000 }
+      let(:template_body) do
+        "{\"a\":\"#{big_string}\"}"
+      end
       it 'exits with a message' do
-        expect { apply }.to output(/The stack is larger than the limit set by AWS/).to_stdout
+        expect { apply }.to output(/The \(space compressed\) stack is larger than the limit set by AWS/).to_stdout
       end
     end
 

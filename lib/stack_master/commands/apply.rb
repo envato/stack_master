@@ -69,7 +69,7 @@ module StackMaster
 
       def stack_too_big
         if proposed_stack.too_big?
-          StackMaster.stdout.puts 'The stack is larger than the limit set by AWS. See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
+          StackMaster.stdout.puts 'The (space compressed) stack is larger than the limit set by AWS. See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
           true
         else
           false
@@ -88,7 +88,7 @@ module StackMaster
       def stack_options
         {
           stack_name: @stack_definition.stack_name,
-          template_body: proposed_stack.template_body,
+          template_body: proposed_stack.maybe_compressed_template_body,
           parameters: proposed_stack.aws_parameters,
           capabilities: ['CAPABILITY_IAM'],
           notification_arns: proposed_stack.notification_arns,
