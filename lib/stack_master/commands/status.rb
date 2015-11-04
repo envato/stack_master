@@ -3,16 +3,29 @@ module StackMaster
     class Status
       include Command
 
-      def initialize(config)
+      def initialize(config, show_progress = true)
         @config = config
+        @show_progress = show_progress
       end
 
       def perform
+        progress if @show_progress
+        status = @config.stacks.map do |stack_definition|
+          status = get_status(stack_definition)
+          progress.increment if @show_progress
+          status
+        end
         tp.set :io, StackMaster.stdout
-        tp @config.stacks.map { |stack_definition| get_status(stack_definition) }
+        tp status
       end
 
       private
+
+      def progress
+        @progress ||= ProgressBar.create(title: "Fetching stack information",
+                                         total: @config.stacks.size,
+                                         output: StackMaster.stdout)
+      end
 
       def sort_params(hash)
         hash.sort.to_h
