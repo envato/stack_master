@@ -1,5 +1,7 @@
 module StackMaster
   class Stack
+    MAX_TEMPLATE_SIZE = 51200
+
     include Virtus.model
 
     attribute :stack_name, String
@@ -58,6 +60,10 @@ module StackMaster
           template_body: template_body,
           notification_arns: stack_definition.notification_arns,
           stack_policy_body: stack_policy_body)
+    end
+
+    def too_big?
+      template_body.size > MAX_TEMPLATE_SIZE
     end
 
     def aws_parameters
