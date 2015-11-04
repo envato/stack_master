@@ -37,7 +37,7 @@ module StackMaster
         begin
           @resolvers[class_name] = Kernel.const_get("StackMaster::ParameterResolvers::#{class_name}").new(@config, @stack_definition)
         rescue NameError
-          raise ResolverNotFound, class_name
+          raise ResolverNotFound, "Could not find parameter resolver called #{class_name}, please double check your configuration"
         end
       end
     end
