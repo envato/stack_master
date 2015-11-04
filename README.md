@@ -1,6 +1,6 @@
 ![StackMaster](/logo.png?raw=true)
 
-StackMaster is a sure-fotted way of creating, updating and keeping track of
+StackMaster is a sure-footed way of creating, updating and keeping track of
 Amazon (AWS) CloudFormation stacks.
 
 - See the changes you are making to a stack before you apply them
