@@ -5,6 +5,7 @@ module StackMaster
     attribute :stack_name, String
     attribute :region, String
     attribute :stack_id, String
+    attribute :stack_status, String
     attribute :parameters, Hash
     attribute :template_body, String
     attribute :notification_arns, Array[String]
@@ -37,7 +38,8 @@ module StackMaster
           template_body: template_body,
           outputs: outputs,
           notification_arns: cf_stack.notification_arns,
-          stack_policy_body: stack_policy_body)
+          stack_policy_body: stack_policy_body,
+          stack_status: cf_stack.stack_status)
     rescue Aws::CloudFormation::Errors::ValidationError
       nil
     end
