@@ -8,7 +8,6 @@ module StackMaster
     end
 
     def find(reference)
-      STDERR.puts "Resolving security group reference '#{reference}'"
       raise ArgumentError, 'Security group references must be non-empty strings' unless reference.is_a?(String) && !reference.empty?
 
       groups = @resource.security_groups({
