@@ -127,8 +127,13 @@ module StackMaster
             say "Invalid arguments. stack_master delete [region] [stack_name]"
             return
           end
-          config = load_config(options.config)
-          region = Utils.underscore_to_hyphen(config.unalias_region(args[0]))
+	  # Because delete can work without a stack_master.yml
+	  if options.config and File.file?(options.config)
+            config = load_config(options.config)
+            region = Utils.underscore_to_hyphen(config.unalias_region(args[0]))
+	  else
+	    region = args[0]
+	  end
           StackMaster.cloud_formation_driver.set_region(region)
           StackMaster::Commands::Delete.perform(region, args[1])
         end
