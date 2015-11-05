@@ -41,7 +41,7 @@ module StackMaster
         text_diff('Stack', current_template, proposed_template, context: 7, include_diff_info: true)
         text_diff('Parameters', current_parameters, proposed_parameters)
         unless noecho_keys.empty?
-          StackMaster.stdout.puts " * can not tell if NoEcho parameters are different, assuming not."
+          StackMaster.stdout.puts " * can not tell if NoEcho parameters are different."
         end
       else
         text_diff('Stack', '', proposed_template)
