@@ -7,7 +7,6 @@ module StackMaster
       end
 
       def resolve(value)
-        tags = {}
         filters = build_filters(value)
         find_latest_ami(filters).try(:image_id)
       end
