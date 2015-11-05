@@ -17,6 +17,7 @@ module StackMaster
         end
         tp.set :io, StackMaster.stdout
         tp status
+        StackMaster.stdout.puts " * No echo parameters can't be diffed"
       end
 
       private
@@ -43,6 +44,7 @@ module StackMaster
             differ = StackMaster::StackDiffer.new(proposed_stack, stack)
             different = differ.body_different? || differ.params_different?
             stack_status = stack.stack_status
+            noecho = !differ.noecho_keys.empty?
           else
             different = true
             stack_status = nil
@@ -52,7 +54,7 @@ module StackMaster
           different = true
         end
 
-        { region: region, stack_name: stack_name, stack_status: stack_status, different: different ? "Yes" : "No" }
+        { region: region, stack_name: stack_name, stack_status: stack_status, different: different ? "Yes" : (noecho ? "No *" : "No") }
       end
 
     end

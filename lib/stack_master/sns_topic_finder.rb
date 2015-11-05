@@ -7,7 +7,6 @@ module StackMaster
     end
 
     def find(reference)
-      $stderr.puts "Resolving SNS topic reference '#{reference}'"
       raise ArgumentError, 'SNS topic references must be non-empty strings' unless reference.is_a?(String) && !reference.empty?
 
       topic = @resource.topics.detect { |t| topic_name_from_arn(t.arn) == reference }
