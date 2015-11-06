@@ -172,7 +172,7 @@ stack_master delete [region-or-alias] [stack-name] # Delete a stack
 stack_master events [region-or-alias] [stack-name] # Display events for a stack
 stack_master outputs [region-or-alias] [stack-name] # Display outputs for a stack
 stack_master resources [region-or-alias] [stack-name] # Display outputs for a stack
-stack_master status # Displays the status of each stacks
+stack_master status # Displays the status of each stack
 ```
 
 ## Applying updates
