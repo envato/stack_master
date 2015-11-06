@@ -14,7 +14,7 @@ module StackMaster
       private
 
       def ec2
-        @ec2 ||= Aws::EC2::Client.new
+        @ec2 ||= Aws::EC2::Client.new(region: @stack_definition.region)
       end
 
       def build_filters(value)
