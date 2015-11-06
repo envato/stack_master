@@ -15,6 +15,22 @@ RSpec.describe StackMaster::Config do
     )
   }
 
+  context ".load!" do
+    it "fails to load the config if no stack_master.yml in parent directories" do
+      expect { StackMaster::Config.load!('stack_master.yml') }.to raise_error Errno::ENOENT
+    end
+
+    it "searches up the tree for stack master yaml" do
+      begin
+        orig_dir = Dir.pwd
+        Dir.chdir './spec/fixtures/templates'
+        expect(StackMaster::Config.load!('stack_master.yml')).to_not be_nil
+      ensure
+        Dir.chdir orig_dir
+      end
+    end
+  end
+
   it 'returns an object that can find stack definitions' do
     stack = loaded_config.find_stack('us-east-1', 'myapp-vpc')
     expect(stack).to eq(myapp_vpc_definition)
