@@ -160,6 +160,15 @@ notification_topic:
   sns_topic: PagerDuty
 ```
 
+### Latest AMI by Tag
+
+Looks up the latest AMI ID by a given set of tags.
+
+```yaml
+web_ami:
+  latest_ami_by_tags: role=web,application=myapp
+```
+
 ## Commands
 
 ```bash
