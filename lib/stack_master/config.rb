@@ -4,8 +4,9 @@ require 'active_support/core_ext/object/deep_dup'
 module StackMaster
   class Config
     def self.load!(config_file = 'stack_master.yml')
-      config = YAML.load(File.read(config_file))
-      base_dir = File.dirname(File.expand_path(config_file))
+      resolved_config_file = search_up_and_chdir(config_file)
+      config = YAML.load(File.read(resolved_config_file))
+      base_dir = File.dirname(File.expand_path(resolved_config_file))
       new(config, base_dir)
     end
 
@@ -14,6 +15,19 @@ module StackMaster
                   :stack_defaults,
                   :region_defaults,
                   :region_aliases
+
+    def self.search_up_and_chdir(config_file)
+      return config_file unless File.dirname(config_file) == "."
+
+      dir = Dir.pwd
+      parent_dir = File.expand_path("..", Dir.pwd)
+      while parent_dir != dir && !File.exists?(File.join(dir, config_file))
+        dir = parent_dir
+        parent_dir = File.expand_path("..", dir)
+      end
+
+      File.join(dir, config_file)
+    end
 
     def initialize(config, base_dir)
       @config = config
