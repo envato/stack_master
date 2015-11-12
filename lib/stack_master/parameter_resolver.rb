@@ -19,8 +19,7 @@ module StackMaster
         begin
           parameters[key] = resolve_parameter_value(value)
         rescue InvalidParameter
-          StackMaster.stderr.puts  "Unable to resolve parameter #{key.inspect} value causing error: #{$!.message}"
-          raise
+          raise InvalidParameter, "Unable to resolve parameter #{key.inspect} value causing error: #{$!.message}"
         end
         parameters
       end
