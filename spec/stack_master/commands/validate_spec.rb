@@ -1,9 +1,10 @@
 RSpec.describe StackMaster::Commands::Validate do
 
-  subject(:validate) { described_class.new(config, stack_definition) }
+  subject(:validate) { described_class.new(config, stack_definition, options) }
   let(:config) { instance_double(StackMaster::Config) }
   let(:region) { "us-east-1" }
   let(:stack_name) { "mystack" }
+  let(:options) { }
   let(:stack_definition) do
     StackMaster::StackDefinition.new(
       region: region,
