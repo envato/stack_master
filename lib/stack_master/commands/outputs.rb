@@ -11,6 +11,7 @@ module StackMaster
 
       def perform
         if stack
+          tp.set :max_width, 80
           tp stack.outputs, :output_key, :output_value, :description
         else
           StackMaster.stdout.puts "Stack doesn't exist"
