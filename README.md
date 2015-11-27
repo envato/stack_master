@@ -175,12 +175,12 @@ web_ami:
 stack_master help # Display up to date docs on the commands available
 stack_master init # Initialises a directory structure and stack_master.yml file
 stack_master list # Lists stack definitions
-stack_master apply [region-or-alias] [stack-name] # Create or update a stack
-stack_master diff [region-or-alias] [stack-name] # Display a stack tempalte and parameter diff
-stack_master delete [region-or-alias] [stack-name] # Delete a stack
-stack_master events [region-or-alias] [stack-name] # Display events for a stack
-stack_master outputs [region-or-alias] [stack-name] # Display outputs for a stack
-stack_master resources [region-or-alias] [stack-name] # Display outputs for a stack
+stack_master apply <region-or-alias> <stack-name> # Create or update a stack
+stack_master diff <region-or-alias> <stack-name> # Display a stack tempalte and parameter diff
+stack_master delete <region-or-alias> <stack-name> # Delete a stack
+stack_master events <region-or-alias> <stack-name> # Display events for a stack
+stack_master outputs <region-or-alias> <stack-name> # Display outputs for a stack
+stack_master resources <region-or-alias> <stack-name> # Display outputs for a stack
 stack_master status # Displays the status of each stack
 ```
 
