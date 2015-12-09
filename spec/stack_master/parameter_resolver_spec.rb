@@ -1,5 +1,12 @@
 RSpec.describe StackMaster::ParameterResolver do
+  subject { StackMaster::ParameterResolver.new(config, region, params) }
+  let(:params) do
+    {
+      param: { my_resolver: 2 }
+    }
+  end
   let(:config) { double }
+  let(:region) { 'us-east-1' }
   let(:my_resolver) {
     Class.new do
       def initialize(config, region)
@@ -10,6 +17,7 @@ RSpec.describe StackMaster::ParameterResolver do
       end
     end
   }
+
   before do
     stub_const('StackMaster::ParameterResolvers::MyResolver', my_resolver)
   end
@@ -53,6 +61,31 @@ RSpec.describe StackMaster::ParameterResolver do
     it "uses the same instance of the resolver for the duration of the resolve run" do
       expect(my_resolver).to receive(:new).once.and_call_original
       expect(resolve(param: { my_resolver: 2 }, param2: { my_resolver: 2 })).to eq(param: 10, param2: 10)
+    end
+  end
+
+  context 'when the resolver class already exist' do
+    it 'does not try to load it' do
+      expect(subject).to receive(:load_parameter_resolver).once.and_call_original
+      expect(subject).not_to receive(:require_parameter_resolver)
+
+      subject.resolve
+    end
+  end
+
+  context 'when the resolver class does not exist' do
+    let(:params) do
+      {
+        param: { dummy_resolver: 2 }
+      }
+    end
+
+    it 'tries to load it' do
+      expect(subject).to receive(:load_parameter_resolver).once.and_call_original
+      expect(subject).to receive(:require_parameter_resolver).and_return nil
+      expect(subject).to receive(:call_resolver).and_return nil
+
+      subject.resolve
     end
   end
 end
