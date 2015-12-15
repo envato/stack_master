@@ -35,7 +35,7 @@ module StackMaster
 
     def load_parameter_resolver(class_name)
       # Check if the class name already exists
-      return if resolver_class_const(class_name)
+      resolver_class_const(class_name)
     rescue NameError
       # If it doesn't, try to load it
       require_parameter_resolver(class_name.underscore)
