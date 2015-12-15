@@ -28,21 +28,17 @@ module StackMaster
     private
 
     def require_parameter_resolver(file_name)
-      begin
-        require "stack_master/parameter_resolvers/#{file_name}"
-      rescue LoadError
-        raise ResolverNotFound.new(file_name)
-      end
+      require "stack_master/parameter_resolvers/#{file_name}"
+    rescue LoadError
+      raise ResolverNotFound.new(file_name)
     end
 
     def load_parameter_resolver(class_name)
-      begin
-        # Check if the class name already exists
-        return if resolver_class_const(class_name)
-      rescue NameError
-        # If it doesn't, try to load it
-        require_parameter_resolver(class_name.underscore)
-      end
+      # Check if the class name already exists
+      return if resolver_class_const(class_name)
+    rescue NameError
+      # If it doesn't, try to load it
+      require_parameter_resolver(class_name.underscore)
     end
 
     def resolve_parameter_value(parameter_value)
