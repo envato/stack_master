@@ -1,5 +1,5 @@
 RSpec.describe StackMaster::ParameterResolver do
-  subject { StackMaster::ParameterResolver.new(config, region, params) }
+  subject(:parameter_resolver) { StackMaster::ParameterResolver.new(config, region, params) }
   let(:params) do
     {
       param: { my_resolver: 2 }
@@ -21,7 +21,6 @@ RSpec.describe StackMaster::ParameterResolver do
   before do
     stub_const('StackMaster::ParameterResolvers::MyResolver', my_resolver)
   end
-
 
   def resolve(params)
     StackMaster::ParameterResolver.resolve(config, 'us-east-1', params)
@@ -66,10 +65,10 @@ RSpec.describe StackMaster::ParameterResolver do
 
   context 'when the resolver class already exist' do
     it 'does not try to load it' do
-      expect(subject).to receive(:load_parameter_resolver).once.and_call_original
-      expect(subject).not_to receive(:require_parameter_resolver)
+      expect(parameter_resolver).to receive(:load_parameter_resolver).once.and_call_original
+      expect(parameter_resolver).not_to receive(:require_parameter_resolver)
 
-      subject.resolve
+      parameter_resolver.resolve
     end
   end
 
@@ -81,11 +80,11 @@ RSpec.describe StackMaster::ParameterResolver do
     end
 
     it 'tries to load it' do
-      expect(subject).to receive(:load_parameter_resolver).once.and_call_original
-      expect(subject).to receive(:require_parameter_resolver).and_return nil
-      expect(subject).to receive(:call_resolver).and_return nil
+      expect(parameter_resolver).to receive(:load_parameter_resolver).once.and_call_original
+      expect(parameter_resolver).to receive(:require_parameter_resolver).and_return nil
+      expect(parameter_resolver).to receive(:call_resolver).and_return nil
 
-      subject.resolve
+      parameter_resolver.resolve
     end
   end
 end
