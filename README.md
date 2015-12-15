@@ -169,6 +169,41 @@ web_ami:
   latest_ami_by_tags: role=web,application=myapp
 ```
 
+### Custom parameter resolvers
+
+New parameter resolvers can be created in a separate gem.
+
+To create a resolver named my_resolver:
+  * Create a new gem using your favorite tool
+  * The gem structure must contain the following path:
+```
+lib/stack_master/parameter_resolvers/my_resolver.rb
+```
+  * That file need to contain a class named `StackMaster::ParameterResolvers::MyResolver`
+    that implements a `resolve` method and an initializer taking 2 parameters :
+```ruby
+module StackMaster
+  module ParameterResolvers
+    class MyResolver
+      def initialize(config, stack_definition)
+        @config = config
+        @stack_definition = stack_definition
+      end
+
+      def resolve(value)
+        value
+      end
+    end
+  end
+end
+```
+  * Note that the filename and classname are both derived from the resolver name
+    passed in the parameter file. In our case, the parameters YAML would look like:
+```yaml
+vpc_id:
+  my_resolver: dummy_value
+```
+
 ## Commands
 
 ```bash
