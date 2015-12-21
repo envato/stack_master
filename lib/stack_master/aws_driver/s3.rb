@@ -37,7 +37,6 @@ module StackMaster
       end
 
       def url(options)
-        puts "Generating url for #{options.inspect}"
         s3_url(@region, options['bucket'], options['prefix'], options['template'])
       end
 
@@ -48,7 +47,6 @@ module StackMaster
       private
 
       def s3
-        puts "Creating S3 client in #{@region}"
         @s3 ||= Aws::S3::Client.new(region: @region)
       end
     end
