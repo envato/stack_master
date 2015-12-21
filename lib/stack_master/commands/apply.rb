@@ -99,14 +99,28 @@ module StackMaster
         s3.upload_files(s3_options)
       end
 
+      def template_method
+        return :template_body unless use_s3?
+        :template_url
+      end
+
+      def template_value
+        return proposed_stack.maybe_compressed_template_body unless use_s3?
+        s3.url(@s3_config.merge('template' => @stack_definition.template))
+      end
+
+      def files_to_upload
+        [@stack_definition.files_to_upload, @stack_definition.template_file_path].flatten
+      end
+
       def stack_options
         {
           stack_name: @stack_definition.stack_name,
-          template_body: proposed_stack.maybe_compressed_template_body,
           parameters: proposed_stack.aws_parameters,
           capabilities: ['CAPABILITY_IAM'],
           notification_arns: proposed_stack.notification_arns,
-          stack_policy_body: proposed_stack.stack_policy_body
+          stack_policy_body: proposed_stack.stack_policy_body,
+          template_method => template_value
         }
       end
 
@@ -115,7 +129,7 @@ module StackMaster
           bucket: @s3_config['bucket'],
           prefix: @s3_config['prefix'],
           region: @s3_config['region'],
-          files: @stack_definition.files_to_upload
+          files: files_to_upload
         }
       end
 
