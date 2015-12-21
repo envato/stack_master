@@ -12,6 +12,7 @@ RSpec.describe StackMaster::Commands::Apply do
   before do
     allow(StackMaster::Stack).to receive(:find).with(region, stack_name).and_return(stack)
     allow(StackMaster::Stack).to receive(:generate).with(stack_definition, config).and_return(proposed_stack)
+    allow(config).to receive(:stack_defaults).and_return({})
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
     allow(cf).to receive(:update_stack)
     allow(cf).to receive(:create_stack)

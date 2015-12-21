@@ -10,12 +10,23 @@ module StackMaster
       attribute :notification_arns, Array[String]
       attribute :base_dir, String
       attribute :secret_file, String
+      attribute :files, Array[String]
       attribute :stack_policy_file, String
       attribute :additional_parameter_lookup_dirs, Array[String]
     end
 
+    def template_dir
+      File.join(base_dir, 'templates')
+    end
+
     def template_file_path
-      File.join(base_dir, 'templates', template)
+      File.join(template_dir, template)
+    end
+
+    def files_to_upload
+      files.map do |file|
+        "#{template_dir}/#{file}"
+      end
     end
 
     def parameter_files

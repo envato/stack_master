@@ -7,6 +7,7 @@ module StackMaster
 
       def initialize(config, stack_definition, options = {})
         @config = config
+        @s3_config = config.stack_defaults['s3']
         @stack_definition = stack_definition
         @from_time = Time.now
         @updating = false
@@ -20,6 +21,7 @@ module StackMaster
         end
         begin
           return if stack_too_big
+          upload_files if use_s3?
           create_or_update_stack
           tail_stack_events
         rescue StackMaster::CtrlC
@@ -33,6 +35,10 @@ module StackMaster
         @cf ||= StackMaster.cloud_formation_driver
       end
 
+      def s3
+        @s3 ||= StackMaster.s3_driver
+      end
+
       def stack
         @stack ||= Stack.find(@stack_definition.region, @stack_definition.stack_name)
       end
@@ -43,6 +49,10 @@ module StackMaster
 
       def stack_exists?
         !stack.nil?
+      end
+
+      def use_s3?
+        @s3_config
       end
 
       def diff_stacks
@@ -85,6 +95,10 @@ module StackMaster
         cf.create_stack(stack_options.merge(tags: proposed_stack.aws_tags))
       end
 
+      def upload_files
+        s3.upload_files(s3_options)
+      end
+
       def stack_options
         {
           stack_name: @stack_definition.stack_name,
@@ -93,6 +107,15 @@ module StackMaster
           capabilities: ['CAPABILITY_IAM'],
           notification_arns: proposed_stack.notification_arns,
           stack_policy_body: proposed_stack.stack_policy_body
+        }
+      end
+
+      def s3_options
+        {
+          bucket: @s3_config['bucket'],
+          prefix: @s3_config['prefix'],
+          region: @s3_config['region'],
+          files: @stack_definition.files_to_upload
         }
       end
 

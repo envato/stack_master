@@ -14,6 +14,7 @@ module StackMaster
     attribute :outputs, Array
     attribute :stack_policy_body, String
     attribute :tags, Hash
+    attribute :files, Array[String]
 
     def template_hash
       if template_body

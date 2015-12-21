@@ -17,6 +17,7 @@ require "stack_master/version"
 require "stack_master/stack"
 require "stack_master/prompter"
 require "stack_master/aws_driver/cloud_formation"
+require "stack_master/aws_driver/s3"
 require "stack_master/test_driver/cloud_formation"
 require "stack_master/stack_events/fetcher"
 require "stack_master/stack_events/presenter"
@@ -60,6 +61,10 @@ module StackMaster
     @cloud_formation_driver ||= AwsDriver::CloudFormation.new
   end
 
+  def s3_driver
+    @s3_driver ||= AwsDriver::S3.new
+  end
+
   def cloud_formation_driver=(value)
     @cloud_formation_driver = value
   end
@@ -80,4 +85,3 @@ module StackMaster
     @stderr = io
   end
 end
-
