@@ -1,6 +1,7 @@
 module StackMaster
   class Stack
     MAX_TEMPLATE_SIZE = 51200
+    MAX_S3_TEMPLATE_SIZE = 460800
 
     include Virtus.model
 
@@ -82,8 +83,13 @@ module StackMaster
           stack_policy_body: stack_policy_body)
     end
 
-    def too_big?
-      maybe_compressed_template_body.size > MAX_TEMPLATE_SIZE
+    def max_template_size(use_s3)
+      return MAX_S3_TEMPLATE_SIZE if use_s3
+      MAX_TEMPLATE_SIZE
+    end
+
+    def too_big?(use_s3 = false)
+      maybe_compressed_template_body.size > max_template_size(use_s3)
     end
 
     def aws_parameters

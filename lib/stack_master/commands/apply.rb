@@ -78,7 +78,7 @@ module StackMaster
       end
 
       def stack_too_big
-        if proposed_stack.too_big?
+        if proposed_stack.too_big?(use_s3?)
           StackMaster.stdout.puts 'The (space compressed) stack is larger than the limit set by AWS. See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
           true
         else
