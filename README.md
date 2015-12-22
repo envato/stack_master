@@ -151,6 +151,14 @@ ssh_sg:
   security_group: SSHSecurityGroup
 ```
 
+An array of security group names can also be provided.
+```yaml
+ssh_sg:
+  security_group:
+    - SSHSecurityGroup
+    - WebAccessSecurityGroup
+```
+
 ### SNS Topic
 
 Looks up an SNS topic by name and returns the ARN.
