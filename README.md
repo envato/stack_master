@@ -173,10 +173,12 @@ ssh_sg:
   security_group: SSHSecurityGroup
 ```
 
+### Security Groups
+
 An array of security group names can also be provided.
 ```yaml
 ssh_sg:
-  security_group:
+  security_groups:
     - SSHSecurityGroup
     - WebAccessSecurityGroup
 ```
