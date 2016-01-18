@@ -1,5 +1,3 @@
-require 'stack_master/parameter_resolvers/security_groups'
-
 RSpec.describe StackMaster::ParameterResolvers::SecurityGroups do
   describe "#resolve" do
     subject(:resolver) { described_class.new(nil, double(region: 'us-east-1')) }

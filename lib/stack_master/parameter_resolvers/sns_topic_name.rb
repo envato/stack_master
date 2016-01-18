@@ -1,7 +1,9 @@
 module StackMaster
   module ParameterResolvers
-    class SnsTopicName
+    class SnsTopicName < Resolver
       TopicNotFound = Class.new(StandardError)
+
+      array_resolver
 
       def initialize(config, stack_definition)
         @config = config
