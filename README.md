@@ -179,6 +179,8 @@ web_ami:
   latest_ami_by_tags: role=web,application=myapp
 ```
 
+Note that the corresponding array resolver is named `latest_amis_by_tags`
+
 ### Custom parameter resolvers
 
 New parameter resolvers can be created in a separate gem.
@@ -194,7 +196,9 @@ lib/stack_master/parameter_resolvers/my_resolver.rb
 ```ruby
 module StackMaster
   module ParameterResolvers
-    class MyResolver
+    class MyResolver < Resolver
+      array_resolver # Also create a MyResolvers resolver to handle arrays
+
       def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition
@@ -212,6 +216,32 @@ end
 ```yaml
 vpc_id:
   my_resolver: dummy_value
+```
+
+## Resolver Arrays
+Most resolvers support taking an array of values that will each be resolved.
+Unless stated otherwise in the documentation, the array version of the
+resolver will be named with the [pluralized](http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-pluralize) 
+name of the original resolver.
+
+When creating a new resolver, one can automatically create the array resolver by adding a `array_resolver` statement
+in the class definition, with an optional class name if different from the default one.
+```
+module StackMaster
+  module ParameterResolvers
+    class MyResolver < Resolver
+      array_resolver 'MyCustomArrayResolver'
+      ...
+    end
+  end
+end
+```
+In that example, using the array resolver would look like:
+```
+my_parameter:
+  my_custom_array_resolver:
+    - value1
+    - value2
 ```
 
 ## Commands

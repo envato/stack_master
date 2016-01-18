@@ -1,8 +1,10 @@
 module StackMaster
   module ParameterResolvers
-    class StackOutput
+    class StackOutput < Resolver
       StackNotFound = Class.new(StandardError)
       StackOutputNotFound = Class.new(StandardError)
+
+      array_resolver
 
       def initialize(config, stack_definition)
         @config = config

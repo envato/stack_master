@@ -1,6 +1,8 @@
 module StackMaster
   module ParameterResolvers
-    class LatestAmiByTags
+    class LatestAmiByTags < Resolver
+      array_resolver class_name: 'LatestAmisByTags'
+
       def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition

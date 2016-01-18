@@ -1,7 +1,9 @@
 module StackMaster
   module ParameterResolvers
-    class Secret
+    class Secret < Resolver
       SecretNotFound = Class.new(StandardError)
+
+      array_resolver
 
       def initialize(config, stack_definition)
         @config = config
