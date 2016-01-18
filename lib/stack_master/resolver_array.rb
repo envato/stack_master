@@ -22,7 +22,6 @@ module StackMaster
         resolver_class ||= Object.const_get(self.name)
         array_resolver_class_name = options[:class_name] || resolver_class.to_s.demodulize.pluralize
 
-        puts "Creating resolver for #{resolver_class}"
         klass = Class.new(ResolverArray) do
           define_method('resolver_class') do
             resolver_class
