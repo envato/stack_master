@@ -23,6 +23,8 @@ module StackMaster
           key = File.basename(file)
           key.prepend("#{prefix}/") if prefix
 
+          StackMaster.stdout.puts "Uploading #{file} to bucket #{options[:bucket]}/#{key}..."
+
           put_object(
             bucket: bucket,
             key: key,
@@ -32,7 +34,6 @@ module StackMaster
       end
 
       def put_object(options)
-        puts "Uploading #{options[:key]} to bucket #{options[:bucket]}..."
         s3.put_object(options)
       end
 

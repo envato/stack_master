@@ -7,7 +7,7 @@ module StackMaster
 
       def initialize(config, stack_definition, options = {})
         @config = config
-        @s3_config = config.stack_defaults['s3']
+        @s3_config = stack_definition['s3']
         @stack_definition = stack_definition
         @from_time = Time.now
         @updating = false
