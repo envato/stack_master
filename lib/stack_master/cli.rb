@@ -12,6 +12,10 @@ module StackMaster
       TablePrint::Config.io = StackMaster.stdout
     end
 
+    def default_config_file
+      "stack_master.yml"
+    end
+
     def execute!
       program :name, 'StackMaster'
       program :version, '0.0.1'
@@ -25,6 +29,7 @@ module StackMaster
         c.description = "Creates or updates a stack. Shows a diff of the proposed stack's template and parameters. Tails stack events until CloudFormation has completed."
         c.example 'update a stack named myapp-vpc in us-east-1', 'stack_master apply us-east-1 myapp-vpc'
         c.action do |args, options|
+          options.defaults config: default_config_file
           execute_stack_command(StackMaster::Commands::Apply, args, options)
         end
       end
@@ -34,6 +39,7 @@ module StackMaster
         c.summary = 'Displays outputs for a stack'
         c.description = "Displays outputs for a stack"
         c.action do |args, options|
+          options.defaults config: default_config_file
           execute_stack_command(StackMaster::Commands::Outputs, args, options)
         end
       end
@@ -44,6 +50,7 @@ module StackMaster
         c.description = 'Initialises the expected directory structure and stack_master.yml file'
         c.option('--overwrite', 'Overwrite existing files')
         c.action do |args, options|
+          options.defaults config: default_config_file
           unless args.size == 2
             say "Invalid arguments. stack_master init [region] [stack_name]"
           else
@@ -58,6 +65,7 @@ module StackMaster
         c.description = "Shows a diff of the proposed stack's template and parameters"
         c.example 'diff a stack named myapp-vpc in us-east-1', 'stack_master diff us-east-1 myapp-vpc'
         c.action do |args, options|
+          options.defaults config: default_config_file
           execute_stack_command(StackMaster::Commands::Diff, args, options)
         end
       end
@@ -71,6 +79,7 @@ module StackMaster
         c.option '--all', 'Show all events'
         c.option '--tail', 'Tail events'
         c.action do |args, options|
+          options.defaults config: default_config_file
           execute_stack_command(StackMaster::Commands::Events, args, options)
         end
       end
@@ -80,6 +89,7 @@ module StackMaster
         c.summary = "Shows stack resources"
         c.description = "Shows stack resources"
         c.action do |args, options|
+          options.defaults config: default_config_file
           execute_stack_command(StackMaster::Commands::Resources, args, options)
         end
       end
@@ -89,6 +99,7 @@ module StackMaster
         c.summary = 'List stack definitions'
         c.description = 'List stack definitions'
         c.action do |args, options|
+          options.defaults config: default_config_file
           say "Invalid arguments." if args.size > 0
           config = load_config(options.config)
           StackMaster::Commands::ListStacks.perform(config)
@@ -101,6 +112,7 @@ module StackMaster
         c.description = 'Validate a template'
         c.example 'validate a stack named myapp-vpc in us-east-1', 'stack_master validate us-east-1 myapp-vpc'
         c.action do |args, options|
+          options.defaults config: default_config_file
           execute_stack_command(StackMaster::Commands::Validate, args, options)
         end
       end
@@ -111,6 +123,7 @@ module StackMaster
         c.description = 'Checks the status of all stacks defined in the stack_master.yml file. Warning this operation can be somewhat slow.'
         c.example 'description', 'Check the status of all stack definitions'
         c.action do |args, options|
+          options.defaults config: default_config_file
           say "Invalid arguments. stack_master status" and return unless args.size == 0
           config = load_config(options.config)
           StackMaster::Commands::Status.perform(config)
@@ -123,17 +136,20 @@ module StackMaster
         c.description = 'Deletes a stack. The stack does not necessarily have to appear in the stack_master.yml file.'
         c.example 'description', 'Delete a stack'
         c.action do |args, options|
+          options.default config: default_config_file
           unless args.size == 2
             say "Invalid arguments. stack_master delete [region] [stack_name]"
             return
           end
-	  # Because delete can work without a stack_master.yml
-	  if options.config and File.file?(options.config)
+
+          # Because delete can work without a stack_master.yml
+          if options.config and File.file?(options.config)
             config = load_config(options.config)
             region = Utils.underscore_to_hyphen(config.unalias_region(args[0]))
-	  else
-	    region = args[0]
-	  end
+          else
+            region = args[0]
+          end
+
           StackMaster.cloud_formation_driver.set_region(region)
           StackMaster::Commands::Delete.perform(region, args[1])
         end
@@ -143,7 +159,7 @@ module StackMaster
     end
 
     def load_config(file)
-      stack_file = file || 'stack_master.yml'
+      stack_file = file || default_config_file
       StackMaster::Config.load!(stack_file)
     rescue Errno::ENOENT => e
       say "Failed to load config file #{stack_file}"
