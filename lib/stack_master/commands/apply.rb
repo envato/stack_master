@@ -7,7 +7,7 @@ module StackMaster
 
       def initialize(config, stack_definition, options = {})
         @config = config
-        @s3_config = stack_definition['s3']
+        @s3_config = stack_definition.s3
         @stack_definition = stack_definition
         @from_time = Time.now
         @updating = false
@@ -52,7 +52,7 @@ module StackMaster
       end
 
       def use_s3?
-        @s3_config
+        !@s3_config.empty?
       end
 
       def diff_stacks
@@ -110,6 +110,7 @@ module StackMaster
       end
 
       def files_to_upload
+        return [] unless use_s3?
         [@stack_definition.files_to_upload, @stack_definition.template_file_path].flatten
       end
 
@@ -125,6 +126,7 @@ module StackMaster
       end
 
       def s3_options
+        return {} unless use_s3?
         {
           bucket: @s3_config['bucket'],
           prefix: @s3_config['prefix'],

@@ -38,6 +38,10 @@ module StackMaster
       File.join(base_dir, 'policies', stack_policy_file) if stack_policy_file
     end
 
+    def s3_configured?
+      !s3.nil?
+    end
+
     private
 
     def additional_parameter_lookup_file_paths

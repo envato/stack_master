@@ -74,7 +74,7 @@ module StackMaster
         region = Utils.underscore_to_hyphen(region)
         stacks_for_region.each do |stack_name, attributes|
           stack_name = Utils.underscore_to_hyphen(stack_name)
-          stack_attributes = attributes.deeper_merge(build_stack_defaults(region)).merge(
+          stack_attributes = build_stack_defaults(region).deeper_merge(attributes).merge(
             'region' => region,
             'stack_name' => stack_name,
             'base_dir' => @base_dir,
