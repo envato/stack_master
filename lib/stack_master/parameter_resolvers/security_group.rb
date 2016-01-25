@@ -1,6 +1,8 @@
 module StackMaster
   module ParameterResolvers
-    class SecurityGroup
+    class SecurityGroup < Resolver
+      array_resolver
+
       def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition
@@ -10,7 +12,7 @@ module StackMaster
         security_group_finder.find(value)
       end
 
-      private
+    private
 
       def security_group_finder
         StackMaster::SecurityGroupFinder.new(@stack_definition.region)
