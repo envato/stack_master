@@ -17,7 +17,7 @@ RSpec.describe StackMaster::Commands::Apply do
     allow(cf).to receive(:create_stack)
     allow(StackMaster::StackDiffer).to receive(:new).with(proposed_stack, stack).and_return double.as_null_object
     allow(STDOUT).to receive(:print)
-    allow(STDIN).to receive(:getch).and_return('y')
+    allow(STDIN).to receive(:gets).and_return("y\n")
     allow(StackMaster::StackEvents::Streamer).to receive(:stream)
   end
 

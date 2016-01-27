@@ -5,10 +5,9 @@ module StackMaster
       answer = if ENV['STUB_AWS']
         ENV['ANSWER']
       else
-        STDIN.getch.chomp
+        STDIN.gets.chomp
       end
-      StackMaster.stdout.puts
-      answer == 'y'
+      answer =~ /y(es)?/i
     end
   end
 end
