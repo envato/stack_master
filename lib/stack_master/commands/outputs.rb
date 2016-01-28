@@ -3,6 +3,7 @@ module StackMaster
     class Outputs
       include Command
       include Commander::UI
+      include StackMaster::Commands::Helper
 
       def initialize(config, stack_definition, options = {})
         @config = config
@@ -11,7 +12,7 @@ module StackMaster
 
       def perform
         if stack
-          tp.set :max_width, 80
+          tp.set :max_width, self.window_size
           tp stack.outputs, :output_key, :output_value, :description
         else
           StackMaster.stdout.puts "Stack doesn't exist"
