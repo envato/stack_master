@@ -2,6 +2,7 @@ module StackMaster
   module Commands
     class Status
       include Command
+      include StackMaster::Commands::Helper
 
       def initialize(config, show_progress = true)
         @config = config
@@ -15,6 +16,7 @@ module StackMaster
           progress.increment if @show_progress
           status
         end
+        tp.set :max_width, self.window_size
         tp.set :io, StackMaster.stdout
         tp status
         StackMaster.stdout.puts " * No echo parameters can't be diffed"
