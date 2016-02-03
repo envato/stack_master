@@ -11,7 +11,9 @@ module StackMaster
       end
 
       def describe_stacks(options)
-        cf.describe_stacks(options)
+        retry_with_backoff do
+          cf.describe_stacks(options)
+        end
       end
 
       def cancel_update_stack(options)
@@ -50,6 +52,23 @@ module StackMaster
 
       def cf
         @cf ||= Aws::CloudFormation::Client.new(region: @region)
+      end
+
+      def retry_with_backoff
+        delay       = 1
+        max_delay   = 30
+        begin
+          yield
+        rescue Aws::CloudFormation::Errors::Throttling => e
+          if e.message =~ /Rate exceeded/
+            sleep delay
+            delay *= 2
+            if delay > max_delay
+              delay = max_delay
+            end
+            retry
+          end
+        end
       end
     end
   end
