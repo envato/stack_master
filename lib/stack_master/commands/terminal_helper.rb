@@ -2,12 +2,12 @@ require 'active_support/concern'
 
 module StackMaster
   module Commands
-    module Helper
+    module TerminalHelper
       extend ActiveSupport::Concern
 
       included do
         def window_size
-          size = ENV["COLUMNS"] || `tput cols`.chomp
+          size = ENV.fetch("COLUMNS") { `tput cols`.chomp }
 
           if size.nil? || size == ""
             80

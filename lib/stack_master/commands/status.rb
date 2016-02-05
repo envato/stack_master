@@ -2,7 +2,7 @@ module StackMaster
   module Commands
     class Status
       include Command
-      include StackMaster::Commands::Helper
+      include StackMaster::Commands::TerminalHelper
 
       def initialize(config, show_progress = true)
         @config = config
