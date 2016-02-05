@@ -3,7 +3,7 @@ module StackMaster
     class Outputs
       include Command
       include Commander::UI
-      include StackMaster::Commands::Helper
+      include StackMaster::Commands::TerminalHelper
 
       def initialize(config, stack_definition, options = {})
         @config = config

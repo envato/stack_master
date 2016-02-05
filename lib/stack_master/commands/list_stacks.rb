@@ -3,7 +3,7 @@ module StackMaster
     class ListStacks
       include Command
       include Commander::UI
-      include StackMaster::Commands::Helper
+      include StackMaster::Commands::TerminalHelper
 
       def initialize(config)
         @config = config
