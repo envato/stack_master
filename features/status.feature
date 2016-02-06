@@ -61,9 +61,6 @@ Feature: Status command
 {
 }
       """
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
 
   Scenario: Run status command and get a list of stack statuii
     Given I set the environment variables to:

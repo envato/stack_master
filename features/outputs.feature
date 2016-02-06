@@ -22,10 +22,6 @@ Feature: Outputs command
         end
       end
       """
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
-      | ANSWER   | y     |
 
   Scenario: Output stack resources
     And I stub the following stacks:

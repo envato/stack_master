@@ -47,9 +47,6 @@ Feature: Diff command
         }
       }
       """
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
 
   Scenario: Run diff on a stack with no changes
     Given I set the environment variables to:

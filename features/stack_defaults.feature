@@ -71,12 +71,6 @@ Feature: Stack defaults
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
       | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
       | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | y     |
 
   Scenario: Create a stack with inherited attributes
     When I run `stack_master apply ap-southeast-2 myapp-vpc --trace` interactively

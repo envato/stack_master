@@ -62,9 +62,6 @@ Feature: Apply command
         end
       end
       """
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
 
   Scenario: Run apply and create a new stack
     Given I set the environment variables to:
