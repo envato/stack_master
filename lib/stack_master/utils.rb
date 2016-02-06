@@ -4,7 +4,7 @@ module StackMaster
 
     def hash_to_aws_parameters(params)
       params.inject([]) do |params, (key, value)|
-        params << { parameter_key: key, parameter_value: value }
+        params << { parameter_key: key, parameter_value: value.to_s }
         params
       end
     end

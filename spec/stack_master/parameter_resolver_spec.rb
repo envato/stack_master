@@ -30,6 +30,10 @@ RSpec.describe StackMaster::ParameterResolver do
     expect(resolve(param1: 'value1')).to eq(param1: 'value1')
   end
 
+  it 'returns the same value for numerics' do
+    expect(resolve(param1: 1)).to eq(param1: 1)
+  end
+
   it 'it throws an error when the hash contains more than one key' do
     expect {
       resolve(param: { nested1: 'value1', nested2: 'value2' })

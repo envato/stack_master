@@ -42,7 +42,7 @@ module StackMaster
     end
 
     def resolve_parameter_value(parameter_value)
-      return parameter_value if String === parameter_value || parameter_value.nil?
+      return parameter_value if Numeric === parameter_value || String === parameter_value || parameter_value.nil?
       raise InvalidParameter, parameter_value unless Hash === parameter_value
       raise InvalidParameter, parameter_value unless parameter_value.keys.size == 1
 
