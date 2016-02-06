@@ -86,6 +86,10 @@ module StackMaster
     @stdout = io
   end
 
+  def stdin
+    $stdin
+  end
+
   def stderr
     @stderr || $stderr
   end
