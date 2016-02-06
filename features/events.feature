@@ -23,10 +23,6 @@ Feature: Events command
         end
       end
       """
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
-      | ANSWER   | y     |
 
   Scenario: View events
     And I stub the following stack events:

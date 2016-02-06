@@ -22,9 +22,6 @@ Feature: Resources command
         end
       end
       """
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
 
   Scenario: Show resources
     And I stub the following stacks:

@@ -1,10 +1,5 @@
 Feature: Delete command
 
-  Background:
-    Given I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
-
   Scenario: Run a delete command on a stack that exists
     Given I set the environment variables to:
       | variable | value |
