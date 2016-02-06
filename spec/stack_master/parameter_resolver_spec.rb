@@ -36,10 +36,10 @@ RSpec.describe StackMaster::ParameterResolver do
     }.to raise_error(StackMaster::ParameterResolver::InvalidParameter)
   end
 
-  it 'throws an error when given an array' do
+  it "doesn't throw an error when given an array" do
     expect {
       resolve(param: [1, 2])
-    }.to raise_error(StackMaster::ParameterResolver::InvalidParameter)
+    }.to_not raise_error
   end
 
   context 'when given a proper resolve hash' do

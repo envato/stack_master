@@ -17,7 +17,7 @@ module StackMaster
     def resolve
       @parameters.reduce({}) do |parameters, (key, value)|
         begin
-          parameters[key] = resolve_parameter_value(value)
+          parameters[key] = resolve_parameter_value(key, value)
         rescue InvalidParameter
           raise InvalidParameter, "Unable to resolve parameter #{key.inspect} value causing error: #{$!.message}"
         end
@@ -41,10 +41,9 @@ module StackMaster
       require_parameter_resolver(class_name.underscore)
     end
 
-    def resolve_parameter_value(parameter_value)
-      return parameter_value if String === parameter_value || parameter_value.nil?
-      raise InvalidParameter, parameter_value unless Hash === parameter_value
-      raise InvalidParameter, parameter_value unless parameter_value.keys.size == 1
+    def resolve_parameter_value(key, parameter_value)
+      return parameter_value unless Hash === parameter_value
+      validate_parameter_value!(key, parameter_value)
 
       resolver_name = parameter_value.keys.first.to_s
       load_parameter_resolver(resolver_name)
@@ -73,6 +72,12 @@ module StackMaster
         rescue NameError
           raise ResolverNotFound, "Could not find parameter resolver called #{class_name}, please double check your configuration"
         end
+      end
+    end
+
+    def validate_parameter_value!(key, parameter_value)
+      if parameter_value.keys.size != 1
+        raise InvalidParameter, "#{key} hash contained more than one key: #{parameter_value.inspect}"
       end
     end
   end
