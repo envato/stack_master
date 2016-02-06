@@ -15,6 +15,7 @@ region_defaults:
   staging:
     tags:
       environment: staging
+      test_override: 1
     notification_arns:
       - test_arn_3
     secret_file: staging.yml.gpg
@@ -33,3 +34,5 @@ stacks:
         - test_arn_4
     myapp_web:
       template: myapp_web
+      tags:
+        test_override: 2
