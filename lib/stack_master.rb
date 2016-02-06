@@ -55,6 +55,18 @@ require "stack_master/cli"
 module StackMaster
   extend self
 
+  def interactive?
+    !non_interactive?
+  end
+
+  def non_interactive?
+    @non_interactive || false
+  end
+
+  def non_interactive!
+    @non_interactive = true
+  end
+
   def base_dir
     File.expand_path(File.join(File.dirname(__FILE__), ".."))
   end
