@@ -31,14 +31,33 @@ RSpec.describe StackMaster::Config do
     end
   end
 
-  it 'returns an object that can find stack definitions' do
-    stack = loaded_config.find_stack('us-east-1', 'myapp-vpc')
-    expect(stack).to eq(myapp_vpc_definition)
+  describe '#find_stack' do
+    it 'returns an object that can find stack definitions' do
+      stack = loaded_config.find_stack('us-east-1', 'myapp-vpc')
+      expect(stack).to eq(myapp_vpc_definition)
+    end
+
+    it 'can find things with underscores instead of hyphens' do
+      stack = loaded_config.find_stack('us_east_1', 'myapp_vpc')
+      expect(stack).to eq(myapp_vpc_definition)
+    end
   end
 
-  it 'can find things with underscores instead of hyphens' do
-    stack = loaded_config.find_stack('us_east_1', 'myapp_vpc')
-    expect(stack).to eq(myapp_vpc_definition)
+  describe '#filter' do
+    it 'returns a list of stack definitions' do
+      stack = loaded_config.filter('us-east-1', 'myapp-vpc')
+      expect(stack).to eq([myapp_vpc_definition])
+    end
+
+    it 'can filter by region only' do
+      stacks = loaded_config.filter('us-east-1')
+      expect(stacks.size).to eq 2
+    end
+
+    it 'can return all stack definitions with no filters' do
+      stacks = loaded_config.filter
+      expect(stacks.size).to eq 4
+    end
   end
 
   it 'exposes the base_dir' do
