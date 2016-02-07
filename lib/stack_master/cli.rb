@@ -171,6 +171,7 @@ module StackMaster
 
     def execute_stacks_command(command, args, options)
       config = load_config(options.config)
+      args = [nil, nil] if args.size == 0
       args.each_slice(2) do |aliased_region, stack_name|
         region = Utils.underscore_to_hyphen(config.unalias_region(aliased_region))
         stack_name = Utils.underscore_to_hyphen(stack_name)
