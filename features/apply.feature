@@ -132,7 +132,7 @@ Feature: Apply command
         }
       }
       """
-    When I run `stack_master apply us-east-1 myapp-vpc --trace` interactively
+    When I run `stack_master apply us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | -    "TestSg2": {                                                              |
@@ -152,7 +152,7 @@ Feature: Apply command
     And I stub the following stacks:
       | stack_id | stack_name | region    | outputs          |
       | 1        | myapp-vpc  | us-east-1 | VpcId=vpc-xxxxxx |
-    When I run `stack_master apply us-east-1 myapp-web --trace` interactively
+    When I run `stack_master apply us-east-1 myapp-web --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | +    "TestSg": {                                                               |
@@ -216,7 +216,7 @@ Feature: Apply command
         }
       }
       """
-    When I run `stack_master apply us-east-1 myapp-vpc --trace` interactively
+    When I run `stack_master apply us-east-1 myapp-vpc --trace`
     Then the stack "myapp-vpc" should have a policy with the following:
       """
       {}

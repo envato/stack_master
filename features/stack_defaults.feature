@@ -73,7 +73,7 @@ Feature: Stack defaults
       | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
 
   Scenario: Create a stack with inherited attributes
-    When I run `stack_master apply ap-southeast-2 myapp-vpc --trace` interactively
+    When I run `stack_master apply ap-southeast-2 myapp-vpc --trace`
     Then the stack "myapp-vpc" should contain this notification ARN "test_arn_1"
     Then the stack "myapp-vpc" should contain this notification ARN "test_arn_3"
     And the stack "myapp-vpc" should have a policy with the following:

@@ -106,7 +106,7 @@ Feature: Status command
 }
       """
 
-    When I run `stack_master status --trace` interactively
+    When I run `stack_master status --trace`
     And the output should contain all of these lines:
       | REGION    \| STACK_NAME \| STACK_STATUS    \| DIFFERENT |
       | ----------\|------------\|-----------------\|---------- |
