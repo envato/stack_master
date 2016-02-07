@@ -78,9 +78,7 @@ Feature: Apply command
     Then the exit status should be 0
 
   Scenario: Run apply and don't create the stack
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | n     |
+    Given I will answer prompts with "n"
     When I run `stack_master apply us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff:      |
