@@ -63,10 +63,7 @@ Feature: Status command
       """
 
   Scenario: Run status command and get a list of stack statuii
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | y     |
-    And I stub the following stacks:
+    Given I stub the following stacks:
       | stack_id | stack_name | parameters     | region    | stack_status    |
       |        1 | stack1     | KeyName=my-key | us-east-1 | CREATE_COMPLETE |
       |        2 | stack2     |                | us-east-1 | UPDATE_COMPLETE |

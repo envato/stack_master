@@ -1,10 +1,7 @@
 Feature: Delete command
 
   Scenario: Run a delete command on a stack that exists
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | y     |
-     And I stub the following stacks:
+    Given I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
       | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
     And I stub the following stack events:
