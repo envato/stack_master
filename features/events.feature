@@ -25,7 +25,7 @@ Feature: Events command
       """
 
   Scenario: View events
-    And I stub the following stack events:
+    Given I stub the following stack events:
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
       | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
       | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
