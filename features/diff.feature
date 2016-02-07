@@ -85,7 +85,7 @@ Feature: Diff command
         }
       }
       """
-    When I run `stack_master diff us-east-1 myapp-vpc --trace` interactively
+    When I run `stack_master diff us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | -KeyName: changed |
       | +KeyName: my-key  |
@@ -128,7 +128,7 @@ Feature: Diff command
         }
       }
       """
-    When I run `stack_master diff us-east-1 myapp-vpc --trace` interactively
+    When I run `stack_master diff us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff: No changes      |
       | Parameters diff: No changes |
@@ -171,7 +171,7 @@ Feature: Diff command
         }
       }
       """
-    When I run `stack_master diff us-east-1 myapp-vpc --trace` interactively
+    When I run `stack_master diff us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
     | -        "GroupDescription": "Changed description" |
     | +        "GroupDescription": "Test SG 2",          |
