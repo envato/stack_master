@@ -5,13 +5,20 @@ module StackMaster
       include Commander::UI
       include StackMaster::Commands::TerminalHelper
 
-      def initialize(config)
+      def initialize(config, options = {})
         @config = config
+        @options = options
       end
 
       def perform
-        tp.set :max_width, self.window_size
-        tp @config.stacks, :region, :stack_name
+        if @options.machine_readable
+          @config.stacks.each do |stack|
+            StackMaster.stdout.puts "#{stack.region} #{stack.stack_name}"
+          end
+        else
+          tp.set :max_width, self.window_size
+          tp @config.stacks, :region, :stack_name
+        end
       end
     end
   end
