@@ -241,6 +241,7 @@ vpc_id:
 ```
 
 ## Resolver Arrays
+
 Most resolvers support taking an array of values that will each be resolved.
 Unless stated otherwise in the documentation, the array version of the
 resolver will be named with the [pluralized](http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-pluralize) 
@@ -252,7 +253,7 @@ in the class definition, with an optional class name if different from the defau
 module StackMaster
   module ParameterResolvers
     class MyResolver < Resolver
-      array_resolver 'MyCustomArrayResolver'
+      array_resolver class_name: 'MyCustomArrayResolver'
       ...
     end
   end
