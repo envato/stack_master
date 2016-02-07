@@ -91,6 +91,23 @@ Feature: Apply command
     And the output should not match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/ 
     Then the exit status should be 0
 
+  Scenario: Run apply with region only and create 2 stacks
+    Given I stub the following stack events:
+      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-web  | myapp-web           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    When I run `stack_master apply us-east-1 --trace`
+    And the output should contain all of these lines:
+      | Stack diff:                                                                    |
+      | +    "Vpc": {                                                                  |
+      | Parameters diff:                                                               |
+      | KeyName: my-key                                                                |
+    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
+    Then the exit status should be 0
+
   Scenario: Run apply on an existing stack
     Given I stub the following stack events:
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |

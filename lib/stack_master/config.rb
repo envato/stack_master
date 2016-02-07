@@ -44,11 +44,15 @@ module StackMaster
       load_config
     end
 
-    def find_stack(region, stack_name)
-      @stacks.find do |s|
-        (s.region == region || s.region == region.gsub('_', '-')) &&
-          (s.stack_name == stack_name || s.stack_name == stack_name.gsub('_', '-'))
+    def filter(region = nil, stack_name = nil)
+      @stacks.select do |s|
+        (s.region == region || region.nil? || s.region == region.gsub('_', '-')) &&
+          (s.stack_name == stack_name || stack_name.blank? || s.stack_name == stack_name.gsub('_', '-'))
       end
+    end
+
+    def find_stack(region, stack_name)
+      filter(region, stack_name).first
     end
 
     def unalias_region(region)
