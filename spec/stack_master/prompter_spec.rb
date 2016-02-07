@@ -6,8 +6,8 @@ RSpec.describe StackMaster::Prompter do
       allow(StackMaster.stdin).to receive(:tty?).and_return(false)
     end
 
-    it 'defaults to no and outputs info about -f' do
-      expect { ask?('blah') }.to output(/To force yes use -f/).to_stdout
+    it 'defaults to no and outputs info about -y' do
+      expect { ask?('blah') }.to output(/To force yes use -y/).to_stdout
     end
   end
 
@@ -16,8 +16,8 @@ RSpec.describe StackMaster::Prompter do
       allow(StackMaster.stdout).to receive(:tty?).and_return(false)
     end
 
-    it 'defaults to no and outputs info about -f' do
-      expect { ask?('blah') }.to output(/To force yes use -f/).to_stdout
+    it 'defaults to no and outputs info about -y' do
+      expect { ask?('blah') }.to output(/To force yes use -y/).to_stdout
     end
   end
 end

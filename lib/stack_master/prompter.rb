@@ -7,7 +7,7 @@ module StackMaster
           StackMaster.stdin.getch.chomp
         else
           StackMaster.stdout.puts
-          StackMaster.stdout.puts "STDOUT or STDIN was not a TTY. Defaulting to no. To force yes use -f"
+          StackMaster.stdout.puts "STDOUT or STDIN was not a TTY. Defaulting to no. To force yes use -y"
           'n'
         end
       else
