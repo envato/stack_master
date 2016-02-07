@@ -60,7 +60,7 @@ RSpec.describe StackMaster::Config do
         'stack_policy_file' => 'my_policy.json'
       },
       'ap-southeast-2' => {
-        'tags' => {'environment' => 'staging'},
+        'tags' => {'environment' => 'staging', 'test_override' => 1 },
         'notification_arns' => ['test_arn_3'],
         'secret_file' => 'staging.yml.gpg'
       }
@@ -80,10 +80,25 @@ RSpec.describe StackMaster::Config do
       region: 'ap-southeast-2',
       tags: {
         'application' => 'my-awesome-blog',
-        'environment' => 'staging'
+        'environment' => 'staging',
+        'test_override' => 1
       },
       notification_arns: ['test_arn_3', 'test_arn_4'],
       template: 'myapp_vpc.rb',
+      base_dir: base_dir,
+      secret_file: 'staging.yml.gpg',
+      additional_parameter_lookup_dirs: ['staging']
+    ))
+    expect(loaded_config.find_stack('ap-southeast-2', 'myapp-web')).to eq(StackMaster::StackDefinition.new(
+      stack_name: 'myapp-web',
+      region: 'ap-southeast-2',
+      tags: {
+        'application' => 'my-awesome-blog',
+        'environment' => 'staging',
+        'test_override' => 2
+      },
+      notification_arns: ['test_arn_3'],
+      template: 'myapp_web',
       base_dir: base_dir,
       secret_file: 'staging.yml.gpg',
       additional_parameter_lookup_dirs: ['staging']
