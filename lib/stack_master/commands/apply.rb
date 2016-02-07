@@ -25,6 +25,8 @@ module StackMaster
         rescue StackMaster::CtrlC
           cancel
         end
+      rescue Aws::CloudFormation::Errors::ServiceError => e
+        StackMaster.stdout.puts "#{e.class} #{e.message}"
       end
 
       private
