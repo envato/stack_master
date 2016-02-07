@@ -1,3 +1,11 @@
+Before do
+  StackMaster.non_interactive_answer = 'y'
+end
+
+Given(/^I will answer prompts with "([^"]*)"$/) do |answer|
+  StackMaster.non_interactive_answer = answer
+end
+
 Given(/^I stub the following stack events:$/) do |table|
   table.hashes.each do |row|
     row.symbolize_keys!
