@@ -54,6 +54,21 @@ require "stack_master/cli"
 module StackMaster
   extend self
 
+  def interactive?
+    !non_interactive?
+  end
+
+  def non_interactive?
+    @non_interactive || false
+  end
+
+  def non_interactive!
+    @non_interactive = true
+  end
+
+  attr_accessor :non_interactive_answer
+  @non_interactive_answer = 'y'
+
   def base_dir
     File.expand_path(File.join(File.dirname(__FILE__), ".."))
   end
@@ -72,6 +87,10 @@ module StackMaster
 
   def stdout=(io)
     @stdout = io
+  end
+
+  def stdin
+    $stdin
   end
 
   def stderr

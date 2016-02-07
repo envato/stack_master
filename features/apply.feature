@@ -62,19 +62,13 @@ Feature: Apply command
         end
       end
       """
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
 
   Scenario: Run apply and create a new stack
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | y     |
-    And I stub the following stack events:
+    Given I stub the following stack events:
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
       | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
       | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-    When I run `stack_master apply us-east-1 myapp-vpc --trace` interactively
+    When I run `stack_master apply us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | +    "Vpc": {                                                                  |
@@ -84,10 +78,8 @@ Feature: Apply command
     Then the exit status should be 0
 
   Scenario: Run apply and don't create the stack
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | n     |
-    When I run `stack_master apply us-east-1 myapp-vpc --trace` interactively
+    Given I will answer prompts with "n"
+    When I run `stack_master apply us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff:      |
       | +    "Vpc": {    |
@@ -98,10 +90,7 @@ Feature: Apply command
     Then the exit status should be 0
 
   Scenario: Run apply on an existing stack
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | y     |
-    And I stub the following stack events:
+    Given I stub the following stack events:
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
       | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
       | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
@@ -141,7 +130,7 @@ Feature: Apply command
         }
       }
       """
-    When I run `stack_master apply us-east-1 myapp-vpc --trace` interactively
+    When I run `stack_master apply us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | -    "TestSg2": {                                                              |
@@ -149,10 +138,7 @@ Feature: Apply command
     Then the exit status should be 0
 
   Scenario: Create a stack using a stack output resolver
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | y     |
-    And a file named "parameters/myapp_web.yml" with:
+    Given a file named "parameters/myapp_web.yml" with:
       """
       VpcId:
         stack_output: myapp-vpc/VpcId
@@ -164,7 +150,7 @@ Feature: Apply command
     And I stub the following stacks:
       | stack_id | stack_name | region    | outputs          |
       | 1        | myapp-vpc  | us-east-1 | VpcId=vpc-xxxxxx |
-    When I run `stack_master apply us-east-1 myapp-web --trace` interactively
+    When I run `stack_master apply us-east-1 myapp-web --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | +    "TestSg": {                                                               |
@@ -188,9 +174,6 @@ Feature: Apply command
       """
       {}
       """
-    And I set the environment variables to:
-      | variable | value |
-      | ANSWER   | y     |
     And I stub the following stack events:
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
       | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
@@ -231,7 +214,7 @@ Feature: Apply command
         }
       }
       """
-    When I run `stack_master apply us-east-1 myapp-vpc --trace` interactively
+    When I run `stack_master apply us-east-1 myapp-vpc --trace`
     Then the stack "myapp-vpc" should have a policy with the following:
       """
       {}

@@ -22,12 +22,9 @@ Feature: Resources command
         end
       end
       """
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
 
   Scenario: Show resources
-    And I stub the following stacks:
+    Given I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
       | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
     And I stub the following stack resources:

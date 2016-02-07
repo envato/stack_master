@@ -22,6 +22,14 @@ module StackMaster
       program :description, 'AWS Stack Management'
 
       global_option '-c', '--config FILE', 'Config file to use'
+      global_option '-y', '--yes', 'Run in non-interactive mode answering yes to any prompts' do
+        StackMaster.non_interactive!
+        StackMaster.non_interactive_answer = 'y'
+      end
+      global_option '-n', '--no', 'Run in non-interactive mode answering no to any prompts' do
+        StackMaster.non_interactive!
+        StackMaster.non_interactive_answer = 'n'
+      end
 
       command :apply do |c|
         c.syntax = 'stack_master apply [region_or_alias] [stack_name]'
