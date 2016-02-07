@@ -11,7 +11,7 @@ module StackMaster
           'n'
         end
       else
-        ENV.fetch('ANSWER') { 'y' }
+        StackMaster.non_interactive_answer
       end
       StackMaster.stdout.puts
       answer == 'y'

@@ -12,18 +12,13 @@ Feature: Delete command
     Then the exit status should be 0
 
   Scenario: Run a delete command on a stack that does not exists
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | y     |
     When I run `stack_master delete us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack does not exist |
     Then the exit status should be 0
 
   Scenario: Answer no when asked to delete stack
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | n     |
+    Given I will answer prompts with "n"
     And I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
       | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 | 
