@@ -30,16 +30,20 @@ RSpec.describe StackMaster::ParameterResolver do
     expect(resolve(param1: 'value1')).to eq(param1: 'value1')
   end
 
+  it 'returns integers as strings' do
+    expect(resolve(param1: 2)).to eq(param1: '2')
+  end
+
   it 'it throws an error when the hash contains more than one key' do
     expect {
       resolve(param: { nested1: 'value1', nested2: 'value2' })
     }.to raise_error(StackMaster::ParameterResolver::InvalidParameter)
   end
 
-  it 'throws an error when given an array' do
+  it "doesn't throw an error when given an array" do
     expect {
       resolve(param: [1, 2])
-    }.to raise_error(StackMaster::ParameterResolver::InvalidParameter)
+    }.to_not raise_error
   end
 
   context 'when given a proper resolve hash' do
