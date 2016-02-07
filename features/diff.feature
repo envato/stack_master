@@ -47,15 +47,9 @@ Feature: Diff command
         }
       }
       """
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
 
   Scenario: Run diff on a stack with no changes
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | y     |
-    And I stub the following stacks:
+    Given I stub the following stacks:
       | stack_id | stack_name | parameters          | region    |
       |        1 | myapp-vpc  | KeyName=changed-key | us-east-1 |
     And I stub a template for the stack "myapp-vpc":
@@ -91,17 +85,14 @@ Feature: Diff command
         }
       }
       """
-    When I run `stack_master diff us-east-1 myapp-vpc --trace` interactively
+    When I run `stack_master diff us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | -KeyName: changed |
       | +KeyName: my-key  |
     Then the exit status should be 0
 
   Scenario: Run diff on a stack with parameter changes
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | y     |
-    And I stub the following stacks:
+    Given I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
       | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
     And I stub a template for the stack "myapp-vpc":
@@ -137,17 +128,14 @@ Feature: Diff command
         }
       }
       """
-    When I run `stack_master diff us-east-1 myapp-vpc --trace` interactively
+    When I run `stack_master diff us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff: No changes      |
       | Parameters diff: No changes |
     Then the exit status should be 0
 
   Scenario: Run diff on a stack with template changes
-    Given I set the environment variables to:
-      | variable | value |
-      | ANSWER   | y     |
-    And I stub the following stacks:
+    Given I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
       | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
     And I stub a template for the stack "myapp-vpc":
@@ -183,7 +171,7 @@ Feature: Diff command
         }
       }
       """
-    When I run `stack_master diff us-east-1 myapp-vpc --trace` interactively
+    When I run `stack_master diff us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
     | -        "GroupDescription": "Changed description" |
     | +        "GroupDescription": "Test SG 2",          |

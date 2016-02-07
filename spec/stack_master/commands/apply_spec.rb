@@ -16,9 +16,8 @@ RSpec.describe StackMaster::Commands::Apply do
     allow(cf).to receive(:update_stack)
     allow(cf).to receive(:create_stack)
     allow(StackMaster::StackDiffer).to receive(:new).with(proposed_stack, stack).and_return double.as_null_object
-    allow(STDOUT).to receive(:print)
-    allow(STDIN).to receive(:getch).and_return('y')
     allow(StackMaster::StackEvents::Streamer).to receive(:stream)
+    allow(StackMaster).to receive(:interactive?).and_return(false)
   end
 
   def apply
@@ -87,6 +86,7 @@ RSpec.describe StackMaster::Commands::Apply do
       let(:template_body) do
         "{\"a\":\"#{big_string}\"}"
       end
+
       it 'exits with a message' do
         expect { apply }.to output(/The \(space compressed\) stack is larger than the limit set by AWS/).to_stdout
       end

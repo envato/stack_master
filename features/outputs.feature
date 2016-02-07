@@ -22,13 +22,9 @@ Feature: Outputs command
         end
       end
       """
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
-      | ANSWER   | y     |
 
   Scenario: Output stack resources
-    And I stub the following stacks:
+    Given I stub the following stacks:
       | stack_id | stack_name | parameters       | region    | outputs          |
       | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 | VpcId=vpc-123456 |
     And I stub a template for the stack "myapp-vpc":

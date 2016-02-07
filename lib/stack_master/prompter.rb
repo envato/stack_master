@@ -2,10 +2,15 @@ module StackMaster
   module Prompter
     def ask?(question)
       StackMaster.stdout.print question
-      answer = if ENV['STUB_AWS']
-        ENV['ANSWER']
+      answer = if StackMaster.interactive?
+        if StackMaster.stdin.tty? && StackMaster.stdout.tty?
+          StackMaster.stdin.getch.chomp
+        else
+          StackMaster.stdout.puts "STDOUT or STDIN was not a TTY. Defaulting to no. To force yes use -f"
+          'n'
+        end
       else
-        STDIN.getch.chomp
+        ENV.fetch('ANSWER') { 'y' }
       end
       StackMaster.stdout.puts
       answer == 'y'

@@ -50,10 +50,6 @@ Feature: Region aliases
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
       | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
       | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-    And I set the environment variables to:
-      | variable | value |
-      | STUB_AWS | true  |
-      | ANSWER   | y     |
 
   Scenario: Create a stack using region aliases
     When I run `stack_master apply staging myapp-vpc --trace`
