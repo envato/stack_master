@@ -14,7 +14,10 @@ module StackMaster
       true
     rescue Aws::CloudFormation::Errors::ValidationError => e
       StackMaster.stdout.puts "invalid. #{e.message}"
+<<<<<<< HEAD
       false
+=======
+>>>>>>> Expose the validate error in output
     end
 
     private
