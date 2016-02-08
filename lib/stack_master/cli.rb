@@ -21,7 +21,7 @@ module StackMaster
       program :version, '0.0.1'
       program :description, 'AWS Stack Management'
 
-      global_option '-c', '--config FILE', 'Config file to use'
+      global_option '-c', '--config FILE', String, 'Config file to use'
       global_option '-y', '--yes', 'Run in non-interactive mode answering yes to any prompts' do
         StackMaster.non_interactive!
         StackMaster.non_interactive_answer = 'y'
