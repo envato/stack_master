@@ -38,7 +38,7 @@ module StackMaster
         c.example 'update a stack named myapp-vpc in us-east-1', 'stack_master apply us-east-1 myapp-vpc'
         c.action do |args, options|
           options.defaults config: default_config_file
-          execute_stack_command(StackMaster::Commands::Apply, args, options)
+          execute_stacks_command(StackMaster::Commands::Apply, args, options)
         end
       end
 
@@ -48,7 +48,7 @@ module StackMaster
         c.description = "Displays outputs for a stack"
         c.action do |args, options|
           options.defaults config: default_config_file
-          execute_stack_command(StackMaster::Commands::Outputs, args, options)
+          execute_stacks_command(StackMaster::Commands::Outputs, args, options)
         end
       end
 
@@ -74,7 +74,7 @@ module StackMaster
         c.example 'diff a stack named myapp-vpc in us-east-1', 'stack_master diff us-east-1 myapp-vpc'
         c.action do |args, options|
           options.defaults config: default_config_file
-          execute_stack_command(StackMaster::Commands::Diff, args, options)
+          execute_stacks_command(StackMaster::Commands::Diff, args, options)
         end
       end
 
@@ -88,7 +88,7 @@ module StackMaster
         c.option '--tail', 'Tail events'
         c.action do |args, options|
           options.defaults config: default_config_file
-          execute_stack_command(StackMaster::Commands::Events, args, options)
+          execute_stacks_command(StackMaster::Commands::Events, args, options)
         end
       end
 
@@ -98,7 +98,7 @@ module StackMaster
         c.description = "Shows stack resources"
         c.action do |args, options|
           options.defaults config: default_config_file
-          execute_stack_command(StackMaster::Commands::Resources, args, options)
+          execute_stacks_command(StackMaster::Commands::Resources, args, options)
         end
       end
 
@@ -121,7 +121,7 @@ module StackMaster
         c.example 'validate a stack named myapp-vpc in us-east-1', 'stack_master validate us-east-1 myapp-vpc'
         c.action do |args, options|
           options.defaults config: default_config_file
-          execute_stack_command(StackMaster::Commands::Validate, args, options)
+          execute_stacks_command(StackMaster::Commands::Validate, args, options)
         end
       end
 
@@ -174,22 +174,21 @@ module StackMaster
       exit 1
     end
 
-    def execute_stack_command(command, args, options)
-      unless args.size == 2
-        say "Invalid arguments. stack_master #{command.name.split('::').last.downcase} [region] [stack_name]"
-        return
-      end
+    def execute_stacks_command(command, args, options)
       config = load_config(options.config)
-      aliased_region, stack_name = args
-      region = Utils.underscore_to_hyphen(config.unalias_region(aliased_region))
-      stack_name = Utils.underscore_to_hyphen(stack_name)
-      StackMaster.cloud_formation_driver.set_region(region)
-      stack_definition ||= config.find_stack(region, stack_name)
-      if stack_definition.nil?
-        say "Could not find stack definition #{stack_name} in region #{region}"
-        return
+      args = [nil, nil] if args.size == 0
+      args.each_slice(2) do |aliased_region, stack_name|
+        region = Utils.underscore_to_hyphen(config.unalias_region(aliased_region))
+        stack_name = Utils.underscore_to_hyphen(stack_name)
+        stack_definitions = config.filter(region, stack_name)
+        if stack_definitions.empty?
+          say "Could not find stack definition #{stack_name} in region #{region}"
+        end
+        stack_definitions.each do |stack_definition|
+          StackMaster.cloud_formation_driver.set_region(stack_definition.region)
+          command.perform(config, stack_definition, options)
+        end
       end
-      command.perform(config, stack_definition, options)
     end
   end
 end
