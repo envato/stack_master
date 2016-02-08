@@ -191,9 +191,6 @@ module StackMaster
         end
       end
 
-      # Setup the right exit code
-      at_exit { exit command_results.all? }
-
       # Return success/failure
       command_results.all?
     end
