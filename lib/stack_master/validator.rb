@@ -12,8 +12,7 @@ module StackMaster
       cf.validate_template(template_body: template_body)
       StackMaster.stdout.puts "valid"
     rescue Aws::CloudFormation::Errors::ValidationError => e
-      StackMaster.stdout.puts "invalid"
-      $stderr.puts e.message
+      StackMaster.stdout.puts "invalid. #{e.message}"
     end
 
     private
