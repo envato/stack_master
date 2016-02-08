@@ -1,8 +1,8 @@
 module StackMaster
   module Prompter
     def ask?(question)
+      StackMaster.stdout.print question
       answer = if StackMaster.interactive?
-        StackMaster.stdout.print question
         if StackMaster.stdin.tty? && StackMaster.stdout.tty?
           StackMaster.stdin.getch.chomp
         else
@@ -11,6 +11,7 @@ module StackMaster
           'n'
         end
       else
+        print StackMaster.non_interactive_answer
         StackMaster.non_interactive_answer
       end
       StackMaster.stdout.puts
