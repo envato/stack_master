@@ -11,9 +11,10 @@ module StackMaster
       template_body = TemplateCompiler.compile(@stack_definition.template_file_path)
       cf.validate_template(template_body: template_body)
       StackMaster.stdout.puts "valid"
+      true
     rescue Aws::CloudFormation::Errors::ValidationError => e
-      StackMaster.stdout.puts "invalid"
-      $stderr.puts e.message
+      StackMaster.stdout.puts "invalid. #{e.message}"
+      false
     end
 
     private
