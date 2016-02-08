@@ -21,7 +21,7 @@ RSpec.describe StackMaster::Validator do
         cf.stub_responses(:validate_template, nil)
       end
       it "tells the user everything will be fine" do
-        expect { validator.perform }.to output(/Valid/).to_stdout
+        expect { validator.perform }.to output(/myapp_vpc: valid/).to_stdout
       end
     end
 
@@ -30,7 +30,7 @@ RSpec.describe StackMaster::Validator do
         cf.stub_responses(:validate_template, Aws::CloudFormation::Errors::ValidationError.new('a', 'Problem'))
       end
       it "informs the user of their stupdity" do
-        expect { validator.perform }.to output(/Validation Failed/).to_stderr
+        expect { validator.perform }.to output(/myapp_vpc: invalid/).to_stdout
       end
     end
   end
