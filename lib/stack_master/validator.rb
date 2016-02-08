@@ -12,7 +12,8 @@ module StackMaster
       StackMaster.stdout.puts "Valid"
     rescue Aws::CloudFormation::Errors::ValidationError => e
       $stderr.puts "Validation Failed"
-      abort e.message
+      $stderr.puts e.message
+      false
     end
 
     private
