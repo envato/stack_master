@@ -6,8 +6,16 @@ module StackMaster
 
     module ClassMethods
       def perform(*args)
-        new(*args).perform
+        new(*args).tap { |command| command.perform }
       end
+    end
+
+    def failed
+      @failed = true
+    end
+
+    def success?
+      @failed != true
     end
   end
 end

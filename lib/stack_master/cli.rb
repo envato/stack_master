@@ -175,6 +175,7 @@ module StackMaster
     end
 
     def execute_stacks_command(command, args, options)
+      command_results = []
       config = load_config(options.config)
       args = [nil, nil] if args.size == 0
       args.each_slice(2) do |aliased_region, stack_name|
@@ -186,9 +187,12 @@ module StackMaster
         end
         stack_definitions.each do |stack_definition|
           StackMaster.cloud_formation_driver.set_region(stack_definition.region)
-          command.perform(config, stack_definition, options)
+          command_results.push command.perform(config, stack_definition, options).success?
         end
       end
+
+      # Return success/failure
+      command_results.all?
     end
   end
 end
