@@ -1,6 +1,8 @@
 module StackMaster
   class Validator
-    include Command
+    def self.valid?(stack_definition)
+      new(stack_definition).perform
+    end
 
     def initialize(stack_definition)
       @stack_definition = stack_definition
