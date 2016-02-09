@@ -56,3 +56,11 @@ Then(/^the stack "([^"]*)" should contain this notification ARN "([^"]*)"$/) do 
   expect(stack).to be
   expect(stack.notification_arns).to include notification_arn
 end
+
+Given(/^I stub CloudFormation validate calls to pass validation$/) do
+  allow(StackMaster.cloud_formation_driver).to receive(:validate_template).and_return(true)
+end
+
+Given(/^I stub CloudFormation validate calls to fail validation with message "([^"]*)"$/) do |message|
+  allow(StackMaster.cloud_formation_driver).to receive(:validate_template).and_raise(Aws::CloudFormation::Errors::ValidationError.new('', message))
+end

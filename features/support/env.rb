@@ -3,6 +3,7 @@ require 'stack_master'
 require 'stack_master/testing'
 require 'aruba/in_process'
 require 'pry'
+require 'cucumber/rspec/doubles'
 
 Aruba.configure do |config|
   config.command_launcher = :in_process
