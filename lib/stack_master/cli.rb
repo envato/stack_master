@@ -22,6 +22,7 @@ module StackMaster
       program :description, 'AWS Stack Management'
 
       global_option '-c', '--config FILE', String, 'Config file to use'
+      global_option '--changed', 'filter stack selection to only ones that have changed'
       global_option '-y', '--yes', 'Run in non-interactive mode answering yes to any prompts' do
         StackMaster.non_interactive!
         StackMaster.non_interactive_answer = 'y'
@@ -183,8 +184,11 @@ module StackMaster
         stack_name = Utils.underscore_to_hyphen(stack_name)
         stack_definitions = config.filter(region, stack_name)
         if stack_definitions.empty?
-          say "Could not find stack definition #{stack_name} in region #{region}"
+          StackMaster.stdout.puts "Could not find stack definition #{stack_name} in region #{region}"
         end
+        stack_definitions.select! do |stack_definition|
+          StackStatus.new(config, stack_definition).changed?
+        end if options.changed
         stack_definitions.each do |stack_definition|
           StackMaster.cloud_formation_driver.set_region(stack_definition.region)
           command_results.push command.perform(config, stack_definition, options).success?
