@@ -10,7 +10,7 @@ module StackMaster
       end
 
       def command_name
-        name.split('::').last.downcase
+        name.split('::').last.underscore
       end
     end
 
