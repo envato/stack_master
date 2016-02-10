@@ -191,6 +191,7 @@ module StackMaster
         end if options.changed
         stack_definitions.each do |stack_definition|
           StackMaster.cloud_formation_driver.set_region(stack_definition.region)
+          StackMaster.stdout.puts "Executing #{command.command_name} on #{stack_definition.stack_name} in #{stack_definition.region}"
           command_results.push command.perform(config, stack_definition, options).success?
         end
       end
