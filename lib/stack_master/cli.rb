@@ -186,7 +186,7 @@ module StackMaster
         if stack_definitions.empty?
           StackMaster.stdout.puts "Could not find stack definition #{stack_name} in region #{region}"
         end
-        stack_definitions.select! do |stack_definition|
+        stack_definitions = stack_definitions.select do |stack_definition|
           StackStatus.new(config, stack_definition).changed?
         end if options.changed
         stack_definitions.each do |stack_definition|
