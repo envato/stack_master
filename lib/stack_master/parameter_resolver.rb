@@ -43,6 +43,7 @@ module StackMaster
 
     def resolve_parameter_value(key, parameter_value)
       return parameter_value.to_s if Numeric === parameter_value
+      return parameter_value.join(',') if Array === parameter_value
       return parameter_value unless Hash === parameter_value
       validate_parameter_value!(key, parameter_value)
 
