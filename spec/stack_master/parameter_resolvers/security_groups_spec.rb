@@ -12,7 +12,7 @@ RSpec.describe StackMaster::ParameterResolvers::SecurityGroups do
 
     context 'when given a single SG name' do
       it "resolves the security group" do
-        expect(resolver.resolve(sg_name)).to eq [sg_id]
+        expect(resolver.resolve(sg_name)).to eq sg_id
       end
     end
 
@@ -25,7 +25,7 @@ RSpec.describe StackMaster::ParameterResolvers::SecurityGroups do
       end
 
       it "resolves the security groups" do
-        expect(resolver.resolve([sg_name, sg_name2])).to eq [sg_id, sg_id2]
+        expect(resolver.resolve([sg_name, sg_name2])).to eq "#{sg_id},#{sg_id2}"
       end
     end
   end

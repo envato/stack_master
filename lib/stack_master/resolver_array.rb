@@ -7,9 +7,9 @@ module StackMaster
       end
 
       def resolve(values)
-        value_list = Array(values).map do |value|
+        Array(values).map do |value|
           resolver_class.new(@config, @stack_definition).resolve(value)
-        end
+        end.join(',')
       end
 
       def resolver_class

@@ -34,6 +34,10 @@ RSpec.describe StackMaster::ParameterResolver do
     expect(resolve(param1: 2)).to eq(param1: '2')
   end
 
+  it 'joins arrays into comma separated strings' do
+    expect(resolve(param1: [1, 2])).to eq(param1: '1,2')
+  end
+
   it 'it throws an error when the hash contains more than one key' do
     expect {
       resolve(param: { nested1: 'value1', nested2: 'value2' })
