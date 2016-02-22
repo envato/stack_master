@@ -18,7 +18,7 @@ module StackMaster
 
     def execute!
       program :name, 'StackMaster'
-      program :version, '0.0.1'
+      program :version, StackMaster::VERSION
       program :description, 'AWS Stack Management'
 
       global_option '-c', '--config FILE', String, 'Config file to use'
