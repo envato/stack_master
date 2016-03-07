@@ -25,6 +25,8 @@ module StackMaster
     end
 
     def files_to_upload
+      require 'pry'
+      binding.pry
       files.map do |file|
         "#{template_dir}/#{file}"
       end

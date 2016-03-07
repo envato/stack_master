@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 module StackMaster
   module AwsDriver
     class S3ConfigurationError < StandardError; end
@@ -18,18 +20,30 @@ module StackMaster
 
         set_region(bucket_region) if bucket_region
 
-        files.each do |file|
+        current_objects = s3.list_objects(
+          prefix: prefix,
+          bucket: bucket
+        ).map(&:contents).flatten.inject({}){|h,obj|
+          h.merge(obj.key => obj)
+        }
+
+        files.each do |template,file|
           body = File.read(file)
-          key = File.basename(file)
+          key = template
           key.prepend("#{prefix}/") if prefix
+          md5 = Digest::MD5.file(file).to_s
+          s3_md5 = current_objects[key] ? current_objects[key].etag.gsub("\"", '') : nil
 
-          StackMaster.stdout.puts "Uploading #{file} to bucket #{options[:bucket]}/#{key}..."
+          unless md5 == s3_md5
+            StackMaster.stdout.puts "Uploading #{file} to bucket #{options[:bucket]}/#{key}..."
 
-          put_object(
-            bucket: bucket,
-            key: key,
-            body: body
-          )
+            put_object(
+              bucket: bucket,
+              key: key,
+              body: body,
+              metadata: { md5: md5 }
+            )
+          end
         end
       end
 
@@ -42,7 +56,12 @@ module StackMaster
       end
 
       def s3_url(region, bucket, prefix, file)
-        "https://s3-#{region}.amazonaws.com/#{bucket}/#{prefix}/#{file}"
+        prefix += '/' if prefix
+        if region == 'us-east-1'
+          "https://s3.amazonaws.com/#{bucket}/#{prefix}#{file}"
+        else
+          "https://s3-#{region}.amazonaws.com/#{bucket}/#{prefix}#{file}"
+        end
       end
 
       private
