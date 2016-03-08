@@ -10,11 +10,19 @@ module StackMaster
     end
 
     def current_template
-      JSON.pretty_generate(@current_stack.template_hash)
+      if @current_stack
+        JSON.pretty_generate(@current_stack.template_hash)
+      else
+        ''
+      end
     end
 
     def current_parameters
-      YAML.dump(sort_params(@current_stack.parameters_with_defaults))
+      if @current_stack
+        YAML.dump(sort_params(@current_stack.parameters_with_defaults))
+      else
+        ''
+      end
     end
 
     def proposed_parameters
@@ -29,25 +37,28 @@ module StackMaster
     end
 
     def body_different?
-      Diffy::Diff.new(current_template, proposed_template, {}).to_s != ''
+      body_diff != ''
+    end
+
+    def body_diff
+      @body_diff ||= Diffy::Diff.new(current_template, proposed_template, context: 7, include_diff_info: true).to_s
     end
 
     def params_different?
-      Diffy::Diff.new(current_parameters, proposed_parameters, {}).to_s != ''
+      params_diff != ''
+    end
+
+    def params_diff
+      @param_diff ||= Diffy::Diff.new(current_parameters, proposed_parameters, {}).to_s
     end
 
     def output_diff
-      if @current_stack
-        text_diff('Stack', current_template, proposed_template, context: 7, include_diff_info: true)
-        text_diff('Parameters', current_parameters, proposed_parameters)
-        unless noecho_keys.empty?
-          StackMaster.stdout.puts " * can not tell if NoEcho parameters are different."
-        end
-      else
-        text_diff('Stack', '', proposed_template)
-        text_diff('Parameters', '', proposed_parameters)
-        StackMaster.stdout.puts "No stack found"
+      display_diff('Stack', body_diff)
+      display_diff('Parameters', params_diff)
+      unless noecho_keys.empty?
+        StackMaster.stdout.puts " * can not tell if NoEcho parameters are different."
       end
+      StackMaster.stdout.puts "No stack found" if @current_stack.nil?
     end
 
     def noecho_keys
@@ -62,8 +73,7 @@ module StackMaster
 
     private
 
-    def text_diff(thing, current, proposed, diff_opts = {})
-      diff = Diffy::Diff.new(current, proposed, diff_opts).to_s
+    def display_diff(thing, diff)
       StackMaster.stdout.print "#{thing} diff: "
       if diff == ''
         StackMaster.stdout.puts "No changes"

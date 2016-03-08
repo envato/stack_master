@@ -21,6 +21,7 @@ RSpec.describe StackMaster::Commands::Status do
       let(:stack2) { double(:stack2, template_hash: {}, parameters_with_defaults: {a: 2}, stack_status: 'CREATE_COMPLETE') }
       let(:proposed_stack1) { double(:proposed_stack1, template_body: "{}", parameters_with_defaults: {a: 1}) }
       let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", parameters_with_defaults: {a: 1}) }
+
       it "returns the status of call stacks" do
         out = "REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT\n----------|------------|-----------------|----------\nus-east-1 | stack1     | UPDATE_COMPLETE | No       \nus-east-1 | stack2     | CREATE_COMPLETE | Yes      \n * No echo parameters can't be diffed\n"
         expect { status.perform }.to output(out).to_stdout
@@ -32,6 +33,7 @@ RSpec.describe StackMaster::Commands::Status do
       let(:stack2) { double(:stack2, template_hash: {}, parameters_with_defaults: {a: 1}, stack_status: 'CREATE_COMPLETE') }
       let(:proposed_stack1) { double(:proposed_stack1, template_body: "{}", parameters_with_defaults: {a: 1}) }
       let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", parameters_with_defaults: {a: 1}) }
+
       it "returns the status of call stacks" do
         out = "REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT\n----------|------------|-----------------|----------\nus-east-1 | stack1     | UPDATE_COMPLETE | Yes      \nus-east-1 | stack2     | CREATE_COMPLETE | No       \n * No echo parameters can't be diffed\n"
         expect { status.perform }.to output(out).to_stdout
