@@ -86,7 +86,7 @@ Feature: Apply command
       | Parameters diff: |
       | KeyName: my-key  |
       | aborted          |
-    And the output should not match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/ 
+    And the output should not match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Run apply with region only and create 2 stacks
@@ -122,6 +122,20 @@ Feature: Apply command
     And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
+
+  Scenario: Create stack with --changed
+    Given I stub the following stack events:
+      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-web  | myapp-web           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    When I run `stack_master --changed apply us-east-1 --trace`
+    And the output should contain all of these lines:
+      | Stack diff:                                                                    |
+      | +    "Vpc": {                                                                  |
+      | Parameters diff:                                                               |
+      | KeyName: my-key                                                                |
 
   Scenario: Run apply with 2 specific stacks and create 2 stacks
     Given I stub the following stack events:
@@ -190,6 +204,99 @@ Feature: Apply command
       | -    "TestSg2": {                                                              |
       | Parameters diff: No changes                                                    |
     Then the exit status should be 0
+
+  Scenario: Update an existing stack that has changed with --changed
+    Given I stub the following stack events:
+      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    And I stub the following stacks:
+      | stack_id | stack_name | parameters       | region    |
+      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub a template for the stack "myapp-vpc":
+      """
+      {
+        "Description": "Test template",
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Parameters": {
+          "KeyName": {
+            "Description": "Key Name",
+            "Type": "String"
+          }
+        },
+        "Resources": {
+          "TestSg": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+              "GroupDescription": "Test SG",
+              "VpcId": {
+                "Ref": "VpcId"
+              }
+            }
+          },
+          "TestSg2": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+              "GroupDescription": "Test SG 2",
+              "VpcId": {
+                "Ref": "VpcId"
+              }
+            }
+          }
+        }
+      }
+      """
+    When I run `stack_master --changed apply us-east-1 myapp-vpc --trace`
+    And the output should contain all of these lines:
+      | Stack diff:                                                                    |
+      | -    "TestSg2": {                                                              |
+      | Parameters diff: No changes                                                    |
+    Then the exit status should be 0
+
+  Scenario: Update an existing stack that hasn't changed with --changed
+    Given I stub the following stack events:
+      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    And I stub the following stacks:
+      | stack_id | stack_name | parameters       | region    |
+      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub a template for the stack "myapp-vpc":
+      """
+      {
+        "Description": "Test template",
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Parameters": {
+          "KeyName": {
+            "Description": "Key name",
+            "Type": "String"
+          }
+        },
+        "Resources": {
+          "Vpc": {
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+              "CidrBlock": "10.200.0.0/16"
+            }
+          }
+        },
+        "Outputs": {
+          "VpcId": {
+            "Description": "A VPC ID",
+            "Value": {
+              "Ref": "Vpc"
+            }
+          }
+        }
+      }
+      """
+    When I run `stack_master --changed apply us-east-1 myapp-vpc --trace`
+    And the output should not contain all of these lines:
+      | Stack diff:                                                                    |
+      | -    "TestSg2": {                                                              |
+      | Parameters diff: No changes                                                    |
+    Then the exit status should be 0
+
 
   Scenario: Create a stack using a stack output resolver
     Given a file named "parameters/myapp_web.yml" with:
