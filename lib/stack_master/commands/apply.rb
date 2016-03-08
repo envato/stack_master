@@ -7,6 +7,7 @@ module StackMaster
 
       def initialize(config, stack_definition, options = {})
         @config = config
+        @s3_config = stack_definition.s3
         @stack_definition = stack_definition
         @from_time = Time.now
         @updating = false
@@ -20,6 +21,7 @@ module StackMaster
         end
         begin
           return if stack_too_big
+          upload_files if use_s3?
           create_or_update_stack
           tail_stack_events
         rescue StackMaster::CtrlC
@@ -35,6 +37,10 @@ module StackMaster
         @cf ||= StackMaster.cloud_formation_driver
       end
 
+      def s3
+        @s3 ||= StackMaster.s3_driver
+      end
+
       def stack
         @stack ||= Stack.find(@stack_definition.region, @stack_definition.stack_name)
       end
@@ -45,6 +51,10 @@ module StackMaster
 
       def stack_exists?
         !stack.nil?
+      end
+
+      def use_s3?
+        !@s3_config.empty?
       end
 
       def diff_stacks
@@ -70,7 +80,7 @@ module StackMaster
       end
 
       def stack_too_big
-        if proposed_stack.too_big?
+        if proposed_stack.too_big?(use_s3?)
           StackMaster.stdout.puts 'The (space compressed) stack is larger than the limit set by AWS. See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
           true
         else
@@ -87,14 +97,43 @@ module StackMaster
         cf.create_stack(stack_options.merge(tags: proposed_stack.aws_tags))
       end
 
+      def upload_files
+        s3.upload_files(s3_options)
+      end
+
+      def template_method
+        return :template_body unless use_s3?
+        :template_url
+      end
+
+      def template_value
+        return proposed_stack.maybe_compressed_template_body unless use_s3?
+        s3.url(@s3_config.merge('template' => @stack_definition.template))
+      end
+
+      def files_to_upload
+        return [] unless use_s3?
+        {@stack_definition.template => @stack_definition.template_file_path}
+      end
+
       def stack_options
         {
           stack_name: @stack_definition.stack_name,
-          template_body: proposed_stack.maybe_compressed_template_body,
           parameters: proposed_stack.aws_parameters,
           capabilities: ['CAPABILITY_IAM'],
           notification_arns: proposed_stack.notification_arns,
-          stack_policy_body: proposed_stack.stack_policy_body
+          stack_policy_body: proposed_stack.stack_policy_body,
+          template_method => template_value
+        }
+      end
+
+      def s3_options
+        return {} unless use_s3?
+        {
+          bucket: @s3_config['bucket'],
+          prefix: @s3_config['prefix'],
+          region: @s3_config['region'],
+          files: files_to_upload
         }
       end
 

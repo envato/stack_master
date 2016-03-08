@@ -144,14 +144,32 @@ RSpec.describe StackMaster::Stack do
   end
 
   describe '#too_big?' do
-    let(:big_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 60000}\"}") }
+    let(:big_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 500000}\"}") }
+    let(:medium_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 60000}\"}") }
     let(:little_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 1000}\"}") }
 
-    it 'returns true for big stacks' do
-      expect(big_stack.too_big?).to be_truthy
+    context 'when not using S3' do
+      it 'returns true for big stacks' do
+        expect(big_stack.too_big?).to be_truthy
+      end
+      it 'returns true for medium stacks' do
+        expect(medium_stack.too_big?).to be_truthy
+      end
+      it 'returns false for small stacks' do
+        expect(little_stack.too_big?).to be_falsey
+      end
     end
-    it 'returns false for small stacks' do
-      expect(little_stack.too_big?).to be_falsey
+
+    context 'when using S3' do
+      it 'returns true for big stacks' do
+        expect(big_stack.too_big?(true)).to be_truthy
+      end
+      it 'returns false for medium stacks' do
+        expect(medium_stack.too_big?(true)).to be_falsey
+      end
+      it 'returns false for small stacks' do
+        expect(little_stack.too_big?(true)).to be_falsey
+      end
     end
   end
 end

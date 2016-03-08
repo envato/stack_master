@@ -69,6 +69,28 @@ stacks:
       template: myapp_vpc.rb
 ```
 
+## S3
+
+StackMaster can optionally use S3 to store the templates before creating a stack.
+This requires to configure an S3 bucket in stack_master.yml:
+
+```yaml
+stack_defaults:
+  s3:
+    bucket: my_bucket_name
+    prefix: cfn_templates/my-awesome-app
+    region: us-west-2
+```
+
+Additional files can be configured to be uploaded to S3 alongside the templates:
+```yaml
+stacks:
+  production:
+    myapp-vpc:
+      template: myapp_vpc.rb
+      files:
+        - userdata.sh
+```
 ## Directories
 
 - `templates` - CloudFormation or SparkleFormation templates.
