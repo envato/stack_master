@@ -7,6 +7,7 @@ RSpec.describe StackMaster::Config do
       stack_name: 'myapp-vpc',
       template: 'myapp_vpc.json',
       tags: { 'application' => 'my-awesome-blog', 'environment' => 'production' },
+      s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
       notification_arns: ['test_arn', 'test_arn_2'],
       base_dir: base_dir,
       secret_file: 'production.yml.gpg',
@@ -47,7 +48,8 @@ RSpec.describe StackMaster::Config do
 
   it 'loads stack defaults' do
     expect(loaded_config.stack_defaults).to eq({
-      'tags' => { 'application' => 'my-awesome-blog' }
+      'tags' => { 'application' => 'my-awesome-blog' },
+      's3' => { 'bucket' => 'my-bucket', 'region' => 'us-east-1' }
     })
   end
 
@@ -82,6 +84,7 @@ RSpec.describe StackMaster::Config do
         'application' => 'my-awesome-blog',
         'environment' => 'staging'
       },
+      s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
       notification_arns: ['test_arn_3', 'test_arn_4'],
       template: 'myapp_vpc.rb',
       base_dir: base_dir,
