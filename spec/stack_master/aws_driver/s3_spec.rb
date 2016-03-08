@@ -1,5 +1,4 @@
 RSpec.describe StackMaster::AwsDriver::S3 do
-  let(:base_dir) { File.expand_path('spec/fixtures') }
   subject(:s3_driver) { StackMaster::AwsDriver::S3.new }
 
   describe '#upload_files' do
@@ -13,7 +12,7 @@ RSpec.describe StackMaster::AwsDriver::S3 do
           bucket: 'bucket',
           region: 'region',
           prefix: 'prefix',
-          files: [{'template' => 'templates/myapp_vpc.json'}]
+          files: [{'template' => 'spec/fixtures/templates/myapp_vpc.json'}]
         }
       end
 
@@ -31,7 +30,7 @@ RSpec.describe StackMaster::AwsDriver::S3 do
         {
           bucket: 'bucket',
           region: 'region',
-          files: [{'template' => 'templates/myapp_vpc.json'}]
+          files: [{'template' => 'spec/fixtures/templates/myapp_vpc.json'}]
         }
       end
 
@@ -50,7 +49,7 @@ RSpec.describe StackMaster::AwsDriver::S3 do
           bucket: 'bucket',
           region: 'region',
           prefix: 'prefix',
-          files: [{'template' => 'templates/myapp_vpc.json'}]
+          files: [{'template' => 'spec/fixtures/templates/myapp_vpc.json'}]
         }
       end
 
@@ -68,7 +67,7 @@ RSpec.describe StackMaster::AwsDriver::S3 do
         {
           bucket: 'bucket',
           region: 'region',
-          files: [{'template1' => 'templates/myapp_vpc.json'}, {'template2' => 'templates/myapp_vpc.json'}]
+          files: [{'template1' => 'spec/fixtures/templates/myapp_vpc.json'}, {'template2' => 'spec/fixtures/templates/myapp_vpc.json'}]
         }
       end
 
