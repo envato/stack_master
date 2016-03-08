@@ -7,7 +7,8 @@ RSpec.describe StackMaster::Config do
       stack_name: 'myapp-vpc',
       template: 'myapp_vpc.json',
       tags: { 'application' => 'my-awesome-blog', 'environment' => 'production' },
-      notification_arns: ['test_arn', 'test_arn_2'],
+      s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
+      notification_arns: ['test_arn_2', 'test_arn'],
       base_dir: base_dir,
       secret_file: 'production.yml.gpg',
       stack_policy_file: 'my_policy.json',
@@ -66,7 +67,8 @@ RSpec.describe StackMaster::Config do
 
   it 'loads stack defaults' do
     expect(loaded_config.stack_defaults).to eq({
-      'tags' => { 'application' => 'my-awesome-blog' }
+      'tags' => { 'application' => 'my-awesome-blog' },
+      's3' => { 'bucket' => 'my-bucket', 'region' => 'us-east-1' }
     })
   end
 
@@ -102,7 +104,8 @@ RSpec.describe StackMaster::Config do
         'environment' => 'staging',
         'test_override' => 1
       },
-      notification_arns: ['test_arn_3', 'test_arn_4'],
+      s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
+      notification_arns: ['test_arn_4', 'test_arn_3'],
       template: 'myapp_vpc.rb',
       base_dir: base_dir,
       secret_file: 'staging.yml.gpg',
@@ -116,6 +119,7 @@ RSpec.describe StackMaster::Config do
         'environment' => 'staging',
         'test_override' => 2
       },
+      s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
       notification_arns: ['test_arn_3'],
       template: 'myapp_web',
       base_dir: base_dir,

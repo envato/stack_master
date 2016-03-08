@@ -4,6 +4,9 @@ region_aliases:
 stack_defaults:
   tags:
     application: my-awesome-blog
+  s3:
+    bucket: my-bucket
+    region: us-east-1
 region_defaults:
   us_east_1:
     tags:
