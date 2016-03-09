@@ -255,6 +255,7 @@ stack_master apply [region-or-alias] [stack-name] # Create or update a stack
 stack_master apply [region-or-alias] [stack-name] [region-or-alias] [stack-name] # Create or update multiple stacks
 stack_master apply [region-or-alias] # Create or update stacks in the given region
 stack_master apply # Create or update all stacks
+stack_master --changed apply # Create or update all stacks that have changed
 stack_master --yes apply [region-or-alias] [stack-name] # Create or update a stack non-interactively (forcing yes)
 stack_master diff [region-or-alias] [stack-name] # Display a stack tempalte and parameter diff
 stack_master delete [region-or-alias] [stack-name] # Delete a stack
