@@ -27,24 +27,22 @@ module StackMaster
           h.merge(obj.key => obj)
         }
 
-        files.each do |hash|
-          hash.each do |template, file|
-            body = File.read(file)
-            key = template.dup
-            key.prepend("#{prefix}/") if prefix
-            md5 = Digest::MD5.file(file).to_s
-            s3_md5 = current_objects[key] ? current_objects[key].etag.gsub("\"", '') : nil
+        files.each do |template, file|
+          body = File.read(file)
+          key = template.dup
+          key.prepend("#{prefix}/") if prefix
+          md5 = Digest::MD5.file(file).to_s
+          s3_md5 = current_objects[key] ? current_objects[key].etag.gsub("\"", '') : nil
 
-            unless md5 == s3_md5
-              StackMaster.stdout.puts "Uploading #{file} to bucket #{options[:bucket]}/#{key}..."
+          unless md5 == s3_md5
+            StackMaster.stdout.puts "Uploading #{file} to bucket #{options[:bucket]}/#{key}..."
 
-              put_object(
-              bucket: bucket,
-              key: key,
-              body: body,
-              metadata: { md5: md5 }
-              )
-            end
+            put_object(
+            bucket: bucket,
+            key: key,
+            body: body,
+            metadata: { md5: md5 }
+            )
           end
         end
       end
