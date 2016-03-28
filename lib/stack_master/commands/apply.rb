@@ -112,7 +112,7 @@ module StackMaster
       end
 
       def files_to_upload
-        return [] unless use_s3?
+        return {} unless use_s3?
         {@stack_definition.template => @stack_definition.template_file_path}
       end
 
