@@ -67,6 +67,20 @@ module StackMaster
     @non_interactive = true
   end
 
+  def debug!
+    @debug = true
+  end
+  @debug = false
+
+  def debug?
+    @debug
+  end
+
+  def debug(message)
+    return unless debug?
+    stderr.puts "[DEBUG] #{message}".colorize(:green)
+  end
+
   attr_accessor :non_interactive_answer
   @non_interactive_answer = 'y'
 
