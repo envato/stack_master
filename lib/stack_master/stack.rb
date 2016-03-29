@@ -40,7 +40,7 @@ module StackMaster
       template_default_parameters.merge(parameters)
     end
 
-    def empty_parameters?
+    def missing_parameters?
       parameters_with_defaults.any? do |key, value|
         value == nil
       end

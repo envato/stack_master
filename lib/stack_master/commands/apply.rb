@@ -14,7 +14,7 @@ module StackMaster
 
       def perform
         diff_stacks
-        if @proposed_stack.empty_parameters?
+        if @proposed_stack.missing_parameters?
           StackMaster.stderr.puts "Empty/blank parameters detected, ensure values exist for those parameters. Parameters will be read from the following locations:"
           @stack_definition.parameter_files.each do |parameter_file|
             StackMaster.stderr.puts " - #{parameter_file}"

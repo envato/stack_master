@@ -155,8 +155,9 @@ RSpec.describe StackMaster::Stack do
     end
   end
 
-  describe '#empty_parameters?' do
-    subject { stack.empty_parameters? }
+  describe '#missing_parameters?' do
+    subject { stack.missing_parameters? }
+
     let(:stack) { StackMaster::Stack.new(parameters: parameters, template_body: '{}') }
 
     context 'when a parameter has a nil value' do

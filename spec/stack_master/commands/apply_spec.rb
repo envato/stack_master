@@ -6,7 +6,8 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:notification_arn) { 'test_arn' }
   let(:stack_definition) { StackMaster::StackDefinition.new(base_dir: '/base_dir', region: region, stack_name: stack_name) }
   let(:template_body) { '{}' }
-  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, tags: { 'environment' => 'production' } , parameters: { 'param_1' => 'hello' }, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
+  let(:parameters) { { 'param_1' => 'hello' } }
+  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, tags: { 'environment' => 'production' } , parameters: parameters, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
   let(:stack_policy_body) { '{}' }
 
   before do
@@ -105,7 +106,7 @@ RSpec.describe StackMaster::Commands::Apply do
     let(:parameters) { { 'param_1' => nil } }
 
     it "doesn't allow apply" do
-      expect { apply }.to_not output(/Continue and apply the stack/).to_stderr
+      expect { apply }.to_not output(/Continue and apply the stack/).to_stdout
     end
 
     it 'outputs a description of the problem' do
