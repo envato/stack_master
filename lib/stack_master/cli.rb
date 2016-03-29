@@ -31,6 +31,9 @@ module StackMaster
         StackMaster.non_interactive!
         StackMaster.non_interactive_answer = 'n'
       end
+      global_option '-d', '--debug', 'Run in debug mode' do
+        StackMaster.debug!
+      end
 
       command :apply do |c|
         c.syntax = 'stack_master apply [region_or_alias] [stack_name]'
