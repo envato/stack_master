@@ -66,4 +66,16 @@ RSpec.describe StackMaster do
       after { StackMaster.instance_variable_set('@non_interactive', false) }
     end
   end
+
+  describe '.non_interactive_answer' do
+    it 'defaults to y' do
+      expect(StackMaster.non_interactive_answer).to eq 'y'
+    end
+
+    it 'can be overridden' do
+      StackMaster.non_interactive_answer = 'n'
+      expect(StackMaster.non_interactive_answer).to eq 'n'
+      StackMaster.instance_variable_set('@non_interactive_answer', 'y')
+    end
+  end
 end
