@@ -6,7 +6,8 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:notification_arn) { 'test_arn' }
   let(:stack_definition) { StackMaster::StackDefinition.new(base_dir: '/base_dir', region: region, stack_name: stack_name) }
   let(:template_body) { '{}' }
-  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, tags: { 'environment' => 'production' } , parameters: { 'param_1' => 'hello' }, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
+  let(:parameters) { { 'param_1' => 'hello' } }
+  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, tags: { 'environment' => 'production' } , parameters: parameters, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
   let(:stack_policy_body) { '{}' }
 
   before do
@@ -96,6 +97,25 @@ RSpec.describe StackMaster::Commands::Apply do
       Timecop.freeze(Time.local(1990)) do
         apply
         expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
+      end
+    end
+  end
+
+  context 'one or more parameters are empty' do
+    let(:stack) { StackMaster::Stack.new(stack_id: '1', parameters: parameters) }
+    let(:parameters) { { 'param_1' => nil } }
+
+    it "doesn't allow apply" do
+      expect { apply }.to_not output(/Continue and apply the stack/).to_stdout
+    end
+
+    it 'outputs a description of the problem' do
+      expect { apply }.to output(/Empty\/blank parameters detected/).to_stderr
+    end
+
+    it 'outputs where param files are loaded from' do
+      stack_definition.parameter_files.each do |parameter_file|
+        expect { apply }.to output(/#{parameter_file}/).to_stderr
       end
     end
   end
