@@ -60,8 +60,9 @@ module StackMaster
   end
 
   def non_interactive?
-    @non_interactive || false
+    @non_interactive
   end
+  @non_interactive = false
 
   def non_interactive!
     @non_interactive = true
