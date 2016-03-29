@@ -14,6 +14,13 @@ module StackMaster
 
       def perform
         diff_stacks
+        if @proposed_stack.empty_parameters?
+          StackMaster.stderr.puts "Empty/blank parameters detected, ensure values exist for those parameters. Parameters will be read from the following locations:"
+          @stack_definition.parameter_files.each do |parameter_file|
+            StackMaster.stderr.puts " - #{parameter_file}"
+          end
+          return
+        end
         unless ask?("Continue and apply the stack (y/n)? ")
           StackMaster.stdout.puts "Stack update aborted"
           return

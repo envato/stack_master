@@ -15,6 +15,10 @@ Feature: Apply command
       """
       KeyName: my-key
       """
+    And a file named "parameters/myapp_web.yml" with:
+      """
+      VpcId: vpc-blah
+      """
     And a directory named "templates"
     And a file named "templates/myapp_vpc.rb" with:
       """

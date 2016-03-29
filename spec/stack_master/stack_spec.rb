@@ -154,4 +154,21 @@ RSpec.describe StackMaster::Stack do
       expect(little_stack.too_big?).to be_falsey
     end
   end
+
+  describe '#empty_parameters?' do
+    subject { stack.empty_parameters? }
+    let(:stack) { StackMaster::Stack.new(parameters: parameters, template_body: '{}') }
+
+    context 'when a parameter has a nil value' do
+      let(:parameters) { { 'my_param' => nil } }
+
+      it { should eq true }
+    end
+
+    context 'when no parameers have a nil value' do
+      let(:parameters) { { 'my_param' => '1' } }
+
+      it { should eq false }
+    end
+  end
 end

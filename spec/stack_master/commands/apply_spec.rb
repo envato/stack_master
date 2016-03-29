@@ -99,4 +99,23 @@ RSpec.describe StackMaster::Commands::Apply do
       end
     end
   end
+
+  context 'one or more parameters are empty' do
+    let(:stack) { StackMaster::Stack.new(stack_id: '1', parameters: parameters) }
+    let(:parameters) { { 'param_1' => nil } }
+
+    it "doesn't allow apply" do
+      expect { apply }.to_not output(/Continue and apply the stack/).to_stderr
+    end
+
+    it 'outputs a description of the problem' do
+      expect { apply }.to output(/Empty\/blank parameters detected/).to_stderr
+    end
+
+    it 'outputs where param files are loaded from' do
+      stack_definition.parameter_files.each do |parameter_file|
+        expect { apply }.to output(/#{parameter_file}/).to_stderr
+      end
+    end
+  end
 end
