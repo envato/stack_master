@@ -20,12 +20,10 @@ module StackMaster
     module Perform
       def perform
         catch(:halt) do
-          begin
-            super
-          rescue Aws::CloudFormation::Errors::ServiceError => e
-            failed "#{e.class} #{e.message}"
-          end
+          super
         end
+      rescue Aws::CloudFormation::Errors::ServiceError => e
+        failed "#{e.class} #{e.message}"
       end
     end
 
