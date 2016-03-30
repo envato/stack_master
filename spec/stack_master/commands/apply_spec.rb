@@ -63,7 +63,7 @@ RSpec.describe StackMaster::Commands::Apply do
       end
 
       it 'outputs the message' do
-        expect { apply }.to output(/the message/).to_stdout
+        expect { apply }.to output(/the message/).to_stderr
       end
     end
   end
@@ -97,7 +97,7 @@ RSpec.describe StackMaster::Commands::Apply do
       end
 
       it 'exits with a message' do
-        expect { apply }.to output(/The \(space compressed\) stack is larger than the limit set by AWS/).to_stdout
+        expect { apply }.to output(/The \(space compressed\) stack is larger than the limit set by AWS/).to_stderr
       end
     end
 

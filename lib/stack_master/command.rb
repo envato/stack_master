@@ -19,8 +19,8 @@ module StackMaster
     end
 
     def failed(message = nil)
-      @failed = true
       StackMaster.stderr.puts(message) if message
+      @failed = true
     end
 
     def success?
