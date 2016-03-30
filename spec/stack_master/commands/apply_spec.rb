@@ -14,7 +14,6 @@ RSpec.describe StackMaster::Commands::Apply do
     allow(StackMaster::Stack).to receive(:find).with(region, stack_name).and_return(stack)
     allow(StackMaster::Stack).to receive(:generate).with(stack_definition, config).and_return(proposed_stack)
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
-    allow(cf).to receive(:update_stack)
     allow(cf).to receive(:create_stack)
     allow(StackMaster::StackDiffer).to receive(:new).with(proposed_stack, stack).and_return double.as_null_object
     allow(StackMaster::StackEvents::Streamer).to receive(:stream)
@@ -28,9 +27,17 @@ RSpec.describe StackMaster::Commands::Apply do
   context 'the stack exist' do
     let(:stack) { StackMaster::Stack.new(stack_id: '1') }
 
-    it 'calls the update stack API method' do
+    before do
+      allow(cf).to receive(:create_change_set).and_return(OpenStruct.new(id: '1'))
+      allow(StackMaster::DisplayChangeSet).to receive(:perform).and_return(double(success?: true))
+      allow(cf).to receive(:execute_change_set).and_return(OpenStruct.new(id: '1'))
+    end
+
+    it 'calls the create_change_set API method' do
+      now = Time.now
+      allow(Time).to receive(:now).and_return(now)
       apply
-      expect(cf).to have_received(:update_stack).with(
+      expect(cf).to have_received(:create_change_set).with(
         stack_name: stack_name,
         template_body: proposed_stack.template_body,
         parameters: [
@@ -38,7 +45,8 @@ RSpec.describe StackMaster::Commands::Apply do
         ],
         capabilities: ['CAPABILITY_IAM'],
         notification_arns: [notification_arn],
-        stack_policy_body: stack_policy_body
+        stack_policy_body: stack_policy_body,
+        change_set_name: "StackMaster#{now.strftime('%Y-%m-%e-%H%M-%s')}"
       )
     end
 
@@ -51,7 +59,7 @@ RSpec.describe StackMaster::Commands::Apply do
 
     context 'when a CF error occurs' do
       before do
-        allow(cf).to receive(:update_stack).with(anything).and_raise(Aws::CloudFormation::Errors::ServiceError.new('a', 'the message'))
+        allow(cf).to receive(:execute_change_set).with(anything).and_raise(Aws::CloudFormation::Errors::ServiceError.new('a', 'the message'))
       end
 
       it 'outputs the message' do

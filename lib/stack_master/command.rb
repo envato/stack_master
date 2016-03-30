@@ -6,7 +6,11 @@ module StackMaster
 
     module ClassMethods
       def perform(*args)
-        new(*args).tap { |command| command.perform }
+        new(*args).tap do |command|
+          catch(:halt) do
+            command.perform
+          end
+        end
       end
 
       def command_name
@@ -14,12 +18,23 @@ module StackMaster
       end
     end
 
-    def failed
+    def failed(message = nil)
       @failed = true
+      StackMaster.stderr.puts(message) if message
     end
 
     def success?
       @failed != true
+    end
+
+    def failed!(message = nil)
+      failed(message)
+      halt!
+    end
+
+    def halt!(message = nil)
+      StackMaster.stdout.puts(message) if message
+      throw :halt
     end
   end
 end

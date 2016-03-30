@@ -19,15 +19,18 @@ module StackMaster
           @stack_definition.parameter_files.each do |parameter_file|
             StackMaster.stderr.puts " - #{parameter_file}"
           end
-          return
-        end
-        unless ask?("Continue and apply the stack (y/n)? ")
-          StackMaster.stdout.puts "Stack update aborted"
-          return
+          halt!
         end
         begin
-          return if stack_too_big
-          create_or_update_stack
+          halt! if stack_too_big
+          if stack_exists?
+            update_stack
+          else
+            unless ask?("Create stack (y/n)? ")
+              failed!("Stack creation aborted")
+            end
+            create_stack
+          end
           tail_stack_events
         rescue StackMaster::CtrlC
           cancel
@@ -68,14 +71,6 @@ module StackMaster
         end
       end
 
-      def create_or_update_stack
-        if stack_exists?
-          update_stack
-        else
-          create_stack
-        end
-      end
-
       def stack_too_big
         if proposed_stack.too_big?
           StackMaster.stdout.puts 'The (space compressed) stack is larger than the limit set by AWS. See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
@@ -87,7 +82,14 @@ module StackMaster
 
       def update_stack
         @updating = true
-        cf.update_stack(stack_options)
+        create_change_set
+        result = DisplayChangeSet.perform(@change_set_id)
+        failed! unless result.success?
+        unless ask?("Apply change set (y/n)? ")
+          delete_change_set
+          halt! "Stack update aborted"
+        end
+        execute_change_set
       end
 
       def create_stack
@@ -107,6 +109,20 @@ module StackMaster
 
       def tail_stack_events
         StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout, from: @from_time)
+      end
+
+      def create_change_set
+        @change_set_name = 'StackMaster' + Time.now.strftime('%Y-%m-%e-%H%M-%s')
+        @change_set_id = cf.create_change_set(stack_options.merge(change_set_name: @change_set_name)).id
+      end
+
+      def delete_change_set
+        cf.delete_change_set(change_set_name: @change_set_id)
+      end
+
+      def execute_change_set
+        cf.execute_change_set(change_set_name: @change_set_id,
+                              stack_name: @stack_definition.stack_name)
       end
     end
   end

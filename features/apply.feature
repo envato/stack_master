@@ -161,7 +161,7 @@ Feature: Apply command
     And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
-  Scenario: Run apply on an existing stack
+  Scenario: Update a stack
     Given I stub the following stack events:
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
       | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
@@ -207,9 +207,12 @@ Feature: Apply command
       | Stack diff:                                                                    |
       | -    "TestSg2": {                                                              |
       | Parameters diff: No changes                                                    |
+      | Proposed change set:                                                           |
+      | ADD                                                                            |
+      | Apply change set (y/n)?                                                              |
     Then the exit status should be 0
 
-  Scenario: Update an existing stack that has changed with --changed
+  Scenario: Update a stack that has changed with --changed
     Given I stub the following stack events:
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
       | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
