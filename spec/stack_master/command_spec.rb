@@ -36,4 +36,13 @@ RSpec.describe StackMaster::Command do
       expect(command_class.perform(nil, true).finished).to_not eq true
     end
   end
+
+  context 'when a CF error occurs' do
+    it 'outputs the message' do
+      error_proc = proc {
+        raise Aws::CloudFormation::Errors::ServiceError.new('a', 'the message')
+      }
+      expect { command_class.perform(error_proc) }.to output(/the message/).to_stderr
+    end
+  end
 end

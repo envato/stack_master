@@ -56,16 +56,6 @@ RSpec.describe StackMaster::Commands::Apply do
         expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
       end
     end
-
-    context 'when a CF error occurs' do
-      before do
-        allow(cf).to receive(:execute_change_set).with(anything).and_raise(Aws::CloudFormation::Errors::ServiceError.new('a', 'the message'))
-      end
-
-      it 'outputs the message' do
-        expect { apply }.to output(/the message/).to_stderr
-      end
-    end
   end
 
   context 'the stack does not exist' do

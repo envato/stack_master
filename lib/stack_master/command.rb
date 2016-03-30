@@ -2,14 +2,13 @@ module StackMaster
   module Command
     def self.included(base)
       base.extend ClassMethods
+      base.prepend Perform
     end
 
     module ClassMethods
       def perform(*args)
         new(*args).tap do |command|
-          catch(:halt) do
-            command.perform
-          end
+          command.perform
         end
       end
 
@@ -18,13 +17,27 @@ module StackMaster
       end
     end
 
-    def failed(message = nil)
-      StackMaster.stderr.puts(message) if message
-      @failed = true
+    module Perform
+      def perform
+        catch(:halt) do
+          begin
+            super
+          rescue Aws::CloudFormation::Errors::ServiceError => e
+            failed "#{e.class} #{e.message}"
+          end
+        end
+      end
     end
 
     def success?
       @failed != true
+    end
+
+    private
+
+    def failed(message = nil)
+      StackMaster.stderr.puts(message) if message
+      @failed = true
     end
 
     def failed!(message = nil)

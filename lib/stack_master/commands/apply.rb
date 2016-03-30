@@ -22,8 +22,6 @@ module StackMaster
         ensure_valid_template_body_size!
         create_or_update_stack
         tail_stack_events
-      rescue Aws::CloudFormation::Errors::ServiceError => e
-        failed "#{e.class} #{e.message}"
       end
 
       private
