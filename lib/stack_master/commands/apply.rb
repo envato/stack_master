@@ -6,6 +6,10 @@ module StackMaster
       include StackMaster::Prompter
       TEMPLATE_TOO_LARGE_ERROR_MESSAGE = 'The (space compressed) stack is larger than the limit set by AWS. See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
 
+      def self.generate_change_set_name
+        'StackMaster' + Time.now.strftime('%Y-%m-%e-%H%M-%s')
+      end
+
       def initialize(config, stack_definition, options = {})
         @config = config
         @stack_definition = stack_definition
@@ -96,7 +100,7 @@ module StackMaster
       end
 
       def create_change_set
-        @change_set_name = 'StackMaster' + Time.now.strftime('%Y-%m-%e-%H%M-%s')
+        @change_set_name = self.class.generate_change_set_name
         @change_set_id = cf.create_change_set(stack_options.merge(change_set_name: @change_set_name)).id
       end
 

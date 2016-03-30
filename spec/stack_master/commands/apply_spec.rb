@@ -34,8 +34,8 @@ RSpec.describe StackMaster::Commands::Apply do
     end
 
     it 'calls the create_change_set API method' do
-      now = Time.now
-      allow(Time).to receive(:now).and_return(now)
+      change_set_name = 'change-set-name'
+      allow(StackMaster::Commands::Apply).to receive(:generate_change_set_name).and_return(change_set_name)
       apply
       expect(cf).to have_received(:create_change_set).with(
         stack_name: stack_name,
@@ -46,7 +46,7 @@ RSpec.describe StackMaster::Commands::Apply do
         capabilities: ['CAPABILITY_IAM'],
         notification_arns: [notification_arn],
         stack_policy_body: stack_policy_body,
-        change_set_name: "StackMaster#{now.strftime('%Y-%m-%e-%H%M-%s')}"
+        change_set_name: change_set_name
       )
     end
 
