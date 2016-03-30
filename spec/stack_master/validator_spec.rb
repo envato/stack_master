@@ -1,6 +1,7 @@
 RSpec.describe StackMaster::Validator do
 
-  subject(:validator) { described_class.new(stack_definition) }
+  subject(:validator) { described_class.new(stack_definition, config) }
+  let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
   let(:stack_definition) do
     StackMaster::StackDefinition.new(
       region: 'us-east-1',

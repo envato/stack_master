@@ -1,7 +1,9 @@
 RSpec.describe StackMaster::TemplateCompiler do
   describe ".compile" do
+    let(:config) { StackMaster::Config.new({'stacks' => {}}, template_file_path) }
+
     def compile
-      StackMaster::TemplateCompiler.compile(template_file_path)
+      StackMaster::TemplateCompiler.compile(config, template_file_path)
     end
 
     context 'json template' do
