@@ -55,7 +55,7 @@ module StackMaster
       def ask_to_cancel_stack_update
         if ask?("Cancel stack update?")
           StackMaster.stdout.puts "Attempting to cancel stack update"
-          cf.cancel_update_stack({stack_name: @stack_definition.stack_name})
+          cf.cancel_update_stack(stack_name: @stack_definition.stack_name)
           tail_stack_events
         end
       end
