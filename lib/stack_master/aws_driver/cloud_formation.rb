@@ -1,67 +1,31 @@
 module StackMaster
   module AwsDriver
     class CloudFormation
+      extend Forwardable
+
       def set_region(region)
         @region = region
         @cf = nil
       end
 
-      def create_change_set(options)
-        cf.create_change_set(options)
-      end
-
-      def describe_change_set(options)
-        cf.describe_change_set(options)
-      end
-
-      def execute_change_set(options)
-        cf.execute_change_set(options)
-      end
-
-      def delete_change_set(options)
-        cf.delete_change_set(options)
-      end
-
-      def delete_stack(options)
-        cf.delete_stack(options)
-      end
+      def_delegators :cf, :create_change_set,
+                          :describe_change_set,
+                          :execute_change_set,
+                          :delete_change_set,
+                          :delete_stack,
+                          :cancel_update_stack,
+                          :describe_stack_resources,
+                          :get_template,
+                          :get_stack_policy,
+                          :describe_stack_events,
+                          :update_stack,
+                          :create_stack,
+                          :validate_template
 
       def describe_stacks(options)
         retry_with_backoff do
           cf.describe_stacks(options)
         end
-      end
-
-      def cancel_update_stack(options)
-        cf.cancel_update_stack(options)
-      end
-
-      def describe_stack_resources(options)
-        cf.describe_stack_resources(options)
-      end
-
-      def get_template(options)
-        cf.get_template(options)
-      end
-
-      def get_stack_policy(options)
-        cf.get_stack_policy(options)
-      end
-
-      def describe_stack_events(options)
-        cf.describe_stack_events(options)
-      end
-
-      def update_stack(options)
-        cf.update_stack(options)
-      end
-
-      def create_stack(options)
-        cf.create_stack(options)
-      end
-
-      def validate_template(options)
-        cf.validate_template(options)
       end
 
       private
