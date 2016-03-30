@@ -6,6 +6,22 @@ module StackMaster
         @cf = nil
       end
 
+      def create_change_set(options)
+        cf.create_change_set(options)
+      end
+
+      def describe_change_set(options)
+        cf.describe_change_set(options)
+      end
+
+      def execute_change_set(options)
+        cf.execute_change_set(options)
+      end
+
+      def delete_change_set(options)
+        cf.delete_change_set(options)
+      end
+
       def delete_stack(options)
         cf.delete_stack(options)
       end
