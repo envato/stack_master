@@ -208,7 +208,7 @@ Feature: Apply command
       | -    "TestSg2": {                                                              |
       | Parameters diff: No changes                                                    |
       | Proposed change set:                                                           |
-      | ADD                                                                            |
+      | Replace                                                                        |
       | Apply change set (y/n)?                                                              |
     Then the exit status should be 0
 
