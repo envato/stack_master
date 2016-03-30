@@ -77,7 +77,7 @@ module StackMaster
         change_details = [
           OpenStruct.new(evaluation: 'Static', change_source: 'ResourceReference', target: OpenStruct.new(attribute: 'Properties', requires_recreation: 'Always', name: 'blah'))
         ]
-        change = OpenStruct.new(action: 'ADD', replacement: 'True', scope: ['Properties'], details: change_details)
+        change = OpenStruct.new(action: 'Modify', replacement: 'True', scope: ['Properties'], details: change_details)
         changes = [
           OpenStruct.new(type: 'AWS::Resource', resource_change: change)
         ]
