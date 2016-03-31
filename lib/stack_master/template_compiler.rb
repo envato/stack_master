@@ -12,9 +12,8 @@ module StackMaster
 
     # private
     def self.template_compiler_for_file(template_file_path, config)
-      template_compilers = config.template_compilers
-      compiler = template_compilers.fetch(file_ext(template_file_path))
-      @compilers.fetch(compiler)
+      compiler_name = config.template_compilers.fetch(file_ext(template_file_path))
+      @compilers.fetch(compiler_name)
     end
     private_class_method :template_compiler_for_file
 
