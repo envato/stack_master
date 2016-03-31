@@ -24,14 +24,6 @@ module StackMaster
       File.join(template_dir, template)
     end
 
-    def files_to_upload
-      require 'pry'
-      binding.pry
-      files.map do |file|
-        "#{template_dir}/#{file}"
-      end
-    end
-
     def parameter_files
       [ default_parameter_file_path, region_parameter_file_path ] + additional_parameter_lookup_file_paths
     end
