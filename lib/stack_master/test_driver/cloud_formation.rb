@@ -60,6 +60,39 @@ module StackMaster
         @stack_events = {}
         @stack_resources = {}
         @stack_policies = {}
+        @change_sets = {}
+      end
+
+      def create_change_set(options)
+        id = SecureRandom.uuid
+        options.merge!(change_set_id: id)
+        @change_sets[id] = options
+        @change_sets[options.fetch(:change_set_name)] = options
+        OpenStruct.new(id: id)
+      end
+
+      def describe_change_set(options)
+        change_set_id = options.fetch(:change_set_name)
+        change_set = @change_sets.fetch(change_set_id)
+        change_details = [
+          OpenStruct.new(evaluation: 'Static', change_source: 'ResourceReference', target: OpenStruct.new(attribute: 'Properties', requires_recreation: 'Always', name: 'blah'))
+        ]
+        change = OpenStruct.new(action: 'Modify', replacement: 'True', scope: ['Properties'], details: change_details)
+        changes = [
+          OpenStruct.new(type: 'AWS::Resource', resource_change: change)
+        ]
+        OpenStruct.new(change_set.merge(changes: changes, status: 'CREATE_COMPLETE'))
+      end
+
+      def execute_change_set(options)
+        change_set_id = options.fetch(:change_set_name)
+        change_set = @change_sets.fetch(change_set_id)
+        update_stack(change_set)
+      end
+
+      def delete_change_set(options)
+        change_set_id = options.fetch(:change_set_name)
+        @change_sets.delete(change_set_id)
       end
 
       def describe_stacks(options = {})
