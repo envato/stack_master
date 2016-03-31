@@ -51,16 +51,11 @@ module StackMaster
         s3.put_object(options)
       end
 
-      def url(options)
-        s3_url(@region, options['bucket'], options['prefix'], options['template'])
-      end
-
-      def s3_url(region, bucket, prefix, file)
-        prefix += '/' if prefix
+      def url(template)
         if region == 'us-east-1'
-          "https://s3.amazonaws.com/#{bucket}/#{prefix}#{file}"
+          ["https://s3.amazonaws.com", bucket, prefix, template].compact.join('/')
         else
-          "https://s3-#{region}.amazonaws.com/#{bucket}/#{prefix}#{file}"
+          ["https://s3-#{region}.amazonaws.com", bucket, prefix, template].compact.join('/')
         end
       end
 
