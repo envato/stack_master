@@ -21,13 +21,5 @@ module StackMaster
     def success?
       @failed != true
     end
-
-    def failed
-      @failed = true
-    end
-
-    def success?
-      @failed != true
-    end
   end
 end
