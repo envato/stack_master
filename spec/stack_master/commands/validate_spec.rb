@@ -18,7 +18,7 @@ RSpec.describe StackMaster::Commands::Validate do
   describe "#perform" do
     context "can find stack" do
       it "calls the validator to validate the stack definition" do
-        expect(StackMaster::Validator).to receive(:valid?).with(stack_definition)
+        expect(StackMaster::Validator).to receive(:valid?).with(stack_definition, config)
         validate.perform
       end
     end

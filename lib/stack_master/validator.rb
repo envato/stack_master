@@ -1,16 +1,17 @@
 module StackMaster
   class Validator
-    def self.valid?(stack_definition)
-      new(stack_definition).perform
+    def self.valid?(stack_definition, config)
+      new(stack_definition, config).perform
     end
 
-    def initialize(stack_definition)
+    def initialize(stack_definition, config)
       @stack_definition = stack_definition
+      @config = config
     end
 
     def perform
       StackMaster.stdout.print "#{@stack_definition.stack_name}: "
-      template_body = TemplateCompiler.compile(@stack_definition.template_file_path)
+      template_body = TemplateCompiler.compile(@config, @stack_definition.template_file_path)
       cf.validate_template(template_body: template_body)
       StackMaster.stdout.puts "valid"
       true

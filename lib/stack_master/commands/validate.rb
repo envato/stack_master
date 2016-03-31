@@ -10,7 +10,7 @@ module StackMaster
       end
 
       def perform
-        failed unless Validator.valid?(@stack_definition)
+        failed unless Validator.valid?(@stack_definition, @config)
       end
     end
   end
