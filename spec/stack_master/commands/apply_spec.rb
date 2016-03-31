@@ -26,18 +26,17 @@ RSpec.describe StackMaster::Commands::Apply do
 
   context 'the stack exist' do
     let(:stack) { StackMaster::Stack.new(stack_id: '1') }
+    let(:change_set) { double(display: true, failed?: false, id: 'id-1') }
 
     before do
       allow(cf).to receive(:create_change_set).and_return(OpenStruct.new(id: '1'))
-      allow(StackMaster::DisplayChangeSet).to receive(:perform).and_return(double(success?: true))
+      allow(StackMaster::ChangeSet).to receive(:create).and_return(change_set)
       allow(cf).to receive(:execute_change_set).and_return(OpenStruct.new(id: '1'))
     end
 
-    it 'calls the create_change_set API method' do
-      change_set_name = 'change-set-name'
-      allow(StackMaster::Commands::Apply).to receive(:generate_change_set_name).and_return(change_set_name)
+    it 'creates a change set' do
       apply
-      expect(cf).to have_received(:create_change_set).with(
+      expect(StackMaster::ChangeSet).to have_received(:create).with(
         stack_name: stack_name,
         template_body: proposed_stack.template_body,
         parameters: [
@@ -45,8 +44,7 @@ RSpec.describe StackMaster::Commands::Apply do
         ],
         capabilities: ['CAPABILITY_IAM'],
         notification_arns: [notification_arn],
-        stack_policy_body: stack_policy_body,
-        change_set_name: change_set_name
+        stack_policy_body: stack_policy_body
       )
     end
 
@@ -54,6 +52,34 @@ RSpec.describe StackMaster::Commands::Apply do
       Timecop.freeze(Time.local(1990)) do
         apply
         expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
+      end
+    end
+
+    context 'the changeset failed to create' do
+      before do
+        allow(change_set).to receive(:failed?).and_return(true)
+        allow(change_set).to receive(:status_reason).and_return('reason')
+      end
+
+      it 'outputs the status reason' do
+        expect { apply }.to output(/reason/).to_stdout
+      end
+    end
+
+    context 'user decides to not apply the change set' do
+      before do
+        allow(StackMaster).to receive(:non_interactive_answer).and_return('n')
+        allow(StackMaster::ChangeSet).to receive(:delete)
+        allow(StackMaster::ChangeSet).to receive(:execute)
+        apply
+      end
+
+      it 'deletes the change set' do
+        expect(StackMaster::ChangeSet).to have_received(:delete).with(change_set.id)
+      end
+
+      it "doesn't execute the change set" do
+        expect(StackMaster::ChangeSet).to_not have_received(:execute).with(change_set.id)
       end
     end
   end
