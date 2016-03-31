@@ -7,7 +7,7 @@ module StackMaster
     ]
 
     def self.generate_change_set_name
-      'StackMaster' + Time.now.strftime('%Y-%m-%e-%H%M-%s')
+      'StackMaster' + Time.now.strftime('%Y-%m-%d-%H%M-%s')
     end
 
     def self.create(create_options)
