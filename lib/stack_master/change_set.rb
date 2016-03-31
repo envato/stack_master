@@ -77,7 +77,8 @@ module StackMaster
     end
 
     def display_resource_change_detail(io, action_name, color, detail)
-      detail_messages = [ detail.target.name || detail.target.attribute ]
+      target_name = [detail.target.attribute, detail.target.name].compact.join('.')
+      detail_messages = [target_name]
       if action_name == 'Replace'
         detail_messages << "#{detail.target.requires_recreation} requires recreation"
       end

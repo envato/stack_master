@@ -40,7 +40,7 @@ RSpec.describe StackMaster::ChangeSet do
 
   describe '#display' do
     context 'a successful response' do
-      let(:target) { OpenStruct.new(name: 'GroupDescription', requires_recreation: 'Always') }
+      let(:target) { OpenStruct.new(name: 'GroupDescription', attribute: 'Properties', requires_recreation: 'Always') }
       let(:changes) { [
         OpenStruct.new(resource_change: OpenStruct.new(replacement: 'True', action: 'Modify', resource_type: 'EC2::Instance', logical_resource_id: '123', details: [OpenStruct.new(target: target, change_source: 'DirectModification', evaluation: 'Static', causing_entity: 'blah')]))
       ] }
@@ -55,7 +55,7 @@ RSpec.describe StackMaster::ChangeSet do
       end
 
       it 'outputs detail data' do
-        expect(message).to include 'GroupDescription. Always requires recreation. Change source: DirectModification. Causing entity: blah'
+        expect(message).to include 'Properties.GroupDescription. Always requires recreation. Change source: DirectModification. Causing entity: blah'
       end
     end
   end
