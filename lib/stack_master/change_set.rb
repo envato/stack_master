@@ -82,13 +82,11 @@ module StackMaster
       if action_name == 'Replace'
         detail_messages << "#{detail.target.requires_recreation} requires recreation"
       end
-      detail_messages << "Change source: #{detail.change_source}"
+      triggered_by = [detail.change_source, detail.causing_entity].compact.join('.')
       if detail.evaluation != 'Static'
-        detail_messages << "#{detail.evaluation} evaluation"
+        triggered_by << "(#{detail.evaluation})"
       end
-      if detail.causing_entity
-        detail_messages << "Causing entity: #{detail.causing_entity}"
-      end
+      detail_messages << "Triggered by: #{triggered_by}"
       io.puts "- #{detail_messages.join('. ')}. ".colorize(color)
     end
 

@@ -55,7 +55,7 @@ RSpec.describe StackMaster::ChangeSet do
       end
 
       it 'outputs detail data' do
-        expect(message).to include 'Properties.GroupDescription. Always requires recreation. Change source: DirectModification. Causing entity: blah'
+        expect(message).to include 'Properties.GroupDescription. Always requires recreation. Triggered by: DirectModification.blah'
       end
     end
   end
