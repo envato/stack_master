@@ -4,6 +4,14 @@ RSpec.describe StackMaster::ChangeSet do
   let(:stack_name) { 'myapp-vpc' }
   let(:change_set_name) { 'changeset-123' }
 
+  describe '.generate_change_set_name' do
+    context 'valid name' do
+      it 'creates a valid name' do
+        expect(StackMaster::ChangeSet.generate_change_set_name).to match(/^[a-zA-Z][-a-zA-Z0-9]*$/)
+      end
+    end
+  end
+
   describe '.create' do
     before do
       allow(StackMaster::ChangeSet).to receive(:generate_change_set_name).and_return(change_set_name)
