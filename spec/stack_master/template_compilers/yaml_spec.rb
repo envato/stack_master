@@ -9,7 +9,9 @@ RSpec.describe StackMaster::TemplateCompilers::Yaml do
 
       it 'produces valid JSON' do
         valid_myapp_vpc_as_json = File.read('spec/fixtures/templates/json/valid_myapp_vpc.json')
-        expect(compile).to eq(valid_myapp_vpc_as_json)
+        valid_myapp_vpc_as_hash = JSON.parse(valid_myapp_vpc_as_json)
+
+        expect(JSON.parse(compile)).to eq(valid_myapp_vpc_as_hash)
       end
     end
 
