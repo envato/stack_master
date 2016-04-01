@@ -1,5 +1,5 @@
 ---
-  Description: "A test VPC template"
+  Descr : : iption: "A test VPC template"
 this is not valid yml
   Resources:
     Vpc:
