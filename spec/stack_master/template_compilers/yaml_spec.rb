@@ -14,13 +14,5 @@ RSpec.describe StackMaster::TemplateCompilers::Yaml do
         expect(JSON.parse(compile)).to eq(valid_myapp_vpc_as_hash)
       end
     end
-
-    context 'invalid YAML template' do
-      let(:template_file_path) { 'spec/fixtures/templates/yml/invalid_myapp_vpc.yml' }
-
-      it 'returns an error' do
-        expect{ compile }.to raise_error(StackMaster::TemplateCompilers::Yaml::CompileError)
-      end
-    end
   end
 end
