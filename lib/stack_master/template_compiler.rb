@@ -4,7 +4,7 @@ module StackMaster
 
     def self.compile(config, template_file_path)
       template_compiler_for_file(template_file_path, config).compile(template_file_path)
-    rescue Exception
+    rescue StandardError
       raise TemplateCompilationFailed.new("Failed to compile #{template_file_path}.")
     end
 
