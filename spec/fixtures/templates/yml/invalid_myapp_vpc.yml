@@ -1,6 +1,0 @@
----
-  Descr : : iption: "A test VPC template"
-this is not valid yml
-  Resources:
-    Vpc:
-      Type: "AWS::EC2::VPC"
