@@ -37,7 +37,7 @@ RSpec.describe StackMaster::Command do
     end
   end
 
-  context 'when a CF error occurs' do
+  context 'when a template compilation error occurs' do
     it 'outputs the message' do
       error_proc = proc {
         raise Aws::CloudFormation::Errors::ServiceError.new('a', 'the message')
