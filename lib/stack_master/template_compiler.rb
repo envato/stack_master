@@ -1,6 +1,6 @@
 module StackMaster
   class TemplateCompiler
-    class TemplateCompilationFailed < RuntimeError; end
+    TemplateCompilationFailed = Class.new(RuntimeError)
 
     def self.compile(config, template_file_path)
       template_compiler_for_file(template_file_path, config).compile(template_file_path)
