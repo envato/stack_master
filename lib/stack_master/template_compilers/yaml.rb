@@ -7,6 +7,5 @@ module StackMaster::TemplateCompilers
     end
 
     StackMaster::TemplateCompiler.register(:yaml, self)
-    StackMaster::TemplateCompiler.register(:yml, self)
   end
 end
