@@ -22,7 +22,7 @@ module StackMaster
         catch(:halt) do
           super
         end
-      rescue Aws::CloudFormation::Errors::ServiceError => e
+      rescue Aws::CloudFormation::Errors::ServiceError, TemplateCompiler::TemplateCompilationFailed => e
         failed "#{e.class} #{e.message}"
       end
     end

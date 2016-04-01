@@ -45,4 +45,13 @@ RSpec.describe StackMaster::Command do
       expect { command_class.perform(error_proc) }.to output(/the message/).to_stderr
     end
   end
+
+  context 'when a CF error occurs' do
+    it 'outputs the message' do
+      error_proc = proc {
+        raise StackMaster::TemplateCompiler::TemplateCompilationFailed.new('the message')
+      }
+      expect { command_class.perform(error_proc) }.to output(/the message/).to_stderr
+    end
+  end
 end
