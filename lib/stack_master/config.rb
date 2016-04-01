@@ -67,6 +67,8 @@ module StackMaster
       {
         rb: :sparkle_formation,
         json: :json,
+        yml:  :yaml,
+        yaml: :yaml,
       }
     end
 
