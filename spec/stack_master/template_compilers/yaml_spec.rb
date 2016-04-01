@@ -19,7 +19,7 @@ RSpec.describe StackMaster::TemplateCompilers::Yaml do
       let(:template_file_path) { 'spec/fixtures/templates/yml/invalid_myapp_vpc.yml' }
 
       it 'returns an error' do
-        expect(compile).to raise_error(StackMaster::TemplateCompilers::Yaml::CompileError)
+        expect{ compile }.to raise_error(StackMaster::TemplateCompilers::Yaml::CompileError)
       end
     end
   end
