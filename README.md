@@ -1,17 +1,29 @@
 ![StackMaster](/logo.png?raw=true)
 
-StackMaster is a sure-footed way of creating, updating and keeping track of
-Amazon (AWS) CloudFormation stacks.
+StackMaster is a CLI tool to manage CloudFormation stacks, with the following features:
 
-- See the changes you are making to a stack before you apply them
-- Connect stacks
-- Keep secrets secret
-- Customise stacks in different environments
-- Apply descriptive labels to regions
+- Synchronous visibility into stack updates. See exactly what is changing and
+  what will happen before agreeing to apply a change.
+- Dynamic paramter resolvers.
+- Template compiler support for YAML and [SparkleFormation](http://www.sparkleformation.io).
 
-StackMaster provides an easy command line interface to managing CloudFormation
-stacks defined with templates specified in either the
-[SparkleFormation](http://www.sparkleformation.io) DSL or standard JSON format.
+Stack updates can cause a lot of damage if applied blindly. StackMaster helps
+with this by providing the operator with as much information about the proposed
+change as possible before asking for confirmation to continue. That information
+includes:
+
+- Template body and parameter diffs.
+- [Change
+  sets](https://aws.amazon.com/blogs/aws/new-change-sets-for-aws-cloudformation/)
+are displayed for review.
+- Once the diffs & change set have been reviewed, the change can be applied and
+  stack events monitored.
+- Stack events will be outputted until an end state is reached.
+
+Stack parameters can be dynamically resolved at runtime using one of the
+built in parameter resolvers. Parameters can be sourced from GPG encrypted YAML
+files, other stacks outputs, querying various AWS API's to get resource ARNs
+etc.
 
 ## Installation
 
@@ -75,14 +87,15 @@ stacks:
 - `polices` - Stack policies.
 - `parameters` - Parameters as YAML files.
 - `secrets` - GPG encrypted secret files.
+- `policies` - Stack policy JSON files.
 
 ## Parameters
 
 Parameters are loaded from multiple YAML files, merged from the following lookup paths:
 
 - parameters/[stack_name].yml
-- parameters/[region]/[stack_name].yml
-- parameters/[region_alias]/[stack_name].yml
+- parameters/[region]/[underscored_stack_name].yml
+- parameters/[region_alias]/[underscored_stack_name].yml
 
 A simple parameter file could look like this:
 
@@ -94,13 +107,11 @@ Keys in parameter files are automatically converted to camel case.
 
 ## Parameter Resolvers
 
-Parameter resolvers enable dynamic resolution of parameter values. A parameter
-using a resolver will be a hash with one key where the key is the name of the
-resolver.
+Parameter values can be sourced dynamically using parameter resolvers.
 
-One benefit of using resolvers instead of hard coding values like VPC ID's and
-resource ARNs is that the same configuration works cross region, even though
-the resolved values will be different.
+One benefit of using parameter resolvers instead of hard coding values like VPC
+ID's and resource ARNs is that the same configuration works cross
+region/account, even though the resolved values will be different.
 
 ### Stack Output
 
@@ -111,6 +122,10 @@ same region. The expected format is `[stack-name]/[OutputName]`.
 vpc_id:
   stack_output: my-vpc-stack/VpcId
 ```
+
+This is the most used parameter resolver because it enables stacks to be split
+up into their separated concerns (VPC, web, database etc) with outputs feeding
+into parameters of dependent stacks.
 
 ### Secret
 
@@ -269,11 +284,13 @@ stack_master status # Displays the status of each stack
 
 The apply command does the following:
 
-- Builds the proposed stack json and resolves parameters.
+- Compiles the proposed stack template and resolves parameters.
 - Fetches the current state of the stack from CloudFormation.
 - Displays a diff of the current stack and the proposed stack.
+- Creates a change set and displays the actions that CloudFormation will take
+  to perform the update (if the stack already exists).
 - Asks if the update should continue.
-- If yes, the API call is made to update or create the stack.
+- If yes, the API calls are made to update or create the stack.
 - Stack events are displayed until CloudFormation has finished applying the changes.
 
 Demo:
