@@ -12,16 +12,19 @@ with this by providing the operator with as much information about the proposed
 change as possible before asking for confirmation to continue. That information
 includes:
 
-- Template body and parameter diffs
-- Change sets are displayed for review before stack updates can be applied
-- Once the diffs & change set look okay, the change can be confirmed to start
-  the update and watch stack events
+- Template body and parameter diffs.
+- [Change
+  sets](https://aws.amazon.com/blogs/aws/new-change-sets-for-aws-cloudformation/)
+are displayed for review.
+- Once the diffs & change set have been reviewed, the change can be applied and stack events monitored.
+- Stack events will be outputted until an end state is reached.
 
-A stacks parameters can be dynamically resolved at runtime using one of the
-built in parameter resolvers. Parameters can be sourced from GPG files, other
-stacks outputs, querying various AWS API's to get resource ARNs etc.
+Stack parameters can be dynamically resolved at runtime using one of the
+built in parameter resolvers. Parameters can be sourced from GPG encrypted YAML
+files, other stacks outputs, querying various AWS API's to get resource ARNs
+etc.
 
-If you hate writing JSON (we do) templates can alternatively written in YAML or
+If JSON is too much work effort type, templates can also be written in YAML or
 [SparkleFormation](http://www.sparkleformation.io).
 
 ## Installation
