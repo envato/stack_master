@@ -5,7 +5,7 @@ StackMaster is a CLI tool to manage CloudFormation stacks, with the following fe
 - Synchronous visibility into stack updates. See exactly what is changing and
   what will happen before agreeing to apply a change.
 - Dynamic paramter resolvers.
-- Template compiler support for YAML and SparkleFormation.
+- Template compiler support for YAML and [SparkleFormation](http://www.sparkleformation.io).
 
 Stack updates can cause a lot of damage if applied blindly. StackMaster helps
 with this by providing the operator with as much information about the proposed
@@ -23,9 +23,6 @@ Stack parameters can be dynamically resolved at runtime using one of the
 built in parameter resolvers. Parameters can be sourced from GPG encrypted YAML
 files, other stacks outputs, querying various AWS API's to get resource ARNs
 etc.
-
-If JSON is too much work effort type, templates can also be written in YAML or
-[SparkleFormation](http://www.sparkleformation.io).
 
 ## Installation
 
