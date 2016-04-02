@@ -22,7 +22,7 @@ built in parameter resolvers. Parameters can be sourced from GPG files, other
 stacks outputs, querying various AWS API's to get resource ARNs etc.
 
 If you hate writing JSON (we do) templates can alternatively written in YAML or
-SparkleFormation.
+[SparkleFormation](http://www.sparkleformation.io).
 
 ## Installation
 
