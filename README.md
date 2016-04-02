@@ -283,13 +283,13 @@ stack_master status # Displays the status of each stack
 
 The apply command does the following:
 
-- Compiles the proposed stack json and resolves parameters.
+- Compiles the proposed stack template and resolves parameters.
 - Fetches the current state of the stack from CloudFormation.
 - Displays a diff of the current stack and the proposed stack.
-- If the stack already exists, it creates a change set and displays the actions
-  that CloudFormation will take to perform the update.
+- Creates a change set and displays the actions that CloudFormation will take
+  to perform the update (if the stack already exists).
 - Asks if the update should continue.
-- If yes, the API call is made to update or create the stack.
+- If yes, the API calls are made to update or create the stack.
 - Stack events are displayed until CloudFormation has finished applying the changes.
 
 Demo:
