@@ -18,11 +18,11 @@ includes:
 are displayed for review.
 - Once the diffs & change set have been reviewed, the change can be applied and
   stack events monitored.
-- Stack events will be outputted until an end state is reached.
+- Stack events will be displayed until an end state is reached.
 
 Stack parameters can be dynamically resolved at runtime using one of the
 built in parameter resolvers. Parameters can be sourced from GPG encrypted YAML
-files, other stacks outputs, querying various AWS API's to get resource ARNs
+files, other stacks outputs, by querying various AWS API's to get resource ARNs
 etc.
 
 ## Installation
