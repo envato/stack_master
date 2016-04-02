@@ -16,7 +16,8 @@ includes:
 - [Change
   sets](https://aws.amazon.com/blogs/aws/new-change-sets-for-aws-cloudformation/)
 are displayed for review.
-- Once the diffs & change set have been reviewed, the change can be applied and stack events monitored.
+- Once the diffs & change set have been reviewed, the change can be applied and
+  stack events monitored.
 - Stack events will be outputted until an end state is reached.
 
 Stack parameters can be dynamically resolved at runtime using one of the
