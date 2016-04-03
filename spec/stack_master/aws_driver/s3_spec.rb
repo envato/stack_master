@@ -14,7 +14,11 @@ RSpec.describe StackMaster::AwsDriver::S3 do
           bucket: 'bucket',
           region: 'region',
           prefix: 'prefix',
-          files: {'template' => 'spec/fixtures/templates/myapp_vpc.json'}
+          files: {'template' => {
+            :path => 'spec/fixtures/templates/myapp_vpc.json',
+            :body => 'file content'
+            }
+          }
         }
       end
 
@@ -22,7 +26,7 @@ RSpec.describe StackMaster::AwsDriver::S3 do
         expect(s3_driver).to receive(:put_object).with(bucket: 'bucket',
                                                        key: 'prefix/template',
                                                        body: 'file content',
-                                                       metadata: {md5: "8a80554c91d9fca8acb82f023de02f11"})
+                                                       metadata: {md5: "d10b4c3ff123b26dc068d43a8bef2d23"})
         s3_driver.upload_files(options)
       end
     end
@@ -32,7 +36,11 @@ RSpec.describe StackMaster::AwsDriver::S3 do
         {
           bucket: 'bucket',
           region: 'region',
-          files: {'template' => 'spec/fixtures/templates/myapp_vpc.json'}
+          files: {'template' => {
+            :path => 'spec/fixtures/templates/myapp_vpc.json',
+            :body => 'file content'
+            }
+          }
         }
       end
 
@@ -40,7 +48,7 @@ RSpec.describe StackMaster::AwsDriver::S3 do
         expect(s3_driver).to receive(:put_object).with(bucket: 'bucket',
                                                        key: 'template',
                                                        body: 'file content',
-                                                       metadata: {md5: "8a80554c91d9fca8acb82f023de02f11"})
+                                                       metadata: {md5: "d10b4c3ff123b26dc068d43a8bef2d23"})
         s3_driver.upload_files(options)
       end
     end
@@ -51,7 +59,11 @@ RSpec.describe StackMaster::AwsDriver::S3 do
           bucket: 'bucket',
           region: 'region',
           prefix: 'prefix',
-          files: {'template' => 'spec/fixtures/templates/myapp_vpc.json'}
+          files: {'template' => {
+            :path => 'spec/fixtures/templates/myapp_vpc.json',
+            :body => 'file content'
+            }
+          }
         }
       end
 
@@ -59,7 +71,7 @@ RSpec.describe StackMaster::AwsDriver::S3 do
         expect(s3_driver).to receive(:put_object).with(bucket: 'bucket',
                                                        key: 'prefix/template',
                                                        body: 'file content',
-                                                       metadata: {md5: "8a80554c91d9fca8acb82f023de02f11"})
+                                                       metadata: {md5: "d10b4c3ff123b26dc068d43a8bef2d23"})
         s3_driver.upload_files(options)
       end
     end
@@ -69,7 +81,16 @@ RSpec.describe StackMaster::AwsDriver::S3 do
         {
           bucket: 'bucket',
           region: 'region',
-          files: {'template1' => 'spec/fixtures/templates/myapp_vpc.json', 'template2' => 'spec/fixtures/templates/myapp_vpc.json'}
+          files: {
+            'template1' => {
+              :path => 'spec/fixtures/templates/myapp_vpc.json',
+              :body => 'file content'
+            },
+            'template2' => {
+              :path => 'spec/fixtures/templates/myapp_vpc.json',
+              :body => 'file content'
+            }
+          }
         }
       end
 
@@ -77,11 +98,11 @@ RSpec.describe StackMaster::AwsDriver::S3 do
         expect(s3_driver).to receive(:put_object).with(bucket: 'bucket',
                                                        key: 'template1',
                                                        body: 'file content',
-                                                       metadata: {md5: "8a80554c91d9fca8acb82f023de02f11"})
+                                                       metadata: {md5: "d10b4c3ff123b26dc068d43a8bef2d23"})
         expect(s3_driver).to receive(:put_object).with(bucket: 'bucket',
                                                        key: 'template2',
                                                        body: 'file content',
-                                                       metadata: {md5: "8a80554c91d9fca8acb82f023de02f11"})
+                                                       metadata: {md5: "d10b4c3ff123b26dc068d43a8bef2d23"})
         s3_driver.upload_files(options)
       end
     end

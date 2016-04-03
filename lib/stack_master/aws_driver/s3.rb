@@ -28,20 +28,24 @@ module StackMaster
         }
 
         files.each do |template, file|
-          body = File.read(file)
+          body = file[:body]
+          file = file[:path]
           key = template.dup
           key.prepend("#{prefix}/") if prefix
-          md5 = Digest::MD5.file(file).to_s
+          file_md5 = Digest::MD5.file(file).to_s
+          body_md5 = Digest::MD5.hexdigest(body).to_s
           s3_md5 = current_objects[key] ? current_objects[key].etag.gsub("\"", '') : nil
 
-          unless md5 == s3_md5
+          # require 'pry'
+          # binding.pry
+          unless file_md5 == s3_md5 or body_md5 == s3_md5
             StackMaster.stdout.puts "Uploading #{file} to bucket #{options[:bucket]}/#{key}..."
 
             put_object(
             bucket: bucket,
             key: key,
             body: body,
-            metadata: { md5: md5 }
+            metadata: { md5: body_md5 }
             )
           end
         end

@@ -113,7 +113,12 @@ module StackMaster
 
       def files_to_upload
         return {} unless use_s3?
-        {@stack_definition.template => @stack_definition.template_file_path}
+        {
+          @stack_definition.template => {
+            :path => @stack_definition.template_file_path,
+            :body => proposed_stack.maybe_compressed_template_body
+          }
+        }
       end
 
       def stack_options
