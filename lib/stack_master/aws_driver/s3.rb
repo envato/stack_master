@@ -51,7 +51,7 @@ module StackMaster
         s3.put_object(options)
       end
 
-      def url(template)
+      def url(bucket: bucket, prefix: prefix, region: region, template: template)
         if region == 'us-east-1'
           ["https://s3.amazonaws.com", bucket, prefix, template].compact.join('/')
         else

@@ -108,7 +108,7 @@ module StackMaster
 
       def template_value
         return proposed_stack.maybe_compressed_template_body unless use_s3?
-        s3.url(@s3_config.merge('template' => @stack_definition.template))
+        s3.url(bucket: @s3_config['bucket'], prefix: @s3_config['prefix'], region: @s3_config['region'], template: @stack_definition.template)
       end
 
       def files_to_upload
@@ -136,6 +136,8 @@ module StackMaster
           files: files_to_upload
         }
       end
+
+
 
       def tail_stack_events
         StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout, from: @from_time)
