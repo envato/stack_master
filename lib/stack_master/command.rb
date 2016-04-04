@@ -22,8 +22,8 @@ module StackMaster
         catch(:halt) do
           super
         end
-      rescue Aws::CloudFormation::Errors::ServiceError => e
-        failed "#{e.class} #{e.message}"
+      rescue Aws::CloudFormation::Errors::ServiceError, TemplateCompiler::TemplateCompilationFailed => e
+        failed error_message(e)
       end
     end
 
@@ -32,6 +32,12 @@ module StackMaster
     end
 
     private
+
+    def error_message(e)
+      msg = "#{e.class} #{e.message}"
+      msg << "\n Caused by: #{e.cause.class} #{e.cause.message}" if e.cause
+      msg
+    end
 
     def failed(message = nil)
       StackMaster.stderr.puts(message) if message
