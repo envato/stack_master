@@ -15,7 +15,7 @@ RSpec.describe StackMaster::Config do
     )
   }
 
-  context ".load!" do
+  describe ".load!" do
     it "fails to load the config if no stack_master.yml in parent directories" do
       expect { StackMaster::Config.load!('stack_master.yml') }.to raise_error Errno::ENOENT
     end
