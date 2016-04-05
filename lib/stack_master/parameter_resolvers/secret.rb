@@ -26,6 +26,7 @@ module StackMaster
       end
 
       def decrypt_with_dotgpg
+        Dotgpg.interactive = true
         dir = Dotgpg::Dir.closest(secret_file_path)
         stream = StringIO.new
         dir.decrypt(secret_path_relative_to_base, stream)
