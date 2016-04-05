@@ -62,7 +62,7 @@ module StackMaster
     end
 
     private
-    def load_template_compilers config
+    def load_template_compilers(config)
       @template_compilers = {}
       populate_template_compilers(config.fetch('template_compilers', {}))
       merge_defaults_to_user_defined_compilers
