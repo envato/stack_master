@@ -4,6 +4,8 @@ region_aliases:
 stack_defaults:
   tags:
     application: my-awesome-blog
+template_compilers:
+  rb: ruby_dsl
 region_defaults:
   us_east_1:
     tags:

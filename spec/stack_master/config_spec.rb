@@ -15,7 +15,7 @@ RSpec.describe StackMaster::Config do
     )
   }
 
-  context ".load!" do
+  describe ".load!" do
     it "fails to load the config if no stack_master.yml in parent directories" do
       expect { StackMaster::Config.load!('stack_master.yml') }.to raise_error Errno::ENOENT
     end
@@ -68,6 +68,16 @@ RSpec.describe StackMaster::Config do
     expect(loaded_config.stack_defaults).to eq({
       'tags' => { 'application' => 'my-awesome-blog' }
     })
+  end
+
+  it 'loads template compiler mappings' do
+    expect(loaded_config.template_compilers).to eq({
+                                                     rb: :ruby_dsl,
+                                                     json: :json,
+                                                     yml: :yaml,
+                                                     yaml: :yaml,
+
+                                                   })
   end
 
   it 'loads region defaults' do
