@@ -70,6 +70,16 @@ RSpec.describe StackMaster::Config do
     })
   end
 
+  it 'loads template compiler mappings' do
+    expect(loaded_config.template_compilers).to eq({
+                                                     rb: :ruby_dsl,
+                                                     json: :json,
+                                                     yml: :yaml,
+                                                     yaml: :yaml,
+
+                                                   })
+  end
+
   it 'loads region defaults' do
     expect(loaded_config.region_defaults).to eq({
       'us-east-1' => {
