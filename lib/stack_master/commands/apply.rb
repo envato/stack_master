@@ -116,7 +116,7 @@ module StackMaster
         {
           @stack_definition.template => {
             :path => @stack_definition.template_file_path,
-            :body => proposed_stack.compiled_template_body
+            :body => proposed_stack.maybe_compressed_template_body
           }
         }
       end
