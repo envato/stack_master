@@ -32,22 +32,19 @@ module StackMaster
           file = file[:path]
           key = template.dup
           key.prepend("#{prefix}/") if prefix
-          file_md5 = Digest::MD5.file(file).to_s
-          body_md5 = Digest::MD5.hexdigest(body).to_s
+          raw_template_md5 = Digest::MD5.file(file).to_s
+          compiled_template_md5 = Digest::MD5.hexdigest(body).to_s
           s3_md5 = current_objects[key] ? current_objects[key].etag.gsub("\"", '') : nil
 
-          # require 'pry'
-          # binding.pry
-          unless file_md5 == s3_md5 or body_md5 == s3_md5
-            StackMaster.stdout.puts "Uploading #{file} to bucket #{options[:bucket]}/#{key}..."
+          next if [raw_template_md5, compiled_template_md5].include?(s3_md5)
+          StackMaster.stdout.puts "Uploading #{file} to bucket #{options[:bucket]}/#{key}..."
 
-            put_object(
+          put_object(
             bucket: bucket,
             key: key,
             body: body,
-            metadata: { md5: body_md5 }
-            )
-          end
+            metadata: { md5: compiled_template_md5 }
+          )
         end
       end
 
