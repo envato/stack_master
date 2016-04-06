@@ -36,5 +36,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency "table_print"
   spec.add_dependency "dotgpg"
   spec.add_dependency "deep_merge"
-  spec.add_dependency "cfndsl"
 end
