@@ -83,11 +83,26 @@ stacks:
 
 ## Directories
 
-- `templates` - CloudFormation or SparkleFormation templates.
+- `templates` - CloudFormation, SparkleFormation or CfnDsl templates.
 - `polices` - Stack policies.
 - `parameters` - Parameters as YAML files.
 - `secrets` - GPG encrypted secret files.
 - `policies` - Stack policy JSON files.
+
+## Templates
+
+StackMaster supports CloudFormation templates in plain JSON or YAML. Any `.yml` or `.yaml` file will be processed as
+YAML. While any `.json` file will be processed as JSON.
+
+### Ruby DSLs
+By default, any template ending with `.rb` will be processed as a [SparkleFormation](https://github.com/sparkleformation/sparkle_formation)
+template. However, if you want to use [CfnDsl](https://github.com/stevenjack/cfndsl) templates you can add
+the following lines to your `stack_master.yml`.
+
+```
+template_compilers:
+  rb: cfndsl
+```
 
 ## Parameters
 
