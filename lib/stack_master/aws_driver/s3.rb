@@ -20,7 +20,7 @@ module StackMaster
 
         set_region(bucket_region) if bucket_region
 
-        current_objects = s3.list_objects(
+        current_objects = list_objects(
           prefix: prefix,
           bucket: bucket
         ).map(&:contents).flatten.inject({}){|h,obj|
@@ -46,6 +46,10 @@ module StackMaster
             metadata: { md5: compiled_template_md5 }
           )
         end
+      end
+
+      def list_objects(options)
+        s3.list_objects(options)
       end
 
       def put_object(options)
