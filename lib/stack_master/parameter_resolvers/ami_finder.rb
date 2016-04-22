@@ -3,18 +3,21 @@ module StackMaster
     class AmiFinder
       def initialize(region)
         @region = region
+        @owner = [aws_account_id]
       end
 
       def build_filters(value, prefix = nil)
         value.split(',').map do |name_with_value|
           name, value = name_with_value.strip.split('=')
+          @owner.push name if name == 'owner_id'
           name = prefix ? "#{prefix}:#{name}" : name
+          puts value.class
           { name: name, values: [value] }
         end
       end
 
-      def find_latest_ami(filters, owner = aws_account_id)
-        images = ec2.describe_images(owners: [owner], filters: filters).images
+      def find_latest_ami(filters)
+        images = ec2.describe_images(owners: @owner, filters: filters).images
         sorted_images = images.sort do |a, b|
           Time.parse(a.creation_date) <=> Time.parse(b.creation_date)
         end

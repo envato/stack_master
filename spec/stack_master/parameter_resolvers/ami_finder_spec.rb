@@ -14,7 +14,7 @@ RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
   describe '#build_filters' do
     context 'when a single key-value pair is specified' do
       it 'returns an array with a single hash' do
-        expect(resolver.build_filters('my-attr=my-value')).to eq [
+        expect(resolver.build_filters('my-attr=my-value', nil)).to eq [
           { name: 'my-attr', values: ['my-value']}
         ]
       end
@@ -22,7 +22,7 @@ RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
 
     context 'when multiple key-value pairs are specified' do
       it 'returns an array with multiple hashes' do
-        expect(resolver.build_filters('my-attr=my-value,foo=bar')).to eq [
+        expect(resolver.build_filters('my-attr=my-value,foo=bar', nil)).to eq [
           { name: 'my-attr', values: ['my-value']},
           { name: 'foo', values: ['bar']}
         ]
