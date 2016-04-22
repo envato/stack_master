@@ -12,7 +12,30 @@ RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
   end
 
   describe '#build_filters' do
+    context 'when a single key-value pair is specified' do
+      it 'returns an array with a single hash' do
+        expect(resolver.build_filters('my-attr=my-value')).to eq [
+          { name: 'my-attr', values: ['my-value']}
+        ]
+      end
+    end
 
+    context 'when multiple key-value pairs are specified' do
+      it 'returns an array with multiple hashes' do
+        expect(resolver.build_filters('my-attr=my-value,foo=bar')).to eq [
+          { name: 'my-attr', values: ['my-value']},
+          { name: 'foo', values: ['bar']}
+        ]
+      end
+    end
+
+    context 'when a prefix is supplied' do
+      it 'adds the prefix to the filter' do
+        expect(resolver.build_filters('my-tag=my-value', 'tag')).to eq [
+          { name: 'tag:my-tag', values: ['my-value']}
+        ]
+      end
+    end
   end
 
   describe '#find_latest_ami' do
