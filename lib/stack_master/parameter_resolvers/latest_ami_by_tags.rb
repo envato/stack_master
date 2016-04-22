@@ -6,32 +6,12 @@ module StackMaster
       def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition
+        @ami_finder = AmiFinder.new(@stack_definition.region)
       end
 
       def resolve(value)
-        filters = build_filters(value)
-        find_latest_ami(filters).try(:image_id)
-      end
-
-      private
-
-      def ec2
-        @ec2 ||= Aws::EC2::Client.new(region: @stack_definition.region)
-      end
-
-      def build_filters(value)
-        value.split(',').map do |tag_with_value|
-          tag, value = tag_with_value.strip.split('=')
-          { name: "tag:#{tag}", values: [value] }
-        end
-      end
-
-      def find_latest_ami(filters)
-        images = ec2.describe_images(filters: filters).images
-        sorted_images = images.sort do |a, b|
-          Time.parse(a.creation_date) <=> Time.parse(b.creation_date)
-        end
-        sorted_images.last
+        filters = @ami_finder.build_filters(value, prefix = "tag:")
+        @ami_finder.find_latest_ami(filters).try(:image_id)
       end
     end
   end
