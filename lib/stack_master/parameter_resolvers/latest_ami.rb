@@ -1,7 +1,7 @@
 module StackMaster
   module ParameterResolvers
-    class LatestAmi < Resolver
-      array_resolver class_name: 'LatestAmi'
+    class LatestAmis < Resolver
+      array_resolver class_name: 'LatestAmis'
 
       def initialize(config, stack_definition)
         @config = config
