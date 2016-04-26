@@ -220,6 +220,8 @@ bastion_ami:
   latest_amis: owner_id=099720109477,name=ubuntu/images/hvm/ubuntu-wily-15.10-amd64-server-*
 ```
 
+A set of possible attributes is available in the [AWS documentation](https://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#describe_images-instance_method)
+
 By default only AMIs from the current account are returned.
 
 ### Custom parameter resolvers
