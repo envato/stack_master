@@ -1,6 +1,6 @@
 module StackMaster
   module ParameterResolvers
-    class LatestAmis < Resolver
+    class LatestAmi < Resolver
       array_resolver class_name: 'LatestAmis'
 
       def initialize(config, stack_definition)
