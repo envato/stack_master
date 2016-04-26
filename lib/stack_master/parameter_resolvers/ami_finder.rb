@@ -11,7 +11,6 @@ module StackMaster
           name, value = name_with_value.strip.split('=')
           @owner.push name if name == 'owner_id'
           name = prefix ? "#{prefix}:#{name}" : name
-          puts value.class
           { name: name, values: [value] }
         end
       end
