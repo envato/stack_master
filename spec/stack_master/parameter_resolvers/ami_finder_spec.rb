@@ -1,14 +1,9 @@
 RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
   subject(:resolver) { described_class.new('us-east-1') }
   let(:ec2) { Aws::EC2::Client.new }
-  let(:iam) { Aws::IAM::Client.new }
 
   before do
     allow(Aws::EC2::Client).to receive(:new).and_return(ec2)
-    allow(Aws::IAM::Client).to receive(:new).and_return(iam)
-    iam.stub_responses(:list_users, users: [
-      {arn:"arn:aws:iam::012345678900:user/root", path: '/', user_name: 'root', user_id: '1', create_date: Time.now}
-    ])
   end
 
   describe '#build_filters' do
