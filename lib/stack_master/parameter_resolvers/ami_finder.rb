@@ -7,14 +7,14 @@ module StackMaster
       end
 
       def build_filters(value, prefix = nil)
-        owner_ids = []
+        owner_id = []
         filters = value.split(',').map do |name_with_value|
           name, value = name_with_value.strip.split('=')
-          owner_ids.push value if name == 'owner_id'
+          owner_id.push value if name == 'owner_id'
           name = prefix ? "#{prefix}:#{name}" : name
           { name: name, values: [value] }
         end
-        @owner = owner_ids unless owner_ids.empty?
+        @owner = owner_id unless owner_id.empty?
         filters
       end
 
