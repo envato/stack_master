@@ -222,7 +222,7 @@ bastion_ami:
 
 A set of possible attributes is available in the [AWS documentation](https://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#describe_images-instance_method)
 
-By default only AMIs from the current account are returned.
+By default only AMIs from the current account are returned unless owner_id is specified, which will restrict AMIs returned to just that/those IDs.
 
 ### Custom parameter resolvers
 
