@@ -31,6 +31,13 @@ RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
         ]
       end
     end
+
+    context 'owner_id is specified' do
+      it 'updates the owner instance variable' do
+        resolver.build_filters('owner_id=0123456789', nil)
+        expect(resolver.instance_variable_get('@owner')).to eq ['self', '0123456789']
+      end
+    end
   end
 
   describe '#find_latest_ami' do

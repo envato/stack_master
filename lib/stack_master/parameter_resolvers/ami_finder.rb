@@ -7,12 +7,15 @@ module StackMaster
       end
 
       def build_filters(value, prefix = nil)
-        value.split(',').map do |name_with_value|
+        owner_ids = []
+        filters = value.split(',').map do |name_with_value|
           name, value = name_with_value.strip.split('=')
-          @owner.push name if name == 'owner_id'
+          owner_ids.push value if name == 'owner_id'
           name = prefix ? "#{prefix}:#{name}" : name
           { name: name, values: [value] }
         end
+        @owner = owner_ids unless owner_ids.empty?
+        filters
       end
 
       def find_latest_ami(filters)
