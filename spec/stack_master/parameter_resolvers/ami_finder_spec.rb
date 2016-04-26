@@ -33,9 +33,10 @@ RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
     end
 
     context 'owner_id is specified' do
-      it 'updates the owner instance variable' do
+      it 'uses the owner_id in the describe_images call' do
         resolver.build_filters('owner_id=0123456789', nil)
-        expect(resolver.instance_variable_get('@owners')).to eq ['0123456789']
+        expect(ec2).to receive(:describe_images).with(owners: ['0123456789'], filters: anything).and_call_original
+        resolver.find_latest_ami([])
       end
     end
   end
