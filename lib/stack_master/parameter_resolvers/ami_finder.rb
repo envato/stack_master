@@ -3,23 +3,23 @@ module StackMaster
     class AmiFinder
       def initialize(region)
         @region = region
-        @owner = ['self']
+        @owners = ['self']
       end
 
       def build_filters(value, prefix = nil)
-        owner_id = []
+        owner_ids = []
         filters = value.split(',').map do |name_with_value|
           name, value = name_with_value.strip.split('=')
-          owner_id.push value if name == 'owner_id'
+          owner_ids.push value if name == 'owner_id'
           name = prefix ? "#{prefix}:#{name}" : name
           { name: name, values: [value] }
         end
-        @owner = owner_id unless owner_id.empty?
+        @owners = owner_ids unless owner_ids.empty?
         filters
       end
 
       def find_latest_ami(filters)
-        images = ec2.describe_images(owners: @owner, filters: filters).images
+        images = ec2.describe_images(owners: @owners, filters: filters).images
         sorted_images = images.sort do |a, b|
           Time.parse(a.creation_date) <=> Time.parse(b.creation_date)
         end
