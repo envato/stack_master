@@ -3,7 +3,7 @@ module StackMaster
     class AmiFinder
       def initialize(region)
         @region = region
-        @owner = [aws_account_id]
+        @owner = ['self']
       end
 
       def build_filters(value, prefix = nil)
@@ -26,17 +26,8 @@ module StackMaster
 
       private
 
-      def aws_account_id
-        arn = iam.list_users.users.first.arn
-        arn[/^arn:aws:iam::([0-9]{12}):/,1]
-      end
-
       def ec2
         @ec2 ||= Aws::EC2::Client.new(region: @region)
-      end
-
-      def iam
-        @iam ||= Aws::IAM::Client.new(region: @region)
       end
     end
   end
