@@ -211,6 +211,17 @@ web_ami:
 
 Note that the corresponding array resolver is named `latest_amis_by_tags`
 
+### Latest AMI by attribute
+
+Looks up the latest AMI ID by a given set of attributes. This selects the latest wily hvm AMI from Ubuntu (using the account id):
+
+```yaml
+bastion_ami:
+  latest_amis: owner_id=099720109477,name=ubuntu/images/hvm/ubuntu-wily-15.10-amd64-server-*
+```
+
+By default only AMIs from the current account are returned.
+
 ### Custom parameter resolvers
 
 New parameter resolvers can be created in a separate gem.
