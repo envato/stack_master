@@ -14,6 +14,10 @@ module StackMaster
         filters
       end
 
+      def build_filters_from_hash(hash)
+        hash.map { |key, value| {name: key, values: Array(value.to_s)}}
+      end
+
       def find_latest_ami(filters, owners = ['self'])
         images = ec2.describe_images(owners: owners, filters: filters).images
         sorted_images = images.sort do |a, b|

@@ -33,6 +33,12 @@ RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
     end
   end
 
+  describe '#build_filters_from_hash' do
+    it 'outputs a hash of values in the format expected by the AWS API' do
+      expect(resolver.build_filters_from_hash({'foo' => 'bacon'})).to eq([{name: 'foo', values: ['bacon']}])
+    end
+  end
+
   describe '#find_latest_ami' do
     let(:filter) { [{ name: "String", values: ["String"]}] }
 
