@@ -10,7 +10,7 @@ module StackMaster
       end
 
       def resolve(value)
-        filters = @ami_finder.build_filters(value, prefix = "tag")
+        filters = @ami_finder.build_filters_from_string(value, prefix = "tag")
         @ami_finder.find_latest_ami(filters).try(:image_id)
       end
     end
