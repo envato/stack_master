@@ -213,16 +213,20 @@ Note that the corresponding array resolver is named `latest_amis_by_tags`
 
 ### Latest AMI by attribute
 
-Looks up the latest AMI ID by a given set of attributes. This selects the latest wily hvm AMI from Ubuntu (using the account id):
+Looks up the latest AMI ID by a given set of attributes. The input to latest_ami can be a string or a hash. If you provide a string, the results will only be from the current account. By providing a hash you can specify the account ID or [certain keywords mentioned in the aws documentation](http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ApiReference-cmd-DescribeImages.html)
+
+This selects the latest wily hvm AMI from Ubuntu (using the account id):
 
 ```yaml
 bastion_ami:
-  latest_amis: owner_id=099720109477,name=ubuntu/images/hvm/ubuntu-wily-15.10-amd64-server-*
+  latest_ami:
+    owner_id: 099720109477
+    name: ubuntu/images/hvm/ubuntu-wily-15.10-amd64-server-*
 ```
 
 A set of possible attributes is available in the [AWS documentation](https://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#describe_images-instance_method)
 
-By default only AMIs from the current account are returned unless owner_id is specified, which will restrict AMIs returned to just that/those IDs.
+Any value can be an array of possible matches.
 
 ### Custom parameter resolvers
 
