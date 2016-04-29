@@ -10,8 +10,15 @@ module StackMaster
       end
 
       def resolve(value)
-        filters = @ami_finder.build_filters_from_string(value)
-        @ami_finder.find_latest_ami(filters).try(:image_id)
+        case value
+        when String
+          owners = ['self']
+          filters = @ami_finder.build_filters_from_string(value)
+        when Hash
+          owners = Array(value.delete('owner_id').to_s || 'self')
+          filters = @ami_finder.build_filters_from_hash(value)
+        end
+        @ami_finder.find_latest_ami(filters, owners).try(:image_id)
       end
     end
   end

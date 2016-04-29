@@ -8,26 +8,43 @@ RSpec.describe StackMaster::ParameterResolvers::LatestAmi do
     allow(Aws::EC2::Client).to receive(:new).and_return(ec2)
   end
 
-  context 'when matches are found' do
-    before do
-      ec2.stub_responses(:describe_images, images: [
-        { image_id: '1', creation_date: '2015-01-02 00:00:00', name: 'foo' },
-        { image_id: '2', creation_date: '2015-01-03 00:00:00', name: 'foo' }
-      ])
+  context 'when passed a string of filters' do
+    context 'when matches are found' do
+      before do
+        ec2.stub_responses(:describe_images, images: [
+          { image_id: '1', creation_date: '2015-01-02 00:00:00', name: 'foo' },
+          { image_id: '2', creation_date: '2015-01-03 00:00:00', name: 'foo' }
+        ])
+      end
+
+      it 'returns the latest one' do
+        expect(resolver.resolve('name=foo')).to eq '2'
+      end
     end
 
-    it 'returns the latest one' do
-      expect(resolver.resolve('name=foo')).to eq '2'
+    context 'when no matches are found' do
+      before do
+        ec2.stub_responses(:describe_images, images: [])
+      end
+
+      it 'returns nil' do
+        expect(resolver.resolve('name=foo')).to be_nil
+      end
     end
   end
 
-  context 'when no matches are found' do
+  context 'when passed a hash of filters is passed' do
+    let(:ami_finder) { StackMaster::ParameterResolvers::AmiFinder.new('us-east-1') }
     before do
-      ec2.stub_responses(:describe_images, images: [])
+      expect(StackMaster::ParameterResolvers::AmiFinder).to receive(:new).and_return(ami_finder)
+      allow(ami_finder).to receive(:build_filters_from_hash).and_call_original
     end
 
-    it 'returns nil' do
-      expect(resolver.resolve('name=foo')).to be_nil
+    context 'when an owner_id is passed' do
+      it 'calls find_latest_ami with the owner and filters' do
+        expect(ami_finder).to receive(:find_latest_ami).with([{name: 'foo', values: ['bacon']}], ['123456'])
+        resolver.resolve({'foo' => 'bacon', 'owner_id' => 123456})
+      end
     end
   end
 end
