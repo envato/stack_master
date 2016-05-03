@@ -11,7 +11,7 @@ module StackMaster
 
       def resolve(value)
         owners = Array(value.fetch('owners', 'self').to_s)
-        filters = @ami_finder.build_filters_from_hash(value['filters'])
+        filters = @ami_finder.build_filters_from_hash(value.fetch('filters'))
         @ami_finder.find_latest_ami(filters, owners).try(:image_id)
       end
     end
