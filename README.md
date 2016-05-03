@@ -211,6 +211,24 @@ web_ami:
 
 Note that the corresponding array resolver is named `latest_amis_by_tags`
 
+### Latest AMI by attribute
+
+Looks up the latest AMI ID by a given set of attributes. By default it will only return AMIs from the account the stack is created in, but you can specify the account ID or [certain keywords mentioned in the aws documentation](http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ApiReference-cmd-DescribeImages.html)
+
+This selects the latest wily hvm AMI from Ubuntu (using the account id):
+
+```yaml
+bastion_ami:
+  latest_ami:
+    owners: 099720109477
+    filters:
+      name: ubuntu/images/hvm/ubuntu-wily-15.10-amd64-server-*
+```
+
+A set of possible attributes is available in the [AWS documentation](https://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#describe_images-instance_method)
+
+Any value can be an array of possible matches.
+
 ### Custom parameter resolvers
 
 New parameter resolvers can be created in a separate gem.
