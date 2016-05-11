@@ -197,7 +197,7 @@ Looks up an SNS topic by name and returns the ARN.
 
 ```yaml
 notification_topic:
-  sns_topic: PagerDuty
+  sns_topic_name: PagerDuty
 ```
 
 ### Latest AMI by Tag
