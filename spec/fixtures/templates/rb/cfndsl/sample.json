@@ -1,0 +1,28 @@
+{
+  "Parameters" : {
+    "One" : {
+      "Type" : "String",
+      "Default" : "Test",
+      "MaxLength" : 15
+    }
+  },
+  "Resources" : {
+    "MyInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "ImageId" : "ami-12345678"
+      }
+    }
+  },
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Outputs" : {
+    "One" : {
+      "Value" : {
+        "Fn::Base64" : {
+          "Ref" : "One"
+        }
+      }
+    }
+  },
+  "Description" : "Test"
+}

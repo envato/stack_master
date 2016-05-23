@@ -1,21 +1,28 @@
 module StackMaster
   class TemplateCompiler
+    TemplateCompilationFailed = Class.new(RuntimeError)
 
-    MAX_TEMPLATE_SIZE = 51200
-
-    def self.compile(template_file_path)
-      if template_file_path.ends_with?('.rb')
-        SparkleFormation.sparkle_path = File.dirname(template_file_path)
-        JSON.pretty_generate(SparkleFormation.compile(template_file_path))
-      else
-        template_body = File.read(template_file_path)
-        if template_body.size > MAX_TEMPLATE_SIZE
-          # Parse the json and rewrite compressed
-          JSON.dump(JSON.parse(template_body))
-        else
-          template_body
-        end
-      end
+    def self.compile(config, template_file_path)
+      template_compiler_for_file(template_file_path, config).compile(template_file_path)
+    rescue
+      raise TemplateCompilationFailed.new("Failed to compile #{template_file_path}.")
     end
+
+    def self.register(name, klass)
+      @compilers ||= {}
+      @compilers[name] = klass
+    end
+
+    # private
+    def self.template_compiler_for_file(template_file_path, config)
+      compiler_name = config.template_compilers.fetch(file_ext(template_file_path))
+      @compilers.fetch(compiler_name)
+    end
+    private_class_method :template_compiler_for_file
+
+    def self.file_ext(template_file_path)
+      File.extname(template_file_path).gsub('.', '').to_sym
+    end
+    private_class_method :file_ext
   end
 end

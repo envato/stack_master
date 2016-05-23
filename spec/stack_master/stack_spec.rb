@@ -82,7 +82,7 @@ RSpec.describe StackMaster::Stack do
     before do
       allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
       allow(StackMaster::ParameterResolver).to receive(:resolve).and_return(resolved_parameters)
-      allow(StackMaster::TemplateCompiler).to receive(:compile).with(stack_definition.template_file_path).and_return(template_body)
+      allow(StackMaster::TemplateCompiler).to receive(:compile).with(config, stack_definition.template_file_path).and_return(template_body)
       allow(File).to receive(:read).with(stack_definition.stack_policy_file_path).and_return(stack_policy_body)
     end
 
@@ -170,6 +170,24 @@ RSpec.describe StackMaster::Stack do
       it 'returns false for small stacks' do
         expect(little_stack.too_big?(true)).to be_falsey
       end
+    end
+  end
+
+  describe '#missing_parameters?' do
+    subject { stack.missing_parameters? }
+
+    let(:stack) { StackMaster::Stack.new(parameters: parameters, template_body: '{}') }
+
+    context 'when a parameter has a nil value' do
+      let(:parameters) { { 'my_param' => nil } }
+
+      it { should eq true }
+    end
+
+    context 'when no parameers have a nil value' do
+      let(:parameters) { { 'my_param' => '1' } }
+
+      it { should eq false }
     end
   end
 end

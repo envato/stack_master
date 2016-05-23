@@ -31,14 +31,7 @@ module StackMaster
       end
 
       def fetch_events
-        events = []
-        next_token = nil
-        begin
-          response = cf.describe_stack_events(stack_name: @stack_name, next_token: next_token)
-          next_token = response.next_token
-          events += response.stack_events
-        end while !next_token.nil?
-        events.reverse
+        PagedResponseAccumulator.call(cf, :describe_stack_events, { stack_name: @stack_name }, :stack_events).stack_events
       end
     end
   end

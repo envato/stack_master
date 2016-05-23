@@ -29,17 +29,25 @@ require "stack_master/security_group_finder"
 require "stack_master/parameter_loader"
 require "stack_master/parameter_resolver"
 require "stack_master/resolver_array"
+require "stack_master/parameter_resolvers/ami_finder"
 require "stack_master/parameter_resolvers/stack_output"
 require "stack_master/parameter_resolvers/secret"
 require "stack_master/parameter_resolvers/sns_topic_name"
 require "stack_master/parameter_resolvers/security_group"
 require "stack_master/parameter_resolvers/latest_ami_by_tags"
+require "stack_master/parameter_resolvers/latest_ami"
 require "stack_master/utils"
 require "stack_master/config"
+require "stack_master/paged_response_accumulator"
 require "stack_master/stack_definition"
 require "stack_master/template_compiler"
+require "stack_master/template_compilers/sparkle_formation"
+require "stack_master/template_compilers/json"
+require "stack_master/template_compilers/yaml"
+require "stack_master/template_compilers/cfndsl"
 require "stack_master/commands/terminal_helper"
 require "stack_master/commands/apply"
+require "stack_master/change_set"
 require "stack_master/commands/events"
 require "stack_master/commands/outputs"
 require "stack_master/commands/init"
@@ -61,11 +69,26 @@ module StackMaster
   end
 
   def non_interactive?
-    @non_interactive || false
+    @non_interactive
   end
+  @non_interactive = false
 
   def non_interactive!
     @non_interactive = true
+  end
+
+  def debug!
+    @debug = true
+  end
+  @debug = false
+
+  def debug?
+    @debug
+  end
+
+  def debug(message)
+    return unless debug?
+    stderr.puts "[DEBUG] #{message}".colorize(:green)
   end
 
   attr_accessor :non_interactive_answer

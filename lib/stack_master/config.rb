@@ -14,7 +14,8 @@ module StackMaster
                   :base_dir,
                   :stack_defaults,
                   :region_defaults,
-                  :region_aliases
+                  :region_aliases,
+                  :template_compilers,
 
     def self.search_up_and_chdir(config_file)
       return config_file unless File.dirname(config_file) == "."
@@ -41,6 +42,7 @@ module StackMaster
       end
       @region_defaults = normalise_region_defaults(config.fetch('region_defaults', {}))
       @stacks = []
+      load_template_compilers(config)
       load_config
     end
 
@@ -60,6 +62,30 @@ module StackMaster
     end
 
     private
+    def load_template_compilers(config)
+      @template_compilers = {}
+      populate_template_compilers(config.fetch('template_compilers', {}))
+      merge_defaults_to_user_defined_compilers
+    end
+
+    def merge_defaults_to_user_defined_compilers
+      @template_compilers = default_template_compilers.merge(@template_compilers)
+    end
+
+    def populate_template_compilers user_defined_compilers
+      user_defined_compilers.each do |key, val|
+        @template_compilers[key.to_sym] = val.to_sym
+      end
+    end
+
+    def default_template_compilers
+      {
+        rb: :sparkle_formation,
+        json: :json,
+        yml:  :yaml,
+        yaml: :yaml,
+      }
+    end
 
     def load_config
       unaliased_stacks = resolve_region_aliases(@config.fetch('stacks'))

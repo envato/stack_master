@@ -6,7 +6,8 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:notification_arn) { 'test_arn' }
   let(:stack_definition) { StackMaster::StackDefinition.new(base_dir: '/base_dir', region: region, stack_name: stack_name) }
   let(:template_body) { '{}' }
-  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, tags: { 'environment' => 'production' } , parameters: { 'param_1' => 'hello' }, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
+  let(:parameters) { { 'param_1' => 'hello' } }
+  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, tags: { 'environment' => 'production' } , parameters: parameters, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
   let(:stack_policy_body) { '{}' }
 
   before do
@@ -14,7 +15,6 @@ RSpec.describe StackMaster::Commands::Apply do
     allow(StackMaster::Stack).to receive(:generate).with(stack_definition, config).and_return(proposed_stack)
     allow(config).to receive(:stack_defaults).and_return({})
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
-    allow(cf).to receive(:update_stack)
     allow(cf).to receive(:create_stack)
     allow(StackMaster::StackDiffer).to receive(:new).with(proposed_stack, stack).and_return double.as_null_object
     allow(StackMaster::StackEvents::Streamer).to receive(:stream)
@@ -27,10 +27,17 @@ RSpec.describe StackMaster::Commands::Apply do
 
   context 'the stack exist' do
     let(:stack) { StackMaster::Stack.new(stack_id: '1') }
+    let(:change_set) { double(display: true, failed?: false, id: 'id-1') }
 
-    it 'calls the update stack API method' do
+    before do
+      allow(cf).to receive(:create_change_set).and_return(OpenStruct.new(id: '1'))
+      allow(StackMaster::ChangeSet).to receive(:create).and_return(change_set)
+      allow(cf).to receive(:execute_change_set).and_return(OpenStruct.new(id: '1'))
+    end
+
+    it 'creates a change set' do
       apply
-      expect(cf).to have_received(:update_stack).with(
+      expect(StackMaster::ChangeSet).to have_received(:create).with(
         stack_name: stack_name,
         template_body: proposed_stack.template_body,
         parameters: [
@@ -49,13 +56,31 @@ RSpec.describe StackMaster::Commands::Apply do
       end
     end
 
-    context 'when a CF error occurs' do
+    context 'the changeset failed to create' do
       before do
-        allow(cf).to receive(:update_stack).with(anything).and_raise(Aws::CloudFormation::Errors::ServiceError.new('a', 'the message'))
+        allow(change_set).to receive(:failed?).and_return(true)
+        allow(change_set).to receive(:status_reason).and_return('reason')
       end
 
-      it 'outputs the message' do
-        expect { apply }.to output(/the message/).to_stdout
+      it 'outputs the status reason' do
+        expect { apply }.to output(/reason/).to_stdout
+      end
+    end
+
+    context 'user decides to not apply the change set' do
+      before do
+        allow(StackMaster).to receive(:non_interactive_answer).and_return('n')
+        allow(StackMaster::ChangeSet).to receive(:delete)
+        allow(StackMaster::ChangeSet).to receive(:execute)
+        apply
+      end
+
+      it 'deletes the change set' do
+        expect(StackMaster::ChangeSet).to have_received(:delete).with(change_set.id)
+      end
+
+      it "doesn't execute the change set" do
+        expect(StackMaster::ChangeSet).to_not have_received(:execute).with(change_set.id)
       end
     end
   end
@@ -89,7 +114,7 @@ RSpec.describe StackMaster::Commands::Apply do
       end
 
       it 'exits with a message' do
-        expect { apply }.to output(/The \(space compressed\) stack is larger than the limit set by AWS/).to_stdout
+        expect { apply }.to output(/The \(space compressed\) stack is larger than the limit set by AWS/).to_stderr
       end
     end
 
@@ -97,6 +122,25 @@ RSpec.describe StackMaster::Commands::Apply do
       Timecop.freeze(Time.local(1990)) do
         apply
         expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
+      end
+    end
+  end
+
+  context 'one or more parameters are empty' do
+    let(:stack) { StackMaster::Stack.new(stack_id: '1', parameters: parameters) }
+    let(:parameters) { { 'param_1' => nil } }
+
+    it "doesn't allow apply" do
+      expect { apply }.to_not output(/Continue and apply the stack/).to_stdout
+    end
+
+    it 'outputs a description of the problem' do
+      expect { apply }.to output(/Empty\/blank parameters detected/).to_stderr
+    end
+
+    it 'outputs where param files are loaded from' do
+      stack_definition.parameter_files.each do |parameter_file|
+        expect { apply }.to output(/#{parameter_file}/).to_stderr
       end
     end
   end

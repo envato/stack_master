@@ -42,6 +42,12 @@ module StackMaster
       template_default_parameters.merge(parameters)
     end
 
+    def missing_parameters?
+      parameters_with_defaults.any? do |key, value|
+        value == nil
+      end
+    end
+
     def self.find(region, stack_name)
       cf = StackMaster.cloud_formation_driver
       cf_stack = cf.describe_stacks(stack_name: stack_name).stacks.first
@@ -69,7 +75,7 @@ module StackMaster
 
     def self.generate(stack_definition, config)
       parameter_hash = ParameterLoader.load(stack_definition.parameter_files)
-      template_body = TemplateCompiler.compile(stack_definition.template_file_path)
+      template_body = TemplateCompiler.compile(config, stack_definition.template_file_path)
       parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash)
       stack_policy_body = if stack_definition.stack_policy_file_path
                             File.read(stack_definition.stack_policy_file_path)

@@ -1,17 +1,29 @@
 ![StackMaster](/logo.png?raw=true)
 
-StackMaster is a sure-footed way of creating, updating and keeping track of
-Amazon (AWS) CloudFormation stacks.
+StackMaster is a CLI tool to manage CloudFormation stacks, with the following features:
 
-- See the changes you are making to a stack before you apply them
-- Connect stacks
-- Keep secrets secret
-- Customise stacks in different environments
-- Apply descriptive labels to regions
+- Synchronous visibility into stack updates. See exactly what is changing and
+  what will happen before agreeing to apply a change.
+- Dynamic parameter resolvers.
+- Template compiler support for YAML and [SparkleFormation](http://www.sparkleformation.io).
 
-StackMaster provides an easy command line interface to managing CloudFormation
-stacks defined with templates specified in either the
-[SparkleFormation](http://www.sparkleformation.io) DSL or standard JSON format.
+Stack updates can cause a lot of damage if applied blindly. StackMaster helps
+with this by providing the operator with as much information about the proposed
+change as possible before asking for confirmation to continue. That information
+includes:
+
+- Template body and parameter diffs.
+- [Change
+  sets](https://aws.amazon.com/blogs/aws/new-change-sets-for-aws-cloudformation/)
+are displayed for review.
+- Once the diffs & change set have been reviewed, the change can be applied and
+  stack events monitored.
+- Stack events will be displayed until an end state is reached.
+
+Stack parameters can be dynamically resolved at runtime using one of the
+built in parameter resolvers. Parameters can be sourced from GPG encrypted YAML
+files, other stacks outputs, by querying various AWS API's to get resource ARNs
+etc.
 
 ## Installation
 
@@ -93,18 +105,34 @@ stacks:
 ```
 ## Directories
 
-- `templates` - CloudFormation or SparkleFormation templates.
+- `templates` - CloudFormation, SparkleFormation or CfnDsl templates.
 - `polices` - Stack policies.
 - `parameters` - Parameters as YAML files.
 - `secrets` - GPG encrypted secret files.
+- `policies` - Stack policy JSON files.
+
+## Templates
+
+StackMaster supports CloudFormation templates in plain JSON or YAML. Any `.yml` or `.yaml` file will be processed as
+YAML. While any `.json` file will be processed as JSON.
+
+### Ruby DSLs
+By default, any template ending with `.rb` will be processed as a [SparkleFormation](https://github.com/sparkleformation/sparkle_formation)
+template. However, if you want to use [CfnDsl](https://github.com/stevenjack/cfndsl) templates you can add
+the following lines to your `stack_master.yml`.
+
+```
+template_compilers:
+  rb: cfndsl
+```
 
 ## Parameters
 
 Parameters are loaded from multiple YAML files, merged from the following lookup paths:
 
 - parameters/[stack_name].yml
-- parameters/[region]/[stack_name].yml
-- parameters/[region_alias]/[stack_name].yml
+- parameters/[region]/[underscored_stack_name].yml
+- parameters/[region_alias]/[underscored_stack_name].yml
 
 A simple parameter file could look like this:
 
@@ -116,13 +144,11 @@ Keys in parameter files are automatically converted to camel case.
 
 ## Parameter Resolvers
 
-Parameter resolvers enable dynamic resolution of parameter values. A parameter
-using a resolver will be a hash with one key where the key is the name of the
-resolver.
+Parameter values can be sourced dynamically using parameter resolvers.
 
-One benefit of using resolvers instead of hard coding values like VPC ID's and
-resource ARNs is that the same configuration works cross region, even though
-the resolved values will be different.
+One benefit of using parameter resolvers instead of hard coding values like VPC
+ID's and resource ARNs is that the same configuration works cross
+region/account, even though the resolved values will be different.
 
 ### Stack Output
 
@@ -133,6 +159,10 @@ same region. The expected format is `[stack-name]/[OutputName]`.
 vpc_id:
   stack_output: my-vpc-stack/VpcId
 ```
+
+This is the most used parameter resolver because it enables stacks to be split
+up into their separated concerns (VPC, web, database etc) with outputs feeding
+into parameters of dependent stacks.
 
 ### Secret
 
@@ -189,7 +219,7 @@ Looks up an SNS topic by name and returns the ARN.
 
 ```yaml
 notification_topic:
-  sns_topic: PagerDuty
+  sns_topic_name: PagerDuty
 ```
 
 ### Latest AMI by Tag
@@ -202,6 +232,24 @@ web_ami:
 ```
 
 Note that the corresponding array resolver is named `latest_amis_by_tags`
+
+### Latest AMI by attribute
+
+Looks up the latest AMI ID by a given set of attributes. By default it will only return AMIs from the account the stack is created in, but you can specify the account ID or [certain keywords mentioned in the aws documentation](http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ApiReference-cmd-DescribeImages.html)
+
+This selects the latest wily hvm AMI from Ubuntu (using the account id):
+
+```yaml
+bastion_ami:
+  latest_ami:
+    owners: 099720109477
+    filters:
+      name: ubuntu/images/hvm/ubuntu-wily-15.10-amd64-server-*
+```
+
+A set of possible attributes is available in the [AWS documentation](https://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#describe_images-instance_method)
+
+Any value can be an array of possible matches.
 
 ### Custom parameter resolvers
 
@@ -277,6 +325,7 @@ stack_master apply [region-or-alias] [stack-name] # Create or update a stack
 stack_master apply [region-or-alias] [stack-name] [region-or-alias] [stack-name] # Create or update multiple stacks
 stack_master apply [region-or-alias] # Create or update stacks in the given region
 stack_master apply # Create or update all stacks
+stack_master --changed apply # Create or update all stacks that have changed
 stack_master --yes apply [region-or-alias] [stack-name] # Create or update a stack non-interactively (forcing yes)
 stack_master diff [region-or-alias] [stack-name] # Display a stack tempalte and parameter diff
 stack_master delete [region-or-alias] [stack-name] # Delete a stack
@@ -290,11 +339,13 @@ stack_master status # Displays the status of each stack
 
 The apply command does the following:
 
-- Builds the proposed stack json and resolves parameters.
+- Compiles the proposed stack template and resolves parameters.
 - Fetches the current state of the stack from CloudFormation.
 - Displays a diff of the current stack and the proposed stack.
+- Creates a change set and displays the actions that CloudFormation will take
+  to perform the update (if the stack already exists).
 - Asks if the update should continue.
-- If yes, the API call is made to update or create the stack.
+- If yes, the API calls are made to update or create the stack.
 - Stack events are displayed until CloudFormation has finished applying the changes.
 
 Demo:
