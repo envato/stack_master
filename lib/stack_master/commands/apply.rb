@@ -113,7 +113,6 @@ module StackMaster
       def stack_options
         {
           stack_name: stack_name,
-          template_body: proposed_stack.maybe_compressed_template_body,
           parameters: proposed_stack.aws_parameters,
           capabilities: ['CAPABILITY_IAM'],
           notification_arns: proposed_stack.notification_arns,
