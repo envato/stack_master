@@ -16,6 +16,7 @@ module StackMaster
                   :region_defaults,
                   :region_aliases,
                   :template_compilers,
+                  :prepend_region_alias_to_stack_names,
 
     def self.search_up_and_chdir(config_file)
       return config_file unless File.dirname(config_file) == "."
@@ -34,6 +35,7 @@ module StackMaster
       @config = config
       @base_dir = base_dir
       @stack_defaults = config.fetch('stack_defaults', {})
+      @prepend_region_alias_to_stack_names = config.fetch('prepend_region_alias_to_stack_names', false)
       @region_aliases = Utils.underscore_keys_to_hyphen(config.fetch('region_aliases', {}))
       @region_to_aliases = @region_aliases.inject({}) do |hash, (key, value)|
         hash[value] ||= []
@@ -46,10 +48,11 @@ module StackMaster
       load_config
     end
 
-    def filter(region = nil, stack_name = nil)
+    def filter(region = nil, stack_name = nil, region_alias = nil)
       @stacks.select do |s|
         (region.blank? || s.region == region || s.region == region.gsub('_', '-')) &&
-          (stack_name.blank? || s.stack_name == stack_name || s.stack_name == stack_name.gsub('_', '-'))
+          (stack_name.blank? || s.stack_name == stack_name || s.stack_name == stack_name.gsub('_', '-')) &&
+            (region_alias.blank? || s.region_alias == region_alias || s.region_alias == region_alias.gsub('_', '-'))
       end
     end
 
@@ -94,24 +97,32 @@ module StackMaster
 
     def resolve_region_aliases(stacks)
       stacks.inject({}) do |hash, (region, attributes)|
-        hash[unalias_region(region)] = attributes
+        hash.deeper_merge(unalias_region(region) => {region => attributes})
         hash
       end
     end
 
     def load_stacks(stacks)
-      stacks.each do |region, stacks_for_region|
-        region = Utils.underscore_to_hyphen(region)
-        stacks_for_region.each do |stack_name, attributes|
-          stack_name = Utils.underscore_to_hyphen(stack_name)
-          stack_attributes = build_stack_defaults(region).deeper_merge!(attributes).merge(
-            'region' => region,
-            'stack_name' => stack_name,
-            'base_dir' => @base_dir,
-            'additional_parameter_lookup_dirs' => @region_to_aliases[region])
-          @stacks << StackDefinition.new(stack_attributes)
+      stacks.each do |region, region_aliases|
+        region_aliases.each do |region_alias, stacks_for_region|
+          region = Utils.underscore_to_hyphen(region)
+          stacks_for_region.each do |stack_name, attributes|
+            stack_attributes = build_stack_defaults(region).deeper_merge!(attributes).merge(
+              'region' => region,
+              'region_alias' => region_alias,
+              'stack_name' => computed_stack_name(stack_name, region, region_alias),
+              'raw_stack_name' => Utils.underscore_to_hyphen(stack_name),
+              'base_dir' => @base_dir,
+              'additional_parameter_lookup_dirs' => @region_to_aliases[region])
+            @stacks << StackDefinition.new(stack_attributes)
+          end
         end
       end
+    end
+
+    def computed_stack_name(stack_name, region, region_alias)
+      prefix = region_alias if prepend_region_alias_to_stack_names && region != region_alias
+      [prefix, Utils.underscore_to_hyphen(stack_name)].compact.join('-')
     end
 
     def build_stack_defaults(region)

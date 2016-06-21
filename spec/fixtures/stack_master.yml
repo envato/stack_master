@@ -1,3 +1,4 @@
+prepend_region_alias_to_stack_names: true
 region_aliases:
   production: us-east-1
   staging: ap-southeast-2
@@ -29,7 +30,7 @@ stacks:
         - test_arn_2
     myapp_web:
       template: myapp_web.rb
-  ap-southeast-2:
+  staging:
     myapp_vpc:
       template: myapp_vpc.rb
       notification_arns:

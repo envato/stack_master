@@ -185,7 +185,7 @@ module StackMaster
       args.each_slice(2) do |aliased_region, stack_name|
         region = Utils.underscore_to_hyphen(config.unalias_region(aliased_region))
         stack_name = Utils.underscore_to_hyphen(stack_name)
-        stack_definitions = config.filter(region, stack_name)
+        stack_definitions = config.filter(region, stack_name, aliased_region)
         if stack_definitions.empty?
           StackMaster.stdout.puts "Could not find stack definition #{stack_name} in region #{region}"
         end

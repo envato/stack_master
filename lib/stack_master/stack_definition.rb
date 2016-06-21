@@ -4,7 +4,9 @@ module StackMaster
 
     values do
       attribute :region, String
+      attribute :region_alias, String
       attribute :stack_name, String
+      attribute :raw_stack_name, String
       attribute :template, String
       attribute :tags, Hash
       attribute :notification_arns, Array[String]
@@ -19,7 +21,12 @@ module StackMaster
     end
 
     def parameter_files
-      [ default_parameter_file_path, region_parameter_file_path ] + additional_parameter_lookup_file_paths
+      [
+        default_parameter_file_path,
+        alias_parameter_file_path,
+        region_parameter_file_path,
+        additional_parameter_lookup_file_paths
+      ].flatten.uniq
     end
 
     def stack_policy_file_path
@@ -34,6 +41,10 @@ module StackMaster
       end
     end
 
+    def alias_parameter_file_path
+      File.join(base_dir, 'parameters', "#{region_alias}", "#{underscored_stack_name}.yml")
+    end
+
     def region_parameter_file_path
       File.join(base_dir, 'parameters', "#{region}", "#{underscored_stack_name}.yml")
     end
@@ -43,7 +54,7 @@ module StackMaster
     end
 
     def underscored_stack_name
-      stack_name.gsub('-', '_')
+      raw_stack_name.to_s.gsub('-', '_')
     end
   end
 end

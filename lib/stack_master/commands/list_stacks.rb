@@ -11,7 +11,7 @@ module StackMaster
 
       def perform
         tp.set :max_width, self.window_size
-        tp @config.stacks, :region, :stack_name
+        tp @config.stacks, :region, :region_alias ,:raw_stack_name
       end
     end
   end

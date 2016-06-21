@@ -4,7 +4,9 @@ RSpec.describe StackMaster::Config do
   let(:myapp_vpc_definition) {
     StackMaster::StackDefinition.new(
       region: 'us-east-1',
+      region_alias: 'us-east-1',
       stack_name: 'myapp-vpc',
+      raw_stack_name: 'myapp-vpc',
       template: 'myapp_vpc.json',
       tags: { 'application' => 'my-awesome-blog', 'environment' => 'production' },
       notification_arns: ['test_arn', 'test_arn_2'],
@@ -104,9 +106,11 @@ RSpec.describe StackMaster::Config do
   end
 
   it 'deep merges stack attributes' do
-    expect(loaded_config.find_stack('ap-southeast-2', 'myapp-vpc')).to eq(StackMaster::StackDefinition.new(
-      stack_name: 'myapp-vpc',
+    expect(loaded_config.find_stack('ap-southeast-2', 'staging-myapp-vpc')).to eq(StackMaster::StackDefinition.new(
+      stack_name: 'staging-myapp-vpc',
+      raw_stack_name: 'myapp-vpc',
       region: 'ap-southeast-2',
+      region_alias: 'staging',
       tags: {
         'application' => 'my-awesome-blog',
         'environment' => 'staging',
@@ -118,9 +122,12 @@ RSpec.describe StackMaster::Config do
       secret_file: 'staging.yml.gpg',
       additional_parameter_lookup_dirs: ['staging']
     ))
-    expect(loaded_config.find_stack('ap-southeast-2', 'myapp-web')).to eq(StackMaster::StackDefinition.new(
-      stack_name: 'myapp-web',
+
+    expect(loaded_config.find_stack('ap-southeast-2', 'staging-myapp-web')).to eq(StackMaster::StackDefinition.new(
+      stack_name: 'staging-myapp-web',
+      raw_stack_name: 'myapp-web',
       region: 'ap-southeast-2',
+      region_alias: 'staging',
       tags: {
         'application' => 'my-awesome-blog',
         'environment' => 'staging',
