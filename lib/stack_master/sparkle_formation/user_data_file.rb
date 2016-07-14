@@ -17,10 +17,14 @@ class SparkleFormation
         end
       end
 
+      UserDataFileNotFound = Class.new(StandardError)
+
       def _user_data_file(file_name)
-        file_path = File.join(File.dirname(::SparkleFormation.sparkle_path), 'templates', 'user_data', file_name)
+        file_path = File.join(::SparkleFormation.sparkle_path, 'user_data', file_name)
         template = File.read(file_path)
         base64!(join!(SfEruby.new(template).evaluate(self)))
+      rescue Errno::ENOENT => e
+        Kernel.raise UserDataFileNotFound, "Could not find user data file at path: #{file_path}"
       end
       alias_method :user_data_file!, :_user_data_file
     end
