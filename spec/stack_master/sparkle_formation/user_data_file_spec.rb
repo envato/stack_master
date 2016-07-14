@@ -8,7 +8,7 @@ echo $REGION
     EOS
   end
   let(:expected_hash) do
-    {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n\nREGION=", {"Ref"=>"AWS::Region"}, "\n", "echo $REGION\n"]]}}
+    {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n", "\n", "REGION=", {"Ref"=>"AWS::Region"}, "echo $REGION\n"]]}}
   end
 
   before do
@@ -23,7 +23,7 @@ echo $REGION
   end
 
   it 'reads from the user_data dir in templates' do
-    expect(File).to receive(:read).with('/templates_dir/user_data/test.erb')
+    expect(File).to receive(:read).with('/templates_dir/user_data/test.erb').and_return(user_data)
     @attr.user_data_file!('test.erb')
   end
 

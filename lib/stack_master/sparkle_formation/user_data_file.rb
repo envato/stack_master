@@ -22,7 +22,22 @@ class SparkleFormation
       def _user_data_file(file_name)
         file_path = File.join(::SparkleFormation.sparkle_path, 'user_data', file_name)
         template = File.read(file_path)
-        base64!(join!(SfEruby.new(template).evaluate(self)))
+
+        compiled_template = SfEruby.new(template).evaluate(self)
+        formatted_cf_template = compiled_template.flat_map do |lines|
+          if String === lines
+            newlines = []
+            lines.count("\n").times do
+              newlines << "\n"
+            end
+            lines.split("\n").map do |line|
+              "#{line}#{newlines.pop}"
+            end
+          else
+            lines
+          end
+        end
+        base64!(join!(formatted_cf_template))
       rescue Errno::ENOENT => e
         Kernel.raise UserDataFileNotFound, "Could not find user data file at path: #{file_path}"
       end
