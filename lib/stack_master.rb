@@ -12,6 +12,7 @@ require 'dotgpg'
 require 'ruby-progressbar'
 
 require "stack_master/ctrl_c"
+require "stack_master/sparkle_formation/user_data_file"
 require "stack_master/command"
 require "stack_master/version"
 require "stack_master/stack"

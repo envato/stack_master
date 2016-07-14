@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "virtus"
   spec.add_dependency "aws-sdk", "~> 2.2.31"
   spec.add_dependency "diffy"
+  spec.add_dependency "erubis"
   spec.add_dependency "colorize"
   spec.add_dependency "activesupport"
   spec.add_dependency "sparkle_formation", "~> 1.1"
