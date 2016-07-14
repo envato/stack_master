@@ -24,7 +24,15 @@ class SparkleFormation
         template = File.read(file_path)
 
         compiled_template = SfEruby.new(template).evaluate(self)
-        formatted_cf_template = compiled_template.flat_map do |lines|
+        base64!(join!(_format_user_data_for_cf(compiled_template)))
+      rescue Errno::ENOENT => e
+        Kernel.raise UserDataFileNotFound, "Could not find user data file at path: #{file_path}"
+      end
+      alias_method :user_data_file!, :_user_data_file
+
+      # To split each user data line to it's own string in the final CF JSON array
+      def _format_user_data_for_cf(compiled_template)
+        compiled_template.flat_map do |lines|
           if String === lines
             newlines = []
             lines.count("\n").times do
@@ -37,11 +45,7 @@ class SparkleFormation
             lines
           end
         end
-        base64!(join!(formatted_cf_template))
-      rescue Errno::ENOENT => e
-        Kernel.raise UserDataFileNotFound, "Could not find user data file at path: #{file_path}"
       end
-      alias_method :user_data_file!, :_user_data_file
     end
   end
 end
