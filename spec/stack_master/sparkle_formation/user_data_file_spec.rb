@@ -35,6 +35,24 @@ echo $REGION
     it 'compiles the file and returns a joined version' do
       expect(@attr.user_data_file!('test.erb')).to eq expected_hash
     end
+
+    context 'with custom vars' do
+      let(:user_data) do
+        <<-EOS
+#!/bin/bash
+<%= my_custom_var %>
+        EOS
+      end
+      let(:expected_hash) do
+        {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n", "test_var", "\n"]]}}
+      end
+
+
+      it 'compiles the file and returns a joined version' do
+        expect(@attr.user_data_file!('test.erb', my_custom_var: :test_var)).to eq expected_hash
+        expect(@attr.user_data_file!('test.erb', my_custom_var: 'test_var')).to eq expected_hash
+      end
+    end
   end
 
   context "when the file doesn't exist" do
