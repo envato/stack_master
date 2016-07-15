@@ -49,7 +49,6 @@ echo $REGION
         {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n", "test_var", "\n", "yes", "\n"]]}}
       end
 
-
       it 'compiles the file and returns a joined version' do
         expect(@attr.user_data_file!('test.erb', my_custom_var: :test_var)).to eq expected_hash
         expect(@attr.user_data_file!('test.erb', my_custom_var: 'test_var')).to eq expected_hash
