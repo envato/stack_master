@@ -6,10 +6,11 @@ RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#user_data_file!' do
 REGION=<%= region! %>
 echo $REGION
 <%= ref!(:test) %> <%= ref!(:test_2) %>
+<%= has_var?(:test) ? "echo 'yes'" : "echo 'no'" %>
     EOS
   end
   let(:expected_hash) do
-    {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n", "\n", "REGION=", {"Ref"=>"AWS::Region"}, "\n", "echo $REGION\n", {"Ref"=>"Test"}, " ", {"Ref"=>"Test2"}, "\n"]]}}
+    {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n", "\n", "REGION=", {"Ref"=>"AWS::Region"}, "\n", "echo $REGION\n", {"Ref"=>"Test"}, " ", {"Ref"=>"Test2"}, "\n", "echo 'no'", "\n"]]}}
   end
 
   before do
@@ -41,10 +42,11 @@ echo $REGION
         <<-EOS
 #!/bin/bash
 <%= my_custom_var %>
+<%= has_var?(:my_custom_var) ? "yes" : "no" %>
         EOS
       end
       let(:expected_hash) do
-        {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n", "test_var", "\n"]]}}
+        {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n", "test_var", "\n", "yes", "\n"]]}}
       end
 
 

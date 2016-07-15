@@ -29,11 +29,16 @@ class SparkleFormation
                 value
               end
             end
-          end.new
+          end.new(vars)
         end
 
-        def initialize
+        def initialize(vars)
           self._camel_keys = true
+          @vars = vars
+        end
+
+        def has_var?(var_key)
+          @vars.include?(var_key)
         end
       end
 
