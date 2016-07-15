@@ -5,10 +5,11 @@ RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#user_data_file!' do
 
 REGION=<%= region! %>
 echo $REGION
+<%= ref!(:test) %> <%= ref!(:test_2) %>
     EOS
   end
   let(:expected_hash) do
-    {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n", "\n", "REGION=", {"Ref"=>"AWS::Region"}, "echo $REGION\n"]]}}
+    {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n", "\n", "REGION=", {"Ref"=>"AWS::Region"}, "\n", "echo $REGION\n", {"Ref"=>"Test"}, " ", {"Ref"=>"Test2"}, "\n"]]}}
   end
 
   before do
@@ -19,7 +20,6 @@ echo $REGION
     klass.include(SparkleFormation::Utils::TypeCheckers)
     @attr = klass.new
     @attr._camel_keys = true
-    @sfn = SparkleFormation.new(:test, :provider => :aws, :sparkle_path => 'spec/fixtures/test')
   end
 
   it 'reads from the user_data dir in templates' do
