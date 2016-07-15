@@ -22,12 +22,17 @@ class SparkleFormation
         include SparkleAttribute::Aws
         include Utils::TypeCheckers
 
-        def initialize(vars)
-          vars.each do |key, value|
-            self.class.send(:define_method, key) do
-              value
+        def self.build(vars)
+          ::Class.new(self).tap do |klass|
+            vars.each do |key, value|
+              klass.send(:define_method, key) do
+                value
+              end
             end
-          end
+          end.new
+        end
+
+        def initialize
           self._camel_keys = true
         end
       end
@@ -65,12 +70,12 @@ class SparkleFormation
         end
       end
 
-      UserDataFileNotFound = Class.new(StandardError)
+      UserDataFileNotFound = ::Class.new(StandardError)
 
       def _user_data_file(file_name, vars = {})
         file_path = File.join(::SparkleFormation.sparkle_path, 'user_data', file_name)
         template = File.read(file_path)
-        template_context = TemplateContext.new(vars)
+        template_context = TemplateContext.build(vars)
         compiled_template = SfEruby.new(template).evaluate(template_context)
         base64!(join!(CloudFormationLineFormatter.format(compiled_template)))
       rescue Errno::ENOENT => e
