@@ -80,11 +80,11 @@ module StackMaster
       def _user_data_file(file_name, vars = {})
         file_path = File.join(::SparkleFormation.sparkle_path, 'user_data', file_name)
         template = File.read(file_path)
-        template_context = StackMaster::SparkleFormation::TemplateContext.build(vars)
-        compiled_template = StackMaster::SparkleFormation::SfEruby.new(template).evaluate(template_context)
-        base64!(join!(StackMaster::SparkleFormation::CloudFormationLineFormatter.format(compiled_template)))
+        template_context = TemplateContext.build(vars)
+        compiled_template = SfEruby.new(template).evaluate(template_context)
+        base64!(join!(CloudFormationLineFormatter.format(compiled_template)))
       rescue Errno::ENOENT => e
-        Kernel.raise StackMaster::SparkleFormation::UserDataFileNotFound, "Could not find user data file at path: #{file_path}"
+        Kernel.raise UserDataFileNotFound, "Could not find user data file at path: #{file_path}"
       end
       alias_method :user_data_file!, :_user_data_file
     end
