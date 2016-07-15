@@ -64,7 +64,7 @@ echo $REGION
     it 'raises a specific error' do
       expect {
         @attr.user_data_file!('test.erb')
-      }.to raise_error(SparkleFormation::SparkleAttribute::Aws::UserDataFileNotFound)
+      }.to raise_error(StackMaster::SparkleFormation::UserDataFileNotFound)
     end
   end
 end
