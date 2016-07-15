@@ -32,6 +32,39 @@ class SparkleFormation
         end
       end
 
+      # Splits up long strings with multiple lines in them to multiple strings
+      # in the CF array. Makes the compiled template and diffs more readable.
+      class CloudFormationLineFormatter
+        def self.format(template)
+          new(template).format
+        end
+
+        def initialize(template)
+          @template = template
+        end
+
+        def format
+          @template.flat_map do |lines|
+            lines = lines.to_s if Symbol === lines
+            if String === lines
+              newlines = []
+              lines.count("\n").times do
+                newlines << "\n"
+              end
+              newlines = lines.split("\n").map do |line|
+                "#{line}#{newlines.pop}"
+              end
+              if lines.starts_with?("\n")
+                newlines.insert(0, "\n")
+              end
+              newlines
+            else
+              lines
+            end
+          end
+        end
+      end
+
       UserDataFileNotFound = Class.new(StandardError)
 
       def _user_data_file(file_name, vars = {})
@@ -39,33 +72,11 @@ class SparkleFormation
         template = File.read(file_path)
         template_context = TemplateContext.new(vars)
         compiled_template = SfEruby.new(template).evaluate(template_context)
-        base64!(join!(_format_user_data_for_cf(compiled_template)))
+        base64!(join!(CloudFormationLineFormatter.format(compiled_template)))
       rescue Errno::ENOENT => e
         Kernel.raise UserDataFileNotFound, "Could not find user data file at path: #{file_path}"
       end
       alias_method :user_data_file!, :_user_data_file
-
-      # To split each user data line to it's own string in the final CF JSON array
-      def _format_user_data_for_cf(compiled_template)
-        compiled_template.flat_map do |lines|
-          lines = lines.to_s if Symbol === lines
-          if String === lines
-            newlines = []
-            lines.count("\n").times do
-              newlines << "\n"
-            end
-            newlines = lines.split("\n").map do |line|
-              "#{line}#{newlines.pop}"
-            end
-            if lines.starts_with?("\n")
-              newlines.insert(0, "\n")
-            end
-            newlines
-          else
-            lines
-          end
-        end
-      end
     end
   end
 end
