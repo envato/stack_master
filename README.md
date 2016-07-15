@@ -307,6 +307,23 @@ my_parameter:
     - value2
 ```
 
+## User Data Files in SparkleFormation templates
+
+An extension to SparkleFormation is the `user_data_file!` method, which evaluates templates in `templates/user_data/[file_name]`. Most of the usual SparkleFormation methods are available in user data templates. Example:
+
+```
+# templates/user_data/app.erb
+REGION=<%= region! %>
+ROLE=<%= role %>
+```
+
+And used like this in SparkleFormation templates:
+
+```
+# templates/app.rb
+  user_data user_data_file!('app.erb', role: :worker)
+```
+
 ## Commands
 
 ```bash
