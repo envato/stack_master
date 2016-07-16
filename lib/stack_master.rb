@@ -1,6 +1,5 @@
 require "commander"
 require "yaml"
-require "virtus"
 require "aws-sdk"
 require "colorize"
 require 'active_support/core_ext/string'
@@ -8,6 +7,7 @@ require 'active_support/core_ext/string'
 module StackMaster
   extend self
 
+  autoload :Initializable, 'stack_master/utils/initializable'
   autoload :ChangeSet, 'stack_master/change_set'
   autoload :CLI, 'stack_master/cli'
   autoload :CtrlC, 'stack_master/ctrl_c'
