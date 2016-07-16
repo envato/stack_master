@@ -1,3 +1,5 @@
+require 'table_print'
+
 module StackMaster
   module Commands
     class ListStacks

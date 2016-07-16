@@ -1,5 +1,5 @@
 module StackMaster
-  class StackEvents
+  module StackEvents
     class Streamer
       def self.stream(*args, &block)
         new(*args, &block).stream

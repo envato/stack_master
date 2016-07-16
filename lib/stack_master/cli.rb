@@ -1,4 +1,5 @@
 require 'commander'
+require 'table_print'
 
 module StackMaster
   class CLI
