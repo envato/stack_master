@@ -35,7 +35,8 @@ module StackMaster
           s3_md5 = current_objects[object_key] ? current_objects[object_key].etag.gsub("\"", '') : nil
 
           next if compiled_template_md5 == s3_md5
-          StackMaster.stdout.puts "Uploading #{file} to bucket #{bucket}/#{object_key}..."
+          s3_uri = "s3://#{bucket}/#{object_key}"
+          StackMaster.stdout.print "- #{File.basename(path)} => #{s3_uri} "
 
           s3.put_object(
             bucket: bucket,
@@ -43,6 +44,7 @@ module StackMaster
             body: body,
             metadata: { md5: compiled_template_md5 }
           )
+          StackMaster.stdout.puts "done."
         end
       end
 
