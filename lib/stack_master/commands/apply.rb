@@ -95,15 +95,17 @@ module StackMaster
       end
 
       def template_value
-        return proposed_stack.maybe_compressed_template_body unless use_s3?
-        s3.url(bucket: @s3_config['bucket'], prefix: @s3_config['prefix'], region: @s3_config['region'], template: @stack_definition.template)
+        if use_s3?
+          s3.url(bucket: @s3_config['bucket'], prefix: @s3_config['prefix'], region: @s3_config['region'], template: @stack_definition.s3_template_file_name)
+        else
+          proposed_stack.maybe_compressed_template_body
+        end
       end
 
       def files_to_upload
         return {} unless use_s3?
         @stack_definition.s3_files.tap do |files|
-          s3_template_name = Utils.change_extension(@stack_definition.template, 'json')
-          files[s3_template_name] = {
+          files[@stack_definition.s3_template_file_name] = {
             path: @stack_definition.template_file_path,
             body: proposed_stack.maybe_compressed_template_body
           }

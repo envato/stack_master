@@ -1,5 +1,6 @@
 RSpec.describe StackMaster::Commands::Apply do
   let(:cf) { instance_double(Aws::CloudFormation::Client) }
+  let(:s3) { instance_double(Aws::S3::Client) }
   let(:region) { 'us-east-1' }
   let(:stack_name) { 'myapp-vpc' }
   let(:config) { double(find_stack: stack_definition) }
@@ -15,6 +16,7 @@ RSpec.describe StackMaster::Commands::Apply do
     allow(StackMaster::Stack).to receive(:generate).with(stack_definition, config).and_return(proposed_stack)
     allow(config).to receive(:stack_defaults).and_return({})
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
+    allow(Aws::S3::Client).to receive(:new).and_return(s3)
     allow(cf).to receive(:create_stack)
     allow(StackMaster::StackDiffer).to receive(:new).with(proposed_stack, stack).and_return double.as_null_object
     allow(StackMaster::StackEvents::Streamer).to receive(:stream)
@@ -53,6 +55,29 @@ RSpec.describe StackMaster::Commands::Apply do
       Timecop.freeze(Time.local(1990)) do
         apply
         expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
+      end
+    end
+
+    context 'when using s3' do
+      before do
+        stack_definition.s3 = {
+          'bucket' => 'my-bucket',
+          'prefix' => 'my-prefix',
+          'region' => 'us-east-1',
+        }
+        stack_definition.template = 'my-template.rb'
+        allow(s3).to receive(:list_objects).and_return([])
+        allow(s3).to receive(:put_object)
+      end
+
+      it 'uploads to the correct URL' do
+        apply
+        expect(s3).to have_received(:put_object).with(
+          bucket: 'my-bucket',
+          key: 'my-prefix/my-template.json',
+          body: template_body,
+          metadata: { md5: Digest::MD5.hexdigest(template_body).to_s }
+        )
       end
     end
 

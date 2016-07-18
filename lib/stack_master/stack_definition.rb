@@ -55,6 +55,10 @@ module StackMaster
       end
     end
 
+    def s3_template_file_name
+      Utils.change_extension(template, 'json')
+    end
+
     def parameter_files
       [ default_parameter_file_path, region_parameter_file_path, additional_parameter_lookup_file_paths ].flatten.compact
     end
