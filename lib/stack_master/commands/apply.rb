@@ -91,8 +91,7 @@ module StackMaster
       end
 
       def template_method
-        return :template_body unless use_s3?
-        :template_url
+        use_s3? ? :template_url : :template_body
       end
 
       def template_value
