@@ -1,3 +1,5 @@
+require 'dotgpg'
+
 module StackMaster
   module ParameterResolvers
     class Secret < Resolver

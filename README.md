@@ -64,21 +64,35 @@ stacks:
   production:
     myapp-vpc:
       template: myapp_vpc.rb
+      tags:
+        purpose: front-end
     myapp-db:
       template: myapp_db.rb
       stack_policy_file: db_stack_policy.json
+      tags:
+        purpose: back-end
     myapp-web:
       template: myapp_web.rb
+      tags:
+        purpose: front-end
   staging:
     myapp-vpc:
       template: myapp_vpc.rb
+      tags:
+        purpose: front-end
     myapp-db:
       template: myapp_db.rb
+      tags:
+        purpose: back-end
     myapp-web:
       template: myapp_web.rb
+      tags:
+        purpose: front-end
   eu-central-1:
     myapp-vpc:
       template: myapp_vpc.rb
+      tags:
+        purpose: vpc
 ```
 
 ## S3
@@ -313,6 +327,23 @@ my_parameter:
   my_custom_array_resolver:
     - value1
     - value2
+```
+
+## User Data Files in SparkleFormation templates
+
+An extension to SparkleFormation is the `user_data_file!` method, which evaluates templates in `templates/user_data/[file_name]`. Most of the usual SparkleFormation methods are available in user data templates. Example:
+
+```
+# templates/user_data/app.erb
+REGION=<%= region! %>
+ROLE=<%= role %>
+```
+
+And used like this in SparkleFormation templates:
+
+```
+# templates/app.rb
+  user_data user_data_file!('app.erb', role: :worker)
 ```
 
 ## Commands

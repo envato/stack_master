@@ -1,19 +1,37 @@
 module StackMaster
   class StackDefinition
-    include Virtus.value_object(strict: true, required: false)
+    attr_accessor :region,
+                  :stack_name,
+                  :template,
+                  :tags,
+                  :notification_arns,
+                  :base_dir,
+                  :secret_file,
+                  :stack_policy_file,
+                  :additional_parameter_lookup_dirs,
+                  :s3
 
-    values do
-      attribute :region, String
-      attribute :stack_name, String
-      attribute :template, String
-      attribute :tags, Hash
-      attribute :s3, Hash
-      attribute :notification_arns, Array[String]
-      attribute :base_dir, String
-      attribute :secret_file, String
-      attribute :files, Array[String]
-      attribute :stack_policy_file, String
-      attribute :additional_parameter_lookup_dirs, Array[String]
+    include Utils::Initializable
+
+    def initialize(attributes = {})
+      @additional_parameter_lookup_dirs = []
+      @notification_arns = []
+      @s3 = {}
+      super
+    end
+
+    def ==(other)
+      self.class === other &&
+        @region == other.region &&
+        @stack_name == other.stack_name &&
+        @template == other.template &&
+        @tags == other.tags &&
+        @notification_arns == other.notification_arns &&
+        @base_dir == other.base_dir &&
+        @secret_file == other.secret_file &&
+        @stack_policy_file == other.stack_policy_file &&
+        @additional_parameter_lookup_dirs == other.additional_parameter_lookup_dirs &&
+        @s3 == other.s3
     end
 
     def template_dir
@@ -25,7 +43,7 @@ module StackMaster
     end
 
     def parameter_files
-      [ default_parameter_file_path, region_parameter_file_path ] + additional_parameter_lookup_file_paths
+      [ default_parameter_file_path, region_parameter_file_path, additional_parameter_lookup_file_paths ].flatten.compact
     end
 
     def stack_policy_file_path
@@ -39,6 +57,7 @@ module StackMaster
     private
 
     def additional_parameter_lookup_file_paths
+      return unless additional_parameter_lookup_dirs
       additional_parameter_lookup_dirs.map do |a|
         File.join(base_dir, 'parameters', a, "#{underscored_stack_name}.yml")
       end

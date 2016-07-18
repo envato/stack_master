@@ -3,19 +3,19 @@ module StackMaster
     MAX_TEMPLATE_SIZE = 51200
     MAX_S3_TEMPLATE_SIZE = 460800
 
-    include Virtus.model
+    attr_reader :stack_name,
+                :region,
+                :stack_id,
+                :stack_status,
+                :parameters,
+                :template_body,
+                :notification_arns,
+                :outputs,
+                :stack_policy_body,
+                :tags,
+                :files
 
-    attribute :stack_name, String
-    attribute :region, String
-    attribute :stack_id, String
-    attribute :stack_status, String
-    attribute :parameters, Hash
-    attribute :template_body, String
-    attribute :notification_arns, Array[String]
-    attribute :outputs, Array
-    attribute :stack_policy_body, String
-    attribute :tags, Hash
-    attribute :files, Array[String]
+    include Utils::Initializable
 
     def template_hash
       if template_body

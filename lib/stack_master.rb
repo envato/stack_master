@@ -1,68 +1,80 @@
 require "commander"
 require "yaml"
-require "virtus"
 require "aws-sdk"
-require "diffy"
 require "colorize"
-require "table_print"
 require 'active_support/core_ext/string'
-require "erb"
-require 'sparkle_formation'
-require 'dotgpg'
-require 'ruby-progressbar'
-
-require "stack_master/ctrl_c"
-require "stack_master/command"
-require "stack_master/version"
-require "stack_master/stack"
-require "stack_master/prompter"
-require "stack_master/aws_driver/cloud_formation"
-require "stack_master/aws_driver/s3"
-require "stack_master/test_driver/cloud_formation"
-require "stack_master/stack_events/fetcher"
-require "stack_master/stack_events/presenter"
-require "stack_master/stack_events/streamer"
-require "stack_master/stack_states"
-require "stack_master/stack_status"
-require "stack_master/sns_topic_finder"
-require "stack_master/security_group_finder"
-require "stack_master/parameter_loader"
-require "stack_master/parameter_resolver"
-require "stack_master/resolver_array"
-require "stack_master/parameter_resolvers/ami_finder"
-require "stack_master/parameter_resolvers/stack_output"
-require "stack_master/parameter_resolvers/secret"
-require "stack_master/parameter_resolvers/sns_topic_name"
-require "stack_master/parameter_resolvers/security_group"
-require "stack_master/parameter_resolvers/latest_ami_by_tags"
-require "stack_master/parameter_resolvers/latest_ami"
-require "stack_master/utils"
-require "stack_master/config"
-require "stack_master/paged_response_accumulator"
-require "stack_master/stack_definition"
-require "stack_master/template_compiler"
-require "stack_master/template_compilers/sparkle_formation"
-require "stack_master/template_compilers/json"
-require "stack_master/template_compilers/yaml"
-require "stack_master/template_compilers/cfndsl"
-require "stack_master/commands/terminal_helper"
-require "stack_master/commands/apply"
-require "stack_master/change_set"
-require "stack_master/commands/events"
-require "stack_master/commands/outputs"
-require "stack_master/commands/init"
-require "stack_master/commands/diff"
-require "stack_master/commands/list_stacks"
-require "stack_master/commands/validate"
-require "stack_master/commands/resources"
-require "stack_master/commands/delete"
-require "stack_master/commands/status"
-require "stack_master/stack_differ"
-require "stack_master/validator"
-require "stack_master/cli"
 
 module StackMaster
   extend self
+
+  autoload :Initializable, 'stack_master/utils/initializable'
+  autoload :ChangeSet, 'stack_master/change_set'
+  autoload :CLI, 'stack_master/cli'
+  autoload :CtrlC, 'stack_master/ctrl_c'
+  autoload :Command, 'stack_master/command'
+  autoload :Version, 'stack_master/version'
+  autoload :Stack, 'stack_master/stack'
+  autoload :Prompter, 'stack_master/prompter'
+  autoload :StackStates, 'stack_master/stack_states'
+  autoload :StackStatus, 'stack_master/stack_status'
+  autoload :SnsTopicFinder, 'stack_master/sns_topic_finder'
+  autoload :SecurityGroupFinder, 'stack_master/security_group_finder'
+  autoload :ParameterLoader, 'stack_master/parameter_loader'
+  autoload :ParameterResolver, 'stack_master/parameter_resolver'
+  autoload :ResolverArray, 'stack_master/resolver_array'
+  autoload :Resolver, 'stack_master/resolver_array'
+  autoload :Utils, 'stack_master/utils'
+  autoload :Config, 'stack_master/config'
+  autoload :PagedResponseAccumulator, 'stack_master/paged_response_accumulator'
+  autoload :StackDefinition, 'stack_master/stack_definition'
+  autoload :TemplateCompiler, 'stack_master/template_compiler'
+
+  autoload :StackDiffer, 'stack_master/stack_differ'
+  autoload :Validator, 'stack_master/validator'
+
+  require 'stack_master/template_compilers/sparkle_formation'
+  require 'stack_master/template_compilers/json'
+  require 'stack_master/template_compilers/yaml'
+  require 'stack_master/template_compilers/cfndsl'
+
+  module Commands
+    autoload :TerminalHelper, 'stack_master/commands/terminal_helper'
+    autoload :Apply, 'stack_master/commands/apply'
+    autoload :Events, 'stack_master/commands/events'
+    autoload :Outputs, 'stack_master/commands/outputs'
+    autoload :Init, 'stack_master/commands/init'
+    autoload :Diff, 'stack_master/commands/diff'
+    autoload :ListStacks, 'stack_master/commands/list_stacks'
+    autoload :Validate, 'stack_master/commands/validate'
+    autoload :Resources, 'stack_master/commands/resources'
+    autoload :Delete, 'stack_master/commands/delete'
+    autoload :Status, 'stack_master/commands/status'
+  end
+
+  module ParameterResolvers
+    autoload :AmiFinder, 'stack_master/parameter_resolvers/ami_finder'
+    autoload :StackOutput, 'stack_master/parameter_resolvers/stack_output'
+    autoload :Secret, 'stack_master/parameter_resolvers/secret'
+    autoload :SnsTopicName, 'stack_master/parameter_resolvers/sns_topic_name'
+    autoload :SecurityGroup, 'stack_master/parameter_resolvers/security_group'
+    autoload :LatestAmiByTags, 'stack_master/parameter_resolvers/latest_ami_by_tags'
+    autoload :LatestAmi, 'stack_master/parameter_resolvers/latest_ami'
+  end
+
+  module AwsDriver
+    autoload :CloudFormation, 'stack_master/aws_driver/cloud_formation'
+    autoload :S3, 'stack_master/aws_driver/s3'
+  end
+
+  module TestDriver
+    autoload :CloudFormation, 'stack_master/test_driver/cloud_formation'
+  end
+
+  module StackEvents
+    autoload :Fetcher, 'stack_master/stack_events/fetcher'
+    autoload :Presenter, 'stack_master/stack_events/presenter'
+    autoload :Streamer, 'stack_master/stack_events/streamer'
+  end
 
   def interactive?
     !non_interactive?

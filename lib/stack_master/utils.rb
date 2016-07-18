@@ -1,5 +1,17 @@
 module StackMaster
   module Utils
+    module Initializable
+      def initialize(attributes = {})
+        self.attributes = attributes
+      end
+
+      def attributes=(attributes)
+        attributes.each do |k, v|
+          instance_variable_set("@#{k}", v)
+        end
+      end
+    end
+
     extend self
 
     def hash_to_aws_parameters(params)
