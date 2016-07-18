@@ -48,7 +48,7 @@ module StackMaster
         end
       end
 
-      def url(bucket: bucket, prefix: prefix, region: region, template: template)
+      def url(bucket:, prefix:, region:, template:)
         if region == 'us-east-1'
           ["https://s3.amazonaws.com", bucket, prefix, template].compact.join('/')
         else
