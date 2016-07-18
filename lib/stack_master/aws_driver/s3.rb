@@ -21,8 +21,10 @@ module StackMaster
           prefix: prefix,
           bucket: bucket
         ).map(&:contents).flatten.inject({}){|h,obj|
-          h.merge(obj.object_key => obj)
+          h.merge(obj.key => obj)
         }
+
+        StackMaster.stdout.puts "Uploading files to S3:"
 
         files.each do |template, file|
           body = file.fetch(:body)
