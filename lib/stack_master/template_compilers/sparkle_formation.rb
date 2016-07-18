@@ -5,7 +5,7 @@ module StackMaster::TemplateCompilers
       require 'stack_master/sparkle_formation/template_file'
     end
 
-    def self.compile(template_file_path)
+    def self.compile(template_file_path, compiler_options={})
       ::SparkleFormation.sparkle_path = File.dirname(template_file_path)
       JSON.pretty_generate(::SparkleFormation.compile(template_file_path))
     end
