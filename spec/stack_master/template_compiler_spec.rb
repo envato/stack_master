@@ -4,6 +4,7 @@ RSpec.describe StackMaster::TemplateCompiler do
     let(:template_file_path) { '/base_dir/templates/template.fab' }
 
     class TestTemplateCompiler
+      def self.require_dependencies; end
       def self.compile(template_file_path); end
     end
 

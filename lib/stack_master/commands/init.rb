@@ -1,3 +1,5 @@
+require "erb"
+
 module StackMaster
   module Commands
     class Init

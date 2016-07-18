@@ -1,5 +1,5 @@
 module StackMaster
-  class StackEvents
+  module StackEvents
     class Presenter
       def self.print_event(io, event)
         new(io).print_event(event)

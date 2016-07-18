@@ -3,6 +3,10 @@ module StackMaster::TemplateCompilers
     MAX_TEMPLATE_SIZE = 51200
     private_constant :MAX_TEMPLATE_SIZE
 
+    def self.require_dependencies
+      require 'json'
+    end
+
     def self.compile(template_file_path)
       template_body = File.read(template_file_path)
       if template_body.size > MAX_TEMPLATE_SIZE

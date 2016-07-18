@@ -1,3 +1,6 @@
+require 'table_print'
+require 'ruby-progressbar'
+
 module StackMaster
   module Commands
     class Status

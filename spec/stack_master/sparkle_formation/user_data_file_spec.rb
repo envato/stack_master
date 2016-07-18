@@ -1,3 +1,5 @@
+require 'stack_master/sparkle_formation/user_data_file'
+
 RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#user_data_file!' do
   let(:user_data) do
     <<-EOS

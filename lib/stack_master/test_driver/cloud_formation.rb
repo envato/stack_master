@@ -1,48 +1,62 @@
 module StackMaster
   module TestDriver
     class Stack
-      include Virtus.model
-      attribute :stack_id, String
-      attribute :stack_name, String
-      attribute :description, String
-      attribute :parameters, Array[OpenStruct]
-      attribute :creation_time, String
-      attribute :last_update_time, String
-      attribute :stack_status, String
-      attribute :stack_status_reason, String
-      attribute :disable_rollback, String
-      attribute :notification_arns, Array
-      attribute :timeout_in_minutes, Integer
-      attribute :capabilities, Array
-      attribute :outputs, Array[OpenStruct]
-      attribute :tags, Array[OpenStruct]
+      attr_reader :stack_id,
+                  :stack_name,
+                  :description,
+                  :parameters,
+                  :creation_time,
+                  :last_update_time,
+                  :stack_status,
+                  :stack_status_reason,
+                  :disable_rollback,
+                  :notification_arns,
+                  :timeout_in_minutes,
+                  :capabilities,
+                  :outputs,
+                  :tags
+
+      include Utils::Initializable
+
+      def parameters
+        @parameters.map do |hash|
+          OpenStruct.new(parameter_key: hash[:parameter_key],
+                         parameter_value: hash[:parameter_value])
+        end
+      end
     end
 
     class StackEvent
-      include Virtus.model
-      attribute :stack_id, String
-      attribute :event_id, String
-      attribute :stack_name, String
-      attribute :logical_resource_id, String
-      attribute :physical_resource_id, String
-      attribute :resource_type, String
-      attribute :timestamp, Time
-      attribute :resource_status, String
-      attribute :resource_status_reason, String
-      attribute :resource_properties, String
+      attr_reader :stack_id,
+                  :event_id,
+                  :stack_name,
+                  :logical_resource_id,
+                  :physical_resource_id,
+                  :resource_type,
+                  :timestamp,
+                  :resource_status,
+                  :resource_status_reason,
+                  :resource_properties
+
+      include Utils::Initializable
+
+      def timestamp
+        Time.parse(@timestamp) if @timestamp
+      end
     end
 
     class StackResource
-      include Virtus.model
-      attribute :stack_name, String
-      attribute :stack_id, String
-      attribute :logical_resource_id, String
-      attribute :physical_resource_id, String
-      attribute :resource_type, String
-      attribute :timestamp, Time
-      attribute :resource_status, String
-      attribute :resource_status_reason, String
-      attribute :description, String
+      attr_reader :stack_name,
+                  :stack_id,
+                  :logical_resource_id,
+                  :physical_resource_id,
+                  :resource_type,
+                  :timestamp,
+                  :resource_status,
+                  :resource_status_reason,
+                  :description
+
+      include Utils::Initializable
     end
 
     class CloudFormation

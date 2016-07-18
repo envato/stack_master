@@ -1,3 +1,5 @@
+require "diffy"
+
 module StackMaster
   class StackDiffer
     def initialize(proposed_stack, current_stack)

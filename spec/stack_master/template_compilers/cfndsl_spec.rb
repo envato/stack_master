@@ -1,4 +1,6 @@
 RSpec.describe StackMaster::TemplateCompilers::Cfndsl do
+  before(:all) { described_class.require_dependencies }
+
   describe '.compile' do
     def compile
       described_class.compile(template_file_path)

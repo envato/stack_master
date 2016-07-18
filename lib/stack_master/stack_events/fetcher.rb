@@ -1,5 +1,5 @@
 module StackMaster
-  class StackEvents
+  module StackEvents
     class Fetcher
       def self.fetch(*args)
         new(*args).fetch
