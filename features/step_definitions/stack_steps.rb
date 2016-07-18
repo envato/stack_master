@@ -64,3 +64,8 @@ end
 Given(/^I stub CloudFormation validate calls to fail validation with message "([^"]*)"$/) do |message|
   allow(StackMaster.cloud_formation_driver).to receive(:validate_template).and_raise(Aws::CloudFormation::Errors::ValidationError.new('', message))
 end
+
+When(/^an S3 file in bucket "([^"]*)" with key "([^"]*)" exists with content:$/) do |bucket, key, body|
+  file = StackMaster.s3_driver.find_file(bucket: bucket, object_key: key)
+  expect(file).to eq body
+end

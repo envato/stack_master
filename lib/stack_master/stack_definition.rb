@@ -9,7 +9,8 @@ module StackMaster
                   :secret_file,
                   :stack_policy_file,
                   :additional_parameter_lookup_dirs,
-                  :s3
+                  :s3,
+                  :files
 
     include Utils::Initializable
 
@@ -17,6 +18,7 @@ module StackMaster
       @additional_parameter_lookup_dirs = []
       @notification_arns = []
       @s3 = {}
+      @files = []
       super
     end
 
@@ -40,6 +42,17 @@ module StackMaster
 
     def template_file_path
       File.join(template_dir, template)
+    end
+
+    def s3_files
+      files.inject({}) do |hash, file|
+        path = File.join(template_dir, file)
+        hash[file] = {
+          path: path,
+          body: File.read(path)
+        }
+        hash
+      end
     end
 
     def parameter_files

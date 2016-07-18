@@ -101,12 +101,13 @@ module StackMaster
 
       def files_to_upload
         return {} unless use_s3?
-        {
-          @stack_definition.template => {
-            :path => @stack_definition.template_file_path,
-            :body => proposed_stack.maybe_compressed_template_body
+        @stack_definition.s3_files.tap do |files|
+          s3_template_name = Utils.change_extension(@stack_definition.template, 'json')
+          files[s3_template_name] = {
+            path: @stack_definition.template_file_path,
+            body: proposed_stack.maybe_compressed_template_body
           }
-        }
+        end
       end
 
       def stack_options
@@ -129,8 +130,6 @@ module StackMaster
           files: files_to_upload
         }
       end
-
-
 
       def tail_stack_events
         StackEvents::Streamer.stream(stack_name, region, io: StackMaster.stdout, from: @from_time)

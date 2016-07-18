@@ -14,6 +14,13 @@ module StackMaster
 
     extend self
 
+    def change_extension(file_name, extension)
+      [
+        File.basename(file_name, '.*'),
+        extension
+      ].join('.')
+    end
+
     def hash_to_aws_parameters(params)
       params.inject([]) do |params, (key, value)|
         params << { parameter_key: key, parameter_value: value }
