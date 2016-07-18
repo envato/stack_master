@@ -21,24 +21,23 @@ module StackMaster
           prefix: prefix,
           bucket: bucket
         ).map(&:contents).flatten.inject({}){|h,obj|
-          h.merge(obj.key => obj)
+          h.merge(obj.object_key => obj)
         }
 
         files.each do |template, file|
-          body = file[:body]
-          file = file[:path]
-          key = template.dup
-          key.prepend("#{prefix}/") if prefix
-          raw_template_md5 = Digest::MD5.file(file).to_s
+          body = file.fetch(:body)
+          path = file.fetch(:path)
+          object_key = template.dup
+          object_key.prepend("#{prefix}/") if prefix
           compiled_template_md5 = Digest::MD5.hexdigest(body).to_s
-          s3_md5 = current_objects[key] ? current_objects[key].etag.gsub("\"", '') : nil
+          s3_md5 = current_objects[object_key] ? current_objects[object_key].etag.gsub("\"", '') : nil
 
-          next if [raw_template_md5, compiled_template_md5].include?(s3_md5)
-          StackMaster.stdout.puts "Uploading #{file} to bucket #{bucket}/#{key}..."
+          next if compiled_template_md5 == s3_md5
+          StackMaster.stdout.puts "Uploading #{file} to bucket #{bucket}/#{object_key}..."
 
           s3.put_object(
             bucket: bucket,
-            key: key,
+            key: object_key,
             body: body,
             metadata: { md5: compiled_template_md5 }
           )
