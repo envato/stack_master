@@ -68,6 +68,7 @@ module StackMaster
 
   module TestDriver
     autoload :CloudFormation, 'stack_master/test_driver/cloud_formation'
+    autoload :S3, 'stack_master/test_driver/s3'
   end
 
   module StackEvents
@@ -114,12 +115,16 @@ module StackMaster
     @cloud_formation_driver ||= AwsDriver::CloudFormation.new
   end
 
+  def cloud_formation_driver=(value)
+    @cloud_formation_driver = value
+  end
+
   def s3_driver
     @s3_driver ||= AwsDriver::S3.new
   end
 
-  def cloud_formation_driver=(value)
-    @cloud_formation_driver = value
+  def s3_driver=(value)
+    @s3_driver = value
   end
 
   def stdout

@@ -12,4 +12,5 @@ end
 
 Before do
   StackMaster.cloud_formation_driver.reset
+  StackMaster.s3_driver.reset
 end
