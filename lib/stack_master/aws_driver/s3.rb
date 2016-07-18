@@ -10,17 +10,14 @@ module StackMaster
         @s3 = nil
       end
 
-      def upload_files(options)
-        bucket = options.fetch(:bucket) { raise StackMaster::AwsDriver::S3ConfigurationError, 'A bucket must be specified in order to use S3' }
-        prefix = options[:prefix]
-        bucket_region = options.fetch(:region, @region)
-        files = options.fetch(:files, [])
+      def upload_files(bucket: nil, prefix: nil, region: nil, files: {})
+        raise StackMaster::AwsDriver::S3ConfigurationError, 'A bucket must be specified in order to use S3' unless bucket
+
+        s3 = new_s3_client(region: region)
 
         return if files.empty?
 
-        set_region(bucket_region) if bucket_region
-
-        current_objects = list_objects(
+        current_objects = s3.list_objects(
           prefix: prefix,
           bucket: bucket
         ).map(&:contents).flatten.inject({}){|h,obj|
@@ -37,23 +34,15 @@ module StackMaster
           s3_md5 = current_objects[key] ? current_objects[key].etag.gsub("\"", '') : nil
 
           next if [raw_template_md5, compiled_template_md5].include?(s3_md5)
-          StackMaster.stdout.puts "Uploading #{file} to bucket #{options[:bucket]}/#{key}..."
+          StackMaster.stdout.puts "Uploading #{file} to bucket #{bucket}/#{key}..."
 
-          put_object(
+          s3.put_object(
             bucket: bucket,
             key: key,
             body: body,
             metadata: { md5: compiled_template_md5 }
           )
         end
-      end
-
-      def list_objects(options)
-        s3.list_objects(options)
-      end
-
-      def put_object(options)
-        s3.put_object(options)
       end
 
       def url(bucket: bucket, prefix: prefix, region: region, template: template)
@@ -66,8 +55,8 @@ module StackMaster
 
       private
 
-      def s3
-        @s3 ||= Aws::S3::Client.new(region: @region)
+      def new_s3_client(region: nil)
+        Aws::S3::Client.new(region: region || @region)
       end
     end
   end
