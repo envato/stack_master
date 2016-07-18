@@ -83,7 +83,7 @@ RSpec.describe StackMaster::Stack do
     before do
       allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
       allow(StackMaster::ParameterResolver).to receive(:resolve).and_return(resolved_parameters)
-      allow(StackMaster::TemplateCompiler).to receive(:compile).with(config, stack_definition.template_file_path).and_return(template_body)
+      allow(StackMaster::TemplateCompiler).to receive(:compile).with(config, stack_definition.template_file_path, stack_definition.compiler_options).and_return(template_body)
       allow(File).to receive(:read).with(stack_definition.stack_policy_file_path).and_return(stack_policy_body)
     end
 

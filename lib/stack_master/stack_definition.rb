@@ -10,12 +10,14 @@ module StackMaster
                   :stack_policy_file,
                   :additional_parameter_lookup_dirs,
                   :s3,
-                  :files
+                  :files,
+                  :compiler_options
 
     include Utils::Initializable
 
     def initialize(attributes = {})
       @additional_parameter_lookup_dirs = []
+      @compiler_options = {}
       @notification_arns = []
       @s3 = {}
       @files = []
@@ -33,7 +35,8 @@ module StackMaster
         @secret_file == other.secret_file &&
         @stack_policy_file == other.stack_policy_file &&
         @additional_parameter_lookup_dirs == other.additional_parameter_lookup_dirs &&
-        @s3 == other.s3
+        @s3 == other.s3 &&
+        @compiler_options == other.compiler_options
     end
 
     def template_dir
