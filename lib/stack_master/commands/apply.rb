@@ -17,7 +17,6 @@ module StackMaster
         diff_stacks
         ensure_valid_parameters!
         ensure_valid_template_body_size!
-        upload_files if use_s3?
         create_or_update_stack
         tail_stack_events
       end
@@ -64,11 +63,13 @@ module StackMaster
         unless ask?('Create stack (y/n)? ')
           failed!("Stack creation aborted")
         end
+        upload_files
         cf.create_stack(stack_options.merge(tags: proposed_stack.aws_tags))
       end
 
       def ask_to_cancel_stack_update
         if ask?("Cancel stack update?")
+          upload_files
           StackMaster.stdout.puts "Attempting to cancel stack update"
           cf.cancel_update_stack(stack_name: stack_name)
           tail_stack_events
@@ -87,6 +88,7 @@ module StackMaster
       end
 
       def upload_files
+        return unless use_s3?
         s3.upload_files(s3_options)
       end
 
@@ -124,7 +126,6 @@ module StackMaster
       end
 
       def s3_options
-        return {} unless use_s3?
         {
           bucket: @s3_config['bucket'],
           prefix: @s3_config['prefix'],
