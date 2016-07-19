@@ -25,7 +25,7 @@ Feature: Apply command
       VpcId: vpc-blah
       """
     And a directory named "templates"
-    And a file named "templates/user_data.sh" with:
+    And a file named "files/user_data.sh" with:
       """
       #!/bin/bash
       echo "HI"

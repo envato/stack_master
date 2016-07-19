@@ -44,9 +44,13 @@ module StackMaster
       File.join(template_dir, template)
     end
 
+    def files_dir
+      File.join(base_dir, 'files')
+    end
+
     def s3_files
       files.inject({}) do |hash, file|
-        path = File.join(template_dir, file)
+        path = File.join(files_dir, file)
         hash[file] = {
           path: path,
           body: File.read(path)
