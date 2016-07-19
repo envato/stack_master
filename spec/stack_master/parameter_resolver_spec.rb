@@ -38,6 +38,11 @@ RSpec.describe StackMaster::ParameterResolver do
     expect(resolve(param1: [1, 2])).to eq(param1: '1,2')
   end
 
+  it 'converts boolean values to strings' do
+    expect(resolve(param1: true)).to eq(param1: 'true')
+    expect(resolve(param1: false)).to eq(param1: 'false')
+  end
+
   it 'it throws an error when the hash contains more than one key' do
     expect {
       resolve(param: { nested1: 'value1', nested2: 'value2' })
