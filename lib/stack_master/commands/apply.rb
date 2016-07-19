@@ -69,7 +69,6 @@ module StackMaster
 
       def ask_to_cancel_stack_update
         if ask?("Cancel stack update?")
-          upload_files
           StackMaster.stdout.puts "Attempting to cancel stack update"
           cf.cancel_update_stack(stack_name: stack_name)
           tail_stack_events
@@ -84,6 +83,7 @@ module StackMaster
           ChangeSet.delete(@change_set.id)
           halt! "Stack update aborted"
         end
+        upload_files
         execute_change_set
       end
 
