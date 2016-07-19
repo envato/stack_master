@@ -13,9 +13,9 @@ module StackMaster
       def upload_files(bucket: nil, prefix: nil, region: nil, files: {})
         raise StackMaster::AwsDriver::S3ConfigurationError, 'A bucket must be specified in order to use S3' unless bucket
 
-        s3 = new_s3_client(region: region)
-
         return if files.empty?
+
+        s3 = new_s3_client(region: region)
 
         current_objects = s3.list_objects(
           prefix: prefix,
