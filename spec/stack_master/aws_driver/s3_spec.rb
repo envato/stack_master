@@ -17,8 +17,14 @@ RSpec.describe StackMaster::AwsDriver::S3 do
       it 'defaults to that region' do
         s3_driver.set_region('default')
         expect(Aws::S3::Client).to receive(:new).with(region: 'default').and_return(s3)
+        files = {
+          'template' => {
+            path: 'spec/fixtures/templates/myapp_vpc.json',
+            body: 'file content'
+          }
+        }
         s3_driver.upload_files(bucket: 'b',
-                               files: {})
+                               files: files)
       end
     end
 
@@ -29,8 +35,8 @@ RSpec.describe StackMaster::AwsDriver::S3 do
           region: 'region',
           prefix: 'prefix',
           files: {'template' => {
-            :path => 'spec/fixtures/templates/myapp_vpc.json',
-            :body => 'file content'
+            path: 'spec/fixtures/templates/myapp_vpc.json',
+            body: 'file content'
             }
           }
         }
