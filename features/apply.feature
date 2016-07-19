@@ -90,7 +90,7 @@ Feature: Apply command
       | Parameters diff: |
       | KeyName: my-key  |
       | aborted          |
-    And the output should not match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/ 
+    And the output should not match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Run apply with region only and create 2 stacks

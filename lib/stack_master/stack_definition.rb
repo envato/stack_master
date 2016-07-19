@@ -8,13 +8,17 @@ module StackMaster
                   :base_dir,
                   :secret_file,
                   :stack_policy_file,
-                  :additional_parameter_lookup_dirs
+                  :additional_parameter_lookup_dirs,
+                  :s3,
+                  :files
 
     include Utils::Initializable
 
     def initialize(attributes = {})
       @additional_parameter_lookup_dirs = []
       @notification_arns = []
+      @s3 = {}
+      @files = []
       super
     end
 
@@ -28,11 +32,35 @@ module StackMaster
         @base_dir == other.base_dir &&
         @secret_file == other.secret_file &&
         @stack_policy_file == other.stack_policy_file &&
-        @additional_parameter_lookup_dirs == other.additional_parameter_lookup_dirs
+        @additional_parameter_lookup_dirs == other.additional_parameter_lookup_dirs &&
+        @s3 == other.s3
+    end
+
+    def template_dir
+      File.join(base_dir, 'templates')
     end
 
     def template_file_path
-      File.join(base_dir, 'templates', template)
+      File.join(template_dir, template)
+    end
+
+    def files_dir
+      File.join(base_dir, 'files')
+    end
+
+    def s3_files
+      files.inject({}) do |hash, file|
+        path = File.join(files_dir, file)
+        hash[file] = {
+          path: path,
+          body: File.read(path)
+        }
+        hash
+      end
+    end
+
+    def s3_template_file_name
+      Utils.change_extension(template, 'json')
     end
 
     def parameter_files
@@ -41,6 +69,10 @@ module StackMaster
 
     def stack_policy_file_path
       File.join(base_dir, 'policies', stack_policy_file) if stack_policy_file
+    end
+
+    def s3_configured?
+      !s3.nil?
     end
 
     private

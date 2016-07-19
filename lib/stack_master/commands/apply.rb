@@ -4,10 +4,11 @@ module StackMaster
       include Command
       include Commander::UI
       include StackMaster::Prompter
-      TEMPLATE_TOO_LARGE_ERROR_MESSAGE = 'The (space compressed) stack is larger than the limit set by AWS. See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
+      TEMPLATE_TOO_LARGE_ERROR_MESSAGE = 'The (space compressed) stack is larger than the limit set by AWS. See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'.freeze
 
       def initialize(config, stack_definition, options = {})
         @config = config
+        @s3_config = stack_definition.s3
         @stack_definition = stack_definition
         @from_time = Time.now
       end
@@ -26,6 +27,10 @@ module StackMaster
         @cf ||= StackMaster.cloud_formation_driver
       end
 
+      def s3
+        @s3 ||= StackMaster.s3_driver
+      end
+
       def stack
         @stack ||= Stack.find(region, stack_name)
       end
@@ -36,6 +41,10 @@ module StackMaster
 
       def stack_exists?
         !stack.nil?
+      end
+
+      def use_s3?
+        !@s3_config.empty?
       end
 
       def diff_stacks
@@ -51,9 +60,10 @@ module StackMaster
       end
 
       def create_stack
-        unless ask?("Create stack (y/n)? ")
+        unless ask?('Create stack (y/n)? ')
           failed!("Stack creation aborted")
         end
+        upload_files
         cf.create_stack(stack_options.merge(tags: proposed_stack.aws_tags))
       end
 
@@ -73,17 +83,54 @@ module StackMaster
           ChangeSet.delete(@change_set.id)
           halt! "Stack update aborted"
         end
+        upload_files
         execute_change_set
+      end
+
+      def upload_files
+        return unless use_s3?
+        s3.upload_files(s3_options)
+      end
+
+      def template_method
+        use_s3? ? :template_url : :template_body
+      end
+
+      def template_value
+        if use_s3?
+          s3.url(bucket: @s3_config['bucket'], prefix: @s3_config['prefix'], region: @s3_config['region'], template: @stack_definition.s3_template_file_name)
+        else
+          proposed_stack.maybe_compressed_template_body
+        end
+      end
+
+      def files_to_upload
+        return {} unless use_s3?
+        @stack_definition.s3_files.tap do |files|
+          files[@stack_definition.s3_template_file_name] = {
+            path: @stack_definition.template_file_path,
+            body: proposed_stack.maybe_compressed_template_body
+          }
+        end
       end
 
       def stack_options
         {
           stack_name: stack_name,
-          template_body: proposed_stack.maybe_compressed_template_body,
           parameters: proposed_stack.aws_parameters,
           capabilities: ['CAPABILITY_IAM'],
           notification_arns: proposed_stack.notification_arns,
-          stack_policy_body: proposed_stack.stack_policy_body
+          stack_policy_body: proposed_stack.stack_policy_body,
+          template_method => template_value
+        }
+      end
+
+      def s3_options
+        {
+          bucket: @s3_config['bucket'],
+          prefix: @s3_config['prefix'],
+          region: @s3_config['region'],
+          files: files_to_upload
         }
       end
 
@@ -110,7 +157,7 @@ module StackMaster
       end
 
       def ensure_valid_template_body_size!
-        if proposed_stack.too_big?
+        if proposed_stack.too_big?(use_s3?)
           failed! TEMPLATE_TOO_LARGE_ERROR_MESSAGE
         end
       end
