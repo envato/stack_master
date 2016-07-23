@@ -40,41 +40,51 @@ RSpec.describe StackMaster::StackDependency do
   subject { described_class.new(vpc_stack_definition, config) }
 
   before do
-    expect(File).to receive(:exists?).with('/base_dir/parameters/myapp_web.yml').and_return(true)
     allow(File).to receive(:exists?).and_call_original
     allow(File).to receive(:read).with('/base_dir/parameters/myapp_web.yml').and_return(web_param_file)
     allow(StackMaster::Stack).to receive(:find).with(region, web_stack_name).and_return(web_stack)
     allow(StackMaster::Stack).to receive(:find).with(region, vpc_stack_name).and_return(vpc_stack)
   end
 
-  context 'when the web stacks parameters are up to date' do
-    let(:web_stack_vpc_id) { "vpc-123" }
-    let(:web_stack_subnet_ids) { "subnet-456,subnet-789" }
+  context 'the stack exists' do
+    before do
+      expect(File).to receive(:exists?).with('/base_dir/parameters/myapp_web.yml').and_return(true)
+    end
+
+    context 'when the web stacks parameters are up to date' do
+      let(:web_stack_vpc_id) { "vpc-123" }
+      let(:web_stack_subnet_ids) { "subnet-456,subnet-789" }
+
+      it 'returns no outdated stacks' do
+        expect(subject.outdated_stacks).to eq []
+      end
+    end
+
+    context 'when the stack_output is out of date' do
+      let(:web_stack_vpc_id) { "vpc-321" }
+      let(:web_stack_subnet_ids) { "subnet-456,subnet-789" }
+
+      it 'returns one outdated stack' do
+        expect(subject.outdated_stacks).to eq [web_stack_definition]
+      end
+    end
+
+    context 'when one of the stack_outputs is out of date' do
+      let(:web_stack_vpc_id) { "vpc-123" }
+      let(:web_stack_subnet_ids) { "subnet-654,subnet-789" }
+
+      it 'returns one outdated stack' do
+        pending('waiting to be implemented')
+        expect(subject.outdated_stacks).to eq [web_stack_definition]
+      end
+    end
+  end
+
+  context 'when no other stacks exist' do
+    let(:web_stack) { nil }
 
     it 'returns no outdated stacks' do
       expect(subject.outdated_stacks).to eq []
     end
-  end
-
-  context 'when the stack_output is out of date' do
-    let(:web_stack_vpc_id) { "vpc-321" }
-    let(:web_stack_subnet_ids) { "subnet-456,subnet-789" }
-
-    it 'returns one outdated stack' do
-      expect(subject.outdated_stacks).to eq [web_stack_definition]
-    end
-  end
-
-  context 'when one of the stack_outputs is out of date' do
-    let(:web_stack_vpc_id) { "vpc-123" }
-    let(:web_stack_subnet_ids) { "subnet-654,subnet-789" }
-
-    it 'returns one outdated stack' do
-      pending('waiting to be implemented')
-      expect(subject.outdated_stacks).to eq [web_stack_definition]
-    end
-  end
-
-  context 'when the dependant stack does not exist' do
   end
 end
