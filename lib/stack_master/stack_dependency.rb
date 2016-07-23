@@ -21,12 +21,11 @@ module StackMaster
 
     def outdated?(dependent_stack, output_key)
       stack_output = output_value(output_key)
-      dependent_input = dependent_stack.parameters[output_key]
-      dependent_input == stack_output
+      dependent_input = dependent_stack.parameters[output_key.camelize]
+      dependent_input != stack_output
     end
 
     def output_value(key)
-      puts updated_stack.outputs
       updated_stack.outputs.select { |output_type| output_type[:output_key] == key }.first[:output_value]
     end
 
