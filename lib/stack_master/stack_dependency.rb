@@ -23,8 +23,12 @@ module StackMaster
 
     def outdated?(dependent_stack, output_key)
       stack_output = output_value(output_key.camelize)
-      dependent_input = dependent_stack.parameters[output_key.camelize]
+      dependent_input = stack_parameter(dependent_stack, output_key)
       dependent_input != stack_output
+    end
+
+    def stack_parameter(stack, key)
+      stack.parameters[key.camelize]
     end
 
     def output_value(key)
