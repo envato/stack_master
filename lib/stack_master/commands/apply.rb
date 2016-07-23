@@ -51,13 +51,16 @@ module StackMaster
         StackDiffer.new(proposed_stack, stack).output_diff
       end
 
+      def dependencies
+        @dependencies ||= StackDependency.new(@stack_definition, @config)
+      end
+
       def create_or_update_stack
         if stack_exists?
           update_stack
         else
           create_stack
         end
-        @dependencies = StackDependency.new(@stack_definition, @config)
         offer_to_run_dependent_stacks
       end
 
@@ -165,7 +168,7 @@ module StackMaster
       end
 
       def offer_to_run_dependent_stacks
-        @dependencies.outdated_stacks.each do |stack|
+        dependencies.outdated_stacks.each do |stack|
           next unless ask?(%Q{A dependent stack "#{stack.stack_name}" is now out of date because of this change.\nApply this stack now (y/n)?})
           self.class.new(@config, stack, @options)
         end
