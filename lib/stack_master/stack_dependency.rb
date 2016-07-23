@@ -1,5 +1,7 @@
 module StackMaster
   class StackDependency
+    StackOutputNotFound = Class.new(StandardError)
+
     def initialize(stack_definition, config)
       @stack_definition = stack_definition
       @config = config
@@ -31,7 +33,12 @@ module StackMaster
     end
 
     def output_value(key)
-      updated_stack.outputs.select { |output_type| output_type[:output_key] == key }.first[:output_value]
+      output_hash = updated_stack.outputs.select { |output_type| output_type[:output_key] == key }
+      if output_hash && ! output_hash.empty?
+        output_hash.first[:output_value]
+      else
+        raise StackOutputNotFound, "Stack exists (#{updated_stack.stack_name}), but output does not: #{key}"
+      end
     end
 
     def updated_stack
