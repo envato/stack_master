@@ -31,6 +31,7 @@ module StackMaster
 
   autoload :StackDiffer, 'stack_master/stack_differ'
   autoload :Validator, 'stack_master/validator'
+  require 'stack_master/stack_dependency'
 
   require 'stack_master/template_compilers/sparkle_formation'
   require 'stack_master/template_compilers/json'
