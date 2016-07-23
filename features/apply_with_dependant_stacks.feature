@@ -76,6 +76,9 @@ Feature: Apply command
     And I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
       | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub the following stacks:
+      | stack_id | stack_name | parameters       | region    |
+      | 2        | myapp-web  | VpcId=vpc-9999   | us-east-1 |
     And I stub a template for the stack "myapp-vpc":
       """
       {
@@ -120,6 +123,9 @@ Feature: Apply command
     And I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
       | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub the following stacks:
+      | stack_id | stack_name | parameters       | region    |
+      | 2        | myapp-web  | VpcId=vpc-9999   | us-east-1 |
     And I stub a template for the stack "myapp-vpc":
       """
       {
