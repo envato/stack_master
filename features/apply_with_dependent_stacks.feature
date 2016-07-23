@@ -110,14 +110,14 @@ Feature: Apply command
 
     When I run `stack_master apply us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
-      | Stack diff:                                                                            |
-      | -        "EnableDnsSupport": "true"                                                    |
-      | Proposed change set:                                                                   |
-      | Replace                                                                                |
-      | Apply change set (y/n)?                                                                |
+      | Stack diff:                                                                  |
+      | -        "EnableDnsSupport": "true"                                          |
+      | Proposed change set:                                                         |
+      | Replace                                                                      |
+      | Apply change set (y/n)?                                                      |
     And the output should not contain all of these lines:
-      | We found a dependent stack "myapp_web" which is now out of date because of this change.|
-      | Would you like us to apply this stack now (y/n)?                                       |
+      | A dependent stack "myapp-web" is now out of date because of this change.     |
+      | Apply this stack now (y/n)?                                                  |
     Then the exit status should be 0
 
    Scenario: Update a stack that causes a replacement
@@ -159,11 +159,11 @@ Feature: Apply command
       """
     When I run `stack_master apply us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
-      | Stack diff:                                                                               |
-      | -        "CidrBlock": "10.161.0.0/16"                                                     |
-      | Proposed change set:                                                                      |
-      | Replace                                                                                   |
-      | Apply change set (y/n)?                                                                   |
-      | We found a dependent stack "myapp-web" which is now out of date because of this change.   |
-      | Would you like us to apply this stack now (y/n)?                                          |
+      | Stack diff:                                                                  |
+      | -        "CidrBlock": "10.161.0.0/16"                                        |
+      | Proposed change set:                                                         |
+      | Replace                                                                      |
+      | Apply change set (y/n)?                                                      |
+      | A dependent stack "myapp-web" is now out of date because of this change.     |
+      | Apply this stack now (y/n)?                                                  |
     Then the exit status should be 0

@@ -166,7 +166,7 @@ module StackMaster
 
       def offer_to_run_dependent_stacks
         @dependencies.outdated_stacks.each do |stack|
-          next unless ask?(%Q{We found a dependent stack "#{stack.stack_name}" which is now out of date because of this change.\nWould you like us to apply this stack now (y/n)?})
+          next unless ask?(%Q{A dependent stack "#{stack.stack_name}" is now out of date because of this change.\nApply this stack now (y/n)?})
           self.class.new(@config, stack, @options)
         end
       end
