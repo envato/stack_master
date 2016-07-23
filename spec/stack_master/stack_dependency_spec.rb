@@ -70,6 +70,7 @@ RSpec.describe StackMaster::StackDependency do
     let(:web_stack_subnet_ids) { "subnet-654,subnet-789" }
 
     it 'returns one outdated stack' do
+      pending('waiting to be implemented')
       expect(subject.outdated_stacks).to eq [web_stack_definition]
     end
   end

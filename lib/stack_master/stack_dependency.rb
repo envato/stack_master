@@ -14,13 +14,6 @@ module StackMaster
               outdated_stacks.push stack
               break
             end
-          elsif value['stack_outputs']
-            value['stack_outputs'].each do |output|
-              if output =~ %r(#{@stack_definition.stack_name}/) && outdated?(Stack.find(@config.region, stack.stack_name), output.split('/').last)
-                outdated_stacks.push stack
-                break
-              end
-            end
           end
         end
       end
