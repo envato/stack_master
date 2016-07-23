@@ -35,7 +35,7 @@ RSpec.describe StackMaster::StackDependency do
         - myapp-vpc/subnet_2_id
     eos
   }
-  let(:config) { double(find: vpc_stack, stacks: [vpc_stack_definition, web_stack_definition], region: region) }
+  let(:config) { double(find: vpc_stack, stacks: [vpc_stack_definition, web_stack_definition]) }
 
   subject { described_class.new(vpc_stack_definition, config) }
 

@@ -8,7 +8,7 @@ module StackMaster
     def outdated_stacks
       outdated_stacks = []
       @config.stacks.collect do |stack|
-        dependant_stack = Stack.find(@config.region, stack.stack_name)
+        dependant_stack = Stack.find(stack.region, stack.stack_name)
         next unless dependant_stack
         ParameterLoader.load(stack.parameter_files).each_value do |value|
           if value['stack_output'] && value['stack_output'] =~ %r(#{@stack_definition.stack_name}/)
