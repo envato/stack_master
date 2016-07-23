@@ -9,12 +9,12 @@ module StackMaster
 
     def outdated_stacks
       @config.stacks.select do |stack|
-        dependant_stack = Stack.find(stack.region, stack.stack_name)
-        next unless dependant_stack
+        dependent_stack = Stack.find(stack.region, stack.stack_name)
+        next unless dependent_stack
         ParameterLoader.load(stack.parameter_files).any? do |_, value|
           value['stack_output'] &&
             value['stack_output'].gsub('_', '-') =~ %r(#{@stack_definition.stack_name}/) &&
-            outdated?(dependant_stack, value['stack_output'].split('/').last)
+            outdated?(dependent_stack, value['stack_output'].split('/').last)
         end
       end
     end
