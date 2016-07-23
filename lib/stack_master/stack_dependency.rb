@@ -10,7 +10,17 @@ module StackMaster
       @config.stacks.collect do |stack|
         ParameterLoader.load(stack.parameter_files).each_value do |value|
           if value['stack_output'] && value['stack_output'] =~ %r(#{@stack_definition.stack_name}/)
-            outdated_stacks.push stack if outdated?(Stack.find(@config.region, stack.stack_name), value['stack_output'].split('/').last)
+            if outdated?(Stack.find(@config.region, stack.stack_name), value['stack_output'].split('/').last)
+              outdated_stacks.push stack
+              break
+            end
+          elsif value['stack_outputs']
+            value['stack_outputs'].each do |output|
+              if output =~ %r(#{@stack_definition.stack_name}/) && outdated?(Stack.find(@config.region, stack.stack_name), output.split('/').last)
+                outdated_stacks.push stack
+                break
+              end
+            end
           end
         end
       end
