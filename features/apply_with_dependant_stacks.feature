@@ -74,8 +74,8 @@ Feature: Apply command
       | 1        | 1        | myapp-vpc  | Vpc                 | UPDATE_COMPLETE | AWS::EC2::VPC    | 2020-10-29 00:00:00 |
       | 1        | 1        | myapp-vpc  | myapp-vpc           | UPDATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     And I stub the following stacks:
-      | stack_id | stack_name | parameters       | region    |
-      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
+      | stack_id | stack_name | parameters       | region    | outputs        |
+      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 | VpcId=vpc-1111 |
     And I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
       | 2        | myapp-web  | VpcId=vpc-9999   | us-east-1 |
@@ -97,6 +97,11 @@ Feature: Apply command
               "CidrBlock": "10.161.0.0/16",
               "EnableDnsSupport": "true"
             }
+          }
+        },
+        "Outputs": {
+          "VpcId": {
+            "Value": { "Ref": "Vpc" }
           }
         }
       }
@@ -121,8 +126,8 @@ Feature: Apply command
       | 1        | 1        | myapp-vpc  | Vpc                 | CREATE_COMPLETE | AWS::EC2::VPC    | 2020-10-29 00:00:00 |
       | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     And I stub the following stacks:
-      | stack_id | stack_name | parameters       | region    |
-      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
+      | stack_id | stack_name | parameters       | region    | outputs        |
+      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 | VpcId=vpc-1111 |
     And I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
       | 2        | myapp-web  | VpcId=vpc-9999   | us-east-1 |
@@ -143,6 +148,11 @@ Feature: Apply command
             "Properties": {
               "CidrBlock": "10.161.0.0/16"
             }
+          }
+        },
+        "Outputs": {
+          "VpcId": {
+            "Value": { "Ref": "Vpc" }
           }
         }
       }
