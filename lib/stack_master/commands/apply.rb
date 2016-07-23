@@ -57,6 +57,8 @@ module StackMaster
         else
           create_stack
         end
+        @dependancies = StackDependency.new(@stack_definition, @config)
+        offer_to_run_dependant_stacks
       end
 
       def create_stack
@@ -159,6 +161,13 @@ module StackMaster
       def ensure_valid_template_body_size!
         if proposed_stack.too_big?(use_s3?)
           failed! TEMPLATE_TOO_LARGE_ERROR_MESSAGE
+        end
+      end
+
+      def offer_to_run_dependant_stacks
+        @dependancies.outdated_stacks.each do |stack|
+          next unless ask?(%Q{We found a dependent stack "#{stack.stack_name}" which is now out of date because of this change.\nWould you like us to apply this stack now (y/n)?})
+          self.class.new(@config, stack, @options)
         end
       end
 

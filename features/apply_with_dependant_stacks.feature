@@ -78,7 +78,7 @@ Feature: Apply command
       | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 | VpcId=vpc-1111 |
     And I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
-      | 2        | myapp-web  | VpcId=vpc-9999   | us-east-1 |
+      | 2        | myapp-web  | VpcId=vpc-1111   | us-east-1 |
     And I stub a template for the stack "myapp-vpc":
       """
       {
@@ -116,7 +116,7 @@ Feature: Apply command
       | Replace                                                                                |
       | Apply change set (y/n)?                                                                |
     And the output should not contain all of these lines:
-      | We found a dependant stack "myapp_web" which is now out of date because of this change.|
+      | We found a dependent stack "myapp_web" which is now out of date because of this change.|
       | Would you like us to apply this stack now (y/n)?                                       |
     Then the exit status should be 0
 
@@ -159,11 +159,11 @@ Feature: Apply command
       """
     When I run `stack_master apply us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
-      | Stack diff:                                                                            |
-      | -        "CidrBlock": "10.161.0.0/16"                                                  |
-      | Proposed change set:                                                                   |
-      | Replace                                                                                |
-      | Apply change set (y/n)?                                                                |
-      | We found a dependant stack "myapp_web" which is now out of date because of this change.|
-      | Would you like us to apply this stack now (y/n)?                                       |
+      | Stack diff:                                                                               |
+      | -        "CidrBlock": "10.161.0.0/16"                                                     |
+      | Proposed change set:                                                                      |
+      | Replace                                                                                   |
+      | Apply change set (y/n)?                                                                   |
+      | We found a dependent stack \"myapp-web\" which is now out of date because of this change. |
+      | Would you like us to apply this stack now (y/n)?                                          |
     Then the exit status should be 0
