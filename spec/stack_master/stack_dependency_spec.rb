@@ -7,9 +7,9 @@ RSpec.describe StackMaster::StackDependency do
       stack_id: '1',
       stack_name: vpc_stack_name,
       outputs: [
-        {description: "", output_key: "vpc_id", output_value: "vpc-123"},
-        {description: "", output_key: "subnet_1_id", output_value: "subnet-456"},
-        {description: "", output_key: "subnet_2_id", output_value: "subnet-789"},
+        {description: "", output_key: "VpcId", output_value: "vpc-123"},
+        {description: "", output_key: "Subnet1Id", output_value: "subnet-456"},
+        {description: "", output_key: "Subnet2Id", output_value: "subnet-789"},
       ]
     )
   end
