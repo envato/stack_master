@@ -13,7 +13,7 @@ module StackMaster
         dependant_stack = Stack.find(stack.region, stack.stack_name)
         next unless dependant_stack
         ParameterLoader.load(stack.parameter_files).each_value do |value|
-          if value['stack_output'] && value['stack_output'] =~ %r(#{@stack_definition.stack_name}/)
+          if value['stack_output'] && value['stack_output'] =~ %r(#{@stack_definition.stack_name.gsub('-', '_')}/)
             if outdated?(dependant_stack, value['stack_output'].split('/').last)
               outdated_stacks.push stack
               break
