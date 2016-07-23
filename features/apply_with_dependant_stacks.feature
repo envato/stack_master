@@ -164,6 +164,6 @@ Feature: Apply command
       | Proposed change set:                                                                      |
       | Replace                                                                                   |
       | Apply change set (y/n)?                                                                   |
-      | We found a dependent stack \"myapp-web\" which is now out of date because of this change. |
+      | We found a dependent stack "myapp-web" which is now out of date because of this change.   |
       | Would you like us to apply this stack now (y/n)?                                          |
     Then the exit status should be 0
