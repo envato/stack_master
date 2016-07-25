@@ -4,7 +4,7 @@ module StackMaster::TemplateCompilers
       require 'cfndsl'
     end
 
-    def self.compile(template_file_path, compiler_options={})
+    def self.compile(template_file_path, compiler_options = {})
       if compiler_options["disable_binding"]
         ::CfnDsl.disable_binding
       end
