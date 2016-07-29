@@ -12,7 +12,7 @@ module StackMaster
   autoload :CLI, 'stack_master/cli'
   autoload :CtrlC, 'stack_master/ctrl_c'
   autoload :Command, 'stack_master/command'
-  autoload :Version, 'stack_master/version'
+  autoload :VERSION, 'stack_master/version'
   autoload :Stack, 'stack_master/stack'
   autoload :Prompter, 'stack_master/prompter'
   autoload :StackStates, 'stack_master/stack_states'
