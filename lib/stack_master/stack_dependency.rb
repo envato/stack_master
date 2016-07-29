@@ -21,7 +21,7 @@ module StackMaster
     def any_stack_output_outdated?(params, stack)
       params.any? do |_, value|
         value['stack_output'] &&
-          value['stack_output'].gsub('_', '-') =~ %r(#{@stack_definition.stack_name}/) &&
+          stack_output_is_our_stack?(value['stack_output'], @stack_definition.stack_name) &&
           outdated?(stack, value['stack_output'].split('/').last)
       end
     end
@@ -33,10 +33,14 @@ module StackMaster
             index = value['stack_outputs'].find_index(output)
             dependent_parameter = stack_parameter(stack, key)
             this_output_value = dependent_parameter.split(',')[index]
-            output.gsub('_', '-') =~ %r(#{@stack_definition.stack_name}/) &&
+            stack_output_is_our_stack?(output, @stack_definition.stack_name) &&
               output_value(output.split('/').last.camelize) != this_output_value
           end
       end
+    end
+
+    def stack_output_is_our_stack?(stack_output, stack)
+      stack_output.gsub('_', '-') =~ %r(#{stack}/)
     end
 
     def outdated?(dependent_stack, output_key)
