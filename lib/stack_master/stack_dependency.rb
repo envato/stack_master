@@ -12,29 +12,32 @@ module StackMaster
         dependent_stack = Stack.find(stack.region, stack.stack_name)
         next unless dependent_stack
         parameters = ParameterLoader.load(stack.parameter_files)
-        any_stack_output_outdated?(parameters, dependent_stack) || any_stack_outputs_outdated?(parameters, dependent_stack)
+        any_stack_output_outdated?(parameters, dependent_stack)
       end
     end
 
     private
 
     def any_stack_output_outdated?(params, stack)
-      params.any? do |_, value|
-        value['stack_output'] &&
-          stack_output_is_our_stack?(value['stack_output'], @stack_definition.stack_name) &&
-          outdated?(stack, value['stack_output'].split('/').last)
+      params.any? do |key, value|
+        stack_output_outdated?(value['stack_output'], stack, @stack_definition.stack_name) ||
+          stack_outputs_outdated?(value['stack_outputs'], stack, @stack_definition.stack_name, key)
       end
     end
 
-    def any_stack_outputs_outdated?(params, stack)
-      dependent_parameter = stack_parameter(stack, key)
-      params.any? do |key, value|
-        value['stack_outputs'] && value['stack_outputs'].any? do |output|
-          index = value['stack_outputs'].find_index(output)
-          this_output_value = dependent_parameter.split(',')[index]
-          stack_output_is_our_stack?(output, @stack_definition.stack_name) &&
-            output_value(output.split('/').last.camelize) != this_output_value
-        end
+    def stack_output_outdated?(stack_output, stack, stack_name)
+      stack_output &&
+        stack_output_is_our_stack?(stack_output, stack_name) &&
+        outdated?(stack, stack_output.split('/').last)
+    end
+
+    def stack_outputs_outdated?(stack_outputs, stack, stack_name, parameter_key)
+      dependent_parameter = stack_parameter(stack, parameter_key)
+      stack_outputs && stack_outputs.any? do |output|
+        index = stack_outputs.find_index(output)
+        this_output_value = dependent_parameter.split(',')[index]
+        stack_output_is_our_stack?(output, stack_name) &&
+          output_value(output.split('/').last.camelize) != this_output_value
       end
     end
 
