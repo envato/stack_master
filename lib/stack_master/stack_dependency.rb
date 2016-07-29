@@ -28,14 +28,13 @@ module StackMaster
 
     def any_stack_outputs_outdated?(params, stack)
       params.any? do |key, value|
-        value['stack_outputs'] &&
-          value['stack_outputs'].any? do |output|
-            index = value['stack_outputs'].find_index(output)
-            dependent_parameter = stack_parameter(stack, key)
-            this_output_value = dependent_parameter.split(',')[index]
-            stack_output_is_our_stack?(output, @stack_definition.stack_name) &&
-              output_value(output.split('/').last.camelize) != this_output_value
-          end
+        value['stack_outputs'] && value['stack_outputs'].any? do |output|
+          index = value['stack_outputs'].find_index(output)
+          dependent_parameter = stack_parameter(stack, key)
+          this_output_value = dependent_parameter.split(',')[index]
+          stack_output_is_our_stack?(output, @stack_definition.stack_name) &&
+            output_value(output.split('/').last.camelize) != this_output_value
+        end
       end
     end
 
