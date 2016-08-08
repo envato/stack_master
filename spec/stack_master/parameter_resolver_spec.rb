@@ -99,5 +99,21 @@ RSpec.describe StackMaster::ParameterResolver do
 
       parameter_resolver.resolve
     end
+
+    context "using an array resolver" do
+      let(:params) do
+        {
+          param: { other_dummy_resolvers: [1, 2] }
+        }
+      end
+
+      it "tries to load the plural and singular forms" do
+        expect(parameter_resolver).to receive(:require_parameter_resolver).with("other_dummy_resolvers").once.and_call_original.ordered
+        expect(parameter_resolver).to receive(:require_parameter_resolver).with("other_dummy_resolver").once.ordered
+        expect(parameter_resolver).to receive(:call_resolver).and_return nil
+
+        parameter_resolver.resolve
+      end
+    end
   end
 end

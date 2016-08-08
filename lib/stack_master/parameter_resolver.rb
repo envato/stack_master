@@ -30,7 +30,11 @@ module StackMaster
     def require_parameter_resolver(file_name)
       require "stack_master/parameter_resolvers/#{file_name}"
     rescue LoadError
-      raise ResolverNotFound.new(file_name)
+      if file_name == file_name.singularize
+        raise ResolverNotFound.new(file_name)
+      else
+        require_parameter_resolver(file_name.singularize)
+      end
     end
 
     def load_parameter_resolver(class_name)
