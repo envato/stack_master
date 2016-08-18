@@ -76,6 +76,7 @@ module StackMaster
       end
 
       def update_stack
+        upload_files
         @change_set = ChangeSet.create(stack_options)
         halt!(@change_set.status_reason) if @change_set.failed?
         @change_set.display(StackMaster.stdout)
@@ -83,7 +84,6 @@ module StackMaster
           ChangeSet.delete(@change_set.id)
           halt! "Stack update aborted"
         end
-        upload_files
         execute_change_set
       end
 

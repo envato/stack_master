@@ -79,6 +79,12 @@ RSpec.describe StackMaster::Commands::Apply do
           metadata: { md5: Digest::MD5.hexdigest(template_body).to_s }
         )
       end
+
+      it 'uploads to S3 before creating a changeset' do
+        expect(s3).to receive(:put_object).ordered
+        expect(StackMaster::ChangeSet).to receive(:create).ordered
+        apply
+      end
     end
 
     context 'the changeset failed to create' do
