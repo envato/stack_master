@@ -64,7 +64,8 @@ module StackMaster
           failed!("Stack creation aborted")
         end
         upload_files
-        cf.create_stack(stack_options.merge(tags: proposed_stack.aws_tags))
+        on_failure = @config.stack_defaults['on_failure'] || 'ROLLBACK'
+        cf.create_stack(stack_options.merge({tags: proposed_stack.aws_tags, on_failure: on_failure}))
       end
 
       def ask_to_cancel_stack_update
