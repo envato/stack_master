@@ -164,6 +164,15 @@ RSpec.describe StackMaster::Commands::Apply do
         hash_including(on_failure: 'DELETE')
       )
     end
+
+    it 'on_failure can be passed in options' do
+      options = Commander::Command::Options.new
+      options.on_failure = 'DELETE'
+      StackMaster::Commands::Apply.perform(config, stack_definition, options)
+      expect(cf).to have_received(:create_stack).with(
+        hash_including(on_failure: 'DELETE')
+      )
+    end
   end
 
   context 'one or more parameters are empty' do
