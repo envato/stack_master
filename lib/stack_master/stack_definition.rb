@@ -60,6 +60,7 @@ module StackMaster
     end
 
     def s3_template_file_name
+      return template if ['.json', '.yaml', '.yml'].include?(File.extname(template))
       Utils.change_extension(template, 'json')
     end
 
