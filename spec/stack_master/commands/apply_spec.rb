@@ -134,7 +134,8 @@ RSpec.describe StackMaster::Commands::Apply do
           }],
         capabilities: ['CAPABILITY_IAM'],
         notification_arns: [notification_arn],
-        stack_policy_body: stack_policy_body
+        stack_policy_body: stack_policy_body,
+        on_failure: 'ROLLBACK'
       )
     end
 
@@ -154,6 +155,23 @@ RSpec.describe StackMaster::Commands::Apply do
         apply
         expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
       end
+    end
+
+    it 'on_failure can be set to a custom value' do
+      config.stack_defaults['on_failure'] = 'DELETE'
+      apply
+      expect(cf).to have_received(:create_stack).with(
+        hash_including(on_failure: 'DELETE')
+      )
+    end
+
+    it 'on_failure can be passed in options' do
+      options = Commander::Command::Options.new
+      options.on_failure = 'DELETE'
+      StackMaster::Commands::Apply.perform(config, stack_definition, options)
+      expect(cf).to have_received(:create_stack).with(
+        hash_including(on_failure: 'DELETE')
+      )
     end
   end
 

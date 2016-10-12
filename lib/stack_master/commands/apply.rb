@@ -6,11 +6,13 @@ module StackMaster
       include StackMaster::Prompter
       TEMPLATE_TOO_LARGE_ERROR_MESSAGE = 'The (space compressed) stack is larger than the limit set by AWS. See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'.freeze
 
-      def initialize(config, stack_definition, options = {})
+      def initialize(config, stack_definition, options = Commander::Command::Options.new)
         @config = config
         @s3_config = stack_definition.s3
         @stack_definition = stack_definition
         @from_time = Time.now
+        @options = options
+        @options.on_failure ||= "ROLLBACK"
       end
 
       def perform
@@ -64,7 +66,8 @@ module StackMaster
           failed!("Stack creation aborted")
         end
         upload_files
-        cf.create_stack(stack_options.merge(tags: proposed_stack.aws_tags))
+        on_failure = @config.stack_defaults['on_failure'] || @options.on_failure
+        cf.create_stack(stack_options.merge({tags: proposed_stack.aws_tags, on_failure: on_failure}))
       end
 
       def ask_to_cancel_stack_update
