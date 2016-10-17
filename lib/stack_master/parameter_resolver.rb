@@ -57,6 +57,8 @@ module StackMaster
       value = parameter_value.values.first
       resolver_class_name = resolver_name.camelize
       call_resolver(resolver_class_name, value)
+    rescue Aws::CloudFormation::Errors::ValidationError
+      raise InvalidParameter, $!.message
     end
 
     def call_resolver(class_name, value)

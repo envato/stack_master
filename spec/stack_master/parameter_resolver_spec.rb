@@ -17,9 +17,20 @@ RSpec.describe StackMaster::ParameterResolver do
       end
     end
   }
+  let(:bad_resolver) {
+    Class.new do
+      def initialize(config, region)
+      end
+
+      def resolve(value)
+        raise Aws::CloudFormation::Errors::ValidationError.new(nil, "Can't find stack")
+      end
+    end
+  }
 
   before do
     stub_const('StackMaster::ParameterResolvers::MyResolver', my_resolver)
+    stub_const('StackMaster::ParameterResolvers::BadResolver', bad_resolver)
   end
 
   def resolve(params)
@@ -66,6 +77,14 @@ RSpec.describe StackMaster::ParameterResolver do
       expect {
         resolve(param: { my_unknown_resolver: 2 })
       }.to raise_error StackMaster::ParameterResolver::ResolverNotFound
+    end
+  end
+
+  context 'when the resolver throws a ValidationError' do
+    it 'throws a invalid parameter error' do
+      expect {
+        resolve(param: { bad_resolver: 2 })
+      }.to raise_error StackMaster::ParameterResolver::InvalidParameter
     end
   end
 
