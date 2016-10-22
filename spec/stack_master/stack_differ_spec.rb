@@ -6,11 +6,13 @@ RSpec.describe StackMaster::StackDiffer do
                                        region: region,
                                        stack_id: 123,
                                        template_body: '{}',
+                                       template_format: :json,
                                        parameters: current_params) }
   let(:proposed_stack) { StackMaster::Stack.new(stack_name: stack_name,
                                                 region: region,
                                                 parameters: proposed_params,
-                                                template_body: "{\"a\": 1}") }
+                                                template_body: "{\"a\": 1}",
+                                                template_format: :json) }
   let(:stack_name) { 'myapp-vpc' }
   let(:region) { 'us-east-1' }
 

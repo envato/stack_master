@@ -7,8 +7,9 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:notification_arn) { 'test_arn' }
   let(:stack_definition) { StackMaster::StackDefinition.new(base_dir: '/base_dir', region: region, stack_name: stack_name) }
   let(:template_body) { '{}' }
+  let(:template_format) { :json }
   let(:parameters) { { 'param_1' => 'hello' } }
-  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, tags: { 'environment' => 'production' } , parameters: parameters, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
+  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, template_format: template_format, tags: { 'environment' => 'production' } , parameters: parameters, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
   let(:stack_policy_body) { '{}' }
 
   before do

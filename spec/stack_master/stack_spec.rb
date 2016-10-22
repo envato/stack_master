@@ -77,6 +77,7 @@ RSpec.describe StackMaster::Stack do
     let(:resolved_parameters) { { 'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium' } }
     let(:template_file_name) { 'template.rb' }
     let(:template_body) { '{"Parameters": { "VpcId": { "Description": "VPC ID" }, "InstanceType": { "Description": "Instance Type", "Default": "t2.micro" }} }' }
+    let(:template_format) { :json }
     let(:stack_policy_body) { '{}' }
 
     before do
@@ -136,7 +137,7 @@ RSpec.describe StackMaster::Stack do
     end
 
     context "oversized json" do
-      let(:stack) { described_class.new(template_body: "{#{' ' * 60000}}" ) }
+      let(:stack) { described_class.new(template_body: "{#{' ' * 60000}}", template_format: :json) }
       it "compresses the json when it's overly bulbous" do
         expect(maybe_compressed_template_body).to eq('{}')
       end
@@ -176,7 +177,7 @@ RSpec.describe StackMaster::Stack do
   describe '#missing_parameters?' do
     subject { stack.missing_parameters? }
 
-    let(:stack) { StackMaster::Stack.new(parameters: parameters, template_body: '{}') }
+    let(:stack) { StackMaster::Stack.new(parameters: parameters, template_body: '{}', template_format: :json) }
 
     context 'when a parameter has a nil value' do
       let(:parameters) { { 'my_param' => nil } }

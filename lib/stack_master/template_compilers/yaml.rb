@@ -6,8 +6,7 @@ module StackMaster::TemplateCompilers
     end
 
     def self.compile(template_file_path)
-      template_body = File.read(template_file_path)
-      JSON.dump(YAML.load(template_body))
+      File.read(template_file_path)
     end
 
     StackMaster::TemplateCompiler.register(:yaml, self)

@@ -9,6 +9,7 @@ module StackMaster
                 :stack_status,
                 :parameters,
                 :template_body,
+                :template_format,
                 :notification_arns,
                 :outputs,
                 :stack_policy_body,
@@ -18,17 +19,20 @@ module StackMaster
     include Utils::Initializable
 
     def template_hash
-      if template_body
-        @template_hash ||= JSON.parse(template_body)
-      end
+      return unless template_body
+      @template_hash ||= case template_format
+                         when :json
+                           JSON.parse(template_body)
+                         when :yaml
+                           YAML.load(template_body)
+                         end
     end
 
     def maybe_compressed_template_body
-      if template_body.size > MAX_TEMPLATE_SIZE
-        @compressed_template_body ||= JSON.dump(template_hash)
-      else
-        template_body
-      end
+      # Do not compress the template if it's not JSON because parsing YAML as a hash ignores
+      # CloudFormation-specific tags such as !Ref
+      return template_body if template_body.size <= MAX_TEMPLATE_SIZE || template_format != :json
+      @compressed_template_body ||= JSON.dump(template_hash)
     end
 
     def template_default_parameters
@@ -57,6 +61,7 @@ module StackMaster
         params_hash
       end
       template_body ||= cf.get_template(stack_name: stack_name).template_body
+      template_format = identify_template_format(template_body)
       stack_policy_body ||= cf.get_stack_policy(stack_name: stack_name).stack_policy_body
       outputs = cf_stack.outputs
 
@@ -65,6 +70,7 @@ module StackMaster
           stack_id: cf_stack.stack_id,
           parameters: parameters,
           template_body: template_body,
+          template_format: template_format,
           outputs: outputs,
           notification_arns: cf_stack.notification_arns,
           stack_policy_body: stack_policy_body,
@@ -76,6 +82,7 @@ module StackMaster
     def self.generate(stack_definition, config)
       parameter_hash = ParameterLoader.load(stack_definition.parameter_files)
       template_body = TemplateCompiler.compile(config, stack_definition.template_file_path)
+      template_format = identify_template_format(template_body)
       parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash)
       stack_policy_body = if stack_definition.stack_policy_file_path
                             File.read(stack_definition.stack_policy_file_path)
@@ -85,9 +92,16 @@ module StackMaster
           tags: stack_definition.tags,
           parameters: parameters,
           template_body: template_body,
+          template_format: template_format,
           notification_arns: stack_definition.notification_arns,
           stack_policy_body: stack_policy_body)
     end
+
+    def self.identify_template_format(template_body)
+      return :json if template_body =~ /^{/x # ignore leading whitespaces
+      :yaml
+    end
+    private_class_method :identify_template_format
 
     def max_template_size(use_s3)
       return MAX_S3_TEMPLATE_SIZE if use_s3
