@@ -3,6 +3,7 @@ module StackMaster::TemplateCompilers
     def self.require_dependencies
       require 'sparkle_formation'
       require 'stack_master/sparkle_formation/user_data_file'
+      require 'stack_master/sparkle_formation/lamda_code'
     end
 
     def self.compile(template_file_path)
