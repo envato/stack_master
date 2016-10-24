@@ -1,6 +1,6 @@
-require 'stack_master/sparkle_formation/lambda_function'
+require 'stack_master/sparkle_formation/lambda_code'
 
-RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#lambda_function!' do
+RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#lambda_code!' do
   let(:lambda_function_code) do
     <<-EOS
 'use strict';
@@ -28,7 +28,7 @@ exports.handler = (event, context, callback) => {
 
   it 'reads from the lambda_functions dir in templates' do
     expect(File).to receive(:read).with('/templates_dir/lambda_functions/test.erb').and_return(lambda_function_code)
-    @attr.lambda_function!('test.erb')
+    @attr.lambda_code!('test.erb')
   end
 
   context 'when the file exists' do
@@ -37,7 +37,7 @@ exports.handler = (event, context, callback) => {
     end
 
     it 'compiles the file and returns a joined version' do
-      expect(@attr.lambda_function!('test.erb')).to eq expected_hash
+      expect(@attr.lambda_code!('test.erb')).to eq expected_hash
     end
 
   end
@@ -49,8 +49,8 @@ exports.handler = (event, context, callback) => {
 
     it 'raises a specific error' do
       expect {
-        @attr.lambda_function!('test.erb')
-      }.to raise_error(StackMaster::SparkleFormation::LambdaFunctionFileNotFound)
+        @attr.lambda_code!('test.erb')
+      }.to raise_error(StackMaster::SparkleFormation::LambdaCodeFileNotFound)
     end
   end
 end

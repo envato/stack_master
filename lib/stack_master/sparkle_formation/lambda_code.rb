@@ -3,7 +3,7 @@ require 'erubis'
 
 module StackMaster
   module SparkleFormation
-    LambdaFunctionFileNotFound = ::Class.new(StandardError)
+    LambdaCodeFileNotFound = ::Class.new(StandardError)
 
     class SfEruby < Erubis::Eruby
       include Erubis::ArrayEnhancer
@@ -43,18 +43,22 @@ module StackMaster
       end
     end
 
-    module LambdaFunction
-      def _lambda_function(file_name, vars = {})
+    module LambdaCode
+      def _lambda_code(file_name, vars = {})
         file_path = File.join(::SparkleFormation.sparkle_path, 'lambda_functions', file_name)
+        # If it's a file, process as a template and attach
         template = File.read(file_path)
         template_context = TemplateContext.build(vars)
         compiled_template = SfEruby.new(template).evaluate(template_context)[0]
+        # Logic is, if the supplied thing is a file then compile it as a tempalte
+        STDERR.puts("TEMPLATE TEXT IS "+compiled_template)
+        compiled_template
       rescue Errno::ENOENT => e
-        Kernel.raise LambdaFunctionFileNotFound, "Could not find lambda function data file at path: #{file_path}"
+        Kernel.raise LambdaCodeFileNotFound, "Could not find lambda function data file at path: #{file_path}"
       end
-      alias_method :lambda_function!, :_lambda_function
+      alias_method :lambda_code!, :_lambda_code
     end
   end
 end
 
-SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::LambdaFunction)
+SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::LambdaCode)
