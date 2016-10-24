@@ -27,22 +27,34 @@ exports.handler = (event, context, callback) => {
   end
 
   it 'reads from the lambda_functions dir in templates' do
+    allow(File).to receive(:file?).and_return(true)
     expect(File).to receive(:read).with('/templates_dir/lambda_functions/test.erb').and_return(lambda_function_code)
     @attr.lambda_code!('test.erb')
   end
 
-  context 'when the file exists' do
+  context 'when the location exists and is a file' do
     before do
+      allow(File).to receive(:file?).and_return(true)
       allow(File).to receive(:read).and_return(lambda_function_code)
     end
 
     it 'compiles the file and returns a joined version' do
       expect(@attr.lambda_code!('test.erb')).to eq expected_hash
     end
-
   end
 
-  context "when the file doesn't exist" do
+  context 'when the location exists and is a directory' do
+    before do
+      allow(File).to receive(:directory?).and_return(true)
+      allow(StackMaster.s3_driver).to receive(:upload_files).and_return(true)
+    end
+
+    it 'zips the directory, uploads to s3 and returns an S3 path' do
+      expect(@attr.lambda_code!('test_dir')).to eq 'https://s3.amazonaws.com/envato-hack-fort-lambda-functions/stack_master/test_dir.zip'
+    end
+  end
+
+  context "when the location doesn't exist" do
     before do
       allow(File).to receive(:read).and_raise(Errno::ENOENT)
     end

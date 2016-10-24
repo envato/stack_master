@@ -46,13 +46,29 @@ module StackMaster
     module LambdaCode
       def _lambda_code(file_name, vars = {})
         file_path = File.join(::SparkleFormation.sparkle_path, 'lambda_functions', file_name)
-        # If it's a file, process as a template and attach
-        template = File.read(file_path)
-        template_context = TemplateContext.build(vars)
-        compiled_template = SfEruby.new(template).evaluate(template_context)[0]
-        # Logic is, if the supplied thing is a file then compile it as a tempalte
-        STDERR.puts("TEMPLATE TEXT IS "+compiled_template)
-        compiled_template
+        #STDERR.puts(file_path)
+        # If it's a file, process as a template and attach if it's a directory zip and upload it to s3
+        if File.file?(file_path) then
+          template = File.read(file_path)
+          template_context = TemplateContext.build(vars)
+          compiled_template = SfEruby.new(template).evaluate(template_context)[0]
+        elsif File.directory?(file_path)
+          s3 = StackMaster.s3_driver
+          s3.upload_files(
+            bucket: 'envato-hack-fort-lambda-functions',
+            prefix: 'stack_master',
+            region: 'us-east-1',
+            files: File.join(::SparkleFormation.sparkle_path, 'lambda_functions', file_name)
+          )
+          s3.url(
+            bucket: 'envato-hack-fort-lambda-functions',
+            prefix: 'stack_master',
+            region: 'us-east-1',
+            template: file_name+".zip"
+          )
+        else
+          Kernel.raise LambdaCodeFileNotFound, "Could not find lambda function data file at path: #{file_path}"
+        end
       rescue Errno::ENOENT => e
         Kernel.raise LambdaCodeFileNotFound, "Could not find lambda function data file at path: #{file_path}"
       end
