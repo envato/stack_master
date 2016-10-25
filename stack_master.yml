@@ -1,0 +1,6 @@
+stacks:
+  us-east-2:
+    lambda:
+      template: lambda.rb
+      tags:
+        environment: production
