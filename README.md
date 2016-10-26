@@ -97,7 +97,7 @@ stacks:
 
 ## S3
 
-StackMaster can optionally use S3 to store the templates before creating a stack.
+StackMaster can optionally use S3 to store the templates before creating a stack. Optionally, you can use a skip_upload flag to reuse existing S3 template. This allows you to decouple template code from management of templates.
 This requires to configure an S3 bucket in stack_master.yml:
 
 ```yaml
@@ -106,6 +106,7 @@ stack_defaults:
     bucket: my_bucket_name
     prefix: cfn_templates/my-awesome-app
     region: us-west-2
+    skip_upload: true # Default to false
 ```
 
 Additional files can be configured to be uploaded to S3 alongside the templates:

@@ -92,7 +92,12 @@ module StackMaster
 
       def upload_files
         return unless use_s3?
-        s3.upload_files(s3_options)
+        # Just use existing S3 template and skip upload.
+        if @s3_config['skip_upload'] == true
+          StackMaster.stdout.puts "\nUsing existing S3 template as you told me to..."
+        else
+          s3.upload_files(s3_options)
+        end
       end
 
       def template_method

@@ -84,7 +84,26 @@ RSpec.describe StackMaster::Commands::Apply do
       it 'uploads to S3 before creating a changeset' do
         expect(s3).to receive(:put_object).ordered
         expect(StackMaster::ChangeSet).to receive(:create).ordered
-        apply
+        expect { apply }.to_not output(/Using existing S3 template/).to_stdout
+      end
+    end
+
+    context 'When using existing S3 template' do
+      before do
+        stack_definition.s3 = {
+          'bucket' => 'my-bucket',
+          'prefix' => 'my-prefix',
+          'region' => 'us-east-1',
+          'skip_upload' => true
+        }
+        stack_definition.template = 'my-template.rb'
+        allow(s3).to receive(:list_objects).and_return([])
+        allow(s3).to receive(:put_object)
+      end
+
+      it 'creates changeset with existing S3 template without Upload' do
+        # expect(StackMaster::ChangeSet).to receive(:create).ordered
+        expect { apply }.to output(/Using existing S3 template/).to_stdout
       end
     end
 
@@ -132,7 +151,7 @@ RSpec.describe StackMaster::Commands::Apply do
           {
             key: 'environment',
             value: 'production'
-          }],
+        }],
         capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
         notification_arns: [notification_arn],
         stack_policy_body: stack_policy_body,
