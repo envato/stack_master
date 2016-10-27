@@ -102,7 +102,7 @@ RSpec.describe StackMaster::Commands::Apply do
       end
 
       it 'creates changeset with existing S3 template without Upload' do
-        # expect(StackMaster::ChangeSet).to receive(:create).ordered
+        expect(StackMaster::ChangeSet).to receive(:create).ordered
         expect { apply }.to output(/Using existing S3 template/).to_stdout
       end
     end

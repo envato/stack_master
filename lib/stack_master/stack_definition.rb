@@ -41,6 +41,29 @@ module StackMaster
     end
 
     def template_file_path
+
+      # Download S3 template if you have skipped upload
+      # This is used for diff/validate commands
+      if s3_configured? && s3['skip_upload']
+        s3_obj = ::Aws::S3::Client.new(region: s3['region'])
+        StackMaster.stdout.puts s3_obj
+        raise "Unable to Get S3 driver for downloading template" if s3_obj.nil?
+
+        # Construct file temporary file location for downloading
+        # template from S3 bucket
+        _template_dir = Dir.tmpdir()
+        _template_file_path = File.join(_template_dir, template)
+
+        # Actually download template from S3
+        response = s3_obj.get_object(
+          {
+            bucket: s3['bucket'],
+            key: "#{s3['prefix']}/#{s3_template_file_name}",
+          },
+          target: _template_file_path,
+        )
+        return _template_file_path
+      end
       File.join(template_dir, template)
     end
 
