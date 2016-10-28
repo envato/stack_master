@@ -84,7 +84,7 @@ RSpec.describe StackMaster::Commands::Apply do
       it 'uploads to S3 before creating a changeset' do
         expect(s3).to receive(:put_object).ordered
         expect(StackMaster::ChangeSet).to receive(:create).ordered
-        expect { apply }.to_not output(/Using existing S3 template/).to_stdout
+        expect { apply }.to_not output(/Skipping Upload/).to_stdout
       end
     end
 
@@ -94,7 +94,7 @@ RSpec.describe StackMaster::Commands::Apply do
           'bucket' => 'my-bucket',
           'prefix' => 'my-prefix',
           'region' => 'us-east-1',
-          'skip_upload' => true
+          'use_remote' => true
         }
         stack_definition.template = 'my-template.rb'
         allow(s3).to receive(:list_objects).and_return([])
@@ -103,7 +103,7 @@ RSpec.describe StackMaster::Commands::Apply do
 
       it 'creates changeset with existing S3 template without Upload' do
         expect(StackMaster::ChangeSet).to receive(:create).ordered
-        expect { apply }.to output(/Using existing S3 template/).to_stdout
+        expect { apply }.to output(/Skipping Upload/).to_stdout
       end
     end
 

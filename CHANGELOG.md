@@ -1,5 +1,4 @@
 # CHANGES FOR STACK MASTER
 
 # v0.9.0
-    # Skip uploading templates to S3 to reuse existing templates
-    # TODO: Fix diff and validate commands with this flag 
+    # Use templates directly from S3 and not maintain a local copy. Useful when working with nested stacks.

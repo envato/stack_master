@@ -44,9 +44,10 @@ module StackMaster
 
       # Download S3 template if you have skipped upload
       # This is used for diff/validate commands
-      if s3_configured? && s3['skip_upload']
+      if s3_configured? && s3['use_remote']
+
+        StackMaster.stdout.puts "I see use_remote flag. Templates will be referenced from S3 bucket and not locally"
         s3_obj = ::Aws::S3::Client.new(region: s3['region'])
-        StackMaster.stdout.puts s3_obj
         raise "Unable to Get S3 driver for downloading template" if s3_obj.nil?
 
         # Construct file temporary file location for downloading
@@ -61,7 +62,13 @@ module StackMaster
             key: "#{s3['prefix']}/#{s3_template_file_name}",
           },
           target: _template_file_path,
-        )
+        ) rescue nil
+
+        if response.nil?
+          StackMaster.stderr.puts "Please double check S3 parameters in your configuration file."
+          raise "Unable to Download #{template} from S3 bucket: #{s3['bucket']}."
+        end
+
         return _template_file_path
       end
       File.join(template_dir, template)
