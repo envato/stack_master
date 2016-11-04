@@ -46,7 +46,7 @@ RSpec.describe StackMaster::Commands::Apply do
         parameters: [
           { parameter_key: 'param_1', parameter_value: 'hello' }
         ],
-        capabilities: ['CAPABILITY_IAM'],
+        capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
         notification_arns: [notification_arn],
         stack_policy_body: stack_policy_body
       )
@@ -133,7 +133,7 @@ RSpec.describe StackMaster::Commands::Apply do
             key: 'environment',
             value: 'production'
           }],
-        capabilities: ['CAPABILITY_IAM'],
+        capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
         notification_arns: [notification_arn],
         stack_policy_body: stack_policy_body,
         on_failure: 'ROLLBACK'
