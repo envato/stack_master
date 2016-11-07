@@ -70,3 +70,40 @@ echo $REGION
     end
   end
 end
+
+RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#config_file!' do
+  let(:config) do
+    <<-EOS
+variable=<%= ref!(:test) %>
+    EOS
+  end
+
+  let(:expected_hash) do
+    {"Fn::Join"=>["", ["variable=", {"Ref"=>"Test"}, "\n"]]}
+  end
+
+  before do
+    allow(SparkleFormation).to receive(:sparkle_path).and_return('/templates_dir')
+    klass = Class.new(AttributeStruct)
+    klass.include(SparkleFormation::SparkleAttribute)
+    klass.include(SparkleFormation::SparkleAttribute::Aws)
+    klass.include(SparkleFormation::Utils::TypeCheckers)
+    @attr = klass.new
+    @attr._camel_keys = true
+  end
+
+  it 'reads from the config dir in templates' do
+    expect(File).to receive(:read).with('/templates_dir/config/test.erb').and_return(config)
+    @attr.config_file!('test.erb')
+  end
+
+  context 'when the file exists' do
+    before do
+      allow(File).to receive(:read).and_return(config)
+    end
+
+    it 'compiles the file and returns a joined version' do
+      expect(@attr.config_file!('test.erb')).to eq expected_hash
+    end
+  end
+end
