@@ -66,7 +66,7 @@ echo $REGION
     it 'raises a specific error' do
       expect {
         @attr.user_data_file!('test.erb')
-      }.to raise_error(StackMaster::SparkleFormation::UserDataFileNotFound)
+      }.to raise_error(StackMaster::SparkleFormation::TemplateFileNotFound)
     end
   end
 end
