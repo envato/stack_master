@@ -77,8 +77,8 @@ module StackMaster
     end
 
     module Template
-      def self.render(file_name, vars)
-        file_path = File.join(::SparkleFormation.sparkle_path, 'user_data', file_name)
+      def self.render(prefix, file_name, vars)
+        file_path = File.join(::SparkleFormation.sparkle_path, prefix, file_name)
         template = File.read(file_path)
         template_context = TemplateContext.build(vars)
         compiled_template = SfEruby.new(template).evaluate(template_context)
@@ -90,14 +90,14 @@ module StackMaster
 
     module ConfigFile
       def _config_file(file_name, vars = {})
-        join!(Template.render(file_name, vars))
+        join!(Template.render('config', file_name, vars))
       end
       alias_method :config_file!, :_config_file
     end
 
     module UserDataFile
       def _user_data_file(file_name, vars = {})
-        base64!(join!(Template.render(file_name, vars)))
+        base64!(join!(Template.render('user_data', file_name, vars)))
       end
       alias_method :user_data_file!, :_user_data_file
     end
