@@ -84,7 +84,7 @@ module StackMaster
         compiled_template = SfEruby.new(template).evaluate(template_context)
         CloudFormationLineFormatter.format(compiled_template)
       rescue Errno::ENOENT => e
-        Kernel.raise TemplateFileNotFound, "Could not find user data file at path: #{file_path}"
+        Kernel.raise TemplateFileNotFound, "Could not find template file at path: #{file_path}"
       end
     end
 
