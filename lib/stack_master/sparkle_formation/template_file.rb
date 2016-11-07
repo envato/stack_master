@@ -88,6 +88,13 @@ module StackMaster
       end
     end
 
+    module ConfigFile
+      def _config_file(file_name, vars = {})
+        join!(Template.render(file_name, vars))
+      end
+      alias_method :config_file!, :_config_file
+    end
+
     module UserDataFile
       def _user_data_file(file_name, vars = {})
         base64!(join!(Template.render(file_name, vars)))
@@ -98,3 +105,5 @@ module StackMaster
 end
 
 SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::UserDataFile)
+SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::ConfigFile)
+
