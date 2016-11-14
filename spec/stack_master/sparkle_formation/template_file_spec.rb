@@ -71,7 +71,7 @@ echo $REGION
   end
 end
 
-RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#config_file!' do
+RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#joined_file!' do
   let(:config) do
     <<-EOS
 variable=<%= ref!(:test) %>
@@ -93,8 +93,8 @@ variable=<%= ref!(:test) %>
   end
 
   it 'reads from the config dir in templates' do
-    expect(File).to receive(:read).with('/templates_dir/config/test.erb').and_return(config)
-    @attr.config_file!('test.erb')
+    expect(File).to receive(:read).with('/templates_dir/joined_file/test.erb').and_return(config)
+    @attr.joined_file!('test.erb')
   end
 
   context 'when the file exists' do
@@ -103,7 +103,7 @@ variable=<%= ref!(:test) %>
     end
 
     it 'compiles the file and returns a joined version' do
-      expect(@attr.config_file!('test.erb')).to eq expected_hash
+      expect(@attr.joined_file!('test.erb')).to eq expected_hash
     end
   end
 end

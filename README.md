@@ -346,7 +346,7 @@ And used like this in SparkleFormation templates:
   user_data user_data_file!('app.erb', role: :worker)
 ```
 
-You can also use the `config_file!` method which evaluates templates in `templates/config/[file_name]`. It is similar to `user_data_file!` but doesn't do base64 encoding. Example:
+You can also use the `joined_file!` method which evaluates templates in `templates/config/[file_name]`. It is similar to `user_data_file!` but doesn't do base64 encoding. Example:
 
 ```
 # templates/config/someconfig.conf.erb
@@ -360,7 +360,7 @@ container_definitions array!(
   -> {
     command array!(
       "-e",
-      config_file!('someconfig.conf.erb')
+      joined_file!('someconfig.conf.erb')
     )
     ...
   }

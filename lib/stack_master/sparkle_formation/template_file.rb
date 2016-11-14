@@ -88,11 +88,11 @@ module StackMaster
       end
     end
 
-    module ConfigFile
-      def _config_file(file_name, vars = {})
-        join!(Template.render('config', file_name, vars))
+    module JoinedFile
+      def _joined_file(file_name, vars = {})
+        join!(Template.render('joined_file', file_name, vars))
       end
-      alias_method :config_file!, :_config_file
+      alias_method :joined_file!, :_joined_file
     end
 
     module UserDataFile
@@ -105,5 +105,5 @@ module StackMaster
 end
 
 SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::UserDataFile)
-SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::ConfigFile)
+SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::JoinedFile)
 
