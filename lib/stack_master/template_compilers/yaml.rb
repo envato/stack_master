@@ -5,7 +5,7 @@ module StackMaster::TemplateCompilers
       require 'json'
     end
 
-    def self.compile(template_file_path)
+    def self.compile(config, template_file_path, stack_definition)
       File.read(template_file_path)
     end
 
