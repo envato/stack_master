@@ -4,6 +4,15 @@ RSpec.describe StackMaster::Stack do
   let(:stack_id) { '1' }
   let(:stack_policy_body) { '{}' }
   let(:cf) { Aws::CloudFormation::Client.new }
+  let(:stack_definition) do
+    StackMaster::StackDefinition.new(
+        region: 'us-east-1',
+        stack_name: 'myapp_vpc',
+        template: 'myapp_vpc.json',
+        tags: { 'environment' => 'production' },
+        base_dir: File.expand_path('spec/fixtures'),
+    )
+  end
   subject(:stack) { StackMaster::Stack.find(region, stack_name) }
 
   before do
@@ -83,7 +92,7 @@ RSpec.describe StackMaster::Stack do
     before do
       allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
       allow(StackMaster::ParameterResolver).to receive(:resolve).and_return(resolved_parameters)
-      allow(StackMaster::TemplateCompiler).to receive(:compile).with(config, stack_definition.template_file_path).and_return(template_body)
+      allow(StackMaster::TemplateCompiler).to receive(:compile).with(config, stack_definition.template_file_path, stack_definition).and_return(template_body)
       allow(File).to receive(:read).with(stack_definition.stack_policy_file_path).and_return(stack_policy_body)
     end
 
