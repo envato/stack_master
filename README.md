@@ -329,7 +329,7 @@ my_parameter:
     - value2
 ```
 
-## User Data Files in SparkleFormation templates
+## ERB Template Files in SparkleFormation templates
 
 An extension to SparkleFormation is the `user_data_file!` method, which evaluates templates in `templates/user_data/[file_name]`. Most of the usual SparkleFormation methods are available in user data templates. Example:
 
@@ -344,6 +344,27 @@ And used like this in SparkleFormation templates:
 ```
 # templates/app.rb
   user_data user_data_file!('app.erb', role: :worker)
+```
+
+You can also use the `joined_file!` method which evaluates templates in `templates/config/[file_name]`. It is similar to `user_data_file!` but doesn't do base64 encoding. Example:
+
+```
+# templates/config/someconfig.conf.erb
+my_variable=<%= ref!(:foo) %>
+my_other_variable=<%= account_id! %>
+```
+
+```
+# templates/ecs_task.rb
+container_definitions array!(
+  -> {
+    command array!(
+      "-e",
+      joined_file!('someconfig.conf.erb')
+    )
+    ...
+  }
+)
 ```
 
 ## Commands

@@ -3,7 +3,7 @@ require 'erubis'
 
 module StackMaster
   module SparkleFormation
-    UserDataFileNotFound = ::Class.new(StandardError)
+    TemplateFileNotFound = ::Class.new(StandardError)
 
     class SfEruby < Erubis::Eruby
       include Erubis::ArrayEnhancer
@@ -76,15 +76,28 @@ module StackMaster
       end
     end
 
-    module UserDataFile
-      def _user_data_file(file_name, vars = {})
-        file_path = File.join(::SparkleFormation.sparkle_path, 'user_data', file_name)
+    module Template
+      def self.render(prefix, file_name, vars)
+        file_path = File.join(::SparkleFormation.sparkle_path, prefix, file_name)
         template = File.read(file_path)
         template_context = TemplateContext.build(vars)
         compiled_template = SfEruby.new(template).evaluate(template_context)
-        base64!(join!(CloudFormationLineFormatter.format(compiled_template)))
+        CloudFormationLineFormatter.format(compiled_template)
       rescue Errno::ENOENT => e
-        Kernel.raise UserDataFileNotFound, "Could not find user data file at path: #{file_path}"
+        Kernel.raise TemplateFileNotFound, "Could not find template file at path: #{file_path}"
+      end
+    end
+
+    module JoinedFile
+      def _joined_file(file_name, vars = {})
+        join!(Template.render('joined_file', file_name, vars))
+      end
+      alias_method :joined_file!, :_joined_file
+    end
+
+    module UserDataFile
+      def _user_data_file(file_name, vars = {})
+        base64!(join!(Template.render('user_data', file_name, vars)))
       end
       alias_method :user_data_file!, :_user_data_file
     end
@@ -92,3 +105,5 @@ module StackMaster
 end
 
 SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::UserDataFile)
+SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::JoinedFile)
+

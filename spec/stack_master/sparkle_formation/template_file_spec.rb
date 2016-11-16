@@ -1,4 +1,4 @@
-require 'stack_master/sparkle_formation/user_data_file'
+require 'stack_master/sparkle_formation/template_file'
 
 RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#user_data_file!' do
   let(:user_data) do
@@ -66,7 +66,44 @@ echo $REGION
     it 'raises a specific error' do
       expect {
         @attr.user_data_file!('test.erb')
-      }.to raise_error(StackMaster::SparkleFormation::UserDataFileNotFound)
+      }.to raise_error(StackMaster::SparkleFormation::TemplateFileNotFound)
+    end
+  end
+end
+
+RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#joined_file!' do
+  let(:config) do
+    <<-EOS
+variable=<%= ref!(:test) %>
+    EOS
+  end
+
+  let(:expected_hash) do
+    {"Fn::Join"=>["", ["variable=", {"Ref"=>"Test"}, "\n"]]}
+  end
+
+  before do
+    allow(SparkleFormation).to receive(:sparkle_path).and_return('/templates_dir')
+    klass = Class.new(AttributeStruct)
+    klass.include(SparkleFormation::SparkleAttribute)
+    klass.include(SparkleFormation::SparkleAttribute::Aws)
+    klass.include(SparkleFormation::Utils::TypeCheckers)
+    @attr = klass.new
+    @attr._camel_keys = true
+  end
+
+  it 'reads from the config dir in templates' do
+    expect(File).to receive(:read).with('/templates_dir/joined_file/test.erb').and_return(config)
+    @attr.joined_file!('test.erb')
+  end
+
+  context 'when the file exists' do
+    before do
+      allow(File).to receive(:read).and_return(config)
+    end
+
+    it 'compiles the file and returns a joined version' do
+      expect(@attr.joined_file!('test.erb')).to eq expected_hash
     end
   end
 end
