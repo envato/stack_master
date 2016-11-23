@@ -11,7 +11,7 @@ module StackMaster
 
     def perform
       StackMaster.stdout.print "#{@stack_definition.stack_name}: "
-      template_body = TemplateCompiler.compile(@config, @stack_definition.template_file_path)
+      template_body = Stack.generate(@stack_definition, @config).maybe_compressed_template_body
       cf.validate_template(template_body: template_body)
       StackMaster.stdout.puts "valid"
       true
