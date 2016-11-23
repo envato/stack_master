@@ -32,6 +32,8 @@ stacks:
         - test_arn_2
     myapp_web:
       template: myapp_web.rb
+    myapp_vpc_with_secrets:
+      template: myapp_vpc.json
   ap-southeast-2:
     myapp_vpc:
       template: myapp_vpc.rb
