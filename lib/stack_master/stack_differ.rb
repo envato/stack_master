@@ -15,7 +15,7 @@ module StackMaster
     def current_template
       return '' unless @current_stack
       return @current_stack.template_body unless @current_stack.template_format == :json
-      JSON.pretty_generate(@current_stack.template_hash)
+      JSON.pretty_generate(TemplateUtils.template_hash(@current_stack.template_format, @current_stack.template_body))
     end
 
     def current_parameters
