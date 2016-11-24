@@ -66,6 +66,16 @@ RSpec.describe StackMaster::ParameterResolver do
     }.to_not raise_error
   end
 
+  context 'when array values contain resolver hashes' do
+    it 'returns the comma separated string values returned by the resolvers' do
+      expect(resolve(param: [1, { my_resolver: 2 }])).to eq(param: '1,10')
+    end
+
+    it 'returns nested array values' do
+      expect(resolve(param: [[1, { my_resolver: 3 }], { my_resolver: 2 }])).to eq(param: '1,15,10')
+    end
+  end
+
   context 'when given a proper resolve hash' do
     it 'returns the value returned by the resolver as the parameter value' do
       expect(resolve(param: { my_resolver: 2 })).to eq(param: 10)
