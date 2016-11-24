@@ -16,7 +16,7 @@ module StackMaster
     include Utils::Initializable
 
     def template_default_parameters
-      TemplateUtils.template_hash(template_format, template).fetch('Parameters', {}).inject({}) do |result, (parameter_name, description)|
+      TemplateUtils.template_hash(template).fetch('Parameters', {}).inject({}) do |result, (parameter_name, description)|
         result[parameter_name] = description['Default']
         result
       end
@@ -95,7 +95,7 @@ module StackMaster
     end
 
     def template
-      @template ||= TemplateUtils.maybe_compressed_template_body(template_format, template_body)
+      @template ||= TemplateUtils.maybe_compressed_template_body(template_body)
     end
   end
 end

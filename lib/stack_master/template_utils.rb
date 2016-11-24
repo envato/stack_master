@@ -10,8 +10,9 @@ module StackMaster
       :yaml
     end
 
-    def template_hash(template_format, template_body=nil)
+    def template_hash(template_body=nil)
       return unless template_body
+      template_format = identify_template_format(template_body)
       case template_format
       when :json
         JSON.parse(template_body)
@@ -20,11 +21,11 @@ module StackMaster
       end
     end
 
-    def maybe_compressed_template_body(template_format, template_body)
+    def maybe_compressed_template_body(template_body)
       # Do not compress the template if it's not JSON because parsing YAML as a hash ignores
       # CloudFormation-specific tags such as !Ref
-      return template_body if template_body.size <= MAX_TEMPLATE_SIZE || template_format != :json
-      JSON.dump(template_hash(template_format, template_body))
+      return template_body if template_body.size <= MAX_TEMPLATE_SIZE || identify_template_format(template_body) != :json
+      JSON.dump(template_hash(template_body))
     end
   end
 end

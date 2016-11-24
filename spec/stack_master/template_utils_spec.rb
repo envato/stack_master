@@ -1,7 +1,7 @@
 RSpec.describe StackMaster::TemplateUtils do
   describe "#maybe_compressed_template_body" do
     subject(:maybe_compressed_template_body) do
-      described_class.maybe_compressed_template_body(:json, template_body)
+      described_class.maybe_compressed_template_body(template_body)
     end
     context "undersized json" do
       let(:template_body) { '{     }' }
