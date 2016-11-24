@@ -17,8 +17,8 @@ RSpec.describe StackMaster::Commands::Status do
     end
 
     context "some parameters are different" do
-      let(:stack1) { double(:stack1, template_hash: {}, template_format: :json, parameters_with_defaults: {a: 1}, stack_status: 'UPDATE_COMPLETE') }
-      let(:stack2) { double(:stack2, template_hash: {}, template_format: :json, parameters_with_defaults: {a: 2}, stack_status: 'CREATE_COMPLETE') }
+      let(:stack1) { double(:stack1, template_body: '{}', template_hash: {}, template_format: :json, parameters_with_defaults: {a: 1}, stack_status: 'UPDATE_COMPLETE') }
+      let(:stack2) { double(:stack2, template_body: '{}', template_hash: {}, template_format: :json, parameters_with_defaults: {a: 2}, stack_status: 'CREATE_COMPLETE') }
       let(:proposed_stack1) { double(:proposed_stack1, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
       let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
 
@@ -29,8 +29,8 @@ RSpec.describe StackMaster::Commands::Status do
     end
 
     context "some templates are different" do
-      let(:stack1) { double(:stack1, template_hash: {foo: 'bar'}, template_format: :json, parameters_with_defaults: {a: 1}, stack_status: 'UPDATE_COMPLETE') }
-      let(:stack2) { double(:stack2, template_hash: {}, template_format: :json, parameters_with_defaults: {a: 1}, stack_status: 'CREATE_COMPLETE') }
+      let(:stack1) { double(:stack1, template_body: '{"foo": "bar"}', template_hash: {foo: 'bar'}, template_format: :json, parameters_with_defaults: {a: 1}, stack_status: 'UPDATE_COMPLETE') }
+      let(:stack2) { double(:stack2, template_body: '{}', template_hash: {}, template_format: :json, parameters_with_defaults: {a: 1}, stack_status: 'CREATE_COMPLETE') }
       let(:proposed_stack1) { double(:proposed_stack1, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
       let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
 

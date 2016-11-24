@@ -103,7 +103,7 @@ module StackMaster
         if use_s3?
           s3.url(bucket: @s3_config['bucket'], prefix: @s3_config['prefix'], region: @s3_config['region'], template: @stack_definition.s3_template_file_name)
         else
-          proposed_stack.maybe_compressed_template_body
+          proposed_stack.template
         end
       end
 
@@ -112,7 +112,7 @@ module StackMaster
         @stack_definition.s3_files.tap do |files|
           files[@stack_definition.s3_template_file_name] = {
             path: @stack_definition.template_file_path,
-            body: proposed_stack.maybe_compressed_template_body
+            body: proposed_stack.template
           }
         end
       end

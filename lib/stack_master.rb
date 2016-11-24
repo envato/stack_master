@@ -24,6 +24,7 @@ module StackMaster
   autoload :ResolverArray, 'stack_master/resolver_array'
   autoload :Resolver, 'stack_master/resolver_array'
   autoload :Utils, 'stack_master/utils'
+  autoload :TemplateUtils, 'stack_master/template_utils'
   autoload :Config, 'stack_master/config'
   autoload :PagedResponseAccumulator, 'stack_master/paged_response_accumulator'
   autoload :StackDefinition, 'stack_master/stack_definition'

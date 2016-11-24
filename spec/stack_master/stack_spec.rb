@@ -124,26 +124,6 @@ RSpec.describe StackMaster::Stack do
     end
   end
 
-  describe "#maybe_compressed_template_body" do
-    subject(:maybe_compressed_template_body) do
-      stack.maybe_compressed_template_body
-    end
-    context "undersized json" do
-      let(:stack) { described_class.new(template_body: '{     }' ) }
-
-      it "leaves the json alone if it's not too large" do
-        expect(maybe_compressed_template_body).to eq('{     }')
-      end
-    end
-
-    context "oversized json" do
-      let(:stack) { described_class.new(template_body: "{#{' ' * 60000}}", template_format: :json) }
-      it "compresses the json when it's overly bulbous" do
-        expect(maybe_compressed_template_body).to eq('{}')
-      end
-    end
-  end
-
   describe '#too_big?' do
     let(:big_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 500000}\"}") }
     let(:medium_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 60000}\"}") }

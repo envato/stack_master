@@ -1,8 +1,5 @@
 module StackMaster
   class Stack
-    MAX_TEMPLATE_SIZE = 51200
-    MAX_S3_TEMPLATE_SIZE = 460800
-
     attr_reader :stack_name,
                 :region,
                 :stack_id,
@@ -18,25 +15,8 @@ module StackMaster
 
     include Utils::Initializable
 
-    def template_hash
-      return unless template_body
-      @template_hash ||= case template_format
-                         when :json
-                           JSON.parse(template_body)
-                         when :yaml
-                           YAML.load(template_body)
-                         end
-    end
-
-    def maybe_compressed_template_body
-      # Do not compress the template if it's not JSON because parsing YAML as a hash ignores
-      # CloudFormation-specific tags such as !Ref
-      return template_body if template_body.size <= MAX_TEMPLATE_SIZE || template_format != :json
-      @compressed_template_body ||= JSON.dump(template_hash)
-    end
-
     def template_default_parameters
-      template_hash.fetch('Parameters', {}).inject({}) do |result, (parameter_name, description)|
+      TemplateUtils.template_hash(template).fetch('Parameters', {}).inject({}) do |result, (parameter_name, description)|
         result[parameter_name] = description['Default']
         result
       end
@@ -61,7 +41,7 @@ module StackMaster
         params_hash
       end
       template_body ||= cf.get_template(stack_name: stack_name).template_body
-      template_format = identify_template_format(template_body)
+      template_format = TemplateUtils.identify_template_format(template_body)
       stack_policy_body ||= cf.get_stack_policy(stack_name: stack_name).stack_policy_body
       outputs = cf_stack.outputs
 
@@ -82,7 +62,7 @@ module StackMaster
     def self.generate(stack_definition, config)
       parameter_hash = ParameterLoader.load(stack_definition.parameter_files)
       template_body = TemplateCompiler.compile(config, stack_definition.template_file_path)
-      template_format = identify_template_format(template_body)
+      template_format = TemplateUtils.identify_template_format(template_body)
       parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash)
       stack_policy_body = if stack_definition.stack_policy_file_path
                             File.read(stack_definition.stack_policy_file_path)
@@ -97,19 +77,13 @@ module StackMaster
           stack_policy_body: stack_policy_body)
     end
 
-    def self.identify_template_format(template_body)
-      return :json if template_body =~ /^{/x # ignore leading whitespaces
-      :yaml
-    end
-    private_class_method :identify_template_format
-
     def max_template_size(use_s3)
-      return MAX_S3_TEMPLATE_SIZE if use_s3
-      MAX_TEMPLATE_SIZE
+      return TemplateUtils::MAX_S3_TEMPLATE_SIZE if use_s3
+      TemplateUtils::MAX_TEMPLATE_SIZE
     end
 
     def too_big?(use_s3 = false)
-      maybe_compressed_template_body.size > max_template_size(use_s3)
+      template.size > max_template_size(use_s3)
     end
 
     def aws_parameters
@@ -118,6 +92,10 @@ module StackMaster
 
     def aws_tags
       Utils.hash_to_aws_tags(tags)
+    end
+
+    def template
+      @template ||= TemplateUtils.maybe_compressed_template_body(template_body)
     end
   end
 end

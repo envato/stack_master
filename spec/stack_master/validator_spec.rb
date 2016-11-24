@@ -2,10 +2,11 @@ RSpec.describe StackMaster::Validator do
 
   subject(:validator) { described_class.new(stack_definition, config) }
   let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
+  let(:stack_name) { 'myapp_vpc' }
   let(:stack_definition) do
     StackMaster::StackDefinition.new(
       region: 'us-east-1',
-      stack_name: 'myapp_vpc',
+      stack_name: stack_name,
       template: 'myapp_vpc.json',
       tags: { 'environment' => 'production' },
       base_dir: File.expand_path('spec/fixtures'),
@@ -32,6 +33,18 @@ RSpec.describe StackMaster::Validator do
       end
       it "informs the user of their stupdity" do
         expect { validator.perform }.to output(/myapp_vpc: invalid/).to_stdout
+      end
+    end
+
+    context "validate is called from from a continuous integration system with no access to secrets" do
+      let(:stack_name) { 'myapp_vpc_with_secrets' }
+      let(:secret) { instance_double(StackMaster::ParameterResolvers::Secret) }
+      before do
+        allow(StackMaster::ParameterResolvers::Secret).to receive(:new).and_return(secret)
+      end
+      it "does not prompt for the secret key" do
+        expect(secret).not_to receive(:resolve)
+        validator.perform
       end
     end
   end

@@ -53,12 +53,12 @@ RSpec.describe StackMaster::Config do
 
     it 'can filter by region only' do
       stacks = loaded_config.filter('us-east-1')
-      expect(stacks.size).to eq 2
+      expect(stacks.size).to eq 3
     end
 
     it 'can return all stack definitions with no filters' do
       stacks = loaded_config.filter
-      expect(stacks.size).to eq 4
+      expect(stacks.size).to eq 5
     end
   end
 
