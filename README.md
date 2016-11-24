@@ -329,6 +329,19 @@ my_parameter:
     - value2
 ```
 
+Array parameter values can include nested parameter resolvers.
+
+For example, given the following parameter definition:
+```
+my_parameter:
+  - stack_output: my-stack/output # value resolves to 'value1'
+  - value2
+```
+The parameter value will resolve to:
+```
+my_parameter: 'value1,value2'
+```
+
 ## ERB Template Files in SparkleFormation templates
 
 An extension to SparkleFormation is the `user_data_file!` method, which evaluates templates in `templates/user_data/[file_name]`. Most of the usual SparkleFormation methods are available in user data templates. Example:
