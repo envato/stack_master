@@ -23,23 +23,29 @@ module StackMaster
       include ::SparkleFormation::SparkleAttribute::Aws
       include ::SparkleFormation::Utils::TypeCheckers
 
-      def self.build(vars)
+      def self.build(vars, prefix)
         ::Class.new(self).tap do |klass|
           vars.each do |key, value|
             klass.send(:define_method, key) do
               value
             end
           end
-        end.new(vars)
+
+        end.new(vars, prefix)
       end
 
-      def initialize(vars)
+      def initialize(vars, prefix)
         self._camel_keys = true
         @vars = vars
+        @prefix = prefix
       end
 
       def has_var?(var_key)
         @vars.include?(var_key)
+      end
+
+      def render(file_name, vars = {})
+        Template.render(@prefix, file_name, @vars.merge(vars))
       end
     end
 
@@ -80,7 +86,7 @@ module StackMaster
       def self.render(prefix, file_name, vars)
         file_path = File.join(::SparkleFormation.sparkle_path, prefix, file_name)
         template = File.read(file_path)
-        template_context = TemplateContext.build(vars)
+        template_context = TemplateContext.build(vars, prefix)
         compiled_template = SfEruby.new(template).evaluate(template_context)
         CloudFormationLineFormatter.format(compiled_template)
       rescue Errno::ENOENT => e
