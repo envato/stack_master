@@ -45,7 +45,7 @@ module StackMaster
       end
 
       def render(file_name, vars = {})
-        Template.render(@prefix, file_name, @vars.merge(vars))
+        Template.render(@prefix, file_name, vars)
       end
     end
 
