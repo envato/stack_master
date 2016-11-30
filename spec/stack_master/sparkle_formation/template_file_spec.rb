@@ -69,6 +69,44 @@ echo $REGION
       }.to raise_error(StackMaster::SparkleFormation::TemplateFileNotFound)
     end
   end
+
+  context 'with nested templates' do
+    let(:inner_user_data) do
+      <<-EOS
+REGION=<%= region! %>
+<%= test1 %>
+<%= has_var?(:test2) ? 'yes' : 'no' %>
+      EOS
+    end
+
+    let(:outer_user_data) do
+      <<-EOS
+#!/bin/bash
+<%= test1 %> <%= test2 %>
+<%= render 'inner.sh.erb', test1: 'inner1' %>
+      EOS
+    end
+
+    let(:expected_hash) do
+      {"Fn::Base64"=>{"Fn::Join"=>["", [
+        "#!/bin/bash\n",
+        "outer1", " ", "outer2", "\n",
+        "REGION=", {"Ref"=>"AWS::Region"}, "\n",
+        "inner1", "\n",
+        "no", "\n", "\n"
+      ]]}}
+    end
+
+    before do
+      allow(File).to receive(:read).and_call_original
+      allow(File).to receive(:read).with('/templates_dir/user_data/outer.sh.erb').and_return(outer_user_data)
+      allow(File).to receive(:read).with('/templates_dir/user_data/inner.sh.erb').and_return(inner_user_data)
+    end
+
+    it 'renders the outer template, including the inner template with its own var context' do
+      expect(@attr.user_data_file!('outer.sh.erb', test1: :outer1, test2: 'outer2')).to eq expected_hash
+    end
+  end
 end
 
 RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#joined_file!' do
