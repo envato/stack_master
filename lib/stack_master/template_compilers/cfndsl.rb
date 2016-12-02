@@ -5,11 +5,8 @@ module StackMaster::TemplateCompilers
     end
 
     def self.compile(template_file_path, compiler_options = {})
-      if compiler_options["disable_binding"]
-        ::CfnDsl.disable_binding
-      end
-
       extras = Array(compiler_options["external_parameters"])
+      ::CfnDsl.disable_binding if !extras.empty?
       ::CfnDsl.eval_file_with_extras(template_file_path, extras).to_json
     end
 
