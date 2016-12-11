@@ -13,7 +13,7 @@ RSpec.describe StackMaster::TemplateCompilers::Cfndsl do
 
   describe '.compile' do
     def compile
-      described_class.compile(config, template_file_path, stack_definition)
+      described_class.compile(config, template_file_path, stack_definition.cfndsl_external_parameters)
     end
 
     context 'valid cfndsl template' do

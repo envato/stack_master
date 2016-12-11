@@ -4,10 +4,10 @@ module StackMaster::TemplateCompilers
       require 'cfndsl'
     end
 
-    def self.compile(config, template_file_path, stack_definition)
+    def self.compile(config, template_file_path, cfndsl_external_parameters)
       params = []
       params.push([:yaml, File.join(config.base_dir, 'external_parameters', 
-                  stack_definition.cfndsl_external_parameters)]) if stack_definition.cfndsl_external_parameters.length > 0
+                  cfndsl_external_parameters)]) if cfndsl_external_parameters.length > 0
       ::CfnDsl.eval_file_with_extras(template_file_path, params).to_json
     end
 
