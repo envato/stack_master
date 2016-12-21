@@ -8,9 +8,9 @@ module StackMaster::TemplateCompilers
       params = []
       if cfndsl_external_parameters.is_a?
         cfndsl_external_parameters.each do |cfndsl_param|
-        params.push([:yaml, File.join(config.base_dir, 'external_parameters',
-                  cfndsl_param)])      
-        end
+          params.push([:yaml, File.join(config.base_dir, 'external_parameters',
+                 cfndsl_param)])      
+          end
       else
       params.push([:yaml, File.join(config.base_dir, 'external_parameters', 
                   cfndsl_external_parameters)]) if cfndsl_external_parameters.length > 0
