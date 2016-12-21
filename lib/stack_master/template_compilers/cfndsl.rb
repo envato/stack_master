@@ -6,7 +6,7 @@ module StackMaster::TemplateCompilers
 
     def self.compile(config, template_file_path, cfndsl_external_parameters)
       params = []
-      if cfndsl_external_parameters.is_a?
+      if cfndsl_external_parameters.is_a?(Array)
         cfndsl_external_parameters.each do |cfndsl_param|
           params.push([:yaml, File.join(config.base_dir, 'external_parameters',
                  cfndsl_param)])      
