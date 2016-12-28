@@ -12,10 +12,10 @@ module StackMaster::TemplateCompilers
                  cfndsl_param)])      
           end
       else
-      params.push([:yaml, File.join(config.base_dir, 'external_parameters', 
+        params.push([:yaml, File.join(config.base_dir, 'external_parameters',
                   cfndsl_external_parameters)]) if cfndsl_external_parameters.length > 0
-      ::CfnDsl.eval_file_with_extras(template_file_path, params).to_json
       end
+      ::CfnDsl.eval_file_with_extras(template_file_path, params).to_json
     end
 
     StackMaster::TemplateCompiler.register(:cfndsl, self)
