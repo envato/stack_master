@@ -74,4 +74,42 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
       end
     end
   end
+
+  context 'when given a valid string value including region' do
+    let(:value) { 'region-1:my-stack/MyOutput' }
+    let(:stacks) { [{ stack_name: 'my-stack', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs}] }
+    let(:outputs) { [] }
+
+    before do
+      allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
+      cf.stub_responses(:describe_stacks, stacks: stacks)
+    end
+
+    context 'the stack and output exist' do
+      let(:outputs) { [{output_key: 'MyOutput', output_value: 'myresolvedvalue'}] }
+
+      it 'resolves the value' do
+        expect(resolved_value).to eq 'myresolvedvalue'
+      end
+
+      context 'the stack and output exist in a different region with the same name' do
+        let(:value_in_region_2) { 'region-2:my-stack/MyOutput' }
+        let(:outputs_in_region_2) { [{output_key: 'MyOutput', output_value: 'myresolvedvalue2'}] }
+        let(:stacks_in_region_2) { [{ stack_name: 'my-stack', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs_in_region_2}] }
+
+        before do
+          cf.stub_responses(
+            :describe_stacks,
+            { stacks: stacks },
+            { stacks: stacks_in_region_2 }
+          )
+        end
+
+        it 'resolves the value to the right region' do
+          resolver.resolve(value)
+          expect(resolver.resolve(value_in_region_2)).to eq 'myresolvedvalue2'
+        end
+      end
+    end
+  end
 end

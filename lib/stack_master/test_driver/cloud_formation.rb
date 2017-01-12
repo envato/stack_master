@@ -64,6 +64,8 @@ module StackMaster
         reset
       end
 
+      attr_reader :region
+
       def set_region(region)
         @region = region
       end

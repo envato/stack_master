@@ -3,6 +3,8 @@ module StackMaster
     class CloudFormation
       extend Forwardable
 
+      attr_reader :region
+
       def set_region(region)
         @region = region
         @cf = nil

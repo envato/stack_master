@@ -10,14 +10,14 @@ module StackMaster
         @config = config
         @stack_definition = stack_definition
         @stacks = {}
+        @output_regex = %r{(?:([^:]+):)?([^:/]+)/(.+)}
       end
 
       def resolve(value)
-        validate_value!(value)
-        stack_name, output_name = value.split('/')
-        stack = find_stack(stack_name)
+        region, stack_name, output_name = parse!(value)
+        stack = find_stack(stack_name, region)
         if stack
-          output = stack.outputs.find { |output| output.output_key == output_name.camelize }
+          output = stack.outputs.find { |o| o.output_key == output_name.camelize }
           if output
             output.output_value
           else
@@ -34,21 +34,27 @@ module StackMaster
         @cf ||= StackMaster.cloud_formation_driver
       end
 
-      def validate_value!(value)
-        if !value.is_a?(String) || !value.include?('/')
-          raise ArgumentError, 'Stack output values must be in the form of stack-name/output-name'
+      def parse!(value)
+        if !value.is_a?(String) || !(match = @output_regex.match(value))
+          raise ArgumentError, 'Stack output values must be in the form of [region:]stack-name/output_name'
         end
+
+        match.captures
       end
 
-      def find_stack(stack_name)
-        @stacks.fetch(stack_name) do
+      def find_stack(stack_name, region)
+        stack_key = stack_key(stack_name, region)
+        @stacks.fetch(stack_key) do
+          original_region = cf.region
+          cf.set_region(region) if region && original_region != region
           cf_stack = cf.describe_stacks(stack_name: stack_name).stacks.first
-          @stacks[stack_name] = cf_stack
+          cf.set_region(original_region) if region && original_region != region
+          @stacks[stack_key] = cf_stack
         end
       end
 
-      def cf
-        @cf ||= StackMaster.cloud_formation_driver
+      def stack_key(stack_name, region)
+        "#{region || 'any'}:#{stack_name}"
       end
     end
   end
