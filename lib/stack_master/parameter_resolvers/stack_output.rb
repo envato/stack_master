@@ -43,12 +43,18 @@ module StackMaster
       end
 
       def find_stack(stack_name, region)
-        stack_key = stack_key(stack_name, region)
+        unaliased_region = @config.unalias_region(region)
+        stack_key = stack_key(stack_name, unaliased_region)
+
         @stacks.fetch(stack_key) do
           original_region = cf.region
-          cf.set_region(region) if region && original_region != region
+
+          cf.set_region(unaliased_region) if region && original_region != unaliased_region
+
           cf_stack = cf.describe_stacks(stack_name: stack_name).stacks.first
-          cf.set_region(original_region) if region && original_region != region
+
+          cf.set_region(original_region) if region && original_region != unaliased_region
+
           @stacks[stack_key] = cf_stack
         end
       end
