@@ -49,6 +49,7 @@ region_aliases:
 stack_defaults:
   tags:
     application: my-awesome-app
+  role_arn: service_role_arn
 region_defaults:
   us-east-1:
     secret_file: production.yml.gpg
