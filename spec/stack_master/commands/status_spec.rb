@@ -41,23 +41,4 @@ RSpec.describe StackMaster::Commands::Status do
     end
   end
 
-  context "handles AWS throttling" do
-    let(:throttle_exception)  { Aws::CloudFormation::Errors::Throttling.new(double(), "Rate exceeded.") }
-    let(:stack1) { double(:stack1, template_hash: {}, parameters_with_defaults: {a: 1}, stack_status: 'UPDATE_COMPLETE') }
-    let(:stack2) { double(:stack2, template_hash: {}, parameters_with_defaults: {a: 2}, stack_status: 'CREATE_COMPLETE') }
-    let(:proposed_stack1) { double(:proposed_stack1, template_body: "{}", parameters_with_defaults: {a: 1}) }
-    let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", parameters_with_defaults: {a: 1}) }
-
-    it "doubles the sleep time across calls" do
-      call_count = 0
-      expect(cf).to receive(:describe_stacks).at_least(1).times do 
-        call_count += 1
-        call_count <= 3 ? raise(throttle_exception) : double(stacks: double(first: nil))
-      end
-      expect(StackMaster.cloud_formation_driver).to receive(:sleep).with(1).ordered
-      expect(StackMaster.cloud_formation_driver).to receive(:sleep).with(2).ordered
-      expect(StackMaster.cloud_formation_driver).to receive(:sleep).with(4).ordered
-      expect { status.perform }.to_not raise_exception
-    end
-  end
 end
