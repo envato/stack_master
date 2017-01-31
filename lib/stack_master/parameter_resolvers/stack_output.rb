@@ -17,7 +17,7 @@ module StackMaster
         region, stack_name, output_name = parse!(value)
         stack = find_stack(stack_name, region)
         if stack
-          output = stack.outputs.find { |o| o.output_key == output_name.camelize }
+          output = stack.outputs.find { |stack_output| stack_output.output_key == output_name.camelize }
           if output
             output.output_value
           else
