@@ -10,7 +10,7 @@ module StackMaster
         @config = config
         @stack_definition = stack_definition
         @stacks = {}
-        @output_regex = %r{(?:([^:]+):)?([^:/]+)/(.+)}
+        @output_regex = %r{(?:(?<region>[^:]+):)?(?<stack_name>[^:/]+)/(?<output_name>.+)}
       end
 
       def resolve(value)
