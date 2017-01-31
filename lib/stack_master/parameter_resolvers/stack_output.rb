@@ -39,7 +39,11 @@ module StackMaster
           raise ArgumentError, 'Stack output values must be in the form of [region:]stack-name/output_name'
         end
 
-        match.captures
+        [
+          match[:region] || cf.region,
+          match[:stack_name],
+          match[:output_name]
+        ]
       end
 
       def find_stack(stack_name, region)
@@ -57,10 +61,6 @@ module StackMaster
 
           @stacks[stack_key] = cf_stack
         end
-      end
-
-      def stack_key(stack_name, region)
-        "#{region || 'any'}:#{stack_name}"
       end
     end
   end
