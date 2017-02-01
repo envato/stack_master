@@ -52,7 +52,7 @@ module StackMaster
         stack_key = stack_key(stack_name, unaliased_region)
 
         @stacks.fetch(stack_key) do
-          regional_cf = cf_for_region(region)
+          regional_cf = cf_for_region(unaliased_region)
           cf_stack = regional_cf.describe_stacks(stack_name: stack_name).stacks.first
           @stacks[stack_key] = cf_stack
         end
