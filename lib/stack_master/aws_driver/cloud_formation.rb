@@ -19,12 +19,17 @@ module StackMaster
                           :get_stack_policy,
                           :describe_stack_events,
                           :update_stack,
-                          :create_stack,
-                          :validate_template
+                          :create_stack
 
       def describe_stacks(options)
         retry_with_backoff do
           cf.describe_stacks(options)
+        end
+      end
+
+      def validate_template(options)
+        retry_with_backoff do
+          cf.validate_template(options)
         end
       end
 
