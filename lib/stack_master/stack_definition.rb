@@ -8,6 +8,7 @@ module StackMaster
                   :base_dir,
                   :secret_file,
                   :stack_policy_file,
+                  :cfndsl_external_parameters,
                   :additional_parameter_lookup_dirs,
                   :s3,
                   :files
@@ -19,6 +20,7 @@ module StackMaster
       @notification_arns = []
       @s3 = {}
       @files = []
+      @cfndsl_external_parameters = []
       super
     end
 
@@ -30,6 +32,7 @@ module StackMaster
         @tags == other.tags &&
         @notification_arns == other.notification_arns &&
         @base_dir == other.base_dir &&
+        @cfndsl_external_parameters == other.cfndsl_external_parameters &&
         @secret_file == other.secret_file &&
         @stack_policy_file == other.stack_policy_file &&
         @additional_parameter_lookup_dirs == other.additional_parameter_lookup_dirs &&

@@ -139,7 +139,23 @@ the following lines to your `stack_master.yml`.
 template_compilers:
   rb: cfndsl
 ```
+## Using external parameters with cfndsl
+In your stack_master.yml file specify cfndsl_external_parameters: file.yml
+file.yml will be loaded from a directory named external_parameters
+Example
+```yaml
+region_aliases:
+  production: ap-southeast-2
+  staging: ap-southeast-2
+template_compilers:
+  rb: cfndsl
+stacks:
+  production:
+    s3:
+      template: s3.rb
+      cfndsl_external_parameters: s3.yml
 
+```
 ## Parameters
 
 Parameters are loaded from multiple YAML files, merged from the following lookup paths:
