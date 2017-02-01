@@ -3,7 +3,7 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:s3) { instance_double(Aws::S3::Client) }
   let(:region) { 'us-east-1' }
   let(:stack_name) { 'myapp-vpc' }
-  let(:config) { double(find_stack: stack_definition) }
+  let(:config) { double(find_stack: stack_definition, stacks: []) }
   let(:notification_arn) { 'test_arn' }
   let(:stack_definition) { StackMaster::StackDefinition.new(base_dir: '/base_dir', region: region, stack_name: stack_name) }
   let(:template_body) { '{}' }

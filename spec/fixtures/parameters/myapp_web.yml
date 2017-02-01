@@ -1,0 +1,6 @@
+vpc_id:
+  stack_output: myapp_vpc/vpc_id
+subnet_ids:
+  stack_outputs:
+    - myapp_vpc/subnet_1
+    - myapp_vpc/subnet_2

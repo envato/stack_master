@@ -53,12 +53,17 @@ module StackMaster
         StackDiffer.new(proposed_stack, stack).output_diff
       end
 
+      def dependencies
+        @dependencies ||= StackDependency.new(@stack_definition, @config)
+      end
+
       def create_or_update_stack
         if stack_exists?
           update_stack
         else
           create_stack
         end
+        offer_to_run_dependent_stacks
       end
 
       def create_stack
@@ -162,6 +167,13 @@ module StackMaster
       def ensure_valid_template_body_size!
         if proposed_stack.too_big?(use_s3?)
           failed! TEMPLATE_TOO_LARGE_ERROR_MESSAGE
+        end
+      end
+
+      def offer_to_run_dependent_stacks
+        dependencies.outdated_stacks.each do |stack|
+          next unless ask?(%Q{A dependent stack "#{stack.stack_name}" is now out of date because of this change.\nApply this stack now (y/n)?})
+          self.class.new(@config, stack, @options)
         end
       end
 
