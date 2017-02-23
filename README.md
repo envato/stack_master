@@ -390,6 +390,37 @@ container_definitions array!(
 )
 ```
 
+## Compiler Options & Alternate Template Directories
+
+StackMaster allows you to separate your stack definitions and parameters from your templates by way of a `template_dir` key in your stack_master.yml.
+You can also pass compiler-specific options to the template compiler to further customize SparkleFormation or CfnDsl's behavior.  Combining the 2 lets you move your SFN templates away from your stack definitions.  For example, if your project is laid out as:
+
+```
+project-root
+|-- envs
+  |-- env-1
+    |-- stack_master.yml
+  |-- env-2
+    |-- stack_master.yml
+|-- sparkle
+  |-- templates
+    |-- my-stack.rb
+```
+
+Your env-1/stack_master.yml files can reference common templates by setting:
+
+```
+template_dir: ../../sparkle/templates
+stack_defaults:
+  compiler_options:
+    sparkle_path: ../../sparkle
+
+stacks:
+  us-east-1:
+    my-stack:
+      template: my-stack.rb
+```
+
 ## Commands
 
 ```bash
