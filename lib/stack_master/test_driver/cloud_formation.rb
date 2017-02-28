@@ -10,6 +10,7 @@ module StackMaster
                   :stack_status,
                   :stack_status_reason,
                   :disable_rollback,
+                  :role_arn,
                   :notification_arns,
                   :timeout_in_minutes,
                   :capabilities,

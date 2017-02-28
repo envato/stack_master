@@ -10,6 +10,7 @@ RSpec.describe StackMaster::Config do
       tags: { 'application' => 'my-awesome-blog', 'environment' => 'production' },
       s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
       notification_arns: ['test_arn', 'test_arn_2'],
+      role_arn: 'test_service_role_arn2',
       base_dir: base_dir,
       secret_file: 'production.yml.gpg',
       stack_policy_file: 'my_policy.json',
@@ -87,12 +88,14 @@ RSpec.describe StackMaster::Config do
     expect(loaded_config.region_defaults).to eq({
       'us-east-1' => {
         'tags' => { 'environment' => 'production' },
+        'role_arn' => 'test_service_role_arn',
         'notification_arns' => ['test_arn'],
         'secret_file' => 'production.yml.gpg',
         'stack_policy_file' => 'my_policy.json'
       },
       'ap-southeast-2' => {
         'tags' => {'environment' => 'staging', 'test_override' => 1 },
+        'role_arn' => 'test_service_role_arn3',
         'notification_arns' => ['test_arn_3'],
         'secret_file' => 'staging.yml.gpg'
       }
@@ -117,6 +120,7 @@ RSpec.describe StackMaster::Config do
         'test_override' => 1
       },
       s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
+      role_arn: 'test_service_role_arn4',
       notification_arns: ['test_arn_3', 'test_arn_4'],
       template: 'myapp_vpc.rb',
       base_dir: base_dir,
@@ -133,6 +137,7 @@ RSpec.describe StackMaster::Config do
         'test_override' => 2
       },
       s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
+      role_arn: 'test_service_role_arn3',
       notification_arns: ['test_arn_3'],
       template: 'myapp_web',
       base_dir: base_dir,

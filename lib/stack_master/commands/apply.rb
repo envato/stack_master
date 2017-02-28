@@ -122,6 +122,7 @@ module StackMaster
           stack_name: stack_name,
           parameters: proposed_stack.aws_parameters,
           capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+          role_arn: proposed_stack.role_arn,
           notification_arns: proposed_stack.notification_arns,
           stack_policy_body: proposed_stack.stack_policy_body,
           template_method => template_value

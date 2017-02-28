@@ -7,6 +7,7 @@ module StackMaster
                 :parameters,
                 :template_body,
                 :template_format,
+                :role_arn,
                 :notification_arns,
                 :outputs,
                 :stack_policy_body,
@@ -52,6 +53,7 @@ module StackMaster
           template_body: template_body,
           template_format: template_format,
           outputs: outputs,
+          role_arn: cf_stack.role_arn,
           notification_arns: cf_stack.notification_arns,
           stack_policy_body: stack_policy_body,
           stack_status: cf_stack.stack_status)
@@ -73,6 +75,7 @@ module StackMaster
           parameters: parameters,
           template_body: template_body,
           template_format: template_format,
+          role_arn: stack_definition.role_arn,
           notification_arns: stack_definition.notification_arns,
           stack_policy_body: stack_policy_body)
     end
