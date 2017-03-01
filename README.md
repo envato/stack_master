@@ -168,11 +168,20 @@ region/account, even though the resolved values will be different.
 ### Stack Output
 
 The stack output parameter resolver looks up outputs from other stacks in the
-same region. The expected format is `[stack-name]/[OutputName]`.
+same or different region. The expected format is `[(region|region-alias):]stack-name/(OutputName|output_name)`.
 
 ```yaml
 vpc_id:
+  # Output from a stack in the same region
   stack_output: my-vpc-stack/VpcId
+
+bucket_name:
+  # Output from a stack in a different region
+  stack_output: us-east-1:init-bucket/bucket_name
+
+zone_name:
+  # Output from a stack in a different region using its alias
+  stack_output: global:hosted-zone/ZoneName
 ```
 
 This is the most used parameter resolver because it enables stacks to be split
@@ -307,7 +316,7 @@ vpc_id:
 
 Most resolvers support taking an array of values that will each be resolved.
 Unless stated otherwise in the documentation, the array version of the
-resolver will be named with the [pluralized](http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-pluralize) 
+resolver will be named with the [pluralized](http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-pluralize)
 name of the original resolver.
 
 When creating a new resolver, one can automatically create the array resolver by adding a `array_resolver` statement

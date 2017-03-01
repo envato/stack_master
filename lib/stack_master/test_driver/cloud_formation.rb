@@ -65,6 +65,10 @@ module StackMaster
         reset
       end
 
+      def region
+        @region ||= ENV['AWS_REGION'] || Aws.config[:region] || Aws.shared_config.region
+      end
+
       def set_region(region)
         @region = region
       end
