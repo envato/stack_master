@@ -3,9 +3,15 @@ module StackMaster
     class CloudFormation
       extend Forwardable
 
-      def set_region(region)
-        @region = region
-        @cf = nil
+      def region
+        @region ||= ENV['AWS_REGION'] || Aws.config[:region] || Aws.shared_config.region
+      end
+
+      def set_region(value)
+        if region != value
+          @region = value
+          @cf = nil
+        end
       end
 
       def_delegators :cf, :create_change_set,
@@ -26,7 +32,7 @@ module StackMaster
       private
 
       def cf
-        @cf ||= Aws::CloudFormation::Client.new(region: @region, retry_limit: 10)
+        @cf ||= Aws::CloudFormation::Client.new(region: region, retry_limit: 10)
       end
 
     end

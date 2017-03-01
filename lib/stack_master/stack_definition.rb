@@ -4,6 +4,7 @@ module StackMaster
                   :stack_name,
                   :template,
                   :tags,
+                  :role_arn,
                   :notification_arns,
                   :base_dir,
                   :secret_file,
@@ -28,6 +29,7 @@ module StackMaster
         @stack_name == other.stack_name &&
         @template == other.template &&
         @tags == other.tags &&
+        @role_arn == other.role_arn &&
         @notification_arns == other.notification_arns &&
         @base_dir == other.base_dir &&
         @secret_file == other.secret_file &&

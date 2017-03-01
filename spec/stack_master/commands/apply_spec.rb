@@ -4,12 +4,13 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:region) { 'us-east-1' }
   let(:stack_name) { 'myapp-vpc' }
   let(:config) { double(find_stack: stack_definition) }
+  let(:role_arn) { 'test_service_role_arn' }
   let(:notification_arn) { 'test_arn' }
   let(:stack_definition) { StackMaster::StackDefinition.new(base_dir: '/base_dir', region: region, stack_name: stack_name) }
   let(:template_body) { '{}' }
   let(:template_format) { :json }
   let(:parameters) { { 'param_1' => 'hello' } }
-  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, template_format: template_format, tags: { 'environment' => 'production' } , parameters: parameters, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
+  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, template_format: template_format, tags: { 'environment' => 'production' } , parameters: parameters, role_arn: role_arn, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
   let(:stack_policy_body) { '{}' }
 
   before do
@@ -47,6 +48,7 @@ RSpec.describe StackMaster::Commands::Apply do
           { parameter_key: 'param_1', parameter_value: 'hello' }
         ],
         capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+        role_arn: role_arn,
         notification_arns: [notification_arn],
         stack_policy_body: stack_policy_body
       )
@@ -134,6 +136,7 @@ RSpec.describe StackMaster::Commands::Apply do
             value: 'production'
           }],
         capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+        role_arn: role_arn,
         notification_arns: [notification_arn],
         stack_policy_body: stack_policy_body,
         on_failure: 'ROLLBACK'

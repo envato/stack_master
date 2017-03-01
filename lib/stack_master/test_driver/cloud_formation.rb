@@ -10,6 +10,7 @@ module StackMaster
                   :stack_status,
                   :stack_status_reason,
                   :disable_rollback,
+                  :role_arn,
                   :notification_arns,
                   :timeout_in_minutes,
                   :capabilities,
@@ -62,6 +63,10 @@ module StackMaster
     class CloudFormation
       def initialize
         reset
+      end
+
+      def region
+        @region ||= ENV['AWS_REGION'] || Aws.config[:region] || Aws.shared_config.region
       end
 
       def set_region(region)
