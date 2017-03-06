@@ -45,6 +45,7 @@ module StackMaster
     autoload :Outputs, 'stack_master/commands/outputs'
     autoload :Init, 'stack_master/commands/init'
     autoload :Diff, 'stack_master/commands/diff'
+    autoload :Stackify, 'stack_master/commands/stackify'
     autoload :ListStacks, 'stack_master/commands/list_stacks'
     autoload :Validate, 'stack_master/commands/validate'
     autoload :Resources, 'stack_master/commands/resources'

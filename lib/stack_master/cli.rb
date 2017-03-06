@@ -84,6 +84,16 @@ module StackMaster
         end
       end
 
+      command :stackify do |c|
+        c.syntax = 'stack_master stackify [input_file]'
+        c.summary = "Turns a raw JSON stack (or part thereof) into a stackmaster template"
+        c.description = "Turns a raw JSON stack (or part thereof) into a stackmaster template"
+        c.example 'convert a file named my_stack.json', 'stack_master stackify my_stack.json'
+        c.action do |args|
+          puts StackMaster::Commands::Stackify.new(File.read(args[0])).perform
+        end
+      end
+
       command :events do |c|
         c.syntax = 'stack_master events [region_or_alias] [stack_name]'
         c.summary = "Shows events for a stack"
