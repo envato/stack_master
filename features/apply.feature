@@ -78,7 +78,7 @@ Feature: Apply command
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
       | KeyName: my-key                                                                |
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Run apply and don't create the stack
@@ -90,7 +90,7 @@ Feature: Apply command
       | Parameters diff: |
       | KeyName: my-key  |
       | aborted          |
-    And the output should not match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should not match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Run apply with region only and create 2 stacks
@@ -120,11 +120,11 @@ Feature: Apply command
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
       | KeyName: my-key                                                                |
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Create stack with --changed
@@ -154,11 +154,11 @@ Feature: Apply command
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
       | KeyName: my-key                                                                |
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Update a stack
@@ -324,7 +324,7 @@ Feature: Apply command
       | +    "TestSg": {                                                               |
       | Parameters diff:                                                               |
       | VpcId: vpc-xxxxxx                                                              |
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Create a stack with a notification ARN and a stack update policy
