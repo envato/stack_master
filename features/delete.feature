@@ -8,7 +8,7 @@ Feature: Delete command
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
       |        1 |        1 | myapp-vpc  | myapp-vpc           | DELETE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     When I run `stack_master delete us-east-1 myapp-vpc --trace`
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack DELETE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack DELETE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Run a delete command on a stack that does not exists

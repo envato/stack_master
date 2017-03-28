@@ -58,5 +58,5 @@ Feature: Region aliases
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
       | KeyName: my-key                                                                |
-    And the output should match /2020-10-29 00:00:00 \+[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
