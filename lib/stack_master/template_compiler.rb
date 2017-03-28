@@ -2,10 +2,10 @@ module StackMaster
   class TemplateCompiler
     TemplateCompilationFailed = Class.new(RuntimeError)
 
-    def self.compile(config, template_file_path)
+    def self.compile(config, template_file_path, compiler_options = {})
       compiler = template_compiler_for_file(template_file_path, config)
       compiler.require_dependencies
-      compiler.compile(template_file_path)
+      compiler.compile(template_file_path, compiler_options)
     rescue
       raise TemplateCompilationFailed.new("Failed to compile #{template_file_path}.")
     end

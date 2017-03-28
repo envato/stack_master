@@ -7,20 +7,24 @@ module StackMaster
                   :role_arn,
                   :notification_arns,
                   :base_dir,
+                  :template_dir,
                   :secret_file,
                   :stack_policy_file,
                   :additional_parameter_lookup_dirs,
                   :s3,
-                  :files
+                  :files,
+                  :compiler_options
 
     include Utils::Initializable
 
     def initialize(attributes = {})
       @additional_parameter_lookup_dirs = []
+      @compiler_options = {}
       @notification_arns = []
       @s3 = {}
       @files = []
       super
+      @template_dir ||= File.join(@base_dir, 'templates')
     end
 
     def ==(other)
@@ -35,15 +39,12 @@ module StackMaster
         @secret_file == other.secret_file &&
         @stack_policy_file == other.stack_policy_file &&
         @additional_parameter_lookup_dirs == other.additional_parameter_lookup_dirs &&
-        @s3 == other.s3
-    end
-
-    def template_dir
-      File.join(base_dir, 'templates')
+        @s3 == other.s3 &&
+        @compiler_options == other.compiler_options
     end
 
     def template_file_path
-      File.join(template_dir, template)
+      File.expand_path(File.join(template_dir, template))
     end
 
     def files_dir
