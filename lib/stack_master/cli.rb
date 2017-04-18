@@ -112,11 +112,12 @@ module StackMaster
         c.syntax = 'stack_master list'
         c.summary = 'List stack definitions'
         c.description = 'List stack definitions'
+        c.option '--machine-readable', 'Output region and stack space delimited without headers'
         c.action do |args, options|
           options.defaults config: default_config_file
           say "Invalid arguments." if args.size > 0
           config = load_config(options.config)
-          StackMaster::Commands::ListStacks.perform(config)
+          StackMaster::Commands::ListStacks.perform(config, options)
         end
       end
 
