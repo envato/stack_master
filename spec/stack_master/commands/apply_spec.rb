@@ -12,6 +12,7 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:parameters) { { 'param_1' => 'hello' } }
   let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, template_format: template_format, tags: { 'environment' => 'production' } , parameters: parameters, role_arn: role_arn, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
   let(:stack_policy_body) { '{}' }
+  let(:change_set) { double(display: true, failed?: false, id: '1') }
 
   before do
     allow(StackMaster::Stack).to receive(:find).with(region, stack_name).and_return(stack)
@@ -19,10 +20,13 @@ RSpec.describe StackMaster::Commands::Apply do
     allow(config).to receive(:stack_defaults).and_return({})
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
     allow(Aws::S3::Client).to receive(:new).and_return(s3)
-    allow(cf).to receive(:create_stack)
     allow(StackMaster::StackDiffer).to receive(:new).with(proposed_stack, stack).and_return double.as_null_object
     allow(StackMaster::StackEvents::Streamer).to receive(:stream)
     allow(StackMaster).to receive(:interactive?).and_return(false)
+    allow(cf).to receive(:create_change_set).and_return(OpenStruct.new(id: '1'))
+    allow(StackMaster::ChangeSet).to receive(:create).and_return(change_set)
+    allow(cf).to receive(:execute_change_set).and_return(OpenStruct.new(id: '1'))
+    allow(cf).to receive(:set_stack_policy)
   end
 
   def apply
@@ -31,13 +35,6 @@ RSpec.describe StackMaster::Commands::Apply do
 
   context 'the stack exist' do
     let(:stack) { StackMaster::Stack.new(stack_id: '1') }
-    let(:change_set) { double(display: true, failed?: false, id: 'id-1') }
-
-    before do
-      allow(cf).to receive(:create_change_set).and_return(OpenStruct.new(id: '1'))
-      allow(StackMaster::ChangeSet).to receive(:create).and_return(change_set)
-      allow(cf).to receive(:execute_change_set).and_return(OpenStruct.new(id: '1'))
-    end
 
     it 'creates a change set' do
       apply
@@ -49,8 +46,7 @@ RSpec.describe StackMaster::Commands::Apply do
         ],
         capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
         role_arn: role_arn,
-        notification_arns: [notification_arn],
-        stack_policy_body: stack_policy_body
+        notification_arns: [notification_arn]
       )
     end
 
@@ -58,6 +54,23 @@ RSpec.describe StackMaster::Commands::Apply do
       Timecop.freeze(Time.local(1990)) do
         apply
         expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
+      end
+    end
+
+    it 'attaches a stack policy to the stack' do
+      apply
+      expect(cf).to have_received(:set_stack_policy).with(
+        stack_name: stack_name,
+        stack_policy_body: stack_policy_body
+      )
+    end
+
+    context 'stack policy is not changed' do
+      let(:stack) { StackMaster::Stack.new(stack_id: '1', stack_policy_body: stack_policy_body) }
+
+      it 'does not set a stack policy' do
+        apply
+        expect(cf).to_not have_received(:set_stack_policy)
       end
     end
 
@@ -122,9 +135,9 @@ RSpec.describe StackMaster::Commands::Apply do
   context 'the stack does not exist' do
     let(:stack) { nil }
 
-    it 'calls the create stack API method' do
+    it 'creates a change set for creating a stack' do
       apply
-      expect(cf).to have_received(:create_stack).with(
+      expect(StackMaster::ChangeSet).to have_received(:create).with(
         stack_name: stack_name,
         template_body: proposed_stack.template_body,
         parameters: [
@@ -134,12 +147,20 @@ RSpec.describe StackMaster::Commands::Apply do
           {
             key: 'environment',
             value: 'production'
-          }],
+          }
+        ],
         capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
         role_arn: role_arn,
         notification_arns: [notification_arn],
-        stack_policy_body: stack_policy_body,
-        on_failure: 'ROLLBACK'
+        change_set_type: 'CREATE'
+      )
+    end
+
+    it 'attaches a stack policy to the created stack' do
+      apply
+      expect(cf).to have_received(:set_stack_policy).with(
+        stack_name: stack_name,
+        stack_policy_body: stack_policy_body
       )
     end
 
@@ -161,21 +182,21 @@ RSpec.describe StackMaster::Commands::Apply do
       end
     end
 
-    it 'on_failure can be set to a custom value' do
-      config.stack_defaults['on_failure'] = 'DELETE'
-      apply
-      expect(cf).to have_received(:create_stack).with(
-        hash_including(on_failure: 'DELETE')
-      )
-    end
+    context 'user decides to not create a stack' do
+      before do
+        allow(StackMaster).to receive(:non_interactive_answer).and_return('n')
+        allow(cf).to receive(:delete_stack)
+        allow(StackMaster::ChangeSet).to receive(:execute)
+        apply
+      end
 
-    it 'on_failure can be passed in options' do
-      options = Commander::Command::Options.new
-      options.on_failure = 'DELETE'
-      StackMaster::Commands::Apply.perform(config, stack_definition, options)
-      expect(cf).to have_received(:create_stack).with(
-        hash_including(on_failure: 'DELETE')
-      )
+      it 'deletes the stack' do
+        expect(cf).to have_received(:delete_stack).with(stack_name: stack_name)
+      end
+
+      it "doesn't execute the change set" do
+        expect(StackMaster::ChangeSet).to_not have_received(:execute).with(change_set.id)
+      end
     end
   end
 

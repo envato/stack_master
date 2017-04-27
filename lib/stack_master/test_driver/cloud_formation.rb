@@ -87,6 +87,8 @@ module StackMaster
         options.merge!(change_set_id: id)
         @change_sets[id] = options
         @change_sets[options.fetch(:change_set_name)] = options
+        stack_name = options.fetch(:stack_name)
+        add_stack(stack_name: stack_name, stack_status: 'REVIEW_IN_PROGRESS') unless @stacks[stack_name]
         OpenStruct.new(id: id)
       end
 
@@ -106,7 +108,7 @@ module StackMaster
       def execute_change_set(options)
         change_set_id = options.fetch(:change_set_name)
         change_set = @change_sets.fetch(change_set_id)
-        update_stack(change_set)
+        @stacks[change_set.fetch(:stack_name)].attributes = change_set
       end
 
       def delete_change_set(options)
@@ -140,6 +142,10 @@ module StackMaster
 
       def get_stack_policy(options)
         OpenStruct.new(stack_policy_body: @stack_policies[options.fetch(:stack_name)])
+      end
+
+      def set_stack_policy(options)
+        @stack_policies[options.fetch(:stack_name)] = options[:stack_policy_body]
       end
 
       def describe_stack_events(options)

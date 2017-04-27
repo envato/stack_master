@@ -23,6 +23,7 @@ module StackMaster
                           :describe_stack_resources,
                           :get_template,
                           :get_stack_policy,
+                          :set_stack_policy,
                           :describe_stack_events,
                           :update_stack,
                           :create_stack,
