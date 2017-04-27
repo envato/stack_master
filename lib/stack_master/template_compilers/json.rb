@@ -7,7 +7,7 @@ module StackMaster::TemplateCompilers
       require 'json'
     end
 
-    def self.compile(template_file_path)
+    def self.compile(template_file_path, compiler_options = {})
       template_body = File.read(template_file_path)
       if template_body.size > MAX_TEMPLATE_SIZE
         # Parse the json and rewrite compressed
