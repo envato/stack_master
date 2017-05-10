@@ -12,6 +12,7 @@ module StackMaster
         @stack_definition = stack_definition
         @from_time = Time.now
         @options = options
+        @options.on_failure ||= @config.stack_defaults['on_failure']
       end
 
       def perform
@@ -63,15 +64,32 @@ module StackMaster
 
       def create_stack
         upload_files
-        options = stack_options.merge(tags: proposed_stack.aws_tags, change_set_type: 'CREATE')
-        @change_set = ChangeSet.create(options)
+        if use_change_set?
+          create_stack_by_change_set
+        else
+          create_stack_directly
+        end
+      end
+
+      def use_change_set?
+        @options.on_failure.nil?
+      end
+
+      def create_stack_by_change_set
+        @change_set = ChangeSet.create(stack_options.merge(change_set_type: 'CREATE'))
         halt!(@change_set.status_reason) if @change_set.failed?
         @change_set.display(StackMaster.stdout)
         unless ask?('Create stack (y/n)? ')
           cf.delete_stack(stack_name: stack_name)
-          halt! 'Stack creation aborted'
+          halt!('Stack creation aborted')
         end
         execute_change_set
+      end
+
+      def create_stack_directly
+        failed!('Stack creation aborted') unless ask?('Create stack (y/n)? ')
+        on_failure = @options.on_failure || 'ROLLBACK'
+        cf.create_stack(stack_options.merge(on_failure: on_failure))
       end
 
       def ask_to_cancel_stack_update
@@ -125,6 +143,7 @@ module StackMaster
         {
           stack_name: stack_name,
           parameters: proposed_stack.aws_parameters,
+          tags: proposed_stack.aws_tags,
           capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
           role_arn: proposed_stack.role_arn,
           notification_arns: proposed_stack.notification_arns,

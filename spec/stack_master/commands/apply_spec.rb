@@ -20,6 +20,7 @@ RSpec.describe StackMaster::Commands::Apply do
     allow(config).to receive(:stack_defaults).and_return({})
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
     allow(Aws::S3::Client).to receive(:new).and_return(s3)
+    allow(cf).to receive(:create_stack)
     allow(StackMaster::StackDiffer).to receive(:new).with(proposed_stack, stack).and_return double.as_null_object
     allow(StackMaster::StackEvents::Streamer).to receive(:stream)
     allow(StackMaster).to receive(:interactive?).and_return(false)
@@ -43,6 +44,9 @@ RSpec.describe StackMaster::Commands::Apply do
         template_body: proposed_stack.template_body,
         parameters: [
           { parameter_key: 'param_1', parameter_value: 'hello' }
+        ],
+        tags: [
+          { key: 'environment', value: 'production' }
         ],
         capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
         role_arn: role_arn,
@@ -135,7 +139,7 @@ RSpec.describe StackMaster::Commands::Apply do
   context 'the stack does not exist' do
     let(:stack) { nil }
 
-    it 'creates a change set for creating a stack' do
+    it 'creates a change set for a new stack' do
       apply
       expect(StackMaster::ChangeSet).to have_received(:create).with(
         stack_name: stack_name,
@@ -144,10 +148,7 @@ RSpec.describe StackMaster::Commands::Apply do
           { parameter_key: 'param_1', parameter_value: 'hello' }
         ],
         tags: [
-          {
-            key: 'environment',
-            value: 'production'
-          }
+          { key: 'environment', value: 'production' }
         ],
         capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
         role_arn: role_arn,
@@ -180,6 +181,23 @@ RSpec.describe StackMaster::Commands::Apply do
         apply
         expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
       end
+    end
+
+    it 'on_failure can be set to a custom value' do
+      config.stack_defaults['on_failure'] = 'DELETE'
+      apply
+      expect(cf).to have_received(:create_stack).with(
+        hash_including(on_failure: 'DELETE')
+      )
+    end
+
+    it 'on_failure can be passed in options' do
+      options = Commander::Command::Options.new
+      options.on_failure = 'DELETE'
+      StackMaster::Commands::Apply.perform(config, stack_definition, options)
+      expect(cf).to have_received(:create_stack).with(
+        hash_including(on_failure: 'DELETE')
+      )
     end
 
     context 'user decides to not create a stack' do
