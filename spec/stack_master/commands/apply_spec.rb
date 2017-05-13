@@ -157,6 +157,36 @@ RSpec.describe StackMaster::Commands::Apply do
       )
     end
 
+    context 'on_failure option is set' do
+      it 'calls the create stack API method' do
+        config.stack_defaults['on_failure'] = 'ROLLBACK'
+        apply
+        expect(cf).to have_received(:create_stack).with(
+          stack_name: stack_name,
+          template_body: proposed_stack.template_body,
+          parameters: [
+            { parameter_key: 'param_1', parameter_value: 'hello' }
+          ],
+          tags: [
+            { key: 'environment', value: 'production' }
+          ],
+          capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+          role_arn: role_arn,
+          notification_arns: [notification_arn],
+          on_failure: 'ROLLBACK'
+        )
+      end
+
+      it 'on_failure can be passed in options' do
+        options = Commander::Command::Options.new
+        options.on_failure = 'DELETE'
+        StackMaster::Commands::Apply.perform(config, stack_definition, options)
+        expect(cf).to have_received(:create_stack).with(
+          hash_including(on_failure: 'DELETE')
+        )
+      end
+    end
+
     it 'attaches a stack policy to the created stack' do
       apply
       expect(cf).to have_received(:set_stack_policy).with(
@@ -181,23 +211,6 @@ RSpec.describe StackMaster::Commands::Apply do
         apply
         expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
       end
-    end
-
-    it 'on_failure can be set to a custom value' do
-      config.stack_defaults['on_failure'] = 'DELETE'
-      apply
-      expect(cf).to have_received(:create_stack).with(
-        hash_including(on_failure: 'DELETE')
-      )
-    end
-
-    it 'on_failure can be passed in options' do
-      options = Commander::Command::Options.new
-      options.on_failure = 'DELETE'
-      StackMaster::Commands::Apply.perform(config, stack_definition, options)
-      expect(cf).to have_received(:create_stack).with(
-        hash_including(on_failure: 'DELETE')
-      )
     end
 
     context 'user decides to not create a stack' do
