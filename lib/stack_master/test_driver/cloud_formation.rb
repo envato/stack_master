@@ -153,12 +153,6 @@ module StackMaster
         OpenStruct.new(stack_events: events, next_token: nil)
       end
 
-      def update_stack(options)
-        stack_name = options.fetch(:stack_name)
-        @stacks[stack_name].attributes = options
-        @stack_policies[stack_name] = options[:stack_policy_body]
-      end
-
       def create_stack(options)
         stack_name = options.fetch(:stack_name)
         add_stack(options)
