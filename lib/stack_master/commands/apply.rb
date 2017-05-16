@@ -12,7 +12,7 @@ module StackMaster
         @stack_definition = stack_definition
         @from_time = Time.now
         @options = options
-        @options.on_failure ||= @config.stack_defaults['on_failure']
+        @options.on_failure ||= nil
       end
 
       def perform
@@ -88,8 +88,7 @@ module StackMaster
 
       def create_stack_directly
         failed!('Stack creation aborted') unless ask?('Create stack (y/n)? ')
-        on_failure = @options.on_failure || 'ROLLBACK'
-        cf.create_stack(stack_options.merge(on_failure: on_failure))
+        cf.create_stack(stack_options.merge(on_failure: @options.on_failure))
       end
 
       def ask_to_cancel_stack_update

@@ -159,7 +159,9 @@ RSpec.describe StackMaster::Commands::Apply do
 
     context 'on_failure option is set' do
       it 'calls the create stack API method' do
-        config.stack_defaults['on_failure'] = 'ROLLBACK'
+        options = Commander::Command::Options.new
+        options.on_failure = 'ROLLBACK'
+        StackMaster::Commands::Apply.perform(config, stack_definition, options)
         apply
         expect(cf).to have_received(:create_stack).with(
           stack_name: stack_name,
@@ -174,15 +176,6 @@ RSpec.describe StackMaster::Commands::Apply do
           role_arn: role_arn,
           notification_arns: [notification_arn],
           on_failure: 'ROLLBACK'
-        )
-      end
-
-      it 'on_failure can be passed in options' do
-        options = Commander::Command::Options.new
-        options.on_failure = 'DELETE'
-        StackMaster::Commands::Apply.perform(config, stack_definition, options)
-        expect(cf).to have_received(:create_stack).with(
-          hash_including(on_failure: 'DELETE')
         )
       end
     end
