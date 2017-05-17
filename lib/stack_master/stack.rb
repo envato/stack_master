@@ -41,7 +41,7 @@ module StackMaster
         params_hash[param_struct.parameter_key] = param_struct.parameter_value
         params_hash
       end
-      template_body ||= cf.get_template(stack_name: stack_name).template_body
+      template_body ||= cf.get_template(stack_name: stack_name, template_stage: 'Original').template_body
       template_format = TemplateUtils.identify_template_format(template_body)
       stack_policy_body ||= cf.get_stack_policy(stack_name: stack_name).stack_policy_body
       outputs = cf_stack.outputs
