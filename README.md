@@ -439,6 +439,7 @@ stack_master events [region-or-alias] [stack-name] # Display events for a stack
 stack_master outputs [region-or-alias] [stack-name] # Display outputs for a stack
 stack_master resources [region-or-alias] [stack-name] # Display outputs for a stack
 stack_master status # Displays the status of each stack
+stack_master stackify [input-file] # Turns a basic cloudformation template into stackmaster syntax
 ```
 
 ## Applying updates
