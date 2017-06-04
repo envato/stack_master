@@ -3,10 +3,11 @@ Feature: Resources command
   Background:
     Given a file named "stack_master.yml" with:
       """
-      stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.rb
+      environments:
+        prod:
+          stacks:
+            myapp_vpc:
+              template: myapp_vpc.rb
       """
     And a directory named "templates"
     And a file named "templates/myapp_vpc.rb" with:
@@ -25,12 +26,12 @@ Feature: Resources command
 
   Scenario: Show resources
     Given I stub the following stacks:
-      | stack_id | stack_name | parameters       | region    |
-      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
+      | stack_id | stack_name      | parameters       | region    |
+      | 1        | prod-myapp-vpc  | KeyName=my-key   | us-east-1 |
     And I stub the following stack resources:
       | stack_name | logical_resource_id  | resource_type | timestamp           | resource_status |
-      | myapp-vpc  | Vpc                  | AWS::EC2::Vpc | 2015-11-02 06:41:58 | CREATE_COMPLETE |
-    When I run `stack_master resources us-east-1 myapp-vpc --trace`
+      | prod-myapp-vpc  | Vpc             | AWS::EC2::Vpc | 2015-11-02 06:41:58 | CREATE_COMPLETE |
+    When I run `stack_master resources prod myapp-vpc --trace`
     And the output should contain all of these lines:
       | Vpc                 |
       | AWS::EC2::Vpc       |
@@ -38,5 +39,5 @@ Feature: Resources command
       | CREATE_COMPLETE     |
 
   Scenario: Fails when the stack doesn't exist
-    When I run `stack_master resources us-east-1 myapp-vpc --trace`
+    When I run `stack_master resources prod myapp-vpc --trace`
     And the output should contain "Stack doesn't exist"

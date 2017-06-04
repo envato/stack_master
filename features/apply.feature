@@ -3,12 +3,14 @@ Feature: Apply command
   Background:
     Given a file named "stack_master.yml" with:
       """
-      stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.rb
-          myapp_web:
-            template: myapp_web.rb
+      environments:
+        prod:
+          region: us-east-1
+          stacks:
+            myapp_vpc:
+              template: myapp_vpc.rb
+            myapp_web:
+              template: myapp_web.rb
       """
     And a directory named "parameters"
     And a file named "parameters/myapp_vpc.yml" with:
@@ -69,38 +71,38 @@ Feature: Apply command
 
   Scenario: Run apply and create a new stack
     Given I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-    When I run `stack_master apply us-east-1 myapp-vpc --trace`
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-vpc  | prod-myapp-vpc      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    When I run `stack_master apply prod myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
       | KeyName: my-key                                                                |
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Run apply and don't create the stack
     Given I will answer prompts with "n"
-    When I run `stack_master apply us-east-1 myapp-vpc --trace`
+    When I run `stack_master apply prod myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff:      |
       | +    "Vpc": {    |
       | Parameters diff: |
       | KeyName: my-key  |
       | aborted          |
-    And the output should not match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should not match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Run apply with region only and create 2 stacks
     Given I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-web  | myapp-web           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-    When I run `stack_master apply us-east-1 --trace`
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-vpc  | prod-myapp-vpc      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-web  | prod-myapp-web      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    When I run `stack_master apply prod --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | +    "Vpc": {                                                                  |
@@ -109,32 +111,32 @@ Feature: Apply command
 
   Scenario: Run apply nothing and create 2 stacks
     Given I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-web  | myapp-web           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-vpc  | prod-myapp-vpc      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-web  | prod-myapp-web      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     When I run `stack_master apply --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
       | KeyName: my-key                                                                |
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Create stack with --changed
     Given I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-web  | myapp-web           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-    When I run `stack_master --changed apply us-east-1 --trace`
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-vpc  | prod-myapp-vpc      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-web  | prod-myapp-web      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    When I run `stack_master --changed apply prod --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | +    "Vpc": {                                                                  |
@@ -143,33 +145,33 @@ Feature: Apply command
 
   Scenario: Run apply with 2 specific stacks and create 2 stacks
     Given I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-web  | myapp-web           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-    When I run `stack_master apply us-east-1 myapp-vpc us-east-1 myapp-web --trace`
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-vpc  | prod-myapp-vpc      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-web  | prod-myapp-web      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    When I run `stack_master apply prod myapp-vpc prod myapp-web --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
       | KeyName: my-key                                                                |
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Update a stack
     Given I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-vpc  | prod-myapp-vpc      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     And I stub the following stacks:
-      | stack_id | stack_name | parameters       | region    |
-      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
-    And I stub a template for the stack "myapp-vpc":
+      | stack_id | stack_name      | parameters       | region    |
+      | 1        | prod-myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub a template for the stack "prod-myapp-vpc":
       """
       {
         "Description": "Test template",
@@ -202,25 +204,25 @@ Feature: Apply command
         }
       }
       """
-    When I run `stack_master apply us-east-1 myapp-vpc --trace`
+    When I run `stack_master apply prod myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | -    "TestSg2": {                                                              |
       | Parameters diff: No changes                                                    |
       | Proposed change set:                                                           |
       | Replace                                                                        |
-      | Apply change set (y/n)?                                                              |
+      | Apply change set (y/n)?                                                        |
     Then the exit status should be 0
 
   Scenario: Update a stack that has changed with --changed
     Given I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-vpc  | prod-myapp-vpc      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     And I stub the following stacks:
-      | stack_id | stack_name | parameters       | region    |
-      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
-    And I stub a template for the stack "myapp-vpc":
+      | stack_id | stack_name      | parameters       | region    |
+      | 1        | prod-myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub a template for the stack "prod-myapp-vpc":
       """
       {
         "Description": "Test template",
@@ -253,7 +255,7 @@ Feature: Apply command
         }
       }
       """
-    When I run `stack_master --changed apply us-east-1 myapp-vpc --trace`
+    When I run `stack_master --changed apply prod myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | -    "TestSg2": {                                                              |
@@ -262,13 +264,13 @@ Feature: Apply command
 
   Scenario: Update an existing stack that hasn't changed with --changed
     Given I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-vpc  | prod-myapp-vpc      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     And I stub the following stacks:
-      | stack_id | stack_name | parameters       | region    |
-      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
-    And I stub a template for the stack "myapp-vpc":
+      | stack_id | stack_name      | parameters       | region    |
+      | 1        | prod-myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub a template for the stack "prod-myapp-vpc":
       """
       {
         "Description": "Test template",
@@ -297,7 +299,7 @@ Feature: Apply command
         }
       }
       """
-    When I run `stack_master --changed apply us-east-1 myapp-vpc --trace`
+    When I run `stack_master --changed apply prod myapp-vpc --trace`
     And the output should not contain all of these lines:
       | Stack diff:                                                                    |
       | -    "TestSg2": {                                                              |
@@ -311,44 +313,45 @@ Feature: Apply command
         stack_output: myapp-vpc/VpcId
       """
     And I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-web  | myapp-web           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-web  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-web  | prod-myapp-web      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     And I stub the following stacks:
       | stack_id | stack_name | region    | outputs          |
-      | 1        | myapp-vpc  | us-east-1 | VpcId=vpc-xxxxxx |
-    When I run `stack_master apply us-east-1 myapp-web --trace`
+      | 1        | prod-myapp-vpc  | us-east-1 | VpcId=vpc-xxxxxx |
+    When I run `stack_master apply prod myapp-web --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | +    "TestSg": {                                                               |
       | Parameters diff:                                                               |
       | VpcId: vpc-xxxxxx                                                              |
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
   Scenario: Create a stack with a notification ARN and a stack update policy
     Given a file named "stack_master.yml" with:
       """
-      stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.rb
-            notification_arns:
-              - test_arn
-            stack_policy_file: no_rds_replacement.json
+      environments:
+        prod:
+          stacks:
+            myapp_vpc:
+              template: myapp_vpc.rb
+              notification_arns:
+                - test_arn
+              stack_policy_file: no_rds_replacement.json
       """
     And a file named "policies/no_rds_replacement.json" with:
       """
       {}
       """
     And I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-vpc  | prod-myapp-vpc      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     And I stub the following stacks:
-      | stack_id | stack_name | parameters       | region    |
-      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
-    And I stub a template for the stack "myapp-vpc":
+      | stack_id | stack_name      | parameters       | region    |
+      | 1        | prod-myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub a template for the stack "prod-myapp-vpc":
       """
       {
         "Description": "Test template",
@@ -381,10 +384,10 @@ Feature: Apply command
         }
       }
       """
-    When I run `stack_master apply us-east-1 myapp-vpc --trace`
-    Then the stack "myapp-vpc" should have a policy with the following:
+    When I run `stack_master apply prod myapp-vpc --trace`
+    Then the stack "prod-myapp-vpc" should have a policy with the following:
       """
       {}
       """
-    And the stack "myapp-vpc" should contain this notification ARN "test_arn"
+    And the stack "prod-myapp-vpc" should contain this notification ARN "test_arn"
     Then the exit status should be 0

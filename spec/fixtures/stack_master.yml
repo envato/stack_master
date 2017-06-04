@@ -1,6 +1,3 @@
-region_aliases:
-  production: us-east-1
-  staging: ap-southeast-2
 stack_defaults:
   tags:
     application: my-awesome-blog
@@ -18,7 +15,7 @@ region_defaults:
     role_arn: test_service_role_arn
     secret_file: production.yml.gpg
     stack_policy_file: my_policy.json
-  staging:
+  ap-southeast-2:
     tags:
       environment: staging
       test_override: 1
@@ -26,24 +23,28 @@ region_defaults:
       - test_arn_3
     role_arn: test_service_role_arn3
     secret_file: staging.yml.gpg
-stacks:
-  us-east-1:
-    myapp_vpc:
-      template: myapp_vpc.json
-      notification_arns:
-        - test_arn_2
-      role_arn: test_service_role_arn2
-    myapp_web:
-      template: myapp_web.rb
-    myapp_vpc_with_secrets:
-      template: myapp_vpc.json
-  ap-southeast-2:
-    myapp_vpc:
-      template: myapp_vpc.rb
-      notification_arns:
-        - test_arn_4
-      role_arn: test_service_role_arn4
-    myapp_web:
-      template: myapp_web
-      tags:
-        test_override: 2
+environments:
+  production:
+    region: us-east-1
+    stacks:
+      myapp_vpc:
+        template: myapp_vpc.json
+        notification_arns:
+          - test_arn_2
+        role_arn: test_service_role_arn2
+      myapp_web:
+        template: myapp_web.rb
+      myapp_vpc_with_secrets:
+        template: myapp_vpc.json
+  staging:
+    region: ap-southeast-2
+    stacks:
+      myapp_vpc:
+        template: myapp_vpc.rb
+        notification_arns:
+          - test_arn_4
+        role_arn: test_service_role_arn4
+      myapp_web:
+        template: myapp_web
+        tags:
+          test_override: 2

@@ -8,12 +8,13 @@ Feature: Apply command
           bucket: my-bucket
           region: us-east-1
           prefix: cfn_templates/my-app
-      stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.rb
-            files:
-              - user_data.sh
+      environments:
+        prod:
+          stacks:
+            myapp_vpc:
+              template: myapp_vpc.rb
+              files:
+                - user_data.sh
       """
     And a directory named "parameters"
     And a file named "parameters/myapp_vpc.yml" with:
@@ -59,16 +60,16 @@ Feature: Apply command
 
   Scenario: Run apply and create a new stack
     Given I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-    When I run `stack_master apply us-east-1 myapp-vpc --trace`
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-vpc  | prod-myapp-vpc      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    When I run `stack_master apply prod myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff:                                                                    |
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
       | KeyName: my-key                                                                |
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     And an S3 file in bucket "my-bucket" with key "cfn_templates/my-app/myapp_vpc.json" exists with content:
       """
       {

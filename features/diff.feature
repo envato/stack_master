@@ -3,10 +3,11 @@ Feature: Diff command
   Background:
     Given a file named "stack_master.yml" with:
       """
-      stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.json
+      environments:
+        prod:
+          stacks:
+            myapp_vpc:
+              template: myapp_vpc.json
       """
     And a directory named "parameters"
     And a file named "parameters/myapp_vpc.yml" with:
@@ -50,9 +51,9 @@ Feature: Diff command
 
   Scenario: Run diff on a stack with no changes
     Given I stub the following stacks:
-      | stack_id | stack_name | parameters          | region    |
-      |        1 | myapp-vpc  | KeyName=changed-key | us-east-1 |
-    And I stub a template for the stack "myapp-vpc":
+      | stack_id | stack_name      | parameters          | region    |
+      |        1 | prod-myapp-vpc  | KeyName=changed-key | us-east-1 |
+    And I stub a template for the stack "prod-myapp-vpc":
       """
       {
         "Description": "Test template",
@@ -85,7 +86,7 @@ Feature: Diff command
         }
       }
       """
-    When I run `stack_master diff us-east-1 myapp-vpc --trace`
+    When I run `stack_master diff prod myapp-vpc --trace`
     And the output should contain all of these lines:
       | -KeyName: changed |
       | +KeyName: my-key  |
@@ -93,9 +94,9 @@ Feature: Diff command
 
   Scenario: Run diff on a stack with parameter changes
     Given I stub the following stacks:
-      | stack_id | stack_name | parameters       | region    |
-      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
-    And I stub a template for the stack "myapp-vpc":
+      | stack_id | stack_name      | parameters       | region    |
+      | 1        | prod-myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub a template for the stack "prod-myapp-vpc":
       """
       {
         "Description": "Test template",
@@ -128,7 +129,7 @@ Feature: Diff command
         }
       }
       """
-    When I run `stack_master diff us-east-1 myapp-vpc --trace`
+    When I run `stack_master diff prod myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack diff: No changes      |
       | Parameters diff: No changes |
@@ -136,9 +137,9 @@ Feature: Diff command
 
   Scenario: Run diff on a stack with template changes
     Given I stub the following stacks:
-      | stack_id | stack_name | parameters       | region    |
-      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
-    And I stub a template for the stack "myapp-vpc":
+      | stack_id | stack_name      | parameters       | region    |
+      | 1        | prod-myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub a template for the stack "prod-myapp-vpc":
       """
       {
         "Description": "Test template",
@@ -171,7 +172,7 @@ Feature: Diff command
         }
       }
       """
-    When I run `stack_master diff us-east-1 myapp-vpc --trace`
+    When I run `stack_master diff prod myapp-vpc --trace`
     And the output should contain all of these lines:
     | -        "GroupDescription": "Changed description" |
     | +        "GroupDescription": "Test SG 2",          |

@@ -3,10 +3,11 @@ Feature: Outputs command
   Background:
     Given a file named "stack_master.yml" with:
       """
-      stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.rb
+      environments:
+        prod:
+          stacks:
+            myapp_vpc:
+              template: myapp_vpc.rb
       """
     And a directory named "templates"
     And a file named "templates/myapp_vpc.rb" with:
@@ -25,20 +26,20 @@ Feature: Outputs command
 
   Scenario: Output stack resources
     Given I stub the following stacks:
-      | stack_id | stack_name | parameters       | region    | outputs          |
-      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 | VpcId=vpc-123456 |
-    And I stub a template for the stack "myapp-vpc":
+      | stack_id | stack_name      | parameters       | region    | outputs          |
+      | 1        | prod-myapp-vpc  | KeyName=my-key   | us-east-1 | VpcId=vpc-123456 |
+    And I stub a template for the stack "prod-myapp-vpc":
       """
       {
       }
       """
-    When I run `stack_master outputs us-east-1 myapp-vpc --trace`
+    When I run `stack_master outputs prod myapp-vpc --trace`
     And the output should contain all of these lines:
       | VpcId      |
       | vpc-123456 |
 
   Scenario: Fails when the stack doesn't exist
-    When I run `stack_master outputs us-east-1 myapp-vpc --trace`
+    When I run `stack_master outputs prod myapp-vpc --trace`
     And the output should not contain all of these lines:
       | VpcId      |
       | vpc-123456 |

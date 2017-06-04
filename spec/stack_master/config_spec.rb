@@ -4,7 +4,7 @@ RSpec.describe StackMaster::Config do
   let(:myapp_vpc_definition) {
     StackMaster::StackDefinition.new(
       region: 'us-east-1',
-      region_alias: 'production',
+      environment: 'production',
       stack_name: 'myapp-vpc',
       template: 'myapp_vpc.json',
       tags: { 'application' => 'my-awesome-blog', 'environment' => 'production' },
@@ -14,7 +14,6 @@ RSpec.describe StackMaster::Config do
       base_dir: base_dir,
       secret_file: 'production.yml.gpg',
       stack_policy_file: 'my_policy.json',
-      additional_parameter_lookup_dirs: ['production']
     )
   }
 
@@ -36,24 +35,24 @@ RSpec.describe StackMaster::Config do
 
   describe '#find_stack' do
     it 'returns an object that can find stack definitions' do
-      stack = loaded_config.find_stack('us-east-1', 'myapp-vpc')
+      stack = loaded_config.find_stack('production', 'myapp-vpc')
       expect(stack).to eq(myapp_vpc_definition)
     end
 
     it 'can find things with underscores instead of hyphens' do
-      stack = loaded_config.find_stack('us_east_1', 'myapp_vpc')
+      stack = loaded_config.find_stack('production', 'myapp_vpc')
       expect(stack).to eq(myapp_vpc_definition)
     end
   end
 
   describe '#filter' do
     it 'returns a list of stack definitions' do
-      stack = loaded_config.filter('us-east-1', 'myapp-vpc')
+      stack = loaded_config.filter('production', 'myapp-vpc')
       expect(stack).to eq([myapp_vpc_definition])
     end
 
     it 'can filter by region only' do
-      stacks = loaded_config.filter('us-east-1')
+      stacks = loaded_config.filter('production')
       expect(stacks.size).to eq 3
     end
 
@@ -102,18 +101,11 @@ RSpec.describe StackMaster::Config do
     })
   end
 
-  it 'loads region_aliases' do
-    expect(loaded_config.region_aliases).to eq(
-      'production' => 'us-east-1',
-      'staging' => 'ap-southeast-2'
-    )
-  end
-
   it 'deep merges stack attributes' do
-    expect(loaded_config.find_stack('ap-southeast-2', 'myapp-vpc')).to eq(StackMaster::StackDefinition.new(
+    expect(loaded_config.find_stack('staging', 'myapp-vpc')).to eq(StackMaster::StackDefinition.new(
       stack_name: 'myapp-vpc',
       region: 'ap-southeast-2',
-      region_alias: 'staging',
+      environment: 'staging',
       tags: {
         'application' => 'my-awesome-blog',
         'environment' => 'staging',
@@ -125,12 +117,11 @@ RSpec.describe StackMaster::Config do
       template: 'myapp_vpc.rb',
       base_dir: base_dir,
       secret_file: 'staging.yml.gpg',
-      additional_parameter_lookup_dirs: ['staging']
     ))
-    expect(loaded_config.find_stack('ap-southeast-2', 'myapp-web')).to eq(StackMaster::StackDefinition.new(
+    expect(loaded_config.find_stack('staging', 'myapp-web')).to eq(StackMaster::StackDefinition.new(
       stack_name: 'myapp-web',
       region: 'ap-southeast-2',
-      region_alias: 'staging',
+      environment: 'staging',
       tags: {
         'application' => 'my-awesome-blog',
         'environment' => 'staging',
@@ -142,12 +133,6 @@ RSpec.describe StackMaster::Config do
       template: 'myapp_web',
       base_dir: base_dir,
       secret_file: 'staging.yml.gpg',
-      additional_parameter_lookup_dirs: ['staging']
     ))
-  end
-
-  it 'allows region aliases in region defaults' do
-    config = StackMaster::Config.new({'region_aliases' => { 'production' => 'us-east-1' }, 'region_defaults' => { 'production' => { 'secret_file' => 'production.yml.gpg' }}, 'stacks' => {}}, '/base')
-    expect(config.region_defaults).to eq('us-east-1' => { 'secret_file' => 'production.yml.gpg' })
   end
 end

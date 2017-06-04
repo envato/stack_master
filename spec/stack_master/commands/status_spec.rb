@@ -2,8 +2,8 @@ RSpec.describe StackMaster::Commands::Status do
   subject(:status) { described_class.new(config, false) }
   let(:config) { instance_double(StackMaster::Config, stacks: stacks) }
   let(:stacks) { [stack_definition_1, stack_definition_2] }
-  let(:stack_definition_1) { double(:stack_definition_1, region: 'us-east-1', stack_name: 'stack1') }
-  let(:stack_definition_2) { double(:stack_definition_2, region: 'us-east-1', stack_name: 'stack2', stack_status: 'CREATE_COMPLETE') }
+  let(:stack_definition_1) { double(:stack_definition_1, region: 'us-east-1', stack_name: 'stack1', environment: 'prod', raw_stack_name: 'stack1') }
+  let(:stack_definition_2) { double(:stack_definition_2, region: 'us-east-1', stack_name: 'stack2', stack_status: 'CREATE_COMPLETE', environment: 'prod', raw_stack_name: 'prod-stack2') }
   let(:cf) { Aws::CloudFormation::Client.new(region: 'us-east-1') }
 
   before do
@@ -23,7 +23,7 @@ RSpec.describe StackMaster::Commands::Status do
       let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
 
       it "returns the status of call stacks" do
-        out = "REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT\n----------|------------|-----------------|----------\nus-east-1 | stack1     | UPDATE_COMPLETE | No       \nus-east-1 | stack2     | CREATE_COMPLETE | Yes      \n * No echo parameters can't be diffed\n"
+        out = "ENVIRONMENT | STACK_NAME | REGION    | STACK_STATUS    | DIFFERENT\n------------|------------|-----------|-----------------|----------\nprod        | stack1     | us-east-1 | UPDATE_COMPLETE | No       \nprod        | stack2     | us-east-1 | CREATE_COMPLETE | Yes      \n * No echo parameters can't be diffed\n"
         expect { status.perform }.to output(out).to_stdout
       end
     end
@@ -35,10 +35,9 @@ RSpec.describe StackMaster::Commands::Status do
       let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
 
       it "returns the status of call stacks" do
-        out = "REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT\n----------|------------|-----------------|----------\nus-east-1 | stack1     | UPDATE_COMPLETE | Yes      \nus-east-1 | stack2     | CREATE_COMPLETE | No       \n * No echo parameters can't be diffed\n"
+        out = "ENVIRONMENT | STACK_NAME | REGION    | STACK_STATUS    | DIFFERENT\n------------|------------|-----------|-----------------|----------\nprod        | stack1     | us-east-1 | UPDATE_COMPLETE | Yes      \nprod        | stack2     | us-east-1 | CREATE_COMPLETE | No       \n * No echo parameters can't be diffed\n"
         expect { status.perform }.to output(out).to_stdout
       end
     end
   end
-
 end
