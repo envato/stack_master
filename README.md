@@ -43,13 +43,11 @@ directory, or that the file is passed in with `--config
 /path/to/stack_master.yml`.  Here's an example configuration file:
 
 ```
-region_aliases:
-  production: us-east-1
-  staging: ap-southeast-2
 stack_defaults:
   tags:
     application: my-awesome-app
   role_arn: service_role_arn
+
 region_defaults:
   us-east-1:
     secret_file: production.yml.gpg
@@ -61,8 +59,10 @@ region_defaults:
     secret_file: staging.yml.gpg
     tags:
       environment: staging
-stacks:
-  production:
+
+environment_defaults:
+  region: ap-southeast-2
+  stacks:
     myapp-vpc:
       template: myapp_vpc.rb
       tags:
@@ -76,24 +76,16 @@ stacks:
       template: myapp_web.rb
       tags:
         purpose: front-end
-  staging:
-    myapp-vpc:
-      template: myapp_vpc.rb
+ 
+
+stacks:
+ production:
+   region: us-east-1
+ staging:
+    extra-vpc:
+      template: extra_vpc.rb
       tags:
-        purpose: front-end
-    myapp-db:
-      template: myapp_db.rb
-      tags:
-        purpose: back-end
-    myapp-web:
-      template: myapp_web.rb
-      tags:
-        purpose: front-end
-  eu-central-1:
-    myapp-vpc:
-      template: myapp_vpc.rb
-      tags:
-        purpose: vpc
+        purpose: side-end
 ```
 
 ## S3
@@ -111,12 +103,13 @@ stack_defaults:
 
 Additional files can be configured to be uploaded to S3 alongside the templates:
 ```yaml
-stacks:
+environments:
   production:
-    myapp-vpc:
-      template: myapp_vpc.rb
-      files:
-        - userdata.sh
+    stacks:
+      myapp-vpc:
+        template: myapp_vpc.rb
+        files:
+          - userdata.sh
 ```
 ## Directories
 
@@ -146,8 +139,8 @@ template_compilers:
 Parameters are loaded from multiple YAML files, merged from the following lookup paths:
 
 - parameters/[stack_name].yml
+- parameters/[environment]/[underscored_stack_name].yml
 - parameters/[region]/[underscored_stack_name].yml
-- parameters/[region_alias]/[underscored_stack_name].yml
 
 A simple parameter file could look like this:
 
@@ -183,7 +176,7 @@ region/account, even though the resolved values will be different.
 ### Stack Output
 
 The stack output parameter resolver looks up outputs from other stacks in the
-same or different region. The expected format is `[(region|region-alias):]stack-name/(OutputName|output_name)`.
+same or different region. The expected format is `[region:]stack-name/(OutputName|output_name)`.
 
 ```yaml
 vpc_id:
@@ -193,10 +186,6 @@ vpc_id:
 bucket_name:
   # Output from a stack in a different region
   stack_output: us-east-1:init-bucket/bucket_name
-
-zone_name:
-  # Output from a stack in a different region using its alias
-  stack_output: global:hosted-zone/ZoneName
 ```
 
 This is the most used parameter resolver because it enables stacks to be split
@@ -213,11 +202,12 @@ in the secret file. A common use case for this is to store database passwords.
 stack_master.yml:
 
 ```yaml
-stacks:
-  us-east-1:
-    my_app:
-      template: my_app.json
-      secret_file: production.yml.gpg
+environments:
+  production:
+    stacks:
+      my_app:
+        template: my_app.json
+        secret_file: production.yml.gpg
 ```
 
 secrets/production.yml.gpg, when decrypted:
@@ -430,10 +420,11 @@ stack_defaults:
   compiler_options:
     sparkle_path: ../../sparkle
 
-stacks:
-  us-east-1:
-    my-stack:
-      template: my-stack.rb
+environments:
+  production:
+    stacks:
+      my-stack:
+        template: my-stack.rb
 ```
 
 ## Commands
@@ -442,17 +433,17 @@ stacks:
 stack_master help # Display up to date docs on the commands available
 stack_master init # Initialises a directory structure and stack_master.yml file
 stack_master list # Lists stack definitions
-stack_master apply [region-or-alias] [stack-name] # Create or update a stack
-stack_master apply [region-or-alias] [stack-name] [region-or-alias] [stack-name] # Create or update multiple stacks
-stack_master apply [region-or-alias] # Create or update stacks in the given region
+stack_master apply [environment] [stack-name] # Create or update a stack
+stack_master apply [environment] [stack-name] [environment] [stack-name] # Create or update multiple stacks
+stack_master apply [environment] # Create or update stacks in the given region
 stack_master apply # Create or update all stacks
 stack_master --changed apply # Create or update all stacks that have changed
-stack_master --yes apply [region-or-alias] [stack-name] # Create or update a stack non-interactively (forcing yes)
-stack_master diff [region-or-alias] [stack-name] # Display a stack tempalte and parameter diff
-stack_master delete [region-or-alias] [stack-name] # Delete a stack
-stack_master events [region-or-alias] [stack-name] # Display events for a stack
-stack_master outputs [region-or-alias] [stack-name] # Display outputs for a stack
-stack_master resources [region-or-alias] [stack-name] # Display outputs for a stack
+stack_master --yes apply [environment] [stack-name] # Create or update a stack non-interactively (forcing yes)
+stack_master diff [environment] [stack-name] # Display a stack tempalte and parameter diff
+stack_master delete [environment] [stack-name] # Delete a stack
+stack_master events [environment] [stack-name] # Display events for a stack
+stack_master outputs [environment] [stack-name] # Display outputs for a stack
+stack_master resources [environment] [stack-name] # Display outputs for a stack
 stack_master status # Displays the status of each stack
 ```
 
