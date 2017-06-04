@@ -18,8 +18,9 @@ module StackMaster
           stack_status = StackStatus.new(@config, stack_definition)
           progress.increment if @show_progress
           {
-            region: stack_definition.region,
+            environment: stack_definition.environment,
             stack_name: stack_definition.stack_name,
+            region: stack_definition.region,
             stack_status: stack_status.status,
             different: stack_status.changed_message,
           }

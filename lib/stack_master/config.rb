@@ -1,5 +1,6 @@
 require 'deep_merge/rails_compat'
 require 'active_support/core_ext/object/deep_dup'
+require 'awesome_print'
 
 module StackMaster
   class Config
@@ -34,33 +35,27 @@ module StackMaster
     def initialize(config, base_dir)
       @config = config
       @base_dir = base_dir
+
       @template_dir = config.fetch('template_dir', nil)
+
+      @region_defaults = Utils.underscore_keys_to_hyphen(config.fetch('region_defaults', {}))
       @stack_defaults = config.fetch('stack_defaults', {})
-      @region_aliases = Utils.underscore_keys_to_hyphen(config.fetch('region_aliases', {}))
-      @region_to_aliases = @region_aliases.inject({}) do |hash, (key, value)|
-        hash[value] ||= []
-        hash[value] << key
-        hash
-      end
-      @region_defaults = normalise_region_defaults(config.fetch('region_defaults', {}))
+      @environment_defaults = config.fetch('environment_defaults', {})
+
       @stacks = []
       load_template_compilers(config)
       load_config
     end
 
-    def filter(region = nil, stack_name = nil)
+    def filter(environment = nil, stack_name = nil)
       @stacks.select do |s|
-        (region.blank? || s.region == region || s.region == region.gsub('_', '-')) &&
+        (environment.blank? || s.environment == environment || s.environment == environment.gsub('_', '-')) &&
           (stack_name.blank? || s.stack_name == stack_name || s.stack_name == stack_name.gsub('_', '-'))
       end
     end
 
-    def find_stack(region, stack_name)
-      filter(region, stack_name).first
-    end
-
-    def unalias_region(region)
-      @region_aliases.fetch(region) { region }
+    def find_stack(environment, stack_name)
+      filter(environment, stack_name).first
     end
 
     private
@@ -90,44 +85,41 @@ module StackMaster
     end
 
     def load_config
-      unaliased_stacks = resolve_region_aliases(@config.fetch('stacks'))
-      load_stacks(unaliased_stacks)
-    end
+      environments = @config.fetch('environments')
 
-    def resolve_region_aliases(stacks)
-      stacks.inject({}) do |hash, (region, attributes)|
-        hash[unalias_region(region)] = attributes
-        hash
+      environments.each do |name, attributes|
+        environment_name = Utils.underscore_to_hyphen(name)
+        environment_attributes = build_environment_defaults.deeper_merge!(attributes)
+
+        region = environment_attributes['region']
+        stacks = environment_attributes['stacks']
+
+        load_stacks(stacks, environment_name, region)
       end
     end
 
-    def load_stacks(stacks)
-      stacks.each do |region, stacks_for_region|
-        region = Utils.underscore_to_hyphen(region)
-        stacks_for_region.each do |stack_name, attributes|
-          stack_name = Utils.underscore_to_hyphen(stack_name)
-          stack_attributes = build_stack_defaults(region).deeper_merge!(attributes).merge(
+    def build_environment_defaults
+      @environment_defaults.deep_dup
+    end
+
+    def load_stacks(stacks, environment_name, region)
+      region = Utils.underscore_to_hyphen(region)
+      stacks.each do |stack_name, attributes|
+        stack_name = Utils.underscore_to_hyphen(stack_name)
+        stack_attributes = build_stack_defaults(region).deeper_merge!(attributes).merge(
+            'environment' => environment_name,
             'region' => region,
             'stack_name' => stack_name,
             'base_dir' => @base_dir,
             'template_dir' => @template_dir,
-            'additional_parameter_lookup_dirs' => @region_to_aliases[region])
-          @stacks << StackDefinition.new(stack_attributes)
-        end
+          )
+        @stacks << StackDefinition.new(stack_attributes)
       end
     end
 
     def build_stack_defaults(region)
-      region_defaults = @region_defaults.fetch(region, {}).deep_dup
-      @stack_defaults.deep_dup.deeper_merge(region_defaults)
-    end
-
-    def normalise_region_defaults(region_defaults)
-      region_defaults.inject({}) do |normalised_aliases, (region_or_alias, value)|
-        region = unalias_region(region_or_alias)
-        normalised_aliases[Utils.underscore_to_hyphen(region)] = value
-        normalised_aliases
-      end
+      region_defaults = @region_defaults.fetch(region, {})
+      @stack_defaults.deep_dup.deeper_merge!(region_defaults)
     end
   end
 end

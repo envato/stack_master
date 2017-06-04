@@ -16,7 +16,14 @@ module StackMaster
 
       def resolve(value)
         region, stack_name, output_name = parse!(value)
-        stack = find_stack(stack_name, region)
+        # FIXME we try our stack names as well as supplied one. i.e. we support what we have created as well as external stacks
+        # Is this the best approach?
+        begin
+          stack = find_stack("#{@stack_definition.environment}-#{stack_name}", region)
+        rescue
+          stack = find_stack(stack_name, region)
+        end
+
         if stack
           output = stack.outputs.find { |stack_output| stack_output.output_key == output_name.camelize }
           if output
@@ -48,11 +55,10 @@ module StackMaster
       end
 
       def find_stack(stack_name, region)
-        unaliased_region = @config.unalias_region(region)
-        stack_key = stack_key(stack_name, unaliased_region)
+        stack_key = stack_key(stack_name, region)
 
         @stacks.fetch(stack_key) do
-          regional_cf = cf_for_region(unaliased_region)
+          regional_cf = cf_for_region(region)
           cf_stack = regional_cf.describe_stacks(stack_name: stack_name).stacks.first
           @stacks[stack_key] = cf_stack
         end

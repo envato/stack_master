@@ -15,16 +15,12 @@ module StackMaster
 
       private
 
-      def stack_definition
-        @stack_definition ||= @config.find_stack(@region, @stack_name)
-      end
-
       def stack
-        @stack ||= Stack.find(@stack_definition.region, @stack_definition.stack_name)
+        @stack ||= Stack.find(@stack_definition.region, @stack_definition.raw_stack_name)
       end
 
       def proposed_stack
-        @proposed_stack ||= Stack.generate(stack_definition, @config)
+        @proposed_stack ||= Stack.generate(@stack_definition, @config)
       end
     end
   end
