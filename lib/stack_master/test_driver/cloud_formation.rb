@@ -69,8 +69,16 @@ module StackMaster
         @region ||= ENV['AWS_REGION'] || Aws.config[:region] || Aws.shared_config.region
       end
 
+      def profile_name
+        @profile_name ||= ENV['AWS_PROFILE'] || Aws.config[:profile_name]
+      end
+
       def set_region(region)
         @region = region
+      end
+
+      def set_profile(profile_name)
+        @profile_name = profile_name
       end
 
       def reset

@@ -1,6 +1,7 @@
 module StackMaster
   class StackDefinition
     attr_accessor :region,
+                  :profile,
                   :stack_name,
                   :template,
                   :tags,
@@ -30,6 +31,7 @@ module StackMaster
     def ==(other)
       self.class === other &&
         @region == other.region &&
+        @profile == other.profile &&
         @stack_name == other.stack_name &&
         @template == other.template &&
         @tags == other.tags &&

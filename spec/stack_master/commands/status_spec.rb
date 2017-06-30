@@ -2,8 +2,8 @@ RSpec.describe StackMaster::Commands::Status do
   subject(:status) { described_class.new(config, false) }
   let(:config) { instance_double(StackMaster::Config, stacks: stacks) }
   let(:stacks) { [stack_definition_1, stack_definition_2] }
-  let(:stack_definition_1) { double(:stack_definition_1, region: 'us-east-1', stack_name: 'stack1') }
-  let(:stack_definition_2) { double(:stack_definition_2, region: 'us-east-1', stack_name: 'stack2', stack_status: 'CREATE_COMPLETE') }
+  let(:stack_definition_1) { double(:stack_definition_1, region: 'us-east-1', profile: nil, stack_name: 'stack1') }
+  let(:stack_definition_2) { double(:stack_definition_2, region: 'us-east-1', profile: nil, stack_name: 'stack2', stack_status: 'CREATE_COMPLETE') }
   let(:cf) { Aws::CloudFormation::Client.new(region: 'us-east-1') }
 
   before do

@@ -8,11 +8,14 @@ module StackMaster
       def set_region(_)
       end
 
+      def set_profile(_)
+      end
+
       def reset
         @files = Hash.new { |hash, key| hash[key] = Hash.new }
       end
 
-      def upload_files(bucket: nil, prefix: nil, region: nil, files: {})
+      def upload_files(bucket: nil, prefix: nil, region: nil, profile_name: nil, files: {})
         return if files.empty?
 
         files.each do |template, file|

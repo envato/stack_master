@@ -96,6 +96,17 @@ stacks:
         purpose: vpc
 ```
 
+## AWS Credentials
+
+The AWS credential discovery support by the AWS SDKs will be used as default.
+You can also set an AWS profile per stack. This can be set in
+stack_defaults or region_defaults. For example
+
+``` yaml
+stack_defaults:
+  profile: company_a
+```
+
 ## S3
 
 StackMaster can optionally use S3 to store the templates before creating a stack.

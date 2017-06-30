@@ -4,13 +4,20 @@ module StackMaster
       include Command
       include StackMaster::Prompter
 
-      def initialize(region, stack_name)
+      def initialize(config, region, stack_name)
+        @config = config
         @region = region
         @stack_name = stack_name
         @from_time = Time.now
       end
 
+      def stack
+        return unless @config
+        @stack ||= @config.filter(@region, @stack_name).first
+      end
+
       def perform
+        cf.set_profile(stack.profile) if stack
 
         return unless check_exists
 

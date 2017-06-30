@@ -165,7 +165,7 @@ module StackMaster
           end
 
           StackMaster.cloud_formation_driver.set_region(region)
-          StackMaster::Commands::Delete.perform(region, args[1])
+          StackMaster::Commands::Delete.perform(config, region, args[1])
         end
       end
 
@@ -196,6 +196,7 @@ module StackMaster
         end if options.changed
         stack_definitions.each do |stack_definition|
           StackMaster.cloud_formation_driver.set_region(stack_definition.region)
+          StackMaster.cloud_formation_driver.set_profile(stack_definition.profile)
           StackMaster.stdout.puts "Executing #{command.command_name} on #{stack_definition.stack_name} in #{stack_definition.region}"
           command_results.push command.perform(config, stack_definition, options).success?
         end
