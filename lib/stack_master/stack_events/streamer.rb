@@ -1,6 +1,8 @@
 module StackMaster
   module StackEvents
     class Streamer
+      StackFailed = Class.new(StandardError)
+
       def self.stream(*args, &block)
         new(*args, &block).stream
       end
@@ -24,6 +26,7 @@ module StackMaster
               @block.call(event) if @block
               Presenter.print_event(@io, event) if @io
               if @break_on_finish_state && finish_state?(event)
+                exit_with_error(event) if failure_state?(event)
                 throw :halt
               end
             end
@@ -49,6 +52,16 @@ module StackMaster
         StackStates.finish_state?(event.resource_status) &&
           event.resource_type == 'AWS::CloudFormation::Stack' &&
           event.logical_resource_id == @stack_name
+      end
+
+      def failure_state?(event)
+        StackStates.failure_state?(event.resource_status) &&
+          event.resource_type == 'AWS::CloudFormation::Stack' &&
+          event.logical_resource_id == @stack_name
+      end
+
+      def exit_with_error(event)
+        raise StackFailed, "#{event.logical_resource_id} did not succeed (last state was #{event.resource_status})"
       end
     end
   end
