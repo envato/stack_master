@@ -7,6 +7,7 @@ module StackMaster
                 :parameters,
                 :template_body,
                 :template_format,
+                :role_arn,
                 :notification_arns,
                 :outputs,
                 :stack_policy_body,
@@ -40,7 +41,7 @@ module StackMaster
         params_hash[param_struct.parameter_key] = param_struct.parameter_value
         params_hash
       end
-      template_body ||= cf.get_template(stack_name: stack_name).template_body
+      template_body ||= cf.get_template(stack_name: stack_name, template_stage: 'Original').template_body
       template_format = TemplateUtils.identify_template_format(template_body)
       stack_policy_body ||= cf.get_stack_policy(stack_name: stack_name).stack_policy_body
       outputs = cf_stack.outputs
@@ -52,6 +53,7 @@ module StackMaster
           template_body: template_body,
           template_format: template_format,
           outputs: outputs,
+          role_arn: cf_stack.role_arn,
           notification_arns: cf_stack.notification_arns,
           stack_policy_body: stack_policy_body,
           stack_status: cf_stack.stack_status)
@@ -61,7 +63,7 @@ module StackMaster
 
     def self.generate(stack_definition, config)
       parameter_hash = ParameterLoader.load(stack_definition.parameter_files)
-      template_body = TemplateCompiler.compile(config, stack_definition.template_file_path)
+      template_body = TemplateCompiler.compile(config, stack_definition.template_file_path, stack_definition.compiler_options)
       template_format = TemplateUtils.identify_template_format(template_body)
       parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash)
       stack_policy_body = if stack_definition.stack_policy_file_path
@@ -73,6 +75,7 @@ module StackMaster
           parameters: parameters,
           template_body: template_body,
           template_format: template_format,
+          role_arn: stack_definition.role_arn,
           notification_arns: stack_definition.notification_arns,
           stack_policy_body: stack_policy_body)
     end

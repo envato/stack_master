@@ -19,7 +19,7 @@ RSpec.describe StackMaster::Stack do
         ]
       }
       before do
-        cf.stub_responses(:describe_stacks, stacks: [{ stack_id: stack_id, stack_name: stack_name, creation_time: Time.now, stack_status: 'UPDATE_COMPLETE', parameters: parameters, notification_arns: ['test_arn']}])
+        cf.stub_responses(:describe_stacks, stacks: [{ stack_id: stack_id, stack_name: stack_name, creation_time: Time.now, stack_status: 'UPDATE_COMPLETE', parameters: parameters, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn'}])
         cf.stub_responses(:get_template, template_body: "{}")
         cf.stub_responses(:get_stack_policy, stack_policy_body: stack_policy_body)
       end
@@ -36,6 +36,10 @@ RSpec.describe StackMaster::Stack do
         expect(stack.parameters).to eq({'param1' => 'value1', 'param2' => 'value2'})
       end
 
+      it 'sets role_arn' do
+        expect(stack.role_arn).to eq('test_service_role_arn')
+      end
+      
       it 'sets notification_arns' do
         expect(stack.notification_arns).to eq(['test_arn'])
       end
@@ -70,7 +74,7 @@ RSpec.describe StackMaster::Stack do
 
   describe '.generate' do
     let(:tags) { { 'tag1' => 'value1' } }
-    let(:stack_definition) { StackMaster::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name, notification_arns: ['test_arn'], stack_policy_file: 'no_replace_rds.json') }
+    let(:stack_definition) { StackMaster::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn', stack_policy_file: 'no_replace_rds.json') }
     let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
     subject(:stack) { StackMaster::Stack.generate(stack_definition, config) }
     let(:parameter_hash) { { 'DbPassword' => { 'secret' => 'db_password' } } }
@@ -83,7 +87,7 @@ RSpec.describe StackMaster::Stack do
     before do
       allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
       allow(StackMaster::ParameterResolver).to receive(:resolve).and_return(resolved_parameters)
-      allow(StackMaster::TemplateCompiler).to receive(:compile).with(config, stack_definition.template_file_path).and_return(template_body)
+      allow(StackMaster::TemplateCompiler).to receive(:compile).with(config, stack_definition.template_file_path, stack_definition.compiler_options).and_return(template_body)
       allow(File).to receive(:read).with(stack_definition.stack_policy_file_path).and_return(stack_policy_body)
     end
 
@@ -107,6 +111,10 @@ RSpec.describe StackMaster::Stack do
       expect(stack.template_body).to eq template_body
     end
 
+    it 'has role_arn' do
+      expect(stack.role_arn).to eq 'test_service_role_arn'
+    end
+    
     it 'has notification_arns' do
       expect(stack.notification_arns).to eq ['test_arn']
     end

@@ -14,7 +14,7 @@ module StackMaster
 
         return unless check_exists
 
-        unless ask?("Really delete stack (y/n)? ")
+        unless ask?("Really delete stack #{@stack_name} (y/n)? ")
           StackMaster.stdout.puts "Stack update aborted"
           return
         end

@@ -49,6 +49,7 @@ region_aliases:
 stack_defaults:
   tags:
     application: my-awesome-app
+  role_arn: service_role_arn
 region_defaults:
   us-east-1:
     secret_file: production.yml.gpg
@@ -169,11 +170,20 @@ region/account, even though the resolved values will be different.
 ### Stack Output
 
 The stack output parameter resolver looks up outputs from other stacks in the
-same region. The expected format is `[stack-name]/[OutputName]`.
+same or different region. The expected format is `[(region|region-alias):]stack-name/(OutputName|output_name)`.
 
 ```yaml
 vpc_id:
+  # Output from a stack in the same region
   stack_output: my-vpc-stack/VpcId
+
+bucket_name:
+  # Output from a stack in a different region
+  stack_output: us-east-1:init-bucket/bucket_name
+
+zone_name:
+  # Output from a stack in a different region using its alias
+  stack_output: global:hosted-zone/ZoneName
 ```
 
 This is the most used parameter resolver because it enables stacks to be split
@@ -308,7 +318,7 @@ vpc_id:
 
 Most resolvers support taking an array of values that will each be resolved.
 Unless stated otherwise in the documentation, the array version of the
-resolver will be named with the [pluralized](http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-pluralize) 
+resolver will be named with the [pluralized](http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-pluralize)
 name of the original resolver.
 
 When creating a new resolver, one can automatically create the array resolver by adding a `array_resolver` statement
@@ -380,6 +390,37 @@ container_definitions array!(
     ...
   }
 )
+```
+
+## Compiler Options & Alternate Template Directories
+
+StackMaster allows you to separate your stack definitions and parameters from your templates by way of a `template_dir` key in your stack_master.yml.
+You can also pass compiler-specific options to the template compiler to further customize SparkleFormation or CfnDsl's behavior.  Combining the 2 lets you move your SFN templates away from your stack definitions.  For example, if your project is laid out as:
+
+```
+project-root
+|-- envs
+  |-- env-1
+    |-- stack_master.yml
+  |-- env-2
+    |-- stack_master.yml
+|-- sparkle
+  |-- templates
+    |-- my-stack.rb
+```
+
+Your env-1/stack_master.yml files can reference common templates by setting:
+
+```
+template_dir: ../../sparkle/templates
+stack_defaults:
+  compiler_options:
+    sparkle_path: ../../sparkle
+
+stacks:
+  us-east-1:
+    my-stack:
+      template: my-stack.rb
 ```
 
 ## Commands

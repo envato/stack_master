@@ -12,7 +12,7 @@ module StackMaster
         @stack_definition = stack_definition
         @from_time = Time.now
         @options = options
-        @options.on_failure ||= "ROLLBACK"
+        @options.on_failure ||= nil
       end
 
       def perform
@@ -21,6 +21,7 @@ module StackMaster
         ensure_valid_template_body_size!
         create_or_update_stack
         tail_stack_events
+        set_stack_policy
       end
 
       private
@@ -62,12 +63,32 @@ module StackMaster
       end
 
       def create_stack
-        unless ask?('Create stack (y/n)? ')
-          failed!("Stack creation aborted")
-        end
         upload_files
-        on_failure = @config.stack_defaults['on_failure'] || @options.on_failure
-        cf.create_stack(stack_options.merge({tags: proposed_stack.aws_tags, on_failure: on_failure}))
+        if use_change_set?
+          create_stack_by_change_set
+        else
+          create_stack_directly
+        end
+      end
+
+      def use_change_set?
+        @options.on_failure.nil?
+      end
+
+      def create_stack_by_change_set
+        @change_set = ChangeSet.create(stack_options.merge(change_set_type: 'CREATE'))
+        halt!(@change_set.status_reason) if @change_set.failed?
+        @change_set.display(StackMaster.stdout)
+        unless ask?('Create stack (y/n)? ')
+          cf.delete_stack(stack_name: stack_name)
+          halt!('Stack creation aborted')
+        end
+        execute_change_set
+      end
+
+      def create_stack_directly
+        failed!('Stack creation aborted') unless ask?('Create stack (y/n)? ')
+        cf.create_stack(stack_options.merge(on_failure: @options.on_failure))
       end
 
       def ask_to_cancel_stack_update
@@ -127,9 +148,10 @@ module StackMaster
         {
           stack_name: stack_name,
           parameters: proposed_stack.aws_parameters,
+          tags: proposed_stack.aws_tags,
           capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+          role_arn: proposed_stack.role_arn,
           notification_arns: proposed_stack.notification_arns,
-          stack_policy_body: proposed_stack.stack_policy_body,
           template_method => template_value
         }
       end
@@ -169,6 +191,19 @@ module StackMaster
         if proposed_stack.too_big?(use_s3?)
           failed! TEMPLATE_TOO_LARGE_ERROR_MESSAGE
         end
+      end
+
+      def set_stack_policy
+        current_policy = stack && stack.stack_policy_body
+        proposed_policy = proposed_stack.stack_policy_body
+        # No need to reset a stack policy if it's nil or not changed
+        return if proposed_policy.nil? || proposed_policy == current_policy
+        StackMaster.stdout.print 'Setting a stack policy...'
+        cf.set_stack_policy(
+          stack_name: stack_name,
+          stack_policy_body: proposed_policy
+        )
+        StackMaster.stdout.puts 'done.'
       end
 
       extend Forwardable
