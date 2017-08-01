@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "timecop"
   spec.add_dependency "ruby-progressbar"
   spec.add_dependency "commander"
-  spec.add_dependency "aws-sdk", "~> 2.6.26"
+  spec.add_dependency "aws-sdk", "~> 2.6"
   spec.add_dependency "diffy"
   spec.add_dependency "erubis"
   spec.add_dependency "colorize"
