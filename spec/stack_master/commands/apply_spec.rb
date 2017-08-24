@@ -109,6 +109,7 @@ RSpec.describe StackMaster::Commands::Apply do
 
     context 'the changeset failed to create' do
       before do
+        allow(StackMaster::ChangeSet).to receive(:delete)
         allow(change_set).to receive(:failed?).and_return(true)
         allow(change_set).to receive(:status_reason).and_return('reason')
       end
