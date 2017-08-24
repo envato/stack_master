@@ -77,7 +77,10 @@ module StackMaster
 
       def create_stack_by_change_set
         @change_set = ChangeSet.create(stack_options.merge(change_set_type: 'CREATE'))
-        halt!(@change_set.status_reason) if @change_set.failed?
+        if @change_set.failed?
+          ChangeSet.delete(@change_set.id)
+          halt!(@change_set.status_reason)
+        end
         @change_set.display(StackMaster.stdout)
         unless ask?('Create stack (y/n)? ')
           cf.delete_stack(stack_name: stack_name)
@@ -102,7 +105,10 @@ module StackMaster
       def update_stack
         upload_files
         @change_set = ChangeSet.create(stack_options)
-        halt!(@change_set.status_reason) if @change_set.failed?
+        if @change_set.failed?
+          ChangeSet.delete(@change_set.id)
+          halt!(@change_set.status_reason)
+        end
         @change_set.display(StackMaster.stdout)
         unless ask?("Apply change set (y/n)? ")
           ChangeSet.delete(@change_set.id)
