@@ -1,7 +1,7 @@
 RSpec.describe StackMaster::TemplateCompilers::Json do
   describe '.compile' do
     def compile
-      described_class.compile(template_file_path)
+      described_class.compile(template_file_path, nil)
     end
 
     let(:template_file_path) { '/base_dir/templates/template.json' }

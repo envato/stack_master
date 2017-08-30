@@ -5,7 +5,7 @@ RSpec.describe StackMaster::TemplateCompiler do
 
     class TestTemplateCompiler
       def self.require_dependencies; end
-      def self.compile(template_file_path, compile_options); end
+      def self.compile(template_file_path, parameters, compile_options); end
     end
 
     context 'when a template compiler is registered for the given file type' do
@@ -14,13 +14,13 @@ RSpec.describe StackMaster::TemplateCompiler do
       }
 
       it 'compiles the template using the relevant template compiler' do
-        expect(TestTemplateCompiler).to receive(:compile).with(template_file_path, anything)
+        expect(TestTemplateCompiler).to receive(:compile).with(template_file_path, anything, anything)
         StackMaster::TemplateCompiler.compile(config, template_file_path, nil)
       end
 
       it 'passes compile_options to the template compiler' do
         opts = {foo: 1, bar: true, baz: "meh"}
-        expect(TestTemplateCompiler).to receive(:compile).with(template_file_path, opts)
+        expect(TestTemplateCompiler).to receive(:compile).with(template_file_path, anything, opts)
         StackMaster::TemplateCompiler.compile(config, template_file_path, nil, opts)
       end
 
