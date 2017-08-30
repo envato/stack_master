@@ -3,7 +3,7 @@ RSpec.describe StackMaster::TemplateCompilers::Cfndsl do
 
   describe '.compile' do
     def compile
-      described_class.compile(template_file_path)
+      described_class.compile(template_file_path, nil)
     end
 
     context 'valid cfndsl template' do

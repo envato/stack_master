@@ -5,7 +5,7 @@ module StackMaster::TemplateCompilers
       require 'stack_master/sparkle_formation/template_file'
     end
 
-    def self.compile(template_file_path, compiler_options = {})
+    def self.compile(template_file_path, _parameters, compiler_options = {})
       if compiler_options["sparkle_path"]
         ::SparkleFormation.sparkle_path = File.expand_path(compiler_options["sparkle_path"])
       else
