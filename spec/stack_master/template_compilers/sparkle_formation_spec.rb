@@ -6,12 +6,16 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       described_class.compile(template_file_path, nil, compiler_options)
     end
 
-    before do
-      allow(::SparkleFormation).to receive(:compile).with(template_file_path).and_return({})
-    end
 
     let(:template_file_path) { '/base_dir/templates/template.rb' }
     let(:compiler_options) { {} }
+    let(:sparkle_template) { instance_double(::SparkleFormation)}
+    before do
+      allow(::SparkleFormation).to receive(:compile).with(template_file_path, :sparkle).and_return(sparkle_template)
+      allow(sparkle_template).to receive(:compile_time_parameter_setter)
+      allow(JSON).to receive(:pretty_generate).with(sparkle_template).and_return("{\n}")
+    end
+
 
     it 'compiles with sparkleformation' do
       expect(compile).to eq("{\n}")
