@@ -33,17 +33,6 @@ module StackMaster::TemplateCompilers
       JSON.pretty_generate(sf)
     end
 
-    # Request compile time parameter value
-    #
-    # @param p_name [String, Symbol] name of parameter
-    # @param p_config [Hash] parameter meta information
-    # @param cur_val [Object, NilClass] current value assigned to parameter
-    # @param nested [TrueClass, FalseClass] template is nested
-    # @option p_config [String, Symbol] :type
-    # @option p_config [String, Symbol] :default
-    # @option p_config [String, Symbol] :description
-    # @option p_config [String, Symbol] :multiple
-    # @return [Object]
     def self.request_compile_parameter(p_name, p_config, cur_val, nested=false)
       result = nil
       attempts = 0
@@ -62,6 +51,7 @@ module StackMaster::TemplateCompilers
           cur_val = cur_val.map(&:to_s).join(',')
         end
         until(result && (!result.respond_to?(:empty?) || !result.empty?))
+
           attempts += 1
           result = cur_val.to_s
           case parameter_type
@@ -88,6 +78,7 @@ module StackMaster::TemplateCompilers
         result
       end
     end
+
     StackMaster::TemplateCompiler.register(:sparkle_formation, self)
   end
 end
