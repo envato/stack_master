@@ -13,8 +13,12 @@ RSpec.describe StackMaster::Validator do
     )
   end
   let(:cf) { Aws::CloudFormation::Client.new(region: "us-east-1") }
+  let(:parameter_hash) { { 'DbPassword' => { 'secret' => 'db_password' } } }
+  let(:resolved_parameters) { { 'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium' } }
   before do
     allow(Aws::CloudFormation::Client).to receive(:new).and_return cf
+    allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
+    allow(StackMaster::ParameterResolver).to receive(:resolve).and_return(resolved_parameters)
   end
 
   describe "#perform" do

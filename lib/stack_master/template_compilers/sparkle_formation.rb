@@ -12,7 +12,10 @@ module StackMaster::TemplateCompilers
         ::SparkleFormation.sparkle_path = File.dirname(template_file_path)
       end
 
-      JSON.pretty_generate(::SparkleFormation.compile(template_file_path))
+      #args ={ state: _parameters}
+      #sparkle_formation = ::SparkleFormation.compile(template_file_path, args)
+      sparkle_formation = ::SparkleFormation.compile(template_file_path)
+      JSON.pretty_generate(sparkle_formation)
     end
 
     StackMaster::TemplateCompiler.register(:sparkle_formation, self)

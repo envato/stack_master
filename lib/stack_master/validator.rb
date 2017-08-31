@@ -10,8 +10,11 @@ module StackMaster
     end
 
     def perform
+      parameter_hash = ParameterLoader.load(@stack_definition.parameter_files)
+      parameters = ParameterResolver.resolve(@config, @stack_definition, parameter_hash)
+
       StackMaster.stdout.print "#{@stack_definition.stack_name}: "
-      template_body = TemplateCompiler.compile(@config, @stack_definition.template_file_path, nil, @stack_definition.compiler_options)
+      template_body = TemplateCompiler.compile(@config, @stack_definition.template_file_path, parameters, @stack_definition.compiler_options)
       cf.validate_template(template_body: TemplateUtils.maybe_compressed_template_body(template_body))
       StackMaster.stdout.puts "valid"
       true
