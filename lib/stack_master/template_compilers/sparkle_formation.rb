@@ -1,5 +1,5 @@
 require 'bogo'
-require_relative 'stack_parameter_validator'
+require_relative '../sparkle_formation/parameter_validator'
 
 module StackMaster::TemplateCompilers
   class SparkleFormation
@@ -75,9 +75,10 @@ module StackMaster::TemplateCompilers
           else
             raise ArgumentError.new "Unknown compile time parameter type provided: `#{p_config[:type].inspect}` (Parameter: #{p_name})"
         end
-        valid = Sfn::Utils::StackParameterValidator.validate_parameter(result, p_config.to_smash)
+        valid = StackMaster::SparkleFormation::ParameterValidator.validate_parameter(result, p_config.to_smash)
         unless valid == true
-          raise ArgumentError.new('Something')
+          error_message = valid.map {|parameter_error| "#{parameter_error[0]}: #{parameter_error[1]}" }.join("\n")
+          raise ArgumentError.new "Invalid compile time paramters provided:\n#{error_message}"
         end
         result
       end

@@ -1,10 +1,10 @@
 require 'bogo'
 
-module Sfn
-  module Utils
+module StackMaster
+  module SparkleFormation
 
     # Helper utility for validating stack parameters
-    class StackParameterValidator
+    class ParameterValidator
 
       include Bogo::AnimalStrings
 
