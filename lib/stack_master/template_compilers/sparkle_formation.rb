@@ -15,8 +15,8 @@ module StackMaster::TemplateCompilers
       sf = ::SparkleFormation.compile(template_file_path, :sparkle)
       sf.compile_time_parameter_setter do |formation|
         current_state = {}
-        unless(formation.parameters.empty?)
-          formation.parameters.each do |k,v|
+        unless (formation.parameters.empty?)
+          formation.parameters.each do |k, v|
             current_value = _parameters[k.to_s.camelize]
             current_state[k] = request_compile_parameter(k, v,
                                                          current_value,
@@ -34,46 +34,41 @@ module StackMaster::TemplateCompilers
     end
 
     def self.request_compile_parameter(p_name, p_config, cur_val, nested=false)
-      result = nil
-      attempts = 0
       parameter_type = p_config.fetch(:type, 'string').to_s.downcase.to_sym
-      if(parameter_type == :complex)
-        if(cur_val.nil?)
+      if (parameter_type == :complex)
+        if (cur_val.nil?)
           raise ArgumentError.new "No value provided for `#{p_name}` parameter (Complex data type)"
         else
           cur_val
         end
       else
-        unless(cur_val || p_config[:default].nil?)
+        unless (cur_val || p_config[:default].nil?)
           cur_val = p_config[:default]
         end
-        if(cur_val.is_a?(Array))
+        if (cur_val.is_a?(Array))
           cur_val = cur_val.map(&:to_s).join(',')
         end
-        until(result && (!result.respond_to?(:empty?) || !result.empty?))
 
-          attempts += 1
-          result = cur_val.to_s
-          case parameter_type
-            when :string
-              if(p_config[:multiple])
-                result = result.split(',').map(&:strip)
+        result = cur_val.to_s
+        case parameter_type
+          when :string
+            if (p_config[:multiple])
+              result = result.split(',').map(&:strip)
+            end
+          when :number
+            if (p_config[:multiple])
+              result = result.split(',').map(&:strip)
+              new_result = result.map do |item|
+                new_item = item.to_i
+                new_item if new_item.to_s == item
               end
-            when :number
-              if(p_config[:multiple])
-                result = result.split(',').map(&:strip)
-                new_result = result.map do |item|
-                  new_item = item.to_i
-                  new_item if new_item.to_s == item
-                end
-                result = new_result.size == result.size ? new_result : []
-              else
-                new_result = result.to_i
-                result = new_result.to_s == result ? new_result : nil
-              end
+              result = new_result.size == result.size ? new_result : []
             else
-              raise ArgumentError.new "Unknown compile time parameter type provided: `#{p_config[:type].inspect}` (Parameter: #{p_name})"
-          end
+              new_result = result.to_i
+              result = new_result.to_s == result ? new_result : nil
+            end
+          else
+            raise ArgumentError.new "Unknown compile time parameter type provided: `#{p_config[:type].inspect}` (Parameter: #{p_name})"
         end
         result
       end
