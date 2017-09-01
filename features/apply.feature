@@ -304,7 +304,6 @@ Feature: Apply command
       | Parameters diff: No changes                                                    |
     Then the exit status should be 0
 
-
   Scenario: Create a stack using a stack output resolver
     Given a file named "parameters/myapp_web.yml" with:
       """

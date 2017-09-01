@@ -9,7 +9,7 @@ module StackMaster::TemplateCompilers
       require 'stack_master/sparkle_formation/template_file'
     end
 
-    def self.compile(template_file_path, _parameters, compiler_options = {})
+    def self.compile(template_file_path, parameters, compiler_options = {})
       if compiler_options["sparkle_path"]
         ::SparkleFormation.sparkle_path = File.expand_path(compiler_options["sparkle_path"])
       else
@@ -21,19 +21,16 @@ module StackMaster::TemplateCompilers
         current_state = {}
         unless (formation.parameters.empty?)
           formation.parameters.each do |k, v|
-            current_value = _parameters[k.to_s.camelize]
+            current_value =  parameters[k.to_s.camelize]
             current_state[k] = request_compile_parameter(k, v,
                                                          current_value,
                                                          !!formation.parent
             )
+            parameters.delete(k.to_s.camelize)
           end
           formation.compile_state = current_state
         end
       end
-
-      # args ={ state: _parameters}
-      # sparkle_formation = ::SparkleFormation.compile(template_file_path, args)
-      #sparkle_formation = ::SparkleFormation.compile(template_file_path)
       JSON.pretty_generate(sf)
     end
 
