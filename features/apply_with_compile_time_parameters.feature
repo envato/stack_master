@@ -68,8 +68,25 @@ Feature: Apply command with compile time parameters
       | 1        | 1        | vpc        | vpc                 | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     When I run `stack_master apply us-east-1 vpc --trace`
     And the output should contain all of these lines:
-      | Stack diff:                                                                    |
-      | +    "Vpc": {                                                                  |
-      | Parameters diff:                                                               |
+      | +    "SubnetPrivate0": {                          |
+      | +      "Type": "AWS::EC2::Subnet",                |
+      | +      "Properties": {                            |
+      | +        "VpcId": {                               |
+      | +          "Ref": "Vpc"                           |
+      | +        },                                       |
+      | +        "AvailabilityZone": "ap-southeast-2",    |
+      | +        "CidrBlock": "10.0.0.0/32"               |
+      | +      }                                          |
+      | +    },                                           |
+      | +    "SubnetPrivate1": {                          |
+      | +      "Type": "AWS::EC2::Subnet",                |
+      | +      "Properties": {                            |
+      | +        "VpcId": {                               |
+      | +          "Ref": "Vpc"                           |
+      | +        },                                       |
+      | +        "AvailabilityZone": "ap-southeast-1",    |
+      | +        "CidrBlock": "10.0.0.2/32"               |
+      | +      }                                          |
+      | +    }                                            |
     And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
