@@ -6,10 +6,9 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       described_class.compile(template_file_path, nil, compiler_options)
     end
 
-
-    let(:template_file_path) { '/base_dir/templates/template.rb' }
-    let(:compiler_options) { {} }
-    let(:sparkle_template) { instance_double(::SparkleFormation)}
+    let(:template_file_path) {'/base_dir/templates/template.rb'}
+    let(:compiler_options) {{}}
+    let(:sparkle_template) {instance_double(::SparkleFormation)}
     before do
       allow(::SparkleFormation).to receive(:compile).with(template_file_path, :sparkle).and_return(sparkle_template)
       allow(sparkle_template).to receive(:compile_time_parameter_setter)
@@ -27,7 +26,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
     end
 
     context 'with a custom sparkle_path' do
-      let(:compiler_options)  { { "sparkle_path" => '../foo' } }
+      let(:compiler_options) {{"sparkle_path" => '../foo'}}
 
       it 'does not use the default path' do
         compile
@@ -47,14 +46,16 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       described_class.request_compile_parameter(key, config, value)
     end
 
-    let(:key){'key'}
+    let(:key) {'key'}
 
-    context 'string compile time parameter' do
+    context 'with string compile time parameter' do
+
+      let(:type){:string}
 
       context 'with default settings' do
 
         it 'should return the string value' do
-          parameter = compile_parameter(key, {type: :string}, 'value')
+          parameter = compile_parameter(key, {type: type}, 'value')
           expect(parameter).to eq 'value'
         end
 
@@ -63,7 +64,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       context 'with multiple true' do
 
         it 'should return the string value' do
-          parameter = compile_parameter(key, {type: :string, multiple: true}, 'a,b')
+          parameter = compile_parameter(key, {type: type, multiple: true}, 'a,b')
           expect(parameter).to eq %w(a b)
         end
 
@@ -74,7 +75,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
         context 'with a value of nil' do
 
           it 'should return the default value' do
-            parameter = compile_parameter(key, {type: :string, default: 'a'}, nil)
+            parameter = compile_parameter(key, {type: type, default: 'a'}, nil)
             expect(parameter).to eq 'a'
           end
 
@@ -84,7 +85,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
         context 'with a value set' do
 
           it 'should return the value' do
-            parameter = compile_parameter(key, {type: :string, default: 'a'}, 'b')
+            parameter = compile_parameter(key, {type: type, default: 'a'}, 'b')
             expect(parameter).to eq 'b'
           end
 
@@ -93,14 +94,100 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
       end
 
+      context 'with allowed_values set' do
+
+        it 'should not raise an exception with valid values' do
+          parameter = compile_parameter(key, {type: type, allowed_values: ['a']}, 'a')
+          expect(parameter).to eq 'a'
+        end
+
+        it 'should raise an exception with invalid values' do
+          expect {compile_parameter(key, {type: type, allowed_values: ['a']}, 'b')}
+              .to raise_error
+        end
+
+      end
+
+      context 'with allowed_pattern set' do
+
+        it 'should not raise an exception with valid values' do
+          parameter = compile_parameter(key, {type: type, allowed_pattern: '^a'}, 'a')
+          expect(parameter).to eq 'a'
+        end
+
+        it 'should raise an exception with invalid values' do
+          expect {compile_parameter(key, {type: type, allowed_pattern: '$b'}, 'a')}
+              .to raise_error
+        end
+      end
+
+      context 'with min_size set' do
+
+        it 'should not raise an exception with valid values' do
+          parameter = compile_parameter(key, {type: type, min_size: 2}, '2')
+          expect(parameter).to eq '2'
+        end
+
+        it 'should raise an exception with invalid values' do
+          expect {compile_parameter(key, {type: type, min_size: 2}, '1')}
+              .to raise_error
+        end
+
+      end
+
+      context 'with max_size set' do
+
+        it 'should not raise an exception with valid values' do
+          parameter = compile_parameter(key, {type: type, max_size: 2}, '2')
+          expect(parameter).to eq '2'
+        end
+
+        it 'should raise an exception with invalid values' do
+          expect {compile_parameter(key, {type: type, max_size: 2}, '3')}
+              .to raise_error
+        end
+
+      end
+
+      context 'with min_length set' do
+
+        it 'should not raise an exception with valid values' do
+          parameter = compile_parameter(key, {type: type, min_length: 2}, 'ab')
+          expect(parameter).to eq 'ab'
+        end
+
+        it 'should raise an exception with invalid values' do
+          expect {compile_parameter(key, {type: type, min_length: 2}, 'a')}
+              .to raise_error
+        end
+
+      end
+
+      context 'with max_length set' do
+
+        it 'should not raise an exception with valid values' do
+          parameter = compile_parameter(key, {type: type, max_length: 2}, 'ab')
+          expect(parameter).to eq 'ab'
+        end
+
+        it 'should raise an exception with invalid values' do
+          expect {compile_parameter(key, {type: type, min_length: 2}, 'a')}
+              .to raise_error
+        end
+
+      end
+
+
     end
 
-    context 'Number compile time parameter' do
+    context 'with number compile time parameter' do
+
+      let(:type){:number}
 
       context 'with default settings' do
 
         it 'should return the string value' do
-          parameter = compile_parameter(key, {type: :number}, '1')
+          parameter = compile_parameter(key, {type: type}, '1')
           expect(parameter).to eq 1
         end
 
@@ -109,8 +196,8 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       context 'with multiple true' do
 
         it 'should return the string value' do
-          parameter = compile_parameter(key, {type: :number, multiple: true}, '1,2')
-          expect(parameter).to eq [1,2]
+          parameter = compile_parameter(key, {type: type, multiple: true}, '1,2')
+          expect(parameter).to eq [1, 2]
         end
 
       end
@@ -120,7 +207,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
         context 'with a value of nil' do
 
           it 'should return the default value' do
-            parameter = compile_parameter(key, {type: :number, default: 1}, nil)
+            parameter = compile_parameter(key, {type: type, default: 1}, nil)
             expect(parameter).to eq 1
           end
 
@@ -130,14 +217,85 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
         context 'with a value set' do
 
           it 'should return the value' do
-            parameter = compile_parameter(key, {type: :number, default: 1}, 2)
+            parameter = compile_parameter(key, {type: type, default: 1}, 2)
             expect(parameter).to eq 2
           end
 
         end
 
+      end
+
+      context 'with allowed_values set' do
+
+        it 'should not raise an exception with valid values' do
+          parameter = compile_parameter(key, {type: type, allowed_values: [1]}, 1)
+          expect(parameter).to eq 1
+        end
+
+        it 'should raise an exception with invalid values' do
+          expect {compile_parameter(key, {type: type, allowed_values: [1]}, 2)}
+              .to raise_error
+        end
 
       end
+
+      context 'with min_size set' do
+
+        it 'should not raise an exception with valid values' do
+          parameter = compile_parameter(key, {type: type, min_size: 2}, 2)
+          expect(parameter).to eq 2
+        end
+
+        it 'should raise an exception with invalid values' do
+          expect {compile_parameter(key, {type: type, min_size: 2}, 1)}
+              .to raise_error
+        end
+
+      end
+
+      context 'with max_size set' do
+
+        it 'should not raise an exception with valid values' do
+          parameter = compile_parameter(key, {type: type, max_size: 2}, 2)
+          expect(parameter).to eq 2
+        end
+
+        it 'should raise an exception with invalid values' do
+          expect {compile_parameter(key, {type: type, max_size: 2}, 3)}
+              .to raise_error
+        end
+
+      end
+
+    end
+
+    context 'with complex compile time parameter' do
+
+      let(:type){:complex}
+
+      it 'should raise an exception whhen the value is nil' do
+        parameter = compile_parameter(key, {type: type}, {test: 'a'})
+        expect(parameter).to eq({test: 'a'})
+      end
+
+
+      it 'should raise an exception when the value is nil' do
+        expect {compile_parameter(key, {type: type}, nil)}
+            .to raise_error(ArgumentError, "No value provided for `#{key}` parameter (Complex data type)")
+      end
+
+
+    end
+
+    context 'with other type' do
+
+      let(:type){:blah}
+
+      it 'should raise an exception' do
+        expect {compile_parameter(key, {type: type}, nil)}
+            .to raise_error(ArgumentError, "Unknown compile time parameter type provided: `#{type.inspect}` (Parameter: #{key})")
+      end
+
 
     end
 

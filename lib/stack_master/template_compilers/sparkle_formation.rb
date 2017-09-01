@@ -1,5 +1,9 @@
+require 'bogo'
+require_relative 'stack_parameter_validator'
+
 module StackMaster::TemplateCompilers
   class SparkleFormation
+
     def self.require_dependencies
       require 'sparkle_formation'
       require 'stack_master/sparkle_formation/template_file'
@@ -34,6 +38,7 @@ module StackMaster::TemplateCompilers
     end
 
     def self.request_compile_parameter(p_name, p_config, cur_val, nested=false)
+
       parameter_type = p_config.fetch(:type, 'string').to_s.downcase.to_sym
       if (parameter_type == :complex)
         if (cur_val.nil?)
@@ -69,6 +74,10 @@ module StackMaster::TemplateCompilers
             end
           else
             raise ArgumentError.new "Unknown compile time parameter type provided: `#{p_config[:type].inspect}` (Parameter: #{p_name})"
+        end
+        valid = Sfn::Utils::StackParameterValidator.validate_parameter(result, p_config.to_smash)
+        unless valid == true
+          raise ArgumentError.new('Something')
         end
         result
       end
