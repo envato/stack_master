@@ -1,18 +1,13 @@
+require_relative 'value_validator'
+
 module StackMaster
   module SparkleFormation
     module CompileTimeParameter
-      class EmptyValidator
-
-        attr_reader :is_valid, :error
+      class EmptyValidator < ValueValidator
 
         def initialize(name, _definition, value)
           @name = name
           @value = value
-        end
-
-        def validate
-          @is_valid = check_is_valid
-          @error = create_error unless @is_valid
         end
 
         private

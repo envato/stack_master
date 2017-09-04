@@ -1,21 +1,16 @@
+require_relative 'value_validator'
+
 module StackMaster
   module SparkleFormation
     module CompileTimeParameter
-      class MinLengthValidator
+      class MinLengthValidator < ValueValidator
 
         KEY = :min_length
-
-        attr_reader :is_valid, :error
 
         def initialize(name, parameter_definition, value)
           @name = name
           @parameter_definition = parameter_definition
           @value = value
-        end
-
-        def validate
-          @is_valid = check_is_valid
-          @error = create_error unless @is_valid
         end
 
         private
