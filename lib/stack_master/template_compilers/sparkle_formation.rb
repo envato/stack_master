@@ -72,9 +72,9 @@ module StackMaster::TemplateCompilers
           else
             raise ArgumentError.new "Unknown compile time parameter type provided: `#{p_config[:type].inspect}` (Parameter: #{p_name})"
         end
-        valid = StackMaster::SparkleFormation::ParameterValidator.validate_parameter(result, p_config.to_smash)
-        unless valid == true
-          error_message = valid.map {|parameter_error| "#{parameter_error[0]}: #{parameter_error[1]}" }.join("\n")
+        validation_results = StackMaster::SparkleFormation::ParameterValidator.validate_parameter(result, p_config.to_smash)
+        unless validation_results.empty?
+          error_message = validation_results.map {|parameter_error| "#{parameter_error[0]}: #{parameter_error[1]}" }.join("\n")
           raise ArgumentError.new "Invalid compile time parameters provided:\n#{error_message}"
         end
         result

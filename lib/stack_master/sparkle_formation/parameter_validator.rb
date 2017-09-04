@@ -15,7 +15,6 @@ module StackMaster
         return [[:blank, 'Value cannot be blank']] if value.to_s.strip.empty?
         value_list = [value]
         result = PARAMETER_VALIDATIONS.map do |validator_key|
-          puts parameter_definition.keys
           valid_key = parameter_definition.keys.detect { |pdef_key| pdef_key == validator_key}
           if (valid_key)
             value_list.map do |value|
@@ -27,7 +26,7 @@ module StackMaster
           end
         end.flatten(1)
         result.delete_if {|x| x == true}
-        result.empty? ? true : result
+        result
       end
 
       def self.allowed_values(value, pdef)
