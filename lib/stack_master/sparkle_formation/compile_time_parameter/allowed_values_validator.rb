@@ -5,14 +5,19 @@ module StackMaster
 
         KEY = :allowed_values
 
-        def initialize(parameter_definition, value)
+        def initialize(name, parameter_definition, value)
+          @name = name
           @parameter_definition = parameter_definition
           @value = value
         end
 
-        def validate
-          return unless @parameter_definition.key?(KEY)
-          create_error unless value_is_allowed?
+        def is_valid?
+          return true unless @parameter_definition.key?(KEY)
+          value_is_allowed?
+        end
+
+        def error
+          create_error
         end
 
         private
@@ -22,7 +27,7 @@ module StackMaster
         end
 
         def create_error
-          [KEY, "Not an allowed value: #{@parameter_definition[KEY].join(', ')}"]
+          "#{@name}:#{@value} is not in #{KEY}:#{@parameter_definition[KEY].join(',')}"
         end
 
       end

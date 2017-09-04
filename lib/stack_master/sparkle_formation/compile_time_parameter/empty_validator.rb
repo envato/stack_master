@@ -3,13 +3,17 @@ module StackMaster
     module CompileTimeParameter
       class EmptyValidator
 
-        def initialize(parameter_definition, value)
-          @parameter_definition = parameter_definition
+        def initialize(name, _definition, value)
+          @name = name
           @value = value
         end
 
-        def validate
-          create_error if value_is_empty?
+        def is_valid?
+          !value_is_empty?
+        end
+
+        def error
+          create_error
         end
 
         private
@@ -19,7 +23,7 @@ module StackMaster
         end
 
         def create_error
-          [:undefined, 'Value cannot be blank']
+          "#{@name} cannot be blank"
         end
 
       end

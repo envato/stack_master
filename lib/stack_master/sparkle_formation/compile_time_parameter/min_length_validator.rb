@@ -5,14 +5,19 @@ module StackMaster
 
         KEY = :min_length
 
-        def initialize(parameter_definition, value)
+        def initialize(name, parameter_definition, value)
+          @name = name
           @parameter_definition = parameter_definition
           @value = value
         end
 
-        def validate
-          return unless @parameter_definition.key?(KEY)
-          create_error if value_is_less_than_min_length?
+        def is_valid?
+          return true unless @parameter_definition.key?(KEY)
+          !value_is_less_than_min_length?
+        end
+
+        def error
+          create_error
         end
 
         private
@@ -22,7 +27,7 @@ module StackMaster
         end
 
         def create_error
-          [KEY, "Value must be at least #{@parameter_definition[KEY]} characters"]
+          "#{@name}:#{@value} must be at least #{KEY}:#{@parameter_definition[KEY]} characters"
         end
 
       end

@@ -20,8 +20,9 @@ module StackMaster
             MaxSizeValidator,
             MinSizeValidator]
 
-        def initialize(parameter_definition, parameter)
-          @parameter_definition = parameter_definition
+        def initialize(name, definition, parameter)
+          @name = name
+          @definition = definition
           @parameter = parameter
         end
 
@@ -37,7 +38,7 @@ module StackMaster
         end
 
         def create_validators(value)
-          VALIDATORS_TYPES.map {|validator| validator.new(@parameter_definition, value)}
+          VALIDATORS_TYPES.map {|validator| validator.new(@name, @definition, value)}
         end
 
       end

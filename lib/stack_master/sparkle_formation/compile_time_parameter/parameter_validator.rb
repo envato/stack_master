@@ -6,16 +6,15 @@ module StackMaster
 
       class ParameterValidator
 
-        def initialize(parameter_definition, parameter)
-          @parameter_definition = parameter_definition
-          @parameter = parameter
-          @factory = ValueValidatorFactory.new(@parameter_definition, @parameter)
+        def initialize(name, definition, parameter)
+          @factory = ValueValidatorFactory.new(name, definition, parameter)
         end
 
 
         def validate
           validators = @factory.build_validators
-          validators.map {|validator| validator.validate}.compact
+          invalid_validator = validators.detect{|validator| !validator.is_valid?}
+          invalid_validator.error if invalid_validator
         end
 
       end

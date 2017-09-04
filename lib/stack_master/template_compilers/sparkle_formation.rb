@@ -17,10 +17,14 @@ module StackMaster::TemplateCompilers
 
       sf = ::SparkleFormation.compile(template_file_path, :sparkle)
       sf.compile_time_parameter_setter do |formation|
+        puts '--------'
+        puts formation.parameters
+        puts '--------'
+
         current_state = {}
         unless (formation.parameters.empty?)
           formation.parameters.each do |k, v|
-            current_value =  parameters[k.to_s.camelize]
+            current_value = parameters[k.to_s.camelize]
             current_state[k] = request_compile_parameter(k, v,
                                                          current_value,
                                                          !!formation.parent
@@ -71,12 +75,9 @@ module StackMaster::TemplateCompilers
           else
             raise ArgumentError.new "Unknown compile time parameter type provided: `#{p_config[:type].inspect}` (Parameter: #{p_name})"
         end
-        validation_results = StackMaster::SparkleFormation::CompileTimeParameter::ParameterValidator.new(p_config, result).validate
 
-        unless validation_results.empty?
-          error_message = validation_results.map {|parameter_error| "#{parameter_error[0]}: #{parameter_error[1]}" }.join("\n")
-          raise ArgumentError.new "Invalid compile time parameters provided:\n#{error_message}"
-        end
+        validation_error = StackMaster::SparkleFormation::CompileTimeParameter::ParameterValidator.new(p_name, p_config, result).validate
+        raise ArgumentError.new "Invalid compile time parameter: #{validation_error}" if validation_error
         result
       end
     end

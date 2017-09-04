@@ -5,14 +5,19 @@ module StackMaster
 
         KEY = :allowed_pattern
 
-        def initialize(parameter_definition, value)
+        def initialize(name, parameter_definition, value)
+          @name = name
           @parameter_definition = parameter_definition
           @value = value
         end
 
-        def validate
-          return unless @parameter_definition.key?(KEY)
-          create_error unless value_matches_pattern?
+        def is_valid?
+          return true unless @parameter_definition.key?(KEY)
+          value_matches_pattern?
+        end
+
+        def error
+          create_error
         end
 
         private
@@ -22,7 +27,7 @@ module StackMaster
         end
 
         def create_error
-          [KEY, "Not a valid pattern. Must match: #{@parameter_definition[KEY]}"]
+          "#{@name}:#{@value} does not match #{KEY}:#{@parameter_definition[KEY]}"
         end
 
       end
