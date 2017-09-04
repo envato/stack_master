@@ -1,82 +1,93 @@
-require 'bogo'
-
 module StackMaster
   module SparkleFormation
 
     # Helper utility for validating stack parameters
     class ParameterValidator
 
-      include Bogo::AnimalStrings
-
       # Supported parameter validations
       PARAMETER_VALIDATIONS = %w(allowed_values allowed_pattern max_length min_length max_size min_size)
 
       def self.validate_parameter(value, parameter_definition)
-        return [[:blank, 'Value cannot be blank']] if value.to_s.strip.empty?
-        value_list = [value]
-        result = PARAMETER_VALIDATIONS.map do |validator_key|
-          valid_key = parameter_definition.keys.detect { |pdef_key| pdef_key == validator_key}
-          if (valid_key)
-            value_list.map do |value|
-              res = self.send(validator_key, value, parameter_definition[valid_key])
-              res == true ? true : [validator_key, res]
-            end
-          else
-            true
-          end
-        end.flatten(1)
-        result.delete_if {|x| x == true}
+        if value.is_a?(Enumerable)
+          validate_list(value, parameter_definition)
+        else
+          validate(value, parameter_definition)
+        end
+      end
+
+      def self.validate_list(value_list, parameter_definition)
+        result = []
+        value_list.each {|value| result += validate(value, parameter_definition)}
         result
       end
 
-      def self.allowed_values(value, pdef)
-        if pdef.include?(value)
-          true
-        else
-          "Not an allowed value: #{pdef.join(', ')}"
+      def self.validate(value, parameter_definition)
+        result = []
+        PARAMETER_VALIDATIONS.each do |validator_key|
+          valid_key = parameter_definition.keys.detect {|pdef_key| pdef_key == validator_key}
+          if valid_key
+               if value.to_s.strip.empty?
+                result << [validator_key, 'Value cannot be blank']
+              else
+                unless self.send("#{validator_key}?", value, parameter_definition[valid_key])
+                  message = self.send("#{validator_key}_message", parameter_definition[valid_key])
+                  result << [validator_key, message]
+                end
+              end
+           end
         end
+        result
       end
 
-      def self.allowed_pattern(value, pdef)
-        if value.match(%r{#{pdef}})
-          true
-        else
-          "Not a valid pattern. Must match: #{pdef}"
-        end
+      def self.allowed_values?(value, pdef)
+        pdef.include?(value)
       end
 
-      def self.max_length(value, pdef)
-        if value.length <= pdef.to_i
-          true
-        else
-          "Value must not exceed #{pdef} characters"
-        end
+      def self.allowed_values_message(pdef)
+        "Not an allowed value: #{pdef.join(', ')}"
       end
 
-      def self.min_length(value, pdef)
-        if value.length >= pdef.to_i
-          true
-        else
-          "Value must be at least #{pdef} characters"
-        end
+      def self.allowed_pattern?(value, pdef)
+        value.match(%r{#{pdef}})
       end
 
-      def self.max_size(value, pdef)
-        if value.to_i <= pdef.to_i
-          true
-        else
-          "Value must not be greater than #{pdef}"
-        end
+      def self.allowed_pattern_message(pdef)
+        "Not a valid pattern. Must match: #{pdef}"
       end
 
-      def self.min_size(value, pdef)
-        if value.to_i >= pdef.to_i
-          true
-        else
-          "Value must not be less than #{pdef}"
-        end
+      def self.max_length?(value, pdef)
+        value.length <= pdef.to_i
+      end
+
+      def self.max_length_message(pdef)
+        "Value must not exceed #{pdef} characters"
+      end
+
+      def self.min_length?(value, pdef)
+        value.length >= pdef.to_i
+      end
+
+      def self.min_length_message(pdef)
+        "Value must be at least #{pdef} characters"
+      end
+
+      def self.max_size?(value, pdef)
+        value.to_i <= pdef.to_i
+      end
+
+      def self.max_size_message(pdef)
+        "Value must not be greater than #{pdef}"
+      end
+
+      def self.min_size?(value, pdef)
+        value.to_i >= pdef.to_i
+      end
+
+      def self.min_size_message(pdef)
+        "Value must not be less than #{pdef}"
       end
 
     end
   end
 end
+
