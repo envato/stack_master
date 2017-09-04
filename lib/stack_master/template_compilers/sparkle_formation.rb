@@ -75,7 +75,7 @@ module StackMaster::TemplateCompilers
         valid = StackMaster::SparkleFormation::ParameterValidator.validate_parameter(result, p_config.to_smash)
         unless valid == true
           error_message = valid.map {|parameter_error| "#{parameter_error[0]}: #{parameter_error[1]}" }.join("\n")
-          raise ArgumentError.new "Invalid compile time paramters provided:\n#{error_message}"
+          raise ArgumentError.new "Invalid compile time parameters provided:\n#{error_message}"
         end
         result
       end

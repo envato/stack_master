@@ -103,7 +103,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
         it 'should raise an exception with invalid values' do
           expect {compile_parameter(key, {type: type, allowed_values: ['a']}, 'b')}
-              .to raise_error(ArgumentError, "Invalid compile time paramters provided:\nallowed_values: Not an allowed value: a")
+              .to raise_error(ArgumentError, "Invalid compile time parameters provided:\nallowed_values: Not an allowed value: a")
         end
 
       end
@@ -117,7 +117,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
         it 'should raise an exception with invalid values' do
           expect {compile_parameter(key, {type: type, allowed_pattern: '$b'}, 'a')}
-              .to raise_error(ArgumentError, "Invalid compile time paramters provided:\nallowed_pattern: Not a valid pattern. Must match: $b")
+              .to raise_error(ArgumentError, "Invalid compile time parameters provided:\nallowed_pattern: Not a valid pattern. Must match: $b")
         end
       end
 
@@ -130,7 +130,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
         it 'should raise an exception with invalid values' do
           expect {compile_parameter(key, {type: type, min_size: 2}, '1')}
-              .to raise_error(ArgumentError, "Invalid compile time paramters provided:\nmin_size: Value must not be less than 2")
+              .to raise_error(ArgumentError, "Invalid compile time parameters provided:\nmin_size: Value must not be less than 2")
         end
 
       end
@@ -144,7 +144,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
         it 'should raise an exception with invalid values' do
           expect {compile_parameter(key, {type: type, max_size: 2}, '3')}
-              .to raise_error(ArgumentError, "Invalid compile time paramters provided:\nmax_size: Value must not be greater than 2")
+              .to raise_error(ArgumentError, "Invalid compile time parameters provided:\nmax_size: Value must not be greater than 2")
         end
 
       end
@@ -158,7 +158,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
         it 'should raise an exception with invalid values' do
           expect {compile_parameter(key, {type: type, min_length: 2}, 'a')}
-              .to raise_error(ArgumentError, "Invalid compile time paramters provided:\nmin_length: Value must be at least 2 characters")
+              .to raise_error(ArgumentError, "Invalid compile time parameters provided:\nmin_length: Value must be at least 2 characters")
         end
 
       end
@@ -172,7 +172,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
         it 'should raise an exception with invalid values' do
           expect {compile_parameter(key, {type: type, min_length: 2}, 'a')}
-              .to raise_error(ArgumentError, "Invalid compile time paramters provided:\nmin_length: Value must be at least 2 characters")
+              .to raise_error(ArgumentError, "Invalid compile time parameters provided:\nmin_length: Value must be at least 2 characters")
         end
 
       end
@@ -234,7 +234,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
         it 'should raise an exception with invalid values' do
           expect {compile_parameter(key, {type: type, allowed_values: [1]}, 2)}
-              .to raise_error(ArgumentError, "Invalid compile time paramters provided:\nallowed_values: Not an allowed value: 1")
+              .to raise_error(ArgumentError, "Invalid compile time parameters provided:\nallowed_values: Not an allowed value: 1")
         end
 
       end
@@ -248,7 +248,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
         it 'should raise an exception with invalid values' do
           expect {compile_parameter(key, {type: type, min_size: 2}, 1)}
-              .to raise_error(ArgumentError, "Invalid compile time paramters provided:\nmin_size: Value must not be less than 2")
+              .to raise_error(ArgumentError, "Invalid compile time parameters provided:\nmin_size: Value must not be less than 2")
         end
 
       end
@@ -262,7 +262,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
         it 'should raise an exception with invalid values' do
           expect {compile_parameter(key, {type: type, max_size: 2}, 3)}
-              .to raise_error(ArgumentError, "Invalid compile time paramters provided:\nmax_size: Value must not be greater than 2")
+              .to raise_error(ArgumentError, "Invalid compile time parameters provided:\nmax_size: Value must not be greater than 2")
         end
 
       end
@@ -271,7 +271,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
     context 'with multiple invalid compile time parameters' do
       it 'should raise one exception with multiple invalid messages ' do
         expect {compile_parameter(key, {type: :number, max_size: 2, allowed_values: [1]}, 3)}
-            .to raise_error(ArgumentError, "Invalid compile time paramters provided:\nallowed_values: Not an allowed value: 1\nmax_size: Value must not be greater than 2")
+            .to raise_error(ArgumentError, "Invalid compile time parameters provided:\nallowed_values: Not an allowed value: 1\nmax_size: Value must not be greater than 2")
       end
 
     end
