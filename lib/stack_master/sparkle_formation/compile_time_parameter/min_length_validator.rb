@@ -11,7 +11,8 @@ module StackMaster
         end
 
         def validate
-           create_error if value_is_less_than_min_length?
+          return unless @parameter_definition.key?(KEY)
+          create_error if value_is_less_than_min_length?
         end
 
         private

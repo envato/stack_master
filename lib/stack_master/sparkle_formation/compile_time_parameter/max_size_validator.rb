@@ -11,6 +11,7 @@ module StackMaster
         end
 
         def validate
+          return unless @parameter_definition.key?(KEY)
           create_error if value_is_greater_than_max_size?
         end
 

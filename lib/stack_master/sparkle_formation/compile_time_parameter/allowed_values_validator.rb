@@ -11,7 +11,8 @@ module StackMaster
         end
 
         def validate
-           create_error unless value_is_allowed?
+          return unless @parameter_definition.key?(KEY)
+          create_error unless value_is_allowed?
         end
 
         private

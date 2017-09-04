@@ -11,7 +11,8 @@ module StackMaster
         end
 
         def validate
-           create_error unless value_matches_pattern?
+          return unless @parameter_definition.key?(KEY)
+          create_error unless value_matches_pattern?
         end
 
         private

@@ -12,6 +12,7 @@ module StackMaster
       class ValueValidatorFactory
 
         VALIDATORS_TYPES = [
+            EmptyValidator,
             AllowedValuesValidator,
             AllowedPatternValidator,
             MaxLengthValidator,
@@ -36,13 +37,7 @@ module StackMaster
         end
 
         def create_validators(value)
-          validators = [EmptyValidator.new(@parameter_definition, value)]
-          validators << find_validator_types.map {|validator| validator.new(@parameter_definition, value)}
-          validators
-        end
-
-        def find_validator_types
-          VALIDATORS_TYPES.select {|validator_type| @parameter_definition.key?(validator_type::KEY)}
+          VALIDATORS_TYPES.map {|validator| validator.new(@parameter_definition, value)}
         end
 
       end
