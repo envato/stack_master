@@ -15,53 +15,46 @@ module StackMaster::TemplateCompilers
         ::SparkleFormation.sparkle_path = File.dirname(template_file_path)
       end
 
-      sf = ::SparkleFormation.compile(template_file_path, :sparkle)
-      sf.compile_time_parameter_setter do |formation|
-        puts '--------'
-        puts formation.parameters
-        puts '--------'
-
+      template = ::SparkleFormation.compile(template_file_path, :sparkle)
+      template.compile_time_parameter_setter do |formation|
         current_state = {}
         unless (formation.parameters.empty?)
-          formation.parameters.each do |k, v|
-            current_value = parameters[k.to_s.camelize]
-            current_state[k] = request_compile_parameter(k, v,
-                                                         current_value,
-                                                         !!formation.parent
-            )
-            parameters.delete(k.to_s.camelize)
+          formation.parameters.each do |name, definition|
+            parameter = parameters[name.to_s.camelize]
+            current_state[name] = request_compile_parameter(name, definition, parameter)
+            parameters.delete(name.to_s.camelize)
           end
           formation.compile_state = current_state
         end
       end
-      JSON.pretty_generate(sf)
+      JSON.pretty_generate(template)
     end
 
-    def self.request_compile_parameter(p_name, p_config, cur_val, nested=false)
+    def self.request_compile_parameter(name, definition, parameter)
 
-      parameter_type = p_config.fetch(:type, 'string').to_s.downcase.to_sym
-      if (parameter_type == :complex)
-        if (cur_val.nil?)
-          raise ArgumentError.new "No value provided for `#{p_name}` parameter (Complex data type)"
+      parameter_type = definition.fetch(:type, 'string').to_s.downcase.to_sym
+      if parameter_type == :complex
+        if parameter.nil?
+          raise ArgumentError.new "No value provided for `#{name}` parameter (Complex data type)"
         else
-          cur_val
+          parameter
         end
       else
-        unless (cur_val || p_config[:default].nil?)
-          cur_val = p_config[:default]
+        unless parameter || definition[:default].nil?
+          parameter = definition[:default]
         end
-        if (cur_val.is_a?(Array))
-          cur_val = cur_val.map(&:to_s).join(',')
+        if parameter.is_a?(Array)
+          parameter = parameter.map(&:to_s).join(',')
         end
 
-        result = cur_val.to_s
+        result = parameter.to_s
         case parameter_type
           when :string
-            if (p_config[:multiple])
+            if definition[:multiple]
               result = result.split(',').map(&:strip)
             end
           when :number
-            if (p_config[:multiple])
+            if definition[:multiple]
               result = result.split(',').map(&:strip)
               new_result = result.map do |item|
                 new_item = item.to_i
@@ -73,14 +66,19 @@ module StackMaster::TemplateCompilers
               result = new_result.to_s == result ? new_result : nil
             end
           else
-            raise ArgumentError.new "Unknown compile time parameter type provided: `#{p_config[:type].inspect}` (Parameter: #{p_name})"
+            raise ArgumentError.new "Unknown compile time parameter type provided: `#{definition[:type].inspect}` (Parameter: #{name})"
         end
 
-        parameter_validator = StackMaster::SparkleFormation::CompileTimeParameter::ParameterValidator.new(p_name, p_config, result)
+        parameter_validator = StackMaster::SparkleFormation::CompileTimeParameter::ParameterValidator.new(name, definition, result)
         parameter_validator.validate
         unless parameter_validator.is_valid
           raise ArgumentError.new "Invalid compile time parameter: #{parameter_validator.error}"
         end
+
+        puts '-------'
+        puts result
+        puts '-------'
+
         result
       end
     end
