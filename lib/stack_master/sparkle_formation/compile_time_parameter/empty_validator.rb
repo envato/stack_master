@@ -1,9 +1,9 @@
-require_relative 'value_validator'
+require_relative 'validator'
 
 module StackMaster
   module SparkleFormation
     module CompileTimeParameter
-      class EmptyValidator < ValueValidator
+      class EmptyValidator < Validator
 
         def initialize(name, _definition, value)
           @name = name

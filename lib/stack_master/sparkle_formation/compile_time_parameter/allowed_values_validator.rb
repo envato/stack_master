@@ -1,9 +1,9 @@
-require_relative 'value_validator'
+require_relative 'validator'
 
 module StackMaster
   module SparkleFormation
     module CompileTimeParameter
-      class AllowedValuesValidator < ValueValidator
+      class AllowedValuesValidator < Validator
 
         KEY = :allowed_values
 
