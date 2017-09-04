@@ -1,5 +1,4 @@
-require 'bogo'
-require_relative '../sparkle_formation/parameter_validator'
+require_relative '../sparkle_formation/compile_time_parameter/parameter_validator'
 
 module StackMaster::TemplateCompilers
   class SparkleFormation
@@ -72,7 +71,8 @@ module StackMaster::TemplateCompilers
           else
             raise ArgumentError.new "Unknown compile time parameter type provided: `#{p_config[:type].inspect}` (Parameter: #{p_name})"
         end
-        validation_results = StackMaster::SparkleFormation::ParameterValidator.validate_parameter(result, p_config.to_smash)
+        validation_results = StackMaster::SparkleFormation::CompileTimeParameter::ParameterValidator.new(p_config, result).validate
+
         unless validation_results.empty?
           error_message = validation_results.map {|parameter_error| "#{parameter_error[0]}: #{parameter_error[1]}" }.join("\n")
           raise ArgumentError.new "Invalid compile time parameters provided:\n#{error_message}"
