@@ -10,11 +10,12 @@ module StackMaster
           @factory = ValueValidatorFactory.new(name, definition, parameter)
         end
 
-
         def validate
           validators = @factory.build_validators
-          invalid_validator = validators.detect{|validator| !validator.is_valid?}
-          invalid_validator.error if invalid_validator
+          validators.each do |validator|
+            validator.validate
+            return validator.error unless validator.is_valid
+          end
         end
 
       end
