@@ -15,9 +15,8 @@ module StackMaster
         return [[:blank, 'Value cannot be blank']] if value.to_s.strip.empty?
         value_list = [value]
         result = PARAMETER_VALIDATIONS.map do |validator_key|
-          valid_key = parameter_definition.keys.detect do |pdef_key|
-            pdef_key.downcase.gsub('_', '') == validator_key.downcase.gsub('_', '')
-          end
+          puts parameter_definition.keys
+          valid_key = parameter_definition.keys.detect { |pdef_key| pdef_key == validator_key}
           if (valid_key)
             value_list.map do |value|
               res = self.send(validator_key, value, parameter_definition[valid_key])
