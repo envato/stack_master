@@ -40,10 +40,10 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
     end
   end
 
-  describe '.request_compile_parameter' do
+  describe '.create_compile_parameter' do
 
     def compile_parameter(key, config, value)
-      described_class.request_compile_parameter(key, config, value)
+      described_class.create_compile_parameter(key, config, value)
     end
 
     let(:key) {'key'}
@@ -273,25 +273,6 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
         expect {compile_parameter(key, {type: :number, max_size: 2, allowed_values: [1]}, 3)}
             .to raise_error(ArgumentError, "Invalid compile time parameter: #{key}:3 is not in allowed_values:1")
       end
-
-    end
-
-    context 'with complex compile time parameter' do
-
-      let(:type) {:complex}
-
-      it 'should raise an exception whhen the value is nil' do
-        parameter = compile_parameter(key, {type: type}, {test: 'a'})
-        expect(parameter).to eq({test: 'a'})
-      end
-
-      #key:3 is not an allowed_value: 1
-      #key:3 is not an
-      it 'should raise an exception when the value is nil' do
-        expect {compile_parameter(key, {type: type}, nil)}
-            .to raise_error(ArgumentError, "No value provided for `#{key}` parameter (Complex data type)")
-      end
-
 
     end
 
