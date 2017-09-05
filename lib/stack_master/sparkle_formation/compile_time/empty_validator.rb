@@ -5,19 +5,24 @@ module StackMaster
     module CompileTime
       class EmptyValidator < Validator
 
-        def initialize(name, _definition, value)
+        def initialize(name, definition, value)
           @name = name
+          @definition = definition
           @value = value
         end
 
         private
 
         def check_is_valid
-          !value_is_empty?
+          has_value? || has_default?
         end
 
-        def value_is_empty?
-          @value.to_s.strip.empty?
+        def has_value?
+          !@value.to_s.strip.empty?
+        end
+
+        def has_default?
+          !@definition[:default].nil? && !@definition[:default].to_s.strip.empty?
         end
 
         def create_error

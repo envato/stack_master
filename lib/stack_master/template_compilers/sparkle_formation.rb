@@ -1,6 +1,7 @@
 require_relative '../sparkle_formation/compile_time/parameter_builder'
 require_relative '../sparkle_formation/compile_time/parameter_validator'
 require_relative '../sparkle_formation/compile_time/definition_validator'
+require_relative '../sparkle_formation/compile_time/state_builder'
 
 module StackMaster::TemplateCompilers
   class SparkleFormation
@@ -20,27 +21,17 @@ module StackMaster::TemplateCompilers
       end
       template = ::SparkleFormation.compile(template_file_path, :sparkle)
       template.compile_time_parameter_setter do |formation|
-        unless formation.parameters.empty?
-          current_state = {}
-          formation.parameters.each do |name, definition|
-            parameter = parameters[name.to_s.camelize]
-            current_state[name] = create_compile_parameter(name, definition, parameter)
-            parameters.delete(name.to_s.camelize)
-          end
-          formation.compile_state = current_state
+        state  = CompileTime::StateBuilder.new(formation, parameters).build
+        state.each do |name, compile_parameter|
+          definition = formation.parameters[name]
+          validate_definition(name, definition)
+          validate_parameter(name, definition, compile_parameter)
+          parameters.delete(name.to_s.camelize)
         end
+        formation.compile_state = state
       end
       JSON.pretty_generate(template)
     end
-
-    def self.create_compile_parameter(name, definition, parameter)
-      compile_parameter = CompileTime::ParameterBuilder.new(definition, parameter).build
-      validate_definition(name, definition)
-      validate_parameter(name, definition, compile_parameter)
-      compile_parameter
-    end
-
-    StackMaster::TemplateCompiler.register(:sparkle_formation, self)
 
     private
 
@@ -56,5 +47,6 @@ module StackMaster::TemplateCompilers
       raise ArgumentError.new "Invalid compile time parameter: #{validator.error}" unless validator.is_valid
     end
 
+    StackMaster::TemplateCompiler.register(:sparkle_formation, self)
   end
 end

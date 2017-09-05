@@ -16,7 +16,7 @@ module StackMaster
         end
 
         def create_error
-          "#{@name}:#{@type} valid types are #{@valid_types.pretty_inspect}"
+          "#{@name}:#{@type} valid types are #{@valid_types}"
         end
 
       end
