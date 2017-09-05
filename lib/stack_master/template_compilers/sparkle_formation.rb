@@ -1,5 +1,6 @@
-require_relative '../sparkle_formation/compile_time/parameter_validator'
 require_relative '../sparkle_formation/compile_time/parameter_builder'
+require_relative '../sparkle_formation/compile_time/parameter_validator'
+require_relative '../sparkle_formation/compile_time/definition_validator'
 
 module StackMaster::TemplateCompilers
   class SparkleFormation
@@ -12,8 +13,8 @@ module StackMaster::TemplateCompilers
     end
 
     def self.compile(template_file_path, parameters, compiler_options = {})
-      if compiler_options["sparkle_path"]
-        ::SparkleFormation.sparkle_path = File.expand_path(compiler_options["sparkle_path"])
+      if compiler_options['sparkle_path']
+        ::SparkleFormation.sparkle_path = File.expand_path(compiler_options['sparkle_path'])
       else
         ::SparkleFormation.sparkle_path = File.dirname(template_file_path)
       end
@@ -44,16 +45,15 @@ module StackMaster::TemplateCompilers
     private
 
     def self.validate_definition(name, definition)
-      type = definition[:type]
-      unless [:string, :number].include? type
-        raise ArgumentError.new "Unknown compile time parameter type provided: `#{type}` (Parameter: #{name})"
-      end
+      validator = CompileTime::DefinitionValidator.new(name, definition)
+      validator.validate
+      raise ArgumentError.new "Unknown compile time parameter type: #{validator.error}" unless validator.is_valid
     end
 
     def self.validate_parameter(name, definition, parameter)
-      parameter_validator = CompileTime::ParameterValidator.new(name, definition, parameter)
-      parameter_validator.validate
-      raise ArgumentError.new "Invalid compile time parameter: #{parameter_validator.error}" unless parameter_validator.is_valid
+      validator = CompileTime::ParameterValidator.new(name, definition, parameter)
+      validator.validate
+      raise ArgumentError.new "Invalid compile time parameter: #{validator.error}" unless validator.is_valid
     end
 
   end

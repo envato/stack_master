@@ -26,11 +26,8 @@ module StackMaster
         end
 
         def convert_strings_to_integers(compile_parameter)
-          if compile_parameter.is_a?(Array)
-            return compile_parameter.map {|item| item.strip.to_i}
-          elsif compile_parameter.is_a?(String)
-            return compile_parameter.to_i
-          end
+          return compile_parameter.map {|item| item.strip.to_i} if compile_parameter.is_a?(Array)
+          return compile_parameter.to_i if compile_parameter.is_a?(String)
           compile_parameter
         end
 
