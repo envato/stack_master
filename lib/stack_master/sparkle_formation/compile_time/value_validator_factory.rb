@@ -8,7 +8,7 @@ require_relative 'min_size_validator'
 
 module StackMaster
   module SparkleFormation
-    module CompileTimeParameter
+    module CompileTime
       class ValueValidatorFactory
 
         VALIDATORS_TYPES = [

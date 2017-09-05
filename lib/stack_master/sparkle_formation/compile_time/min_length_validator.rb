@@ -2,10 +2,10 @@ require_relative 'validator'
 
 module StackMaster
   module SparkleFormation
-    module CompileTimeParameter
-      class AllowedValuesValidator < Validator
+    module CompileTime
+      class MinLengthValidator < Validator
 
-        KEY = :allowed_values
+        KEY = :min_length
 
         def initialize(name, parameter_definition, value)
           @name = name
@@ -17,15 +17,15 @@ module StackMaster
 
         def check_is_valid
           return true unless @parameter_definition.key?(KEY)
-          value_is_allowed?
+          !value_is_less_than_min_length?
         end
 
-        def value_is_allowed?
-          @parameter_definition[KEY].include?(@value)
+        def value_is_less_than_min_length?
+          @value.length < @parameter_definition[KEY].to_i
         end
 
         def create_error
-          "#{@name}:#{@value} is not in #{KEY}:#{@parameter_definition[KEY].join(',')}"
+          "#{@name}:#{@value} must be at least #{KEY}:#{@parameter_definition[KEY]} characters"
         end
 
       end

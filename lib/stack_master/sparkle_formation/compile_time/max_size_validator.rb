@@ -2,10 +2,10 @@ require_relative 'validator'
 
 module StackMaster
   module SparkleFormation
-    module CompileTimeParameter
-      class AllowedPatternValidator < Validator
+    module CompileTime
+      class MaxSizeValidator < Validator
 
-        KEY = :allowed_pattern
+        KEY = :max_size
 
         def initialize(name, parameter_definition, value)
           @name = name
@@ -17,15 +17,15 @@ module StackMaster
 
         def check_is_valid
           return true unless @parameter_definition.key?(KEY)
-          value_matches_pattern?
+          !value_is_greater_than_max_size?
         end
 
-        def value_matches_pattern?
-          @value.match(%r{#{@parameter_definition[KEY]}})
+        def value_is_greater_than_max_size?
+          @value.to_i > @parameter_definition[KEY].to_i
         end
 
         def create_error
-          "#{@name}:#{@value} does not match #{KEY}:#{@parameter_definition[KEY]}"
+          "#{@name}:#{@value} must not be greater than #{KEY}:#{@parameter_definition[KEY]}"
         end
 
       end

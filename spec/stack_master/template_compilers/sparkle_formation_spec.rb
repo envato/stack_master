@@ -282,7 +282,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
       it 'should raise an exception' do
         expect {compile_parameter(key, {type: type}, nil)}
-            .to raise_error(ArgumentError, "Unknown compile time parameter type provided: `#{type.inspect}` (Parameter: #{key})")
+            .to raise_error(ArgumentError, "Unknown compile time parameter type provided: `#{type}` (Parameter: #{key})")
       end
 
 

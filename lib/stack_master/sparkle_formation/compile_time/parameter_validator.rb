@@ -3,7 +3,7 @@ require_relative 'value_validator_factory'
 
 module StackMaster
   module SparkleFormation
-    module CompileTimeParameter
+    module CompileTime
       class ParameterValidator < Validator
 
         def initialize(name, definition, parameter)

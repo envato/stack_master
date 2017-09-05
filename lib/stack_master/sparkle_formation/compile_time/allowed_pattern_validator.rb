@@ -2,10 +2,10 @@ require_relative 'validator'
 
 module StackMaster
   module SparkleFormation
-    module CompileTimeParameter
-      class MinLengthValidator < Validator
+    module CompileTime
+      class AllowedPatternValidator < Validator
 
-        KEY = :min_length
+        KEY = :allowed_pattern
 
         def initialize(name, parameter_definition, value)
           @name = name
@@ -17,15 +17,15 @@ module StackMaster
 
         def check_is_valid
           return true unless @parameter_definition.key?(KEY)
-          !value_is_less_than_min_length?
+          value_matches_pattern?
         end
 
-        def value_is_less_than_min_length?
-          @value.length < @parameter_definition[KEY].to_i
+        def value_matches_pattern?
+          @value.match(%r{#{@parameter_definition[KEY]}})
         end
 
         def create_error
-          "#{@name}:#{@value} must be at least #{KEY}:#{@parameter_definition[KEY]} characters"
+          "#{@name}:#{@value} does not match #{KEY}:#{@parameter_definition[KEY]}"
         end
 
       end

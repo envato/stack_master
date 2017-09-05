@@ -1,6 +1,6 @@
 module StackMaster
   module SparkleFormation
-    module CompileTimeParameter
+    module CompileTime
       class Validator
 
         attr_reader :is_valid, :error

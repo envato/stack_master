@@ -2,10 +2,10 @@ require_relative 'validator'
 
 module StackMaster
   module SparkleFormation
-    module CompileTimeParameter
-      class MaxLengthValidator < Validator
+    module CompileTime
+      class AllowedValuesValidator < Validator
 
-        KEY = :max_length
+        KEY = :allowed_values
 
         def initialize(name, parameter_definition, value)
           @name = name
@@ -17,15 +17,15 @@ module StackMaster
 
         def check_is_valid
           return true unless @parameter_definition.key?(KEY)
-          !value_is_greater_than_max_length?
+          value_is_allowed?
         end
 
-        def value_is_greater_than_max_length?
-          @value.length > @parameter_definition[KEY].to_i
+        def value_is_allowed?
+          @parameter_definition[KEY].include?(@value)
         end
 
         def create_error
-          "#{@name}:#{@value} must not exceed #{KEY}:#{@parameter_definition[KEY]} characters"
+          "#{@name}:#{@value} is not in #{KEY}:#{@parameter_definition[KEY].join(',')}"
         end
 
       end

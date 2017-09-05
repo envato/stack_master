@@ -1,7 +1,10 @@
-require_relative '../sparkle_formation/compile_time_parameter/parameter_validator'
+require_relative '../sparkle_formation/compile_time/parameter_validator'
+require_relative '../sparkle_formation/compile_time/parameter_builder'
 
 module StackMaster::TemplateCompilers
   class SparkleFormation
+
+    CompileTime = StackMaster::SparkleFormation::CompileTime
 
     def self.require_dependencies
       require 'sparkle_formation'
@@ -14,11 +17,10 @@ module StackMaster::TemplateCompilers
       else
         ::SparkleFormation.sparkle_path = File.dirname(template_file_path)
       end
-
       template = ::SparkleFormation.compile(template_file_path, :sparkle)
       template.compile_time_parameter_setter do |formation|
-        current_state = {}
-        unless (formation.parameters.empty?)
+        unless formation.parameters.empty?
+          current_state = {}
           formation.parameters.each do |name, definition|
             parameter = parameters[name.to_s.camelize]
             current_state[name] = create_compile_parameter(name, definition, parameter)
@@ -31,55 +33,28 @@ module StackMaster::TemplateCompilers
     end
 
     def self.create_compile_parameter(name, definition, parameter)
-
-      parameter_type = definition.fetch(:type)
-      parameter = set_default_if_parameter_is_nil(definition, parameter)
-      parameter = convert_parameter_to_string_if_array(parameter)
-      result = parameter.to_s
-
-      case parameter_type
-        when :string
-          if definition[:multiple]
-            result = result.split(',').map(&:strip)
-          end
-        when :number
-          if definition[:multiple]
-            result = result.split(',').map(&:strip)
-            new_result = result.map do |item|
-              new_item = item.to_i
-              new_item if new_item.to_s == item
-            end
-            result = new_result.size == result.size ? new_result : []
-          else
-            new_result = result.to_i
-            result = new_result.to_s == result ? new_result : nil
-          end
-        else
-          raise ArgumentError.new "Unknown compile time parameter type provided: `#{definition[:type].inspect}` (Parameter: #{name})"
-      end
-
-      parameter_validator = StackMaster::SparkleFormation::CompileTimeParameter::ParameterValidator.new(name, definition, result)
-      parameter_validator.validate
-      unless parameter_validator.is_valid
-        raise ArgumentError.new "Invalid compile time parameter: #{parameter_validator.error}"
-      end
-      result
-    end
-
-    def self.convert_parameter_to_string_if_array(parameter)
-      if parameter.is_a?(Array)
-        parameter = parameter.map(&:to_s).join(',')
-      end
-      parameter
-    end
-
-    def self.set_default_if_parameter_is_nil(definition, parameter)
-      unless parameter || definition[:default].nil?
-        parameter = definition[:default]
-      end
-      parameter
+      compile_parameter = CompileTime::ParameterBuilder.new(definition, parameter).build
+      validate_definition(name, definition)
+      validate_parameter(name, definition, compile_parameter)
+      compile_parameter
     end
 
     StackMaster::TemplateCompiler.register(:sparkle_formation, self)
+
+    private
+
+    def self.validate_definition(name, definition)
+      type = definition[:type]
+      unless [:string, :number].include? type
+        raise ArgumentError.new "Unknown compile time parameter type provided: `#{type}` (Parameter: #{name})"
+      end
+    end
+
+    def self.validate_parameter(name, definition, parameter)
+      parameter_validator = CompileTime::ParameterValidator.new(name, definition, parameter)
+      parameter_validator.validate
+      raise ArgumentError.new "Invalid compile time parameter: #{parameter_validator.error}" unless parameter_validator.is_valid
+    end
+
   end
 end
