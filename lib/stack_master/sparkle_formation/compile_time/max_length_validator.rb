@@ -1,9 +1,9 @@
-require_relative 'validator'
+require_relative 'value_validator'
 
 module StackMaster
   module SparkleFormation
     module CompileTime
-      class MaxLengthValidator < Validator
+      class MaxLengthValidator < ValueValidator
 
         KEY = :max_length
 

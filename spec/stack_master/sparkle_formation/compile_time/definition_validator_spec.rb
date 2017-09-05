@@ -17,12 +17,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::DefinitionValidator d
 
         let(:type) {type}
 
-        it 'should be valid' do
-          expect(subject.is_valid).to be_truthy
-        end
-
-        it 'should not have an error' do
-          expect(subject.error).to be_nil
+        it 'should not raise an exception' do
+          expect{subject}.to_not raise_error
         end
 
       end
@@ -33,12 +29,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::DefinitionValidator d
 
       let(:type) {:other}
 
-      it 'should not be valid' do
-        expect(subject.is_valid).to be_falsey
-      end
-
-      it 'should have an error' do
-        expect(subject.error).to eq "#{key}:#{type} valid types are #{[:string, :number]}"
+      it 'should not raise an exception' do
+        expect{subject}.to raise_error(ArgumentError, "Unknown compile time parameter type: #{key}:#{type} valid types are #{[:string, :number]}")
       end
 
     end

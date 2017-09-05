@@ -36,9 +36,7 @@ module StackMaster::TemplateCompilers
     private
 
     def self.validate_definition(name, definition)
-      validator = CompileTime::DefinitionValidator.new(name, definition)
-      validator.validate
-      raise ArgumentError.new "Unknown compile time parameter type: #{validator.error}" unless validator.is_valid
+      CompileTime::DefinitionValidator.new(name, definition).validate
     end
 
     def self.validate_parameter(name, definition, parameter)

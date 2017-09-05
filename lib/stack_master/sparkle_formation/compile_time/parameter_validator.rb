@@ -1,10 +1,9 @@
-require_relative 'validator'
 require_relative 'value_validator_factory'
 
 module StackMaster
   module SparkleFormation
     module CompileTime
-      class ParameterValidator < Validator
+      class ParameterValidator < ValueValidator
 
         def initialize(name, definition, parameter)
           @factory = ValueValidatorFactory.new(name, definition, parameter)

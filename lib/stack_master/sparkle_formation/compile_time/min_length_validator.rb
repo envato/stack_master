@@ -1,9 +1,9 @@
-require_relative 'validator'
+require_relative 'value_validator'
 
 module StackMaster
   module SparkleFormation
     module CompileTime
-      class MinLengthValidator < Validator
+      class MinLengthValidator < ValueValidator
 
         KEY = :min_length
 

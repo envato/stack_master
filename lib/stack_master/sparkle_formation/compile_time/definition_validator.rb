@@ -1,9 +1,9 @@
-require_relative 'validator'
+require_relative 'value_validator'
 
 module StackMaster
   module SparkleFormation
     module CompileTime
-      class DefinitionValidator < Validator
+      class DefinitionValidator
 
         def initialize(name, definition)
           @name = name
@@ -11,7 +11,14 @@ module StackMaster
           @valid_types = [:string, :number]
         end
 
-        def check_is_valid
+
+        def validate
+            raise ArgumentError.new "Unknown compile time parameter type: #{create_error}" unless is_valid
+        end
+
+        private
+
+        def is_valid
           @valid_types.include? @type
         end
 
