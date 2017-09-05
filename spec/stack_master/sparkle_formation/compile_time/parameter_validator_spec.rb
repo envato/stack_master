@@ -4,12 +4,9 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
   describe '#validate' do
 
-    def validator(name, definition, parameter)
-      described_class.new(name, definition, parameter).tap {|validator| validator.validate}
-    end
-
     let(:name) {'name'}
-    subject {validator(name, definition, parameter)}
+
+    subject {described_class.new(name, definition, parameter).validate}
 
     context 'with a :string type definition' do
 
@@ -21,12 +18,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'a'}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -35,12 +28,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'a,b'}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -49,12 +38,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {nil}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should have an error' do
-            expect(subject.error).to eq "#{name} cannot be blank"
+          it 'should raise an exception' do
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name} cannot be blank")
           end
 
         end
@@ -69,12 +54,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'b'}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -83,12 +64,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {nil}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -103,12 +80,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'a'}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -117,12 +90,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'b'}
 
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to eq "#{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values].join(',')}"
+          it 'should raise an exception' do
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values].join(',')}")
           end
 
         end
@@ -137,12 +106,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'a'}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -151,12 +116,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'b'}
 
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to eq "#{name}:#{parameter} does not match allowed_pattern:#{definition[:allowed_pattern]}"
+          it 'should raise an exception' do
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} does not match allowed_pattern:#{definition[:allowed_pattern]}")
           end
 
         end
@@ -171,12 +132,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'2'}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -185,12 +142,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'1'}
 
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to eq "#{name}:#{parameter} must not be less than min_size:#{definition[:min_size]}"
+          it 'should raise an exception' do
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be less than min_size:#{definition[:min_size]}")
           end
 
         end
@@ -198,7 +151,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
       end
 
-      context 'with definition of type {type: :string, min_size: 2}' do
+      context 'with definition of type {type: :string, max_size: 2}' do
 
         let(:definition) {{type: :string, max_size: 2}}
 
@@ -206,12 +159,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'2'}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -220,12 +169,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'3'}
 
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to eq "#{name}:#{parameter} must not be greater than max_size:#{definition[:max_size]}"
+          it 'should raise an exception' do
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be greater than max_size:#{definition[:max_size]}")
           end
 
         end
@@ -241,12 +186,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'ab'}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -255,12 +196,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'a'}
 
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to eq "#{name}:#{parameter} must be at least min_length:#{definition[:min_length]} characters"
+          it 'should raise an exception' do
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must be at least min_length:#{definition[:min_length]} characters")
           end
 
         end
@@ -275,12 +212,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'ab'}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -289,12 +222,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {'abc'}
 
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to eq "#{name}:#{parameter} must not exceed max_length:#{definition[:max_length]} characters"
+          it 'should raise an exception' do
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not exceed max_length:#{definition[:max_length]} characters")
           end
 
         end
@@ -313,26 +242,18 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {1}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
 
         context 'with parameter of [1,2]' do
 
-          let(:parameter) {[1,2]}
+          let(:parameter) {[1, 2]}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -341,12 +262,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {nil}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should have an error' do
-            expect(subject.error).to eq "#{name} cannot be blank"
+          it 'should raise an exception' do
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name} cannot be blank")
           end
 
         end
@@ -361,12 +278,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {1}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -375,12 +288,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {nil}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -395,12 +304,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {1}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -409,12 +314,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {2}
 
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to eq "#{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values].join(',')}"
+          it 'should raise an exception' do
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values].join(',')}")
           end
 
         end
@@ -429,12 +330,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {2}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -443,12 +340,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {1}
 
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to eq "#{name}:#{parameter} must not be less than min_size:#{definition[:min_size]}"
+          it 'should raise an exception' do
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be less than min_size:#{definition[:min_size]}")
           end
 
         end
@@ -456,7 +349,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
       end
 
-      context 'with definition of type {type: :number, min_size: 2}' do
+      context 'with definition of type {type: :number, man_size: 2}' do
 
         let(:definition) {{type: :number, max_size: 2}}
 
@@ -464,12 +357,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {2}
 
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to be_nil
+          it 'should not raise an exception' do
+            expect {subject}.to_not raise_error
           end
 
         end
@@ -478,16 +367,11 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
           let(:parameter) {3}
 
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should not have an error' do
-            expect(subject.error).to eq "#{name}:#{parameter} must not be greater than max_size:#{definition[:max_size]}"
+          it 'should raise an exception' do
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be greater than max_size:#{definition[:max_size]}")
           end
 
         end
-
 
       end
 

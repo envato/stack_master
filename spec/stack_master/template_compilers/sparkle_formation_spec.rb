@@ -12,9 +12,9 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
     before do
       allow(::SparkleFormation).to receive(:compile).with(template_file_path, :sparkle).and_return(sparkle_template)
       allow(sparkle_template).to receive(:compile_time_parameter_setter)
+      allow(sparkle_template).to receive(:parameters).and_return([])
       allow(JSON).to receive(:pretty_generate).with(sparkle_template).and_return("{\n}")
     end
-
 
     it 'compiles with sparkleformation' do
       expect(compile).to eq("{\n}")

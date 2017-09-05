@@ -3,7 +3,7 @@ require_relative 'value_validator_factory'
 module StackMaster
   module SparkleFormation
     module CompileTime
-      class ParameterValidator < ValueValidator
+      class ParameterValidator
 
         def initialize(name, definition, parameter)
           @factory = ValueValidatorFactory.new(name, definition, parameter)
@@ -13,9 +13,7 @@ module StackMaster
           validators = @factory.build_validators
           validators.each do |validator|
             validator.validate
-            @is_valid = validator.is_valid
-            @error = validator.error unless @is_valid
-            return unless @is_valid
+            raise ArgumentError.new "Invalid compile time parameter: #{validator.error}" unless validator.is_valid
           end
         end
 

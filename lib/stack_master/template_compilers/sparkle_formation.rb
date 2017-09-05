@@ -1,6 +1,5 @@
-require_relative '../sparkle_formation/compile_time/parameter_builder'
 require_relative '../sparkle_formation/compile_time/parameter_validator'
-require_relative '../sparkle_formation/compile_time/definition_validator'
+require_relative '../sparkle_formation/compile_time/definitions_validator'
 require_relative '../sparkle_formation/compile_time/state_builder'
 
 module StackMaster::TemplateCompilers
@@ -20,11 +19,12 @@ module StackMaster::TemplateCompilers
         ::SparkleFormation.sparkle_path = File.dirname(template_file_path)
       end
       template = ::SparkleFormation.compile(template_file_path, :sparkle)
+      validate_definitions(template.parameters)
+
       template.compile_time_parameter_setter do |formation|
         state  = CompileTime::StateBuilder.new(formation, parameters).build
         state.each do |name, compile_parameter|
           definition = formation.parameters[name]
-          validate_definition(name, definition)
           validate_parameter(name, definition, compile_parameter)
           parameters.delete(name.to_s.camelize)
         end
@@ -35,14 +35,12 @@ module StackMaster::TemplateCompilers
 
     private
 
-    def self.validate_definition(name, definition)
-      CompileTime::DefinitionValidator.new(name, definition).validate
+    def self.validate_definitions(definitions)
+        CompileTime::DefinitionsValidator.new(definitions).validate
     end
 
     def self.validate_parameter(name, definition, parameter)
-      validator = CompileTime::ParameterValidator.new(name, definition, parameter)
-      validator.validate
-      raise ArgumentError.new "Invalid compile time parameter: #{validator.error}" unless validator.is_valid
+      CompileTime::ParameterValidator.new(name, definition, parameter).validate
     end
 
     StackMaster::TemplateCompiler.register(:sparkle_formation, self)

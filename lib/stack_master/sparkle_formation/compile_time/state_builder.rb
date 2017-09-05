@@ -1,7 +1,4 @@
 require_relative 'parameter_builder'
-require_relative 'parameter_validator'
-require_relative 'definition_validator'
-
 
 module StackMaster
   module SparkleFormation

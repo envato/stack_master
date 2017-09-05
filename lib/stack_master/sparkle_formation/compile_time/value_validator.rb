@@ -17,7 +17,6 @@ module StackMaster
         end
 
         def create_error
-
         end
 
       end
