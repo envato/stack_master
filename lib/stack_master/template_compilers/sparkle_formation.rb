@@ -1,4 +1,5 @@
 require_relative '../sparkle_formation/compile_time/parameter_validator'
+require_relative '../sparkle_formation/compile_time/parameters_validator'
 require_relative '../sparkle_formation/compile_time/definitions_validator'
 require_relative '../sparkle_formation/compile_time/state_builder'
 
@@ -18,29 +19,44 @@ module StackMaster::TemplateCompilers
       else
         ::SparkleFormation.sparkle_path = File.dirname(template_file_path)
       end
-      template = ::SparkleFormation.compile(template_file_path, :sparkle)
-      validate_definitions(template.parameters)
+      sparkle_template = ::SparkleFormation.compile(template_file_path, :sparkle)
+      definitions = sparkle_template.parameters
+      validate_definitions(definitions)
+      #validate_parameters(definitions, parameters)
 
-      template.compile_time_parameter_setter do |formation|
-        state  = CompileTime::StateBuilder.new(formation, parameters).build
+      sparkle_template.compile_time_parameter_setter do
+        state = create_state(definitions, parameters)
         state.each do |name, compile_parameter|
-          definition = formation.parameters[name]
+          definition = sparkle_template.parameters[name]
           validate_parameter(name, definition, compile_parameter)
-          parameters.delete(name.to_s.camelize)
         end
-        formation.compile_state = state
+        sparkle_template.compile_state = state
+        remove_compile_parameters(definitions, parameters)
       end
-      JSON.pretty_generate(template)
+
+      JSON.pretty_generate(sparkle_template)
     end
 
     private
 
     def self.validate_definitions(definitions)
-        CompileTime::DefinitionsValidator.new(definitions).validate
+      CompileTime::DefinitionsValidator.new(definitions).validate
     end
 
     def self.validate_parameter(name, definition, parameter)
       CompileTime::ParameterValidator.new(name, definition, parameter).validate
+    end
+
+    def self.validate_parameters(definitions, parameters)
+      CompileTime::ParametersValidator.new(definitions, parameters).validate
+    end
+
+    def self.create_state(definitions, parameters)
+      CompileTime::StateBuilder.new(definitions, parameters).build
+    end
+
+    def self.remove_compile_parameters(definitions, parameters)
+      definitions.each {|name, _definition| parameters.delete(name.to_s.camelize)}
     end
 
     StackMaster::TemplateCompiler.register(:sparkle_formation, self)

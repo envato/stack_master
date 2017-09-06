@@ -7,27 +7,39 @@ module StackMaster
 
         KEY = :allowed_values
 
-        def initialize(name, parameter_definition, value)
+        def initialize(name, definition, parameter)
           @name = name
-          @parameter_definition = parameter_definition
-          @value = value
+          @definition = definition
+          @parameter = parameter
         end
 
         private
 
         def check_is_valid
-          return true unless @parameter_definition.key?(KEY)
-          value_is_allowed?
+          return true unless @definition.key?(KEY)
+          parameter_is_allowed?
         end
 
-        def value_is_allowed?
-          @parameter_definition[KEY].include?(@value)
+        def parameter_is_allowed?
+          invalid_parameters.empty?
         end
 
         def create_error
-          "#{@name}:#{@value} is not in #{KEY}:#{@parameter_definition[KEY].join(',')}"
+          "#{@name}:#{invalid_parameters.join(',')} is not in #{KEY}:#{@definition[KEY]}"
         end
 
+        def invalid_parameters
+          parameter = @parameter.nil? ? @definition[:default] : @parameter
+          parameter = convert_to_array(parameter)
+          parameter - @definition[KEY]
+        end
+
+        def convert_to_array(parameter)
+          if @definition[:multiple] && parameter.is_a?(String)
+            return parameter.split(',').map(&:strip)
+          end
+          parameter.is_a?(Array) ? parameter : [parameter]
+        end
       end
     end
   end

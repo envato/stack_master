@@ -91,7 +91,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
           let(:parameter) {'b'}
 
           it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values].join(',')}")
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values]}")
           end
 
         end
@@ -315,7 +315,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
           let(:parameter) {2}
 
           it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values].join(',')}")
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values]}")
           end
 
         end

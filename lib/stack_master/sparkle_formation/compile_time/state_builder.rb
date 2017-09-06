@@ -5,17 +5,17 @@ module StackMaster
     module CompileTime
       class StateBuilder
 
-        def initialize(sparkle_template, parameters)
-          @sparkle_template = sparkle_template
+        def initialize(definitions, parameters)
+          @definitions = definitions
           @parameters = parameters
         end
 
         def build
           state = {}
-          @sparkle_template.parameters.each do |compile_parameter_name, definition|
-            parameter_name = compile_parameter_name.to_s.camelize
-            parameter = @parameters[parameter_name]
-            state[compile_parameter_name] = create_parameter(definition, parameter)
+          @definitions.each do |name, definition|
+            parameter_key = name.to_s.camelize
+            parameter = @parameters[parameter_key]
+            state[name] = create_parameter(definition, parameter)
           end
           state
         end

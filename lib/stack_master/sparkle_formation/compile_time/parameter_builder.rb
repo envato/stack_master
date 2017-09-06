@@ -11,7 +11,7 @@ module StackMaster
         def build
           parameter_or_default
           convert_strings_to_array
-          convert_strings_to_integers
+          convert_strings_to_numbers
           @compile_parameter
         end
 
@@ -27,10 +27,14 @@ module StackMaster
           end
         end
 
-        def convert_strings_to_integers
+        def convert_strings_to_numbers
           if @definition[:type] == :number
-            @compile_parameter = @compile_parameter.to_i if @compile_parameter.is_a?(String)
-            @compile_parameter = @compile_parameter.map {|item| item.strip.to_i} if @compile_parameter.is_a?(Array)
+            @compile_parameter = @compile_parameter.to_f if @compile_parameter.is_a?(String)
+            if @compile_parameter.is_a?(Array)
+              @compile_parameter = @compile_parameter.map do |item|
+                item.is_a?(String) ? item.strip.to_f : item
+              end
+            end
           end
         end
 
