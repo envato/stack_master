@@ -7,25 +7,36 @@ module StackMaster
 
         KEY = :allowed_pattern
 
-        def initialize(name, parameter_definition, value)
+        def initialize(name, definition, parameter)
           @name = name
-          @parameter_definition = parameter_definition
-          @value = value
+          @definition = definition
+          @parameter = parameter
         end
 
         private
 
         def check_is_valid
-          return true unless @parameter_definition.key?(KEY)
-          value_matches_pattern?
-        end
-
-        def value_matches_pattern?
-          @value.match(%r{#{@parameter_definition[KEY]}})
+          return true unless @definition.key?(KEY)
+          invalid_parameters.empty?
         end
 
         def create_error
-          "#{@name}:#{@value} does not match #{KEY}:#{@parameter_definition[KEY]}"
+          "#{@name}:#{invalid_parameters} does not match #{KEY}:#{@definition[KEY]}"
+        end
+
+        def invalid_parameters
+          parameter = @parameter.nil? ? @definition[:default] : @parameter
+          parameter_list = convert_to_array(parameter)
+          parameter_list.reject do |parameter|
+            parameter.nil? ? false : parameter.to_s.match(%r{#{@definition[KEY]}})
+          end
+        end
+
+        def convert_to_array(parameter)
+          if @definition[:multiple] && parameter.is_a?(String)
+            return parameter.split(',').map(&:strip)
+          end
+          parameter.is_a?(Array) ? parameter : [parameter]
         end
 
       end

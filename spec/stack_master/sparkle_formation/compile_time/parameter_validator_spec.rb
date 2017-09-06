@@ -117,7 +117,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
           let(:parameter) {'b'}
 
           it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} does not match allowed_pattern:#{definition[:allowed_pattern]}")
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:[\"#{parameter}\"] does not match allowed_pattern:#{definition[:allowed_pattern]}")
           end
 
         end
