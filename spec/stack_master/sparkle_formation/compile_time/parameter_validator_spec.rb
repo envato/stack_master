@@ -39,7 +39,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
           let(:parameter) {nil}
 
           it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name} cannot be blank")
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name} cannot contain empty parameters:#{parameter.inspect}")
           end
 
         end
@@ -263,7 +263,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
           let(:parameter) {nil}
 
           it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name} cannot be blank")
+            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name} cannot contain empty parameters:#{parameter.inspect}")
           end
 
         end
