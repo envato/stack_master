@@ -16,16 +16,15 @@ module StackMaster
         private
 
         def check_is_valid
+          return true unless @definition[:type] == :number
           return true unless @definition.key?(KEY)
           invalid_values.empty?
         end
 
         def invalid_values
-          parameter = @parameter.nil? ? @definition[:default] : @parameter
-          parameter_list = convert_to_array(parameter)
-          parameter_list.select do |parameter|
-            parameter.nil? ? true : parameter.to_i < @definition[KEY].to_i
-          end
+          parameter_or_default = @parameter.nil? ? @definition[:default] : @parameter
+          parameter_list = convert_to_array(parameter_or_default)
+          parameter_list.select {|parameter| parameter.to_f < @definition[KEY].to_f}
         end
 
         def create_error
@@ -38,7 +37,7 @@ module StackMaster
           end
           parameter.is_a?(Array) ? parameter : [parameter]
         end
-        
+
       end
     end
   end

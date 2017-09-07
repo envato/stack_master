@@ -16,6 +16,7 @@ module StackMaster
         private
 
         def check_is_valid
+          return true unless @definition[:type] == :number
           return true unless @definition.key?(KEY)
           invalid_values.empty?
         end
@@ -24,7 +25,7 @@ module StackMaster
           parameter = @parameter.nil? ? @definition[:default] : @parameter
           parameter_list = convert_to_array(parameter)
           parameter_list.select do |parameter|
-            parameter.nil? ? true : parameter.to_i > @definition[KEY].to_i
+            parameter.nil? ? true : parameter.to_f > @definition[KEY].to_f
           end
         end
 

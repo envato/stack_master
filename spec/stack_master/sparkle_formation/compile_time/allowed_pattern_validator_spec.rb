@@ -20,12 +20,12 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedPatternValidat
 
         {definition: {type: :string, allowed_pattern: '^a', multiple: true, default: 'a,a'}, parameter: nil, valid: true},
 
-        {definition: {type: :number, allowed_pattern: '^1'}, parameter: '1', valid: true},
         {definition: {type: :number, allowed_pattern: '^1'}, parameter: 1, valid: true},
+        {definition: {type: :number, allowed_pattern: '^1'}, parameter: '1', valid: true},
         {definition: {type: :number, allowed_pattern: '^1'}, parameter: [1], valid: true},
         {definition: {type: :number, allowed_pattern: '^1'}, parameter: ['1'], valid: true},
-        {definition: {type: :number, allowed_pattern: '^1'}, parameter: '2', valid: false, error: ['2']},
         {definition: {type: :number, allowed_pattern: '^1'}, parameter: 2, valid: false, error: [2]},
+        {definition: {type: :number, allowed_pattern: '^1'}, parameter: '2', valid: false, error: ['2']},
 
         {definition: {type: :number, allowed_pattern: '^1', default: '1'}, parameter: nil, valid: true},
     ]

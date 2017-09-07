@@ -6,11 +6,16 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::MaxSizeValidator do
     let(:name) {'name'}
 
     scenarios = [
-        {definition: {type: :number, max_size: 2}, parameter: 2, valid: true},
-        {definition: {type: :number, max_size: 2}, parameter: '2', valid: true},
-        {definition: {type: :number, max_size: 2}, parameter: 3, valid: false, error: [3]},
-        {definition: {type: :number, max_size: 2, default: 2}, parameter: nil, valid: true},
-        {definition: {type: :number, max_size: 2, default: 3}, parameter: nil, valid: false, error: [3]}
+        {definition: {type: :number, max_size: 1}, parameter: 1, valid: true},
+        {definition: {type: :number, max_size: 1}, parameter: '1', valid: true},
+        {definition: {type: :number, max_size: 1}, parameter: [1], valid: true},
+        {definition: {type: :number, max_size: 1}, parameter: ['1'], valid: true},
+        {definition: {type: :number, max_size: 1}, parameter: 2, valid: false, error: [2]},
+        {definition: {type: :number, max_size: 1}, parameter: '2', valid: false, error: ['2']},
+
+        {definition: {type: :number, max_size: 1, default: 1}, parameter: nil, valid: true},
+
+        {definition: {type: :string, max_size: 1}, parameter: 2, valid: true},
     ]
     subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
 

@@ -6,11 +6,17 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::MinSizeValidator do
     let(:name) {'name'}
 
     scenarios = [
-        {definition: {type: :string, min_size: 2}, parameter: 2, valid: true},
-        {definition: {type: :string, min_size: 2}, parameter: '2', valid: true},
-        {definition: {type: :string, min_size: 2}, parameter: 1, valid: false, error: [1]},
-        {definition: {type: :number, min_size: 2, default: 2}, parameter: nil, valid: true},
-        {definition: {type: :number, min_size: 2, default: 1}, parameter: nil, valid: false, error: [1]}
+        {definition: {type: :number, min_size: 1}, parameter: 1, valid: true},
+        {definition: {type: :number, min_size: 1}, parameter: '1', valid: true},
+        {definition: {type: :number, min_size: 1}, parameter: [1], valid: true},
+        {definition: {type: :number, min_size: 1}, parameter: ['1'], valid: true},
+        {definition: {type: :number, min_size: 1}, parameter: 0, valid: false, error: [0]},
+        {definition: {type: :number, min_size: 1}, parameter: '0', valid: false, error: ['0']},
+
+        {definition: {type: :number, min_size: 1, default: 1}, parameter: nil, valid: true},
+
+        {definition: {type: :string, min_size: 1}, parameter: 0, valid: true},
+    
     ]
     subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
 
@@ -22,7 +28,6 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::MinSizeValidator do
         let(:error) {scenario[:error]}
         if scenario[:valid]
           it 'should be valid' do
-            puts(definition)
             expect(subject.is_valid).to be_truthy
           end
         else

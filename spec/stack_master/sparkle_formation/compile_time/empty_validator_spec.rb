@@ -19,12 +19,12 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::EmptyValidator do
 
         {definition: {type: :string, multiple: true, default: 'a,b'}, parameter: nil, valid: true},
 
-        {definition: {type: :number}, parameter: '1', valid: true},
         {definition: {type: :number}, parameter: 1, valid: true},
-        {definition: {type: :number}, parameter: nil, valid: false},
+        {definition: {type: :number}, parameter: '1', valid: true},
         {definition: {type: :number}, parameter: [1], valid: true},
-        {definition: {type: :number}, parameter: [1, nil], valid: false},
         {definition: {type: :number}, parameter: ['1'], valid: true},
+        {definition: {type: :number}, parameter: nil, valid: false},
+        {definition: {type: :number}, parameter: [1, nil], valid: false},
         {definition: {type: :number}, parameter: ['1', nil], valid: false},
 
         {definition: {type: :number, default: '1'}, parameter: nil, valid: true},

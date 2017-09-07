@@ -20,12 +20,12 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedValuesValidato
 
         {definition: {type: :string, allowed_values: ['a'], multiple: true, default: 'a,a'}, parameter: nil, valid: true},
 
-        {definition: {type: :number, allowed_values: [1]}, parameter: '1', valid: true},
         {definition: {type: :number, allowed_values: [1]}, parameter: 1, valid: true},
+        {definition: {type: :number, allowed_values: [1]}, parameter: '1', valid: true},
         {definition: {type: :number, allowed_values: [1]}, parameter: [1], valid: true},
         {definition: {type: :number, allowed_values: [1]}, parameter: ['1'], valid: true},
-        {definition: {type: :number, allowed_values: [1]}, parameter: '2', valid: false, error: ['2']},
         {definition: {type: :number, allowed_values: [1]}, parameter: 2, valid: false, error: [2]},
+        {definition: {type: :number, allowed_values: [1]}, parameter: '2', valid: false, error: ['2']},
 
         {definition: {type: :number, allowed_values: [1], default: 1}, parameter: nil, valid: true},
     ]
