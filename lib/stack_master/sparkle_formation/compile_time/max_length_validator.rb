@@ -16,6 +16,7 @@ module StackMaster
         private
 
         def check_is_valid
+          return true if @definition[:type] == :number
           return true unless @definition.key?(KEY)
           invalid_values.empty?
         end

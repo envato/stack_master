@@ -22,15 +22,10 @@ module StackMaster::TemplateCompilers
       sparkle_template = ::SparkleFormation.compile(template_file_path, :sparkle)
       definitions = sparkle_template.parameters
       validate_definitions(definitions)
-      #validate_parameters(definitions, parameters)
+      validate_parameters(definitions, parameters)
 
       sparkle_template.compile_time_parameter_setter do
-        state = create_state(definitions, parameters)
-        state.each do |name, compile_parameter|
-          definition = sparkle_template.parameters[name]
-          validate_parameter(name, definition, compile_parameter)
-        end
-        sparkle_template.compile_state = state
+        sparkle_template.compile_state = create_state(definitions, parameters)
         remove_compile_parameters(definitions, parameters)
       end
 

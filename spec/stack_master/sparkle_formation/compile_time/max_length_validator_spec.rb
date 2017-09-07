@@ -6,16 +6,24 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::MaxLengthValidator do
     let(:name) {'name'}
 
     scenarios = [
-        {definition: {type: :string, max_length: 3}, parameter: 'abc', valid: true},
-        {definition: {type: :string, max_length: 3}, parameter: 'abcd', valid: false, error: ['abcd']},
-        {definition: {type: :string, max_length: 3, default: 'abc'}, parameter: nil, valid: true},
-        {definition: {type: :string, max_length: 3, default: ['abc', 'xyz']}, parameter: nil, valid: true},
-        {definition: {type: :string, max_length: 3, default: ['abcd', 'xyz']}, parameter: nil, valid: false, error: ['abcd']},
-        {definition: {type: :string, max_length: 3, multiple:true, default: 'abc,xyz'}, parameter: nil, valid: true},
-        {definition: {type: :string, max_length: 3, multiple:true, default: 'abcd,xyz'}, parameter: nil, valid: false, error: ['abcd']},
-        {definition: {type: :string, max_length: 3, multiple:true, default: 'abc,,xyz'}, parameter: nil, valid: true},
+        {definition: {type: :string, max_length: 1}, parameter: 'a', valid: true},
+        {definition: {type: :string, max_length: 1}, parameter: 'ab', valid: false, error: ['ab']},
+        {definition: {type: :string, max_length: 1}, parameter: ['a', 'b'], valid: true},
+        {definition: {type: :string, max_length: 1}, parameter: ['a', 'bc'], valid: false, error: ['bc']},
+        {definition: {type: :string, max_length: 1}, parameter: ['ab', 'cd'], valid: false, error: ['ab', 'cd']},
 
-        # {definition: {type: :number, max_length: 1}, parameter: 'abc', valid: true}
+        {definition: {type: :string, max_length: 1, default: 'a'}, parameter: nil, valid: true},
+        {definition: {type: :string, max_length: 1, default: 'ab'}, parameter: nil, valid: false, error: ['ab']},
+        {definition: {type: :string, max_length: 1, default: ['a', 'b']}, parameter: nil, valid: true},
+        {definition: {type: :string, max_length: 1, default: ['a', 'bc']}, parameter: nil, valid: false, error: ['bc']},
+        {definition: {type: :string, max_length: 1, default: ['ab', 'cd']}, parameter: nil, valid: false, error: ['ab', 'cd']},
+
+        {definition: {type: :string, max_length: 1, multiple: true, default: 'a,b'}, parameter: nil, valid: true},
+        {definition: {type: :string, max_length: 1, multiple: true, default: 'a,ab'}, parameter: nil, valid: false, error: ['ab']},
+        {definition: {type: :string, max_length: 1, multiple: true, default: 'ab,bc'}, parameter: nil, valid: false, error: ['ab', 'bc']},
+        # {definition: {type: :string, max_length: 1, multiple: true, default: 'ab,,cd'}, parameter: nil, valid: false, error: ['ab', nil, 'cd']},
+
+        {definition: {type: :number, max_length: 1}, parameter: 'ab', valid: true}
 
     ]
     subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
