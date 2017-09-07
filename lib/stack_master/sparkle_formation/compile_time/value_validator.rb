@@ -20,7 +20,7 @@ module StackMaster
 
         end
 
-        def build_parameters(definition, parameter)
+        def build_values(definition, parameter)
           parameter_or_default = parameter.nil? ? definition[:default] : parameter
           convert_to_array(definition, parameter_or_default)
         end

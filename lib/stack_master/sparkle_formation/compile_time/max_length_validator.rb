@@ -22,8 +22,8 @@ module StackMaster
         end
 
         def invalid_values
-          parameter_list = build_parameters(@definition, @parameter)
-          parameter_list.select { |parameter| parameter.length > @definition[KEY].to_i }
+          values = build_values(@definition, @parameter)
+          values.select { |values| values.length > @definition[KEY].to_i }
         end
 
         def create_error

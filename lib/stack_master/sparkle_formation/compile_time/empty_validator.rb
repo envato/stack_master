@@ -14,12 +14,12 @@ module StackMaster
         private
 
         def check_is_valid
-          !has_invalid_parameters?
+          !has_invalid_values?
         end
 
-        def has_invalid_parameters?
-          parameter_list = build_parameters(@definition, @parameter)
-          parameter_list.include?(nil) || parameter_list.include?('')
+        def has_invalid_values?
+          values = build_values(@definition, @parameter)
+          values.include?(nil) || values.include?('')
         end
 
         def create_error

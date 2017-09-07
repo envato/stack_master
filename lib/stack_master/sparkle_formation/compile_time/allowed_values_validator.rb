@@ -17,16 +17,16 @@ module StackMaster
 
         def check_is_valid
           return true unless @definition.key?(KEY)
-          invalid_parameters.empty?
+          invalid_values.empty?
         end
 
-        def invalid_parameters
-          parameter_list = build_parameters(@definition, @parameter)
-          parameter_list.reject {|parameter| @definition[KEY].any? {|allowed_value| allowed_value.to_s == parameter.to_s}}
+        def invalid_values
+          values = build_values(@definition, @parameter)
+          values.reject {|value| @definition[KEY].any? {|allowed_value| allowed_value.to_s == value.to_s}}
         end
 
         def create_error
-          "#{@name}:#{invalid_parameters} is not in #{KEY}:#{@definition[KEY]}"
+          "#{@name}:#{invalid_values} is not in #{KEY}:#{@definition[KEY]}"
         end
 
       end
