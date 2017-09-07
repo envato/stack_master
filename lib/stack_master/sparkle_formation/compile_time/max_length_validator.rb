@@ -7,27 +7,37 @@ module StackMaster
 
         KEY = :max_length
 
-        def initialize(name, parameter_definition, value)
+        def initialize(name, definition, parameter)
           @name = name
-          @parameter_definition = parameter_definition
-          @value = value
+          @definition = definition
+          @parameter = parameter
         end
 
         private
 
         def check_is_valid
-          return true unless @parameter_definition.key?(KEY)
-          !value_is_greater_than_max_length?
+          return true unless @definition.key?(KEY)
+          invalid_values.empty?
         end
 
-        def value_is_greater_than_max_length?
-          @value.length > @parameter_definition[KEY].to_i
+        def invalid_values
+          parameter = @parameter.nil? ? @definition[:default] : @parameter
+          parameter_list = convert_to_array(parameter)
+          parameter_list.select do |parameter|
+            parameter.nil? ? true : parameter.length > @definition[KEY].to_i
+          end
         end
 
         def create_error
-          "#{@name}:#{@value} must not exceed #{KEY}:#{@parameter_definition[KEY]} characters"
+          "#{@name}:#{invalid_values} must not exceed #{KEY}:#{@definition[KEY]} characters"
         end
-
+        
+        def convert_to_array(parameter)
+          if @definition[:multiple] && parameter.is_a?(String)
+            return parameter.split(',').map(&:strip)
+          end
+          parameter.is_a?(Array) ? parameter : [parameter]
+        end
       end
     end
   end

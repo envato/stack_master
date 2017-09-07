@@ -25,7 +25,7 @@ module StackMaster
         end
 
         def create_error
-          "#{@name}:#{invalid_parameters.join(',')} is not in #{KEY}:#{@definition[KEY]}"
+          "#{@name}:#{invalid_parameters} is not in #{KEY}:#{@definition[KEY]}"
         end
 
         def invalid_parameters

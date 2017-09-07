@@ -7,27 +7,38 @@ module StackMaster
 
         KEY = :min_size
 
-        def initialize(name, parameter_definition, value)
+        def initialize(name, definition, parameter)
           @name = name
-          @parameter_definition = parameter_definition
-          @value = value
+          @definition = definition
+          @parameter = parameter
         end
 
         private
 
         def check_is_valid
-          return true unless @parameter_definition.key?(KEY)
-          !value_is_less_than_min_size?
+          return true unless @definition.key?(KEY)
+          invalid_values.empty?
         end
 
-        def value_is_less_than_min_size?
-          @value.to_i < @parameter_definition[KEY].to_i
+        def invalid_values
+          parameter = @parameter.nil? ? @definition[:default] : @parameter
+          parameter_list = convert_to_array(parameter)
+          parameter_list.select do |parameter|
+            parameter.nil? ? true : parameter.to_i < @definition[KEY].to_i
+          end
         end
 
         def create_error
-          "#{@name}:#{@value} must not be less than #{KEY}:#{@parameter_definition[KEY]}"
+          "#{@name}:#{invalid_values} must not be lesser than #{KEY}:#{@definition[KEY]}"
         end
 
+        def convert_to_array(parameter)
+          if @definition[:multiple] && parameter.is_a?(String)
+            return parameter.split(',').map(&:strip)
+          end
+          parameter.is_a?(Array) ? parameter : [parameter]
+        end
+        
       end
     end
   end

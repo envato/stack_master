@@ -6,200 +6,47 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedValuesValidato
 
     let(:name) {'name'}
 
+    scenarios = [
+        {definition: {type: :string, allowed_values: %w(a b)}, parameter: 'a', valid: true},
+        {definition: {type: :string, allowed_values: %w(a b)}, parameter: 'a,b', valid: false, error: '["a,b"]'},
+        {definition: {type: :string, allowed_values: %w(c)}, parameter: 'a,b', valid: false, error: '["a,b"]'},
+        {definition: {type: :string, allowed_values: %w(c)}, parameter: 'a', valid: false, error: '["a"]'},
+        {definition: {type: :string, allowed_values: %w(c)}, parameter: %w(a b), valid: false, error: '["a", "b"]'},
+        {definition: {type: :string, multiple: true, allowed_values: %w(a b)}, parameter: 'a,b', valid: true},
+        {definition: {type: :string, multiple: true, allowed_values: %w(a b)}, parameter: 'a, b', valid: true},
+        {definition: {type: :string, multiple: true, allowed_values: ['c']}, parameter: 'a', valid: false, error: '["a"]'},
+        {definition: {type: :string, multiple: true, allowed_values: ['c']}, parameter: 'a,b', valid: false, error: '["a", "b"]'},
+        {definition: {type: :string, multiple: true, allowed_values: ['c']}, parameter: 'a, b', valid: false, error: '["a", "b"]'},
+        {definition: {type: :string, multiple: true, allowed_values: ['c'], default: 'c'}, parameter: nil, valid: true},
+        {definition: {type: :number, allowed_values: %w(1 2)}, parameter: '1', valid: true},
+        {definition: {type: :number, allowed_values: %w(1 2)}, parameter: %w(1 2), valid: true},
+        {definition: {type: :number, allowed_values: %w(1 2)}, parameter: ['1','2'], valid: true},
+        {definition: {type: :number, allowed_values: %w(3)}, parameter: %w(1 2), valid: false, error: '["1", "2"]'},
+        {definition: {type: :number, allowed_values: %w(3)}, parameter: ['1','2'], valid: false, error: '["1", "2"]'},
+        {definition: {type: :number, allowed_values: %w(1), default: '1'}, parameter: nil, valid: true}
+    ]
+
     subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
 
-    context 'with definition of type: :string' do
-
-      context 'and multiple: true' do
-
-        context 'and allowed values of ["a","b"]' do
-
-          let(:definition) {{type: :string, multiple: true, allowed_values: %w(a b)}}
-
-          ['a', 'a,b', 'a, b'].each do |parameter|
-
-            context "and parameter is #{parameter.inspect}" do
-              let(:parameter) {parameter}
-
-              it ('should be valid') do
-                expect(subject.is_valid).to be_truthy
-              end
-
-            end
-
+    scenarios.each do |scenario|
+      context_description = scenario.clone.tap {|clone| clone.delete(:valid); clone.delete(:error)}
+      context "when #{context_description}" do
+        let(:definition) {scenario[:definition]}
+        let(:parameter) {scenario[:parameter]}
+        let(:error) {scenario[:error]}
+        if scenario[:valid]
+          it 'should be valid' do
+            expect(subject.is_valid).to be_truthy
           end
-
+        else
+          it 'should not be valid' do
+            expect(subject.is_valid).to be_falsey
+          end
+          it 'should have an error' do
+            expect(subject.error).to eql "name:#{error} is not in allowed_values:#{definition[:allowed_values]}"
+          end
         end
-
-        context 'and allowed values of ["c"]' do
-
-          ['a', 'a,b', 'a, b'].each do |parameter|
-
-            context "and parameter is #{parameter.inspect}" do
-
-              let(:definition) {{type: :string, multiple: true, allowed_values: ['c']}}
-              let(:parameter) {parameter}
-
-              it ('should be not valid') do
-                expect(subject.is_valid).to be_falsey
-              end
-
-              it ('should have an error message') do
-                invalid_values = parameter.split(',').map(&:strip) - definition[:allowed_values]
-                expect(subject.error).to eq "#{name}:#{invalid_values.join(',')} is not in allowed_values:#{definition[:allowed_values]}"
-              end
-
-            end
-          end
-
-          context 'and parameter is nil' do
-
-            let(:parameter) {nil}
-
-            context 'and default: of "c"' do
-              let(:definition) {{type: :string, multiple: true, allowed_values: ['c'], default: 'c'}}
-
-              it ('should be valid') do
-                expect(subject.is_valid).to be_truthy
-              end
-
-            end
-
-          end
-
-        end
-
       end
-
-      context 'and multiple: false' do
-
-        context 'and allowed values of ["a","b"]' do
-
-          let(:definition) {{type: :string, allowed_values: %w(a a,b)}}
-
-          ['a', 'a,b', ['a']].each do |parameter|
-
-            context "and parameter is #{parameter.inspect}" do
-              let(:parameter) {parameter}
-
-              it ('should be valid') do
-                expect(subject.is_valid).to be_truthy
-              end
-
-            end
-
-          end
-
-        end
-
-        context 'and allowed values of ["c"]' do
-
-          ['a', 'a,b', %w(a b)].each do |parameter|
-
-            context "and parameter is #{parameter.inspect}" do
-
-              let(:definition) {{type: :string, allowed_values: ['c']}}
-              let(:parameter) {parameter}
-
-              it ('should be not valid') do
-                expect(subject.is_valid).to be_falsey
-              end
-
-              it ('should have an error message') do
-                error_parameters = parameter.is_a?(Array) ? parameter.join(',') : parameter
-                expect(subject.error).to eq "#{name}:#{error_parameters} is not in allowed_values:#{definition[:allowed_values]}"
-              end
-
-            end
-          end
-
-          context 'and parameter is nil' do
-
-            let(:parameter) {nil}
-
-            context 'and default: of "c"' do
-              let(:definition) {{type: :string, allowed_values: ['c'], default: 'c'}}
-
-              it ('should be valid') do
-                expect(subject.is_valid).to be_truthy
-              end
-
-            end
-
-          end
-
-        end
-
-      end
-
     end
-
-    context 'with definition of type: :number' do
-
-      context 'and multiple: false' do
-
-        context 'and allowed values of [1]' do
-
-          let(:definition) {{type: :number, allowed_values: [1, 2]}}
-
-          [1, [1, 2]].each do |parameter|
-
-            context "and parameter is #{parameter.inspect}" do
-              let(:parameter) {parameter}
-
-              it ('should be valid') do
-                expect(subject.is_valid).to be_truthy
-              end
-
-            end
-
-          end
-
-        end
-
-        context 'and allowed values of [3]' do
-
-          [1, [1, 2]].each do |parameter|
-
-            context "and parameter is #{parameter.inspect}" do
-
-              let(:definition) {{type: :string, allowed_values: [3, 4]}}
-              let(:parameter) {parameter}
-
-              it ('should be not valid') do
-                expect(subject.is_valid).to be_falsey
-              end
-
-              it ('should have an error message') do
-                error_parameters = parameter.is_a?(Array) ? parameter.join(',') : parameter
-                expect(subject.error).to eq "#{name}:#{error_parameters} is not in allowed_values:#{definition[:allowed_values]}"
-              end
-
-            end
-          end
-
-          context 'and parameter is nil' do
-
-            let(:parameter) {nil}
-
-            context 'and default: of 1' do
-
-              let(:definition) {{type: :number, allowed_values: [1], default: 1}}
-
-              it ('should be valid') do
-                expect(subject.is_valid).to be_truthy
-              end
-
-            end
-
-          end
-
-        end
-
-      end
-
-    end
-
   end
-
 end
