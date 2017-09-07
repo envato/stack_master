@@ -8,30 +8,32 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedPatternValidat
 
     scenarios = [
         {definition: {type: :string, allowed_pattern: '^a'}, parameter: 'a', valid: true},
-        {definition: {type: :string, allowed_pattern: '^a'}, parameter: 'b', valid: false, error: '["b"]'},
         {definition: {type: :string, allowed_pattern: '^a'}, parameter: ['a'], valid: true},
-        {definition: {type: :string, allowed_pattern: '^a'}, parameter: ['b'], valid: false, error: '["b"]'},
-        {definition: {type: :string, allowed_pattern: '^a'}, parameter: nil, valid: false, error: '[nil]'},
-        {definition: {type: :string, allowed_pattern: '^a'}, parameter: ['a', nil], valid: false, error: '[nil]'},
-        {definition: {type: :string, allowed_pattern: '^a'}, parameter: ['b', nil], valid: false, error: '["b", nil]'},
+        {definition: {type: :string, allowed_pattern: '^a'}, parameter: 'b', valid: false, error: ['b']},
+        {definition: {type: :string, allowed_pattern: '^a'}, parameter: ['b'], valid: false, error: ['b']},
+        {definition: {type: :string, allowed_pattern: '^a'}, parameter: nil, valid: false, error: [nil]},
+        {definition: {type: :string, allowed_pattern: '^a'}, parameter: ['a', nil], valid: false, error: [nil]},
+        {definition: {type: :string, allowed_pattern: '^a'}, parameter: ['b', nil], valid: false, error: ['b', nil]},
+
         {definition: {type: :string, allowed_pattern: '^a', default: 'a'}, parameter: nil, valid: true},
+
         {definition: {type: :string, allowed_pattern: '^a', multiple: true}, parameter: 'a,ab', valid: true},
-        {definition: {type: :string, allowed_pattern: '^a', multiple: true}, parameter: 'a,,ab', valid: false, error: '[""]'},
-        {definition: {type: :string, allowed_pattern: '^a', multiple: true}, parameter: 'a,,b', valid: false, error: '["", "b"]'},
-        {definition: {type: :string, allowed_pattern: '^a', multiple: true, default: 'a,ab'}, parameter: nil, valid: true},
-        {definition: {type: :string, allowed_pattern: '^a', multiple: true, default: 'a,,ab'}, parameter: nil, valid: false, error: '[""]'},
-        {definition: {type: :string, allowed_pattern: '^a', multiple: true, default: 'a,,b'}, parameter: nil, valid: false, error: '["", "b"]'},
+        {definition: {type: :string, allowed_pattern: '^a', multiple: true}, parameter: 'a,,ab', valid: false, error: ['']},
+        {definition: {type: :string, allowed_pattern: '^a', multiple: true}, parameter: 'a,, b', valid: false, error: ['', 'b']},
+
+        {definition: {type: :string, allowed_pattern: '^a', multiple: true, default: 'a,a'}, parameter: nil, valid: true},
+
         {definition: {type: :number, allowed_pattern: '^1'}, parameter: '1', valid: true},
-        {definition: {type: :number, allowed_pattern: '^1'}, parameter: '2', valid: false, error: '["2"]'},
         {definition: {type: :number, allowed_pattern: '^1'}, parameter: 1, valid: true},
-        {definition: {type: :number, allowed_pattern: '^1'}, parameter: 2, valid: false, error: '[2]'},
-        {definition: {type: :number, allowed_pattern: '^1'}, parameter: nil, valid: false, error: '[nil]'},
         {definition: {type: :number, allowed_pattern: '^1'}, parameter: [1], valid: true},
-        {definition: {type: :number, allowed_pattern: '^1'}, parameter: [2, nil], valid: false, error: '[2, nil]'},
         {definition: {type: :number, allowed_pattern: '^1'}, parameter: ['1'], valid: true},
-        {definition: {type: :number, allowed_pattern: '^1'}, parameter: ['2', nil], valid: false, error: '["2", nil]'},
+        {definition: {type: :number, allowed_pattern: '^1'}, parameter: '2', valid: false, error: ['2']},
+        {definition: {type: :number, allowed_pattern: '^1'}, parameter: 2, valid: false, error: [2]},
+        {definition: {type: :number, allowed_pattern: '^1'}, parameter: nil, valid: false, error: [nil]},
+        {definition: {type: :number, allowed_pattern: '^1'}, parameter: [2, nil], valid: false, error: [2, nil]},
+        {definition: {type: :number, allowed_pattern: '^1'}, parameter: ['2', nil], valid: false, error: ['2', nil]},
+
         {definition: {type: :number, allowed_pattern: '^1', default: '1'}, parameter: nil, valid: true},
-        {definition: {type: :number, allowed_pattern: '^1', default: 1}, parameter: nil, valid: true}
     ]
 
 

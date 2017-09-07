@@ -29,9 +29,9 @@ module StackMaster
         end
 
         def invalid_parameters
-          parameter = @parameter.nil? ? @definition[:default] : @parameter
-          parameter = convert_to_array(parameter)
-          parameter - @definition[KEY]
+          parameter_or_default = @parameter.nil? ? @definition[:default] : @parameter
+          parameter_list = convert_to_array(parameter_or_default)
+          parameter_list.reject {|parameter| @definition[KEY].any? {|allowed_value| allowed_value.to_s == parameter.to_s}}
         end
 
         def convert_to_array(parameter)

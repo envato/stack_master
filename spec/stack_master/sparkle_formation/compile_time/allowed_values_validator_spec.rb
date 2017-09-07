@@ -7,23 +7,33 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedValuesValidato
     let(:name) {'name'}
 
     scenarios = [
-        {definition: {type: :string, allowed_values: %w(a b)}, parameter: 'a', valid: true},
-        {definition: {type: :string, allowed_values: %w(a b)}, parameter: 'a,b', valid: false, error: '["a,b"]'},
-        {definition: {type: :string, allowed_values: %w(c)}, parameter: 'a,b', valid: false, error: '["a,b"]'},
-        {definition: {type: :string, allowed_values: %w(c)}, parameter: 'a', valid: false, error: '["a"]'},
-        {definition: {type: :string, allowed_values: %w(c)}, parameter: %w(a b), valid: false, error: '["a", "b"]'},
-        {definition: {type: :string, multiple: true, allowed_values: %w(a b)}, parameter: 'a,b', valid: true},
-        {definition: {type: :string, multiple: true, allowed_values: %w(a b)}, parameter: 'a, b', valid: true},
-        {definition: {type: :string, multiple: true, allowed_values: ['c']}, parameter: 'a', valid: false, error: '["a"]'},
-        {definition: {type: :string, multiple: true, allowed_values: ['c']}, parameter: 'a,b', valid: false, error: '["a", "b"]'},
-        {definition: {type: :string, multiple: true, allowed_values: ['c']}, parameter: 'a, b', valid: false, error: '["a", "b"]'},
-        {definition: {type: :string, multiple: true, allowed_values: ['c'], default: 'c'}, parameter: nil, valid: true},
-        {definition: {type: :number, allowed_values: %w(1 2)}, parameter: '1', valid: true},
-        {definition: {type: :number, allowed_values: %w(1 2)}, parameter: %w(1 2), valid: true},
-        {definition: {type: :number, allowed_values: %w(1 2)}, parameter: ['1','2'], valid: true},
-        {definition: {type: :number, allowed_values: %w(3)}, parameter: %w(1 2), valid: false, error: '["1", "2"]'},
-        {definition: {type: :number, allowed_values: %w(3)}, parameter: ['1','2'], valid: false, error: '["1", "2"]'},
-        {definition: {type: :number, allowed_values: %w(1), default: '1'}, parameter: nil, valid: true}
+        {definition: {type: :string, allowed_values: ['a']}, parameter: 'a', valid: true},
+        {definition: {type: :string, allowed_values: ['a']}, parameter: ['a'], valid: true},
+        {definition: {type: :string, allowed_values: ['a']}, parameter: 'b', valid: false, error: ['b']},
+        {definition: {type: :string, allowed_values: ['a']}, parameter: ['b'], valid: false, error: ['b']},
+        {definition: {type: :string, allowed_values: ['a']}, parameter: nil, valid: false, error: [nil]},
+        {definition: {type: :string, allowed_values: ['a']}, parameter: ['a', nil], valid: false, error: [nil]},
+        {definition: {type: :string, allowed_values: ['a']}, parameter: ['b', nil], valid: false, error: ['b', nil]},
+
+        {definition: {type: :string, allowed_values: ['a'], default: 'a'}, parameter: nil, valid: true},
+
+        {definition: {type: :string, allowed_values: ['a'], multiple: true}, parameter: 'a,a', valid: true},
+        {definition: {type: :string, allowed_values: ['a'], multiple: true}, parameter: 'a,, a', valid: false, error: ['']},
+        {definition: {type: :string, allowed_values: ['a'], multiple: true}, parameter: 'a,,b', valid: false, error: ['', 'b']},
+
+        {definition: {type: :string, allowed_values: ['a'], multiple: true, default: 'a,a'}, parameter: nil, valid: true},
+
+        {definition: {type: :number, allowed_values: [1]}, parameter: '1', valid: true},
+        {definition: {type: :number, allowed_values: [1]}, parameter: 1, valid: true},
+        {definition: {type: :number, allowed_values: [1]}, parameter: [1], valid: true},
+        {definition: {type: :number, allowed_values: [1]}, parameter: ['1'], valid: true},
+        {definition: {type: :number, allowed_values: [1]}, parameter: '2', valid: false, error: ['2']},
+        {definition: {type: :number, allowed_values: [1]}, parameter: 2, valid: false, error: [2]},
+        {definition: {type: :number, allowed_values: [1]}, parameter: nil, valid: false, error: [nil]},
+        {definition: {type: :number, allowed_values: [1]}, parameter: [2, nil], valid: false, error: [2, nil]},
+        {definition: {type: :number, allowed_values: [1]}, parameter: ['2', nil], valid: false, error: ['2', nil]},
+
+        {definition: {type: :number, allowed_values: [1], default: 1}, parameter: nil, valid: true},
     ]
 
     subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}

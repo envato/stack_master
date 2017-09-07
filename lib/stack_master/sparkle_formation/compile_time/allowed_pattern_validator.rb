@@ -25,11 +25,9 @@ module StackMaster
         end
 
         def invalid_parameters
-          parameter = @parameter.nil? ? @definition[:default] : @parameter
-          parameter_list = convert_to_array(parameter)
-          parameter_list.reject do |parameter|
-            parameter.nil? ? false : parameter.to_s.match(%r{#{@definition[KEY]}})
-          end
+          parameter_or_default = @parameter.nil? ? @definition[:default] : @parameter
+          parameter_list = convert_to_array(parameter_or_default)
+          parameter_list.reject {|parameter| parameter.to_s.match(%r{#{@definition[KEY]}})}
         end
 
         def convert_to_array(parameter)
