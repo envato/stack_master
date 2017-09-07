@@ -26,7 +26,7 @@ module StackMaster
           @parameter = parameter
         end
 
-        def build_validators
+        def build
           VALIDATORS_TYPES.map {|validator| validator.new(@name, @definition, @parameter)}
         end
 

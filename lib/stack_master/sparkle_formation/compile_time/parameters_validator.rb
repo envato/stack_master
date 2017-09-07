@@ -14,7 +14,7 @@ module StackMaster
           @definitions.each do |name, definition|
             parameter = @parameters[name.to_s.camelize]
             factory = ValueValidatorFactory.new(name, definition, parameter)
-            value_validators = factory.build_validators
+            value_validators = factory.build
             value_validators.each do |validator|
               validator.validate
               raise ArgumentError.new "Invalid compile time parameter: #{validator.error}" unless validator.is_valid
