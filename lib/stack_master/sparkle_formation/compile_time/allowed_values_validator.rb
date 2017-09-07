@@ -17,10 +17,6 @@ module StackMaster
 
         def check_is_valid
           return true unless @definition.key?(KEY)
-          parameter_is_allowed?
-        end
-
-        def parameter_is_allowed?
           invalid_parameters.empty?
         end
 

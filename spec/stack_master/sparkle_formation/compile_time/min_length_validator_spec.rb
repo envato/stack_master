@@ -6,14 +6,19 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::MinLengthValidator do
     let(:name) {'name'}
 
     scenarios = [
-        {definition: {type: :string, min_length: 2}, parameter: 'abc', valid: true},
+        {definition: {type: :string, min_length: 2}, parameter: 'ab', valid: true},
+        {definition: {type: :string, min_length: 2}, parameter: ['ab'], valid: true},
         {definition: {type: :string, min_length: 2}, parameter: 'a', valid: false, error: ['a']},
-        {definition: {type: :string, min_length: 2, default: 'abc'}, parameter: nil, valid: true},
-        {definition: {type: :string, min_length: 2, default: ['abc', 'xyz']}, parameter: nil, valid: true},
-        {definition: {type: :string, min_length: 2, default: ['a', 'xyz']}, parameter: nil, valid: false, error: ['a']},
-        {definition: {type: :string, min_length: 2, multiple:true, default: 'abc,xyz'}, parameter: nil, valid: true},
-        {definition: {type: :string, min_length: 2, multiple:true, default: 'a,xyz'}, parameter: nil, valid: false, error: ['a']},
-        {definition: {type: :string, min_length: 2, multiple:true, default: 'abc,,xyz'}, parameter: nil, valid: false, error: ['']},
+        {definition: {type: :string, min_length: 2}, parameter: ['a'], valid: false, error: ['a']},
+
+        {definition: {type: :string, min_length: 2, default: 'ab'}, parameter: nil, valid: true},
+
+        {definition: {type: :string, min_length: 2, multiple: true}, parameter: 'ab,cd', valid: true},
+        {definition: {type: :string, min_length: 2, multiple: true}, parameter: 'a,, cd', valid: false, error: ['a','']},
+
+        {definition: {type: :string, min_length: 2, multiple: true, default: 'ab,cd'}, parameter: nil, valid: true},
+
+        {definition: {type: :number, min_length: 2}, parameter: 'a', valid: true}
     ]
     subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
 

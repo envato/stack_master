@@ -11,11 +11,14 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::EmptyValidator do
         {definition: {type: :string}, parameter: ['a'], valid: true},
         {definition: {type: :string}, parameter: nil, valid: false},
         {definition: {type: :string}, parameter: ['a', nil], valid: false},
+
         {definition: {type: :string, default: 'a'}, parameter: nil, valid: true},
+
         {definition: {type: :string, multiple: true}, parameter: 'a,b', valid: true},
         {definition: {type: :string, multiple: true}, parameter: 'a,,b', valid: false},
+
         {definition: {type: :string, multiple: true, default: 'a,b'}, parameter: nil, valid: true},
-        {definition: {type: :string, multiple: true, default: 'a,,b'}, parameter: nil, valid: false},
+
         {definition: {type: :number}, parameter: '1', valid: true},
         {definition: {type: :number}, parameter: 1, valid: true},
         {definition: {type: :number}, parameter: nil, valid: false},
@@ -23,8 +26,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::EmptyValidator do
         {definition: {type: :number}, parameter: [1, nil], valid: false},
         {definition: {type: :number}, parameter: ['1'], valid: true},
         {definition: {type: :number}, parameter: ['1', nil], valid: false},
+
         {definition: {type: :number, default: '1'}, parameter: nil, valid: true},
-        {definition: {type: :number, default: 1}, parameter: nil, valid: true},
     ]
 
 

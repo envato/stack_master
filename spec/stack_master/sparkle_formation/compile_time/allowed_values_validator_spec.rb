@@ -11,9 +11,6 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedValuesValidato
         {definition: {type: :string, allowed_values: ['a']}, parameter: ['a'], valid: true},
         {definition: {type: :string, allowed_values: ['a']}, parameter: 'b', valid: false, error: ['b']},
         {definition: {type: :string, allowed_values: ['a']}, parameter: ['b'], valid: false, error: ['b']},
-        {definition: {type: :string, allowed_values: ['a']}, parameter: nil, valid: false, error: [nil]},
-        {definition: {type: :string, allowed_values: ['a']}, parameter: ['a', nil], valid: false, error: [nil]},
-        {definition: {type: :string, allowed_values: ['a']}, parameter: ['b', nil], valid: false, error: ['b', nil]},
 
         {definition: {type: :string, allowed_values: ['a'], default: 'a'}, parameter: nil, valid: true},
 
@@ -29,9 +26,6 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedValuesValidato
         {definition: {type: :number, allowed_values: [1]}, parameter: ['1'], valid: true},
         {definition: {type: :number, allowed_values: [1]}, parameter: '2', valid: false, error: ['2']},
         {definition: {type: :number, allowed_values: [1]}, parameter: 2, valid: false, error: [2]},
-        {definition: {type: :number, allowed_values: [1]}, parameter: nil, valid: false, error: [nil]},
-        {definition: {type: :number, allowed_values: [1]}, parameter: [2, nil], valid: false, error: [2, nil]},
-        {definition: {type: :number, allowed_values: [1]}, parameter: ['2', nil], valid: false, error: ['2', nil]},
 
         {definition: {type: :number, allowed_values: [1], default: 1}, parameter: nil, valid: true},
     ]
