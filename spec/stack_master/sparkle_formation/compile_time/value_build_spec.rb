@@ -21,7 +21,6 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ValueBuilder do
       {definition: {type: :number}, parameter: [1], expected: [1]},
       {definition: {type: :number}, parameter: ['1'], expected: [1]},
 
-
       {definition: {type: :number, default: '1'}, parameter: nil, expected: 1},
 
       {definition: {type: :number, multiple: true}, parameter: 1, expected: 1},
