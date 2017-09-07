@@ -1,4 +1,4 @@
-require_relative 'parameter_builder'
+require_relative 'value_builder'
 
 module StackMaster
   module SparkleFormation
@@ -15,15 +15,15 @@ module StackMaster
           @definitions.each do |name, definition|
             parameter_key = name.to_s.camelize
             parameter = @parameters[parameter_key]
-            state[name] = create_parameter(definition, parameter)
+            state[name] = create_value(definition, parameter)
           end
           state
         end
 
         private
 
-        def create_parameter(definition, parameter)
-          ParameterBuilder.new(definition, parameter).build
+        def create_value(definition, parameter)
+          ValueBuilder.new(definition, parameter).build
         end
 
       end
