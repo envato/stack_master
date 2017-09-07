@@ -30,7 +30,7 @@ module StackMaster
         def convert_strings_to_numbers
           if @definition[:type] == :number
             @value = @value.to_f if @value.is_a?(String)
-            @value = @value.map {|item| item.is_a?(String) ? item.strip.to_f : item} if @value.is_a?(Array)
+            @value = @value.map {|item| item.is_a?(String) ? item.to_f : item} if @value.is_a?(Array)
           end
         end
 
