@@ -86,15 +86,15 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
         end
 
-        context 'with parameter of "b"' do
-
-          let(:parameter) {'b'}
-
-          it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values]}")
-          end
-
-        end
+        # context 'with parameter of "b"' do
+        #
+        #   let(:parameter) {'b'}
+        #
+        #   it 'should raise an exception' do
+        #     expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values]}")
+        #   end
+        #
+        # end
 
       end
 
@@ -138,15 +138,15 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
         end
 
-        context 'with parameter of "1"' do
-
-          let(:parameter) {'1'}
-
-          it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be less than min_size:#{definition[:min_size]}")
-          end
-
-        end
+        # context 'with parameter of "1"' do
+        #
+        #   let(:parameter) {'1'}
+        #
+        #   it 'should raise an exception' do
+        #     expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be less than min_size:#{definition[:min_size]}")
+        #   end
+        #
+        # end
 
 
       end
@@ -165,15 +165,15 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
         end
 
-        context 'with parameter of "3"' do
-
-          let(:parameter) {'3'}
-
-          it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be greater than max_size:#{definition[:max_size]}")
-          end
-
-        end
+        # context 'with parameter of "3"' do
+        #
+        #   let(:parameter) {'3'}
+        #
+        #   it 'should raise an exception' do
+        #     expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be greater than max_size:#{definition[:max_size]}")
+        #   end
+        #
+        # end
 
 
       end
@@ -192,15 +192,15 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
         end
 
-        context 'with parameter of "a"' do
-
-          let(:parameter) {'a'}
-
-          it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must be at least min_length:#{definition[:min_length]} characters")
-          end
-
-        end
+        # context 'with parameter of "a"' do
+        #
+        #   let(:parameter) {'a'}
+        #
+        #   it 'should raise an exception' do
+        #     expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must be at least min_length:#{definition[:min_length]} characters")
+        #   end
+        #
+        # end
 
       end
 
@@ -218,15 +218,15 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
         end
 
-        context 'with parameter of "a"' do
-
-          let(:parameter) {'abc'}
-
-          it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not exceed max_length:#{definition[:max_length]} characters")
-          end
-
-        end
+        # context 'with parameter of "a"' do
+        #
+        #   let(:parameter) {'abc'}
+        #
+        #   it 'should raise an exception' do
+        #     expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not exceed max_length:#{definition[:max_length]} characters")
+        #   end
+        #
+        # end
 
       end
 
@@ -310,15 +310,15 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
         end
 
-        context 'with parameter of 2' do
-
-          let(:parameter) {2}
-
-          it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values]}")
-          end
-
-        end
+        # context 'with parameter of 2' do
+        #
+        #   let(:parameter) {2}
+        #
+        #   it 'should raise an exception' do
+        #     expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} is not in allowed_values:#{definition[:allowed_values]}")
+        #   end
+        #
+        # end
 
       end
 
@@ -336,15 +336,15 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
 
         end
 
-        context 'with parameter of 1' do
-
-          let(:parameter) {1}
-
-          it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be less than min_size:#{definition[:min_size]}")
-          end
-
-        end
+        # context 'with parameter of 1' do
+        #
+        #   let(:parameter) {1}
+        #
+        #   it 'should raise an exception' do
+        #     expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be less than min_size:#{definition[:min_size]}")
+        #   end
+        #
+        # end
 
 
       end
@@ -362,16 +362,16 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParameterValidator do
           end
 
         end
-
-        context 'with parameter of 3' do
-
-          let(:parameter) {3}
-
-          it 'should raise an exception' do
-            expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be greater than max_size:#{definition[:max_size]}")
-          end
-
-        end
+        #
+        # context 'with parameter of 3' do
+        #
+        #   let(:parameter) {3}
+        #
+        #   it 'should raise an exception' do
+        #     expect {subject}.to raise_error(ArgumentError, "Invalid compile time parameter: #{name}:#{parameter} must not be greater than max_size:#{definition[:max_size]}")
+        #   end
+        #
+        # end
 
       end
 
