@@ -4,8 +4,10 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::DefinitionsValidator 
 
   describe '#validate' do
 
-    let(:key) {'key'}
-    subject {described_class.new({"#{key}": {type: type}}).tap {|validator| validator.validate}}
+    let(:key) {:key}
+    let(:definition){ {key: {type: type}} }
+
+    subject {described_class.new(definition)}
 
     [:string, :number].each do |type|
 
@@ -14,7 +16,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::DefinitionsValidator 
         let(:type) {type}
 
         it 'should not raise an exception' do
-          expect {subject}.to_not raise_error
+          expect {subject.validate}.to_not raise_error
         end
 
       end
@@ -26,7 +28,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::DefinitionsValidator 
       let(:type) {:other}
 
       it 'should not raise an exception' do
-        expect {subject}.to raise_error(ArgumentError, "Unknown compile time parameter type: #{key}:#{type} valid types are #{[:string, :number]}")
+        expect {subject.validate}.to raise_error(ArgumentError, "Unknown compile time parameter type: #{key}:#{type} valid types are #{[:string, :number]}")
       end
 
     end
