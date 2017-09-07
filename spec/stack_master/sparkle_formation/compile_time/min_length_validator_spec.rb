@@ -20,6 +20,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::MinLengthValidator do
 
         {definition: {type: :number, min_length: 2}, parameter: 'a', valid: true}
     ]
+
     subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
 
     scenarios.each do |scenario|

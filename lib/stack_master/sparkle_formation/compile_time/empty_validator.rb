@@ -17,21 +17,13 @@ module StackMaster
           !has_invalid_parameters?
         end
 
-        def create_error
-          "#{@name} cannot contain empty parameters:#{@parameter.inspect}"
-        end
-
         def has_invalid_parameters?
-          parameter = @parameter.nil? ? @definition[:default] : @parameter
-          parameter_list = convert_to_array(parameter)
+          parameter_list = build_parameters(@definition, @parameter)
           parameter_list.include?(nil) || parameter_list.include?('')
         end
 
-        def convert_to_array(parameter)
-          if @definition[:multiple] && parameter.is_a?(String)
-            return parameter.split(',').map(&:strip)
-          end
-          parameter.is_a?(Array) ? parameter : [parameter]
+        def create_error
+          "#{@name} cannot contain empty parameters:#{@parameter.inspect}"
         end
 
       end

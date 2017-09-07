@@ -22,20 +22,12 @@ module StackMaster
         end
 
         def invalid_values
-          parameter_or_default = @parameter.nil? ? @definition[:default] : @parameter
-          parameter_list = convert_to_array(parameter_or_default)
+          parameter_list = build_parameters(@definition, @parameter)
           parameter_list.select {|parameter| parameter.to_f < @definition[KEY].to_f}
         end
 
         def create_error
           "#{@name}:#{invalid_values} must not be lesser than #{KEY}:#{@definition[KEY]}"
-        end
-
-        def convert_to_array(parameter)
-          if @definition[:multiple] && parameter.is_a?(String)
-            return parameter.split(',').map(&:strip)
-          end
-          parameter.is_a?(Array) ? parameter : [parameter]
         end
 
       end

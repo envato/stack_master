@@ -5,7 +5,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::DefinitionsValidator 
   describe '#validate' do
 
     let(:key) {'key'}
-    subject {described_class.new({"#{key}": {type: type}}).validate}
+    subject {described_class.new({"#{key}": {type: type}}).tap {|validator| validator.validate}}
 
     [:string, :number].each do |type|
 

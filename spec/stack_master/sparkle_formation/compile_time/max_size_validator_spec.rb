@@ -17,6 +17,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::MaxSizeValidator do
 
         {definition: {type: :string, max_size: 1}, parameter: 2, valid: true},
     ]
+
     subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
 
     scenarios.each do |scenario|

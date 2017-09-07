@@ -1,4 +1,4 @@
-require_relative 'parameter_validator'
+require_relative 'value_validator'
 
 module StackMaster
   module SparkleFormation
@@ -22,22 +22,12 @@ module StackMaster
         end
 
         def invalid_values
-          parameter = @parameter.nil? ? @definition[:default] : @parameter
-          parameter_list = convert_to_array(parameter)
-          parameter_list.select do |parameter|
-            parameter.nil? ? true : parameter.to_f > @definition[KEY].to_f
-          end
+          parameter_list = build_parameters(@definition, @parameter)
+          parameter_list.select {|parameter| parameter.to_f > @definition[KEY].to_f}
         end
 
         def create_error
           "#{@name}:#{invalid_values} must not be greater than #{KEY}:#{@definition[KEY]}"
-        end
-
-        def convert_to_array(parameter)
-          if @definition[:multiple] && parameter.is_a?(String)
-            return parameter.split(',').map(&:strip)
-          end
-          parameter.is_a?(Array) ? parameter : [parameter]
         end
 
       end

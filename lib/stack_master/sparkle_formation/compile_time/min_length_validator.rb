@@ -22,8 +22,7 @@ module StackMaster
         end
 
         def invalid_values
-          parameter = @parameter.nil? ? @definition[:default] : @parameter
-          parameter_list = convert_to_array(parameter)
+          parameter_list = build_parameters(@definition, @parameter)
           parameter_list.select {|parameter| parameter.length < @definition[KEY].to_i}
         end
 
@@ -31,12 +30,6 @@ module StackMaster
           "#{@name}:#{invalid_values} must be at least #{KEY}:#{@definition[KEY]} characters"
         end
 
-        def convert_to_array(parameter)
-          if @definition[:multiple] && parameter.is_a?(String)
-            return parameter.split(',').map(&:strip)
-          end
-          parameter.is_a?(Array) ? parameter : [parameter]
-        end
       end
     end
   end

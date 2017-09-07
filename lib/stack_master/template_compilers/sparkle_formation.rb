@@ -1,4 +1,3 @@
-require_relative '../sparkle_formation/compile_time/parameter_validator'
 require_relative '../sparkle_formation/compile_time/parameters_validator'
 require_relative '../sparkle_formation/compile_time/definitions_validator'
 require_relative '../sparkle_formation/compile_time/state_builder'

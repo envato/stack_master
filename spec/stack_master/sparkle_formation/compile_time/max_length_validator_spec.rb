@@ -21,6 +21,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::MaxLengthValidator do
 
         {definition: {type: :number, max_length: 1}, parameter: 'ab', valid: true}
     ]
+
     subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
 
     scenarios.each do |scenario|

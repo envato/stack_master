@@ -30,12 +30,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::EmptyValidator do
         {definition: {type: :number, default: '1'}, parameter: nil, valid: true},
     ]
 
-
-    subject do
-      validator = described_class.new(name, definition, parameter)
-      validator.validate
-      validator
-    end
+    subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
 
     scenarios.each do |scenario|
       context_description = scenario.clone.tap {|clone| clone.delete(:valid)}
