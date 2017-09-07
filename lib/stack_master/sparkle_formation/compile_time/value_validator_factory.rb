@@ -27,18 +27,7 @@ module StackMaster
         end
 
         def build_validators
-          values_to_validate = create_values_to_validate
-          values_to_validate.map {|value| create_validators(value)}.flatten
-        end
-
-        private
-
-        def create_values_to_validate
-          @parameter.is_a?(Enumerable) ? @parameter : [@parameter]
-        end
-
-        def create_validators(value)
-          VALIDATORS_TYPES.map {|validator| validator.new(@name, @definition, value)}
+          VALIDATORS_TYPES.map {|validator| validator.new(@name, @definition, @parameter)}
         end
 
       end

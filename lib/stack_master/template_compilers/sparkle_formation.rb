@@ -37,10 +37,6 @@ module StackMaster::TemplateCompilers
       CompileTime::DefinitionsValidator.new(definitions).validate
     end
 
-    def self.validate_parameter(name, definition, parameter)
-      CompileTime::ParameterValidator.new(name, definition, parameter).validate
-    end
-
     def self.validate_parameters(definitions, parameters)
       CompileTime::ParametersValidator.new(definitions, parameters).validate
     end

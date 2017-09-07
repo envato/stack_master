@@ -4,8 +4,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ParametersValidator d
 
   describe '#validate' do
 
-    let(:name) {'name'}
-    let(:definitions) {}
+    let(:definitions) {{ip: {type: :string}}}
+    let(:parameters) {{'Ip' => '10.0.0.0'}}
 
     subject {described_class.new(definitions, parameters).validate}
 
