@@ -31,7 +31,7 @@ module StackMaster
         end
 
         def build
-          VALIDATORS_TYPES.map {|validator| validator.new(@name, @definition, @parameter)}
+          VALIDATORS_TYPES.map { |validator| validator.new(@name, @definition, @parameter)}
         end
 
       end

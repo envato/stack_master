@@ -23,7 +23,7 @@ module StackMaster
 
         def invalid_values
           values = build_values(@definition, @parameter)
-          values.select {|value| value.to_f < @definition[KEY].to_f}
+          values.select { |value| value.to_f < @definition[KEY].to_f}
         end
 
         def create_error

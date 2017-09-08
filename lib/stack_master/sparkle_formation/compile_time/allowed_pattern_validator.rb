@@ -22,7 +22,7 @@ module StackMaster
 
         def invalid_values
           values = build_values(@definition, @parameter)
-          values.reject {|value| value.to_s.match(%r{#{@definition[KEY]}})}
+          values.reject { |value| value.to_s.match(%r{#{@definition[KEY]}}) }
         end
 
         def create_error

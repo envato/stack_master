@@ -20,7 +20,7 @@ module StackMaster
 
         def invalid_values
           values = build_values(@definition, @parameter)
-          values.reject {|value| value.is_a?(String)}
+          values.reject { |value| value.is_a?(String)}
         end
 
         def create_error
