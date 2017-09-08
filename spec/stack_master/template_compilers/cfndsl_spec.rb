@@ -1,9 +1,12 @@
 RSpec.describe StackMaster::TemplateCompilers::Cfndsl do
+
+  let(:parameters) { { 'InstanceType' => 't2.medium' } }
+
   before(:all) { described_class.require_dependencies }
 
   describe '.compile' do
     def compile
-      described_class.compile(template_file_path, nil)
+      described_class.compile(template_file_path, parameters)
     end
 
     context 'valid cfndsl template' do
