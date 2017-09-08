@@ -22,7 +22,8 @@ module StackMaster
             MaxLengthValidator,
             MinLengthValidator,
             MaxSizeValidator,
-            MinSizeValidator]
+            MinSizeValidator
+        ]
 
         def initialize(name, definition, parameter)
           @name = name
