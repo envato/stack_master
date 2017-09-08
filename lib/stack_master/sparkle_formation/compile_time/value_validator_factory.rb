@@ -1,4 +1,6 @@
 require_relative 'empty_validator'
+require_relative 'string_validator'
+require_relative 'number_validator'
 require_relative 'allowed_values_validator'
 require_relative 'allowed_pattern_validator'
 require_relative 'max_length_validator'
@@ -13,6 +15,8 @@ module StackMaster
 
         VALIDATORS_TYPES = [
             EmptyValidator,
+            StringValidator,
+            NumberValidator,
             AllowedValuesValidator,
             AllowedPatternValidator,
             MaxLengthValidator,

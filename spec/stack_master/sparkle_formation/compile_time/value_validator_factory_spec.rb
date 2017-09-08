@@ -1,5 +1,7 @@
 require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/value_validator_factory'
 require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/empty_validator'
+require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/string_validator'
+require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/number_validator'
 require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/allowed_values_validator'
 require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/allowed_pattern_validator'
 require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/max_length_validator'
@@ -19,6 +21,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ValueValidatorFactory
 
     validators = [
         StackMaster::SparkleFormation::CompileTime::EmptyValidator,
+        StackMaster::SparkleFormation::CompileTime::StringValidator,
+        StackMaster::SparkleFormation::CompileTime::NumberValidator,
         StackMaster::SparkleFormation::CompileTime::AllowedValuesValidator,
         StackMaster::SparkleFormation::CompileTime::AllowedPatternValidator,
         StackMaster::SparkleFormation::CompileTime::MaxLengthValidator,
