@@ -18,7 +18,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::StringValidator do
 
         {definition: {type: :string, multiple: true, default: 'a,a'}, parameter: nil, valid: true},
 
-        {definition: {type: :number}, parameter: 1, valid: true},
+        {definition: {type: :number}, parameter: 1, valid: true}
     ]
 
     subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
