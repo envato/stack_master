@@ -13,11 +13,11 @@ module StackMaster
         protected
 
         def check_is_valid
-          true
+          raise NotImplementedError
         end
 
         def create_error
-
+          raise NotImplementedError
         end
 
         def build_values(definition, parameter)
