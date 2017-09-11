@@ -1,54 +1,42 @@
 RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedValuesValidator do
 
   describe '#validate' do
+    let(:error_message) { "is not in allowed_values" }
+    let(:error_parameter_key) { :allowed_values }
 
-    let(:name) {'name'}
+    context 'string validation' do
+      let(:validator_definition) { {type: :string, allowed_values: ['a']} }
+      include_examples 'validate valid parameter', described_class, 'a'
+      include_examples 'validate valid parameter', described_class, ['a']
+      include_examples 'validate invalid parameter', described_class, 'b', ['b']
+      include_examples 'validate invalid parameter', described_class, ['b'], ['b']
+    end
 
-    scenarios = [
-        {definition: {type: :string, allowed_values: ['a']}, parameter: 'a', valid: true},
-        {definition: {type: :string, allowed_values: ['a']}, parameter: ['a'], valid: true},
-        {definition: {type: :string, allowed_values: ['a']}, parameter: 'b', valid: false, error: ['b']},
-        {definition: {type: :string, allowed_values: ['a']}, parameter: ['b'], valid: false, error: ['b']},
+    context 'multiple string validation' do
+      let(:validator_definition) { {type: :string, allowed_values: ['a'], multiple: true} }
+      include_examples 'validate valid parameter', described_class, 'a,a'
+      include_examples 'validate invalid parameter', described_class, 'a,, a', ['']
+      include_examples 'validate invalid parameter', described_class, 'a,,b', ['', 'b']
+    end
 
-        {definition: {type: :string, allowed_values: ['a'], default: 'a'}, parameter: nil, valid: true},
+    context 'validation with multiple default values' do
+      let(:validator_definition) { {type: :string, allowed_values: ['a'], multiple: true, default: 'a,a'} }
+      include_examples 'validate valid parameter', described_class, nil
+    end
 
-        {definition: {type: :string, allowed_values: ['a'], multiple: true}, parameter: 'a,a', valid: true},
-        {definition: {type: :string, allowed_values: ['a'], multiple: true}, parameter: 'a,, a', valid: false, error: ['']},
-        {definition: {type: :string, allowed_values: ['a'], multiple: true}, parameter: 'a,,b', valid: false, error: ['', 'b']},
+    context 'numerical validation' do
+      let(:validator_definition) { {type: :number, allowed_values: [1]} }
+      include_examples 'validate valid parameter', described_class, 1
+      include_examples 'validate valid parameter', described_class, '1'
+      include_examples 'validate valid parameter', described_class, [1]
+      include_examples 'validate valid parameter', described_class, ['1']
+      include_examples 'validate invalid parameter', described_class, 2, [2]
+      include_examples 'validate invalid parameter', described_class, '2', ['2']
+    end
 
-        {definition: {type: :string, allowed_values: ['a'], multiple: true, default: 'a,a'}, parameter: nil, valid: true},
-
-        {definition: {type: :number, allowed_values: [1]}, parameter: 1, valid: true},
-        {definition: {type: :number, allowed_values: [1]}, parameter: '1', valid: true},
-        {definition: {type: :number, allowed_values: [1]}, parameter: [1], valid: true},
-        {definition: {type: :number, allowed_values: [1]}, parameter: ['1'], valid: true},
-        {definition: {type: :number, allowed_values: [1]}, parameter: 2, valid: false, error: [2]},
-        {definition: {type: :number, allowed_values: [1]}, parameter: '2', valid: false, error: ['2']},
-
-        {definition: {type: :number, allowed_values: [1], default: 1}, parameter: nil, valid: true},
-    ]
-
-    subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
-
-    scenarios.each do |scenario|
-      context_description = scenario.clone.tap {|clone| clone.delete(:valid); clone.delete(:error)}
-      context "when #{context_description}" do
-        let(:definition) {scenario[:definition]}
-        let(:parameter) {scenario[:parameter]}
-        let(:error) {scenario[:error]}
-        if scenario[:valid]
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-        else
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-          it 'should have an error' do
-            expect(subject.error).to eql "name:#{error} is not in allowed_values:#{definition[:allowed_values]}"
-          end
-        end
-      end
+    context 'validation wtih default value' do
+      let(:validator_definition) { {type: :number, allowed_values: [1], default: 1} }
+      include_examples 'validate valid parameter', described_class, nil
     end
   end
 end
