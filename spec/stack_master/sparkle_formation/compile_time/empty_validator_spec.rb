@@ -1,62 +1,47 @@
 RSpec.describe StackMaster::SparkleFormation::CompileTime::EmptyValidator do
 
   describe '#validate' do
+    let(:name) { 'name' }
+    let(:error_message) { -> (error, _) { "#{name} cannot contain empty parameters:#{error.inspect}" } }
 
-    let(:name) {'name'}
+    context 'string validation' do
+      let(:validator_definition) { {type: :string} }
+      include_examples 'validate valid parameter', described_class, 'a'
+      include_examples 'validate valid parameter', described_class, ['a']
+      include_examples 'validate invalid parameter', described_class, nil, nil
+      include_examples 'validate invalid parameter', described_class, ['a', nil], ['a', nil]
+    end
 
-    scenarios = [
-        {definition: {type: :string}, parameter: 'a', valid: true},
-        {definition: {type: :string}, parameter: ['a'], valid: true},
-        {definition: {type: :string}, parameter: nil, valid: false},
-        {definition: {type: :string}, parameter: ['a', nil], valid: false},
+    context 'string validation with default' do
+      let(:validator_definition) { {type: :string, default: 'a'} }
+      include_examples 'validate valid parameter', described_class, nil
+    end
 
-        {definition: {type: :string, default: 'a'}, parameter: nil, valid: true},
+    context 'string validation with multiples' do
+      let(:validator_definition) { {type: :string, multiple: true} }
+      include_examples 'validate valid parameter', described_class, 'a,b'
+      include_examples 'validate invalid parameter', described_class, 'a,,b', 'a,,b'
+    end
 
-        {definition: {type: :string, multiple: true}, parameter: 'a,b', valid: true},
-        {definition: {type: :string, multiple: true}, parameter: 'a,,b', valid: false},
+    context 'string validation with multiples and defaults' do
+      let(:validator_definition) { {type: :string, multiple: true, default: 'a,b'} }
+      include_examples 'validate valid parameter', described_class, nil
+    end
 
-        {definition: {type: :string, multiple: true, default: 'a,b'}, parameter: nil, valid: true},
+    context 'numerical validation' do
+      let(:validator_definition) { {type: :number} }
+      include_examples 'validate valid parameter', described_class, 1
+      include_examples 'validate valid parameter', described_class, '1'
+      include_examples 'validate valid parameter', described_class, [1]
 
-        {definition: {type: :number}, parameter: 1, valid: true},
-        {definition: {type: :number}, parameter: '1', valid: true},
-        {definition: {type: :number}, parameter: [1], valid: true},
-        {definition: {type: :number}, parameter: ['1'], valid: true},
-        {definition: {type: :number}, parameter: nil, valid: false},
-        {definition: {type: :number}, parameter: [1, nil], valid: false},
-        {definition: {type: :number}, parameter: ['1', nil], valid: false},
+      include_examples 'validate invalid parameter', described_class, nil, nil
+      include_examples 'validate invalid parameter', described_class, [1, nil], [1, nil]
+      include_examples 'validate invalid parameter', described_class, ['1', nil], ['1', nil]
+    end
 
-        {definition: {type: :number, default: '1'}, parameter: nil, valid: true},
-    ]
-
-    subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
-
-    scenarios.each do |scenario|
-      context_description = scenario.clone.tap {|clone| clone.delete(:valid)}
-
-      context "when #{context_description}" do
-        let(:definition) {scenario[:definition]}
-        let(:parameter) {scenario[:parameter]}
-
-        if scenario[:valid]
-
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-
-        else
-
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-
-          it 'should have an error' do
-            expect(subject.error).to eql "#{name} cannot contain empty parameters:#{parameter.inspect}"
-          end
-
-        end
-
-      end
-
+    context 'numerical validation with default' do
+      let(:validator_definition) { {type: :number, default: '1'} }
+      include_examples 'validate valid parameter', described_class, nil
     end
 
   end

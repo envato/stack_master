@@ -3,8 +3,8 @@ require 'spec_helper'
 RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedPatternValidator do
 
   describe '#validate' do
-    let(:error_message) { "does not match allowed_pattern" }
-    let(:error_parameter_key) { :allowed_pattern }
+    let(:name) { 'name' }
+    let(:error_message) { -> (error, validator_definition) { "name:#{error} does not match allowed_pattern:#{validator_definition[:allowed_pattern]}" } }
 
     context 'string validation' do
       let(:validator_definition) { {type: :string, allowed_pattern: '^a'} }
