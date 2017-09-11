@@ -3,8 +3,8 @@ require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/nu
 RSpec.describe StackMaster::SparkleFormation::CompileTime::NumberValidator do
 
   describe '#validate' do
-    let(:error_message) { -> (error, _) { "name:#{error} are not Numbers" } }
     let(:name) {'name'}
+    let(:error_message) { -> (error, _definition) { "#{name}:#{error} are not Numbers" } }
 
     context 'string validation' do
       let(:definition) { {type: :string} }

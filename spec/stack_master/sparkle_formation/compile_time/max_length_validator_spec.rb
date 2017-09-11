@@ -1,8 +1,8 @@
 RSpec.describe StackMaster::SparkleFormation::CompileTime::MaxLengthValidator do
 
   describe '#validate' do
-    let(:error_message) { -> (error, definition) { "name:#{error} must not exceed max_length:#{definition[:max_length]} characters" } }    
     let(:name) {'name'}
+    let(:error_message) { -> (error, definition) { "#{name}:#{error} must not exceed max_length:#{definition[:max_length]} characters" } }
 
     context 'string validation' do
       let(:definition) { {type: :string, max_length: 1} }

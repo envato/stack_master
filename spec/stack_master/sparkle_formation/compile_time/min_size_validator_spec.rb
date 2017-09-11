@@ -1,8 +1,8 @@
 RSpec.describe StackMaster::SparkleFormation::CompileTime::MinSizeValidator do
 
   describe '#validate' do
-    let(:error_message) { -> (error, definition) { "name:#{error} must not be lesser than min_size:#{definition[:min_size]}" } }
     let(:name) {'name'}
+    let(:error_message) { -> (error, definition) { "#{name}:#{error} must not be lesser than min_size:#{definition[:min_size]}" } }
 
     context 'string validation' do
       let(:definition) { {type: :string, min_size: 1} }

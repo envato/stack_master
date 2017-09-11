@@ -2,7 +2,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::MaxSizeValidator do
 
   describe '#validate' do
     let(:name) {'name'}
-    let(:error_message) { -> (error, definition) { "name:#{error} must not be greater than max_size:#{definition[:max_size]}" } }        
+    let(:error_message) { -> (error, definition) { "#{name}:#{error} must not be greater than max_size:#{definition[:max_size]}" } }
 
     context 'numerical validation' do
       let(:definition) { {type: :number, max_size: 1} }

@@ -3,8 +3,8 @@ require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/st
 RSpec.describe StackMaster::SparkleFormation::CompileTime::StringValidator do
 
   describe '#validate' do
-    let(:error_message) { -> (error, _) { "name:#{error} are not Strings" } }
     let(:name) {'name'}
+    let(:error_message) { -> (error, _definition) { "#{name}:#{error} are not Strings" } }
 
     context 'string validation' do
       let(:definition) { {type: :string} }

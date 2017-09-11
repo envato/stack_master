@@ -1,8 +1,8 @@
 RSpec.describe StackMaster::SparkleFormation::CompileTime::MinLengthValidator do
 
   describe '#validate' do
-    let(:error_message) { -> (error, definition) { "name:#{error} must be at least min_length:#{definition[:min_length]} characters" } }
     let(:name) {'name'}
+    let(:error_message) { -> (error, definition) { "#{name}:#{error} must be at least min_length:#{definition[:min_length]} characters" } }
 
     context 'string validation' do
       let(:definition) { {type: :string, min_length: 2} }
