@@ -17,7 +17,7 @@ RSpec.shared_examples "validate invalid parameter" do |validator_class, paramete
     end
 
     it 'has an error' do
-      # "#{@name} cannot contain empty parameters:#{@parameter.inspect}"
+      puts parameter
       expect(invalid_parameter_validator.error).to eql error_message.call(errored_parameters, validator_definition)
     end
   end

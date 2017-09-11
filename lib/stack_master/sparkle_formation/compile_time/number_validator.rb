@@ -20,7 +20,6 @@ module StackMaster
 
         def invalid_values
           values = build_values(@definition, @parameter)
-          #TODO: check value is a number
           values.reject do |value|
             value.is_a?(Numeric) || value.is_a?(String) && value.to_s =~ /^(\d+)(\.?(\d+))?$/
           end

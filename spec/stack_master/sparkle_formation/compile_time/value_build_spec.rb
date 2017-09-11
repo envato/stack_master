@@ -1,5 +1,4 @@
 RSpec.describe StackMaster::SparkleFormation::CompileTime::ValueBuilder do
-
   scenarios= [
       {definition: {type: :string}, parameter: nil, expected: nil},
       {definition: {type: :string}, parameter: 'a', expected: 'a'},

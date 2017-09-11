@@ -1,47 +1,38 @@
 RSpec.describe StackMaster::SparkleFormation::CompileTime::MaxLengthValidator do
-
   describe '#validate' do
+    let(:error_message) { -> (error, definition) { "name:#{error} must not exceed max_length:#{definition[:max_length]} characters" } }    
     let(:name) {'name'}
 
-    scenarios = [
-        {definition: {type: :string, max_length: 1}, parameter: 'a', valid: true},
-        {definition: {type: :string, max_length: 1}, parameter: ['a'], valid: true},
-        {definition: {type: :string, max_length: 1}, parameter: 'ab', valid: false, error: ['ab']},
-        {definition: {type: :string, max_length: 1}, parameter: ['ab'], valid: false, error: ['ab']},
+    context 'string validation' do
+      let(:validator_definition) { {type: :string, max_length: 1} }
+      include_examples 'validate valid parameter', described_class, 'a'
+      include_examples 'validate valid parameter', described_class, ['a']
+      include_examples 'validate invalid parameter', described_class, 'ab', ['ab']
+      include_examples 'validate invalid parameter', described_class, ['ab'], ['ab']
+    end
 
-        {definition: {type: :string, max_length: 1, default: 'a'}, parameter: nil, valid: true},
+    context 'validation with default value' do
+      let(:validator_definition) { {type: :string, max_length: 1, default: 'a'} }
+      include_examples 'validate valid parameter', described_class, nil
+    end
 
-        {definition: {type: :string, max_length: 1, multiple: true}, parameter: 'a,a', valid: true},
-        {definition: {type: :string, max_length: 1, multiple: true}, parameter: 'a,,a', valid: true},
-        {definition: {type: :string, max_length: 1, multiple: true}, parameter: 'a,, ab', valid: false, error: ['ab']},
+    context 'string validation with multiples' do
+      let(:validator_definition) { {type: :string, max_length: 1, multiple: true} }
 
-        {definition: {type: :string, max_length: 1, multiple: true, default: 'a,a'}, parameter: nil, valid: true},
+      include_examples 'validate valid parameter', described_class, 'a,a'
+      include_examples 'validate valid parameter', described_class, 'a,,a'
 
-        {definition: {type: :number, max_length: 1}, parameter: 'ab', valid: true}
-    ]
+      include_examples 'validate invalid parameter', described_class, 'a,, ab', ['ab']
+    end
 
-    subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
+    context 'string validation wtih multiples and default' do
+      let(:validator_definition) { {type: :string, max_length: 1, multiple: true, default: 'a,a'} }
+      include_examples 'validate valid parameter', described_class, nil
+    end
 
-    scenarios.each do |scenario|
-      context_description = scenario.clone.tap {|clone| clone.delete(:valid); clone.delete(:error)}
-      context "when #{context_description}" do
-        let(:definition) {scenario[:definition]}
-        let(:parameter) {scenario[:parameter]}
-        let(:error) {scenario[:error]}
-        if scenario[:valid]
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-        else
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-          it 'should have an error' do
-            expect(subject.error).to eql "name:#{error} must not exceed max_length:#{definition[:max_length]} characters"
-          end
-        end
-      end
+    context 'numerical validation' do
+      let(:validator_definition) { {type: :number, max_length: 1} }
+      include_examples 'validate valid parameter', described_class, 'ab'
     end
   end
 end
-

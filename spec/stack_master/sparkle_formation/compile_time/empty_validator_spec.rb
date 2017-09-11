@@ -1,5 +1,4 @@
 RSpec.describe StackMaster::SparkleFormation::CompileTime::EmptyValidator do
-
   describe '#validate' do
     let(:name) { 'name' }
     let(:error_message) { -> (error, _) { "#{name} cannot contain empty parameters:#{error.inspect}" } }
@@ -43,7 +42,5 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::EmptyValidator do
       let(:validator_definition) { {type: :number, default: '1'} }
       include_examples 'validate valid parameter', described_class, nil
     end
-
   end
-
 end

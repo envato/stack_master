@@ -1,43 +1,26 @@
 RSpec.describe StackMaster::SparkleFormation::CompileTime::MinSizeValidator do
-
   describe '#validate' do
+    let(:error_message) { -> (error, definition) { "name:#{error} must not be lesser than min_size:#{definition[:min_size]}" } }
     let(:name) {'name'}
 
-    scenarios = [
-        {definition: {type: :number, min_size: 1}, parameter: 1, valid: true},
-        {definition: {type: :number, min_size: 1}, parameter: '1', valid: true},
-        {definition: {type: :number, min_size: 1}, parameter: [1], valid: true},
-        {definition: {type: :number, min_size: 1}, parameter: ['1'], valid: true},
-        {definition: {type: :number, min_size: 1}, parameter: 0, valid: false, error: [0]},
-        {definition: {type: :number, min_size: 1}, parameter: '0', valid: false, error: ['0']},
+    context 'string validation' do
+      let(:validator_definition) { {type: :string, min_size: 1} }
+      include_examples 'validate valid parameter', described_class, 0
+    end
 
-        {definition: {type: :number, min_size: 1, default: 1}, parameter: nil, valid: true},
+    context 'numerical validation with default value' do
+      let(:validator_definition) { {type: :number, min_size: 1, default: 1} }
+      include_examples 'validate valid parameter', described_class, nil
+    end
 
-        {definition: {type: :string, min_size: 1}, parameter: 0, valid: true},
-    
-    ]
-
-    subject {described_class.new(name, definition, parameter).tap {|validator| validator.validate}}
-
-    scenarios.each do |scenario|
-      context_description = scenario.clone.tap {|clone| clone.delete(:valid); clone.delete(:error)}
-      context "when #{context_description}" do
-        let(:definition) {scenario[:definition]}
-        let(:parameter) {scenario[:parameter]}
-        let(:error) {scenario[:error]}
-        if scenario[:valid]
-          it 'should be valid' do
-            expect(subject.is_valid).to be_truthy
-          end
-        else
-          it 'should not be valid' do
-            expect(subject.is_valid).to be_falsey
-          end
-          it 'should have an error' do
-            expect(subject.error).to eql "name:#{error} must not be lesser than min_size:#{definition[:min_size]}"
-          end
-        end
-      end
+    context 'numerical validation' do
+      let(:validator_definition) { {type: :number, min_size: 1} }
+      include_examples 'validate valid parameter', described_class, 1
+      include_examples 'validate valid parameter', described_class, '1'
+      include_examples 'validate valid parameter', described_class, [1]
+      include_examples 'validate valid parameter', described_class, ['1']
+      include_examples 'validate invalid parameter', described_class, 0, [0]
+      include_examples 'validate invalid parameter', described_class, '0', ['0']
     end
   end
 end

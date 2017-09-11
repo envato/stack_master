@@ -1,5 +1,4 @@
 RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedValuesValidator do
-
   describe '#validate' do
     let(:name) { 'name' }
     let(:error_message) { -> (error, validator_definition) { "name:#{error} is not in allowed_values:#{validator_definition[:allowed_values]}" } }
