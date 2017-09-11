@@ -1,7 +1,3 @@
-require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/parameters_validator'
-require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/value_validator_factory'
-require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/value_validator'
-
 RSpec.describe StackMaster::SparkleFormation::CompileTime::ParametersValidator do
 
   let(:definitions) {{ip: {type: :string}}}

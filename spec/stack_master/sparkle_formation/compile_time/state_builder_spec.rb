@@ -1,5 +1,3 @@
-require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/state_builder'
-
 RSpec.describe StackMaster::SparkleFormation::CompileTime::StateBuilder do
 
   let(:definitions) {{ip: {type: :string}, size: {type: :number}}}

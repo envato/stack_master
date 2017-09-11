@@ -1,5 +1,3 @@
-require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/allowed_pattern_validator'
-
 RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedPatternValidator do
 
   describe '#validate' do

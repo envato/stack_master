@@ -1,5 +1,3 @@
-require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/max_length_validator'
-
 RSpec.describe StackMaster::SparkleFormation::CompileTime::MaxLengthValidator do
 
   describe '#validate' do

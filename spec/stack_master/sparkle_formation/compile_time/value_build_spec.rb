@@ -1,5 +1,3 @@
-require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/value_builder'
-
 RSpec.describe StackMaster::SparkleFormation::CompileTime::ValueBuilder do
 
   scenarios= [

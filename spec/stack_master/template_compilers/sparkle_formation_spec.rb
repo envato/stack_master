@@ -1,4 +1,3 @@
-require 'sparkle_formation'
 RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
   describe '.compile' do

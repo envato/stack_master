@@ -1,5 +1,3 @@
-require_relative '../../../../lib/stack_master/sparkle_formation/compile_time/min_size_validator'
-
 RSpec.describe StackMaster::SparkleFormation::CompileTime::MinSizeValidator do
 
   describe '#validate' do
