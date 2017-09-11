@@ -1,23 +1,23 @@
-RSpec.shared_examples "validate valid parameter" do |validator_class, parameter|
+RSpec.shared_examples 'validate valid parameter' do |validator_class, parameter|
   context "with parameter #{parameter}" do
-    subject(:valid_parameter_validator) { validator_class.new('name', validator_definition, parameter).tap {|validator| validator.validate} }
+    subject(:validator) { validator_class.new('name', definition, parameter).tap {|validator| validator.validate} }
 
     it 'is valid' do
-      expect(valid_parameter_validator.is_valid).to be_truthy
+      expect(validator.is_valid).to be_truthy
     end
   end
 end
 
-RSpec.shared_examples "validate invalid parameter" do |validator_class, parameter, errored_parameters|
+RSpec.shared_examples 'validate invalid parameter' do |validator_class, parameter, errors|
   context "with parameter #{parameter}" do
-    subject(:invalid_parameter_validator) { validator_class.new(name, validator_definition, parameter).tap {|validator| validator.validate} }
+    subject(:validator) { validator_class.new(name, definition, parameter).tap {|validator| validator.validate} }
 
     it 'is not valid' do
-      expect(invalid_parameter_validator.is_valid).to be_falsey
+      expect(validator.is_valid).to be_falsey
     end
 
     it 'has an error' do
-      expect(invalid_parameter_validator.error).to eql error_message.call(errored_parameters, validator_definition)
+      expect(validator.error).to eql error_message.call(errors, definition)
     end
   end
 end

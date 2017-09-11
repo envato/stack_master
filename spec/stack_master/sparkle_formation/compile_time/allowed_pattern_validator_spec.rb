@@ -1,13 +1,11 @@
-require 'spec_helper'
-
 RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedPatternValidator do
 
   describe '#validate' do
     let(:name) { 'name' }
-    let(:error_message) { -> (error, validator_definition) { "name:#{error} does not match allowed_pattern:#{validator_definition[:allowed_pattern]}" } }
+    let(:error_message) { -> (error, definition) { "#{name}:#{error} does not match allowed_pattern:#{definition[:allowed_pattern]}" } }
 
     context 'string validation' do
-      let(:validator_definition) { {type: :string, allowed_pattern: '^a'} }
+      let(:definition) { {type: :string, allowed_pattern: '^a'} }
 
       include_examples 'validate valid parameter', described_class, 'a'
       include_examples 'validate valid parameter', described_class, ['a']
@@ -15,7 +13,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedPatternValidat
     end
 
     context 'numerical validation' do
-      let(:validator_definition) { {type: :number, allowed_pattern: '^1'} }
+      let(:definition) { {type: :number, allowed_pattern: '^1'} }
 
       include_examples 'validate valid parameter', described_class, 1
       include_examples 'validate valid parameter', described_class, '1'
@@ -28,7 +26,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedPatternValidat
     end
 
     context 'validation with default value' do
-      let(:validator_definition) { {type: :number, allowed_pattern: '^1', default: '1'} }
+      let(:definition) { {type: :number, allowed_pattern: '^1', default: '1'} }
       include_examples 'validate valid parameter', described_class, nil
     end
   end
