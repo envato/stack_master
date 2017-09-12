@@ -6,31 +6,31 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::MinLengthValidator do
 
     context 'string validation' do
       let(:definition) { {type: :string, min_length: 2} }
-      include_examples 'validate valid parameter', 'ab'
-      include_examples 'validate valid parameter', ['ab']
-      include_examples 'validate invalid parameter', 'a', ['a']
-      include_examples 'validate invalid parameter', ['a'], ['a']
+      validate_valid_parameter('ab')
+      validate_valid_parameter(['ab'])
+      validate_invalid_parameter('a', ['a'])
+      validate_invalid_parameter(['a'], ['a'])
     end
 
     context 'string validation with default value' do
       let(:definition) { {type: :string, min_length: 2, default: 'ab'} }
-      include_examples 'validate valid parameter', nil
+      validate_valid_parameter(nil)
     end
 
     context 'string validation with multiples' do
       let(:definition) { {type: :string, min_length: 2, multiple: true} }
-      include_examples 'validate valid parameter', 'ab,cd'
-      include_examples 'validate invalid parameter', 'a,, cd', ['a', '']
+      validate_valid_parameter('ab,cd')
+      validate_invalid_parameter('a,, cd', ['a', ''])
     end
 
-    context 'string validation wtih multiples and default' do
+    context 'string validation with multiples and default' do
       let(:definition) { {type: :string, min_length: 2, multiple: true, default: 'ab,cd'} }
-      include_examples 'validate valid parameter', nil
+      validate_valid_parameter(nil)
     end
 
     context 'numerical validation' do
       let(:definition) { {type: :number, min_length: 2} }
-      include_examples 'validate valid parameter', 'a'
+      validate_valid_parameter('a')
     end
   end
 end

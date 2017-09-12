@@ -6,22 +6,22 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::MaxSizeValidator do
 
     context 'numerical validation' do
       let(:definition) { {type: :number, max_size: 1} }
-      include_examples 'validate valid parameter', 1
-      include_examples 'validate valid parameter', ['1']
-      include_examples 'validate valid parameter', [1]
-      include_examples 'validate valid parameter', ['1']
-      include_examples 'validate invalid parameter', 2, [2]
-      include_examples 'validate invalid parameter', '2', ['2']
+      validate_valid_parameter(1)
+      validate_valid_parameter('1')
+      validate_valid_parameter([1])
+      validate_valid_parameter(['1'])
+      validate_invalid_parameter(2, [2])
+      validate_invalid_parameter('2', ['2'])
     end
 
     context 'numerical validation with default' do
       let(:definition) { {type: :number, max_size: 1, default: 1} }
-      include_examples 'validate valid parameter', nil
+      validate_valid_parameter(nil)
     end
 
     context 'string validation' do
       let(:definition) { {type: :string, max_size: 1} }
-      include_examples 'validate valid parameter', 2
+      validate_valid_parameter(2)
     end
   end
 end

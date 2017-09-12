@@ -1,4 +1,4 @@
-RSpec.shared_examples 'validate valid parameter' do |parameter|
+def validate_valid_parameter(parameter)
   context "with parameter #{parameter}" do
     subject(:validator) { described_class.new('name', definition, parameter).tap {|validator| validator.validate} }
 
@@ -8,7 +8,7 @@ RSpec.shared_examples 'validate valid parameter' do |parameter|
   end
 end
 
-RSpec.shared_examples 'validate invalid parameter' do |parameter, errors|
+def validate_invalid_parameter(parameter, errors)
   context "with parameter #{parameter}" do
     subject(:validator) { described_class.new(name, definition, parameter).tap {|validator| validator.validate} }
 

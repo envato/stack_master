@@ -6,28 +6,42 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedPatternValidat
 
     context 'string validation' do
       let(:definition) { {type: :string, allowed_pattern: '^a'} }
+      validate_valid_parameter('a')
+      validate_valid_parameter(['a'])
+      validate_invalid_parameter('b', ['b'])
+      validate_invalid_parameter(['b'], ['b'])
+    end
 
-      include_examples 'validate valid parameter', 'a'
-      include_examples 'validate valid parameter', ['a']
-      include_examples 'validate invalid parameter', 'b', ['b']
+    context 'string validation with default' do
+      let(:definition) { {type: :string, allowed_pattern: '^a', default: 'a'} }
+      validate_valid_parameter(nil)
+    end
+
+    context 'string validation with multiple' do
+      let(:definition) { {type: :string, allowed_pattern: '^a', multiple: true} }
+      validate_valid_parameter('a,ab')
+      validate_invalid_parameter('a,,ab', [''])
+      validate_invalid_parameter('a, ,ab', [''])
+    end
+
+    context 'string validation with multiple default values' do
+      let(:definition) { {type: :string, allowed_pattern: '^a', multiple: true, default:'a,a'} }
+      validate_valid_parameter(nil)
     end
 
     context 'numerical validation' do
       let(:definition) { {type: :number, allowed_pattern: '^1'} }
-
-      include_examples 'validate valid parameter', 1
-      include_examples 'validate valid parameter', '1'
-      include_examples 'validate valid parameter', [1]
-      include_examples 'validate valid parameter', ['1']
-
-      include_examples 'validate invalid parameter', 2, [2]
-      include_examples 'validate invalid parameter', '2', ['2']
-      include_examples 'validate invalid parameter', '2', ['2']
+      validate_valid_parameter(1)
+      validate_valid_parameter('1')
+      validate_valid_parameter([1])
+      validate_valid_parameter(['1'])
+      validate_invalid_parameter(2, [2])
+      validate_invalid_parameter('2', ['2'])
     end
 
     context 'validation with default value' do
       let(:definition) { {type: :number, allowed_pattern: '^1', default: '1'} }
-      include_examples 'validate valid parameter', nil
+      validate_valid_parameter(nil)
     end
   end
 end
