@@ -6,37 +6,37 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedValuesValidato
 
     context 'string validation' do
       let(:definition) { {type: :string, allowed_values: ['a']} }
-      include_examples 'validate valid parameter', described_class, 'a'
-      include_examples 'validate valid parameter', described_class, ['a']
-      include_examples 'validate invalid parameter', described_class, 'b', ['b']
-      include_examples 'validate invalid parameter', described_class, ['b'], ['b']
+      include_examples 'validate valid parameter', 'a'
+      include_examples 'validate valid parameter', ['a']
+      include_examples 'validate invalid parameter', 'b', ['b']
+      include_examples 'validate invalid parameter', ['b'], ['b']
     end
 
     context 'multiple string validation' do
       let(:definition) { {type: :string, allowed_values: ['a'], multiple: true} }
-      include_examples 'validate valid parameter', described_class, 'a,a'
-      include_examples 'validate invalid parameter', described_class, 'a,, a', ['']
-      include_examples 'validate invalid parameter', described_class, 'a,,b', ['', 'b']
+      include_examples 'validate valid parameter', 'a,a'
+      include_examples 'validate invalid parameter', 'a,, a', ['']
+      include_examples 'validate invalid parameter', 'a,,b', ['', 'b']
     end
 
     context 'validation with multiple default values' do
       let(:definition) { {type: :string, allowed_values: ['a'], multiple: true, default: 'a,a'} }
-      include_examples 'validate valid parameter', described_class, nil
+      include_examples 'validate valid parameter', nil
     end
 
     context 'numerical validation' do
       let(:definition) { {type: :number, allowed_values: [1]} }
-      include_examples 'validate valid parameter', described_class, 1
-      include_examples 'validate valid parameter', described_class, '1'
-      include_examples 'validate valid parameter', described_class, [1]
-      include_examples 'validate valid parameter', described_class, ['1']
-      include_examples 'validate invalid parameter', described_class, 2, [2]
-      include_examples 'validate invalid parameter', described_class, '2', ['2']
+      include_examples 'validate valid parameter', 1
+      include_examples 'validate valid parameter', '1'
+      include_examples 'validate valid parameter', [1]
+      include_examples 'validate valid parameter', ['1']
+      include_examples 'validate invalid parameter', 2, [2]
+      include_examples 'validate invalid parameter', '2', ['2']
     end
 
     context 'validation wtih default value' do
       let(:definition) { {type: :number, allowed_values: [1], default: 1} }
-      include_examples 'validate valid parameter', described_class, nil
+      include_examples 'validate valid parameter', nil
     end
   end
 end

@@ -1,39 +1,39 @@
 RSpec.describe StackMaster::SparkleFormation::CompileTime::MaxLengthValidator do
 
   describe '#validate' do
-    let(:name) {'name'}
+    let(:name) { 'name' }
     let(:error_message) { -> (error, definition) { "#{name}:#{error} must not exceed max_length:#{definition[:max_length]} characters" } }
 
     context 'string validation' do
       let(:definition) { {type: :string, max_length: 1} }
-      include_examples 'validate valid parameter', described_class, 'a'
-      include_examples 'validate valid parameter', described_class, ['a']
-      include_examples 'validate invalid parameter', described_class, 'ab', ['ab']
-      include_examples 'validate invalid parameter', described_class, ['ab'], ['ab']
+      include_examples 'validate valid parameter', 'a'
+      include_examples 'validate valid parameter', ['a']
+      include_examples 'validate invalid parameter', 'ab', ['ab']
+      include_examples 'validate invalid parameter', ['ab'], ['ab']
     end
 
     context 'validation with default value' do
       let(:definition) { {type: :string, max_length: 1, default: 'a'} }
-      include_examples 'validate valid parameter', described_class, nil
+      include_examples 'validate valid parameter', nil
     end
 
     context 'string validation with multiples' do
       let(:definition) { {type: :string, max_length: 1, multiple: true} }
 
-      include_examples 'validate valid parameter', described_class, 'a,a'
-      include_examples 'validate valid parameter', described_class, 'a,,a'
+      include_examples 'validate valid parameter', 'a,a'
+      include_examples 'validate valid parameter', 'a,,a'
 
-      include_examples 'validate invalid parameter', described_class, 'a,, ab', ['ab']
+      include_examples 'validate invalid parameter', 'a,, ab', ['ab']
     end
 
     context 'string validation wtih multiples and default' do
       let(:definition) { {type: :string, max_length: 1, multiple: true, default: 'a,a'} }
-      include_examples 'validate valid parameter', described_class, nil
+      include_examples 'validate valid parameter', nil
     end
 
     context 'numerical validation' do
       let(:definition) { {type: :number, max_length: 1} }
-      include_examples 'validate valid parameter', described_class, 'ab'
+      include_examples 'validate valid parameter', 'ab'
     end
   end
 end

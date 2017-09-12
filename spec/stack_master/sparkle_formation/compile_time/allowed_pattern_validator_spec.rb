@@ -7,27 +7,27 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::AllowedPatternValidat
     context 'string validation' do
       let(:definition) { {type: :string, allowed_pattern: '^a'} }
 
-      include_examples 'validate valid parameter', described_class, 'a'
-      include_examples 'validate valid parameter', described_class, ['a']
-      include_examples 'validate invalid parameter', described_class, 'b', ['b']
+      include_examples 'validate valid parameter', 'a'
+      include_examples 'validate valid parameter', ['a']
+      include_examples 'validate invalid parameter', 'b', ['b']
     end
 
     context 'numerical validation' do
       let(:definition) { {type: :number, allowed_pattern: '^1'} }
 
-      include_examples 'validate valid parameter', described_class, 1
-      include_examples 'validate valid parameter', described_class, '1'
-      include_examples 'validate valid parameter', described_class, [1]
-      include_examples 'validate valid parameter', described_class, ['1']
+      include_examples 'validate valid parameter', 1
+      include_examples 'validate valid parameter', '1'
+      include_examples 'validate valid parameter', [1]
+      include_examples 'validate valid parameter', ['1']
 
-      include_examples 'validate invalid parameter', described_class, 2, [2]
-      include_examples 'validate invalid parameter', described_class, '2', ['2']
-      include_examples 'validate invalid parameter', described_class, '2', ['2']
+      include_examples 'validate invalid parameter', 2, [2]
+      include_examples 'validate invalid parameter', '2', ['2']
+      include_examples 'validate invalid parameter', '2', ['2']
     end
 
     context 'validation with default value' do
       let(:definition) { {type: :number, allowed_pattern: '^1', default: '1'} }
-      include_examples 'validate valid parameter', described_class, nil
+      include_examples 'validate valid parameter', nil
     end
   end
 end
