@@ -12,8 +12,8 @@ module StackMaster
         template_parameters = create_template_parameters(parameters)
         compile_time_parameters = create_compile_time_parameters(parameters)
 
-        assign_parameters_to_hash(hash[:template_parameters], template_parameters)
-        assign_parameters_to_hash(hash[:compile_time_parameters], compile_time_parameters)
+        merge_and_camelize(hash[:template_parameters], template_parameters)
+        merge_and_camelize(hash[:compile_time_parameters], compile_time_parameters)
         hash
       end
 
@@ -41,7 +41,7 @@ module StackMaster
       (parameters[COMPILE_TIME_PARAMETERS_KEY] || parameters[COMPILE_TIME_PARAMETERS_KEY.camelize] || {}).deep_dup
     end
 
-    def self.assign_parameters_to_hash(hash, parameters)
+    def self.merge_and_camelize(hash, parameters)
       parameters.each { |key, value| hash[key.camelize] = value }
     end
 
