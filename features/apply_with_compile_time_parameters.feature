@@ -12,9 +12,10 @@ Feature: Apply command with compile time parameters
     And a file named "parameters/vpc.yml" with:
     """
           vpc_cidr: 10.200.2.0/23
-          private_subnet_cidrs:
-            - 10.0.0.0/32:ap-southeast-2
-            - 10.0.0.2/32:ap-southeast-1
+          compile_time_parameters:
+             private_subnet_cidrs:
+              - 10.0.0.0/32:ap-southeast-2
+              - 10.0.0.2/32:ap-southeast-1
           """
     And a directory named "templates"
     And a file named "templates/vpc.rb" with:

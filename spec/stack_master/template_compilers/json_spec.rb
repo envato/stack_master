@@ -1,10 +1,10 @@
 RSpec.describe StackMaster::TemplateCompilers::Json do
 
-  let(:parameters) { { 'InstanceType' => 't2.medium' } }
+  let(:compile_time_parameters) { { 'InstanceType' => 't2.medium' } }
 
   describe '.compile' do
     def compile
-      described_class.compile(template_file_path, parameters)
+      described_class.compile(template_file_path, compile_time_parameters)
     end
 
     let(:template_file_path) { '/base_dir/templates/template.json' }

@@ -2,18 +2,18 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
   describe '.compile' do
     def compile
-      described_class.compile(template_file_path, parameters, compiler_options)
+      described_class.compile(template_file_path, compile_time_parameters, compiler_options)
     end
 
-    let(:template_file_path) {'/base_dir/templates/template.rb'}
-    let(:parameters){{'Ip' => '10.0.0.0', 'Name' => 'Something'}}
-    let(:compiler_options) {{}}
-    let(:compile_time_parameter_definitions) {{}}
+    let(:template_file_path) { '/base_dir/templates/template.rb' }
+    let(:compile_time_parameters) { {'Ip' => '10.0.0.0', 'Name' => 'Something'} }
+    let(:compiler_options) { {} }
+    let(:compile_time_parameter_definitions) { {} }
 
-    let(:sparkle_template) {instance_double(::SparkleFormation)}
-    let(:definitions_validator){instance_double(StackMaster::SparkleFormation::CompileTime::DefinitionsValidator)}
-    let(:parameters_validator){instance_double(StackMaster::SparkleFormation::CompileTime::ParametersValidator)}
-    let(:state_builder){instance_double(StackMaster::SparkleFormation::CompileTime::StateBuilder)}
+    let(:sparkle_template) { instance_double(::SparkleFormation) }
+    let(:definitions_validator) { instance_double(StackMaster::SparkleFormation::CompileTime::DefinitionsValidator) }
+    let(:parameters_validator) { instance_double(StackMaster::SparkleFormation::CompileTime::ParametersValidator) }
+    let(:state_builder) { instance_double(StackMaster::SparkleFormation::CompileTime::StateBuilder) }
 
     before do
       allow(::SparkleFormation).to receive(:compile).with(template_file_path, :sparkle).and_return(sparkle_template)
@@ -46,13 +46,13 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
     end
 
     it 'should validate the parameters against any compile time definitions' do
-      expect(StackMaster::SparkleFormation::CompileTime::ParametersValidator).to receive(:new).with(compile_time_parameter_definitions, parameters)
+      expect(StackMaster::SparkleFormation::CompileTime::ParametersValidator).to receive(:new).with(compile_time_parameter_definitions, compile_time_parameters)
       expect(parameters_validator).to receive(:validate)
       compile
     end
 
     it 'should create the compile state' do
-      expect(StackMaster::SparkleFormation::CompileTime::StateBuilder).to receive(:new).with(compile_time_parameter_definitions, parameters)
+      expect(StackMaster::SparkleFormation::CompileTime::StateBuilder).to receive(:new).with(compile_time_parameter_definitions, compile_time_parameters)
       expect(state_builder).to receive(:build)
       compile
     end
@@ -62,18 +62,8 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       compile
     end
 
-    context 'with compile time parameter definitions' do
-      let(:compile_time_parameter_definitions) {{ip: {type: :string}}}
-
-      it 'should remove the parameters that match the definition' do
-        compile
-        expect(parameters).to eq({'Name' => 'Something'})
-      end
-
-    end
-
     context 'with a custom sparkle_path' do
-      let(:compiler_options) {{'sparkle_path' => '../foo'}}
+      let(:compiler_options) { {'sparkle_path' => '../foo'} }
 
       it 'does not use the default path' do
         compile

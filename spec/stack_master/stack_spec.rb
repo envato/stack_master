@@ -14,12 +14,12 @@ RSpec.describe StackMaster::Stack do
     context 'when the stack exists in AWS' do
       let(:parameters) {
         [
-          {parameter_key: 'param1', parameter_value: 'value1'},
-          {parameter_key: 'param2', parameter_value: 'value2'}
+            {parameter_key: 'param1', parameter_value: 'value1'},
+            {parameter_key: 'param2', parameter_value: 'value2'}
         ]
       }
       before do
-        cf.stub_responses(:describe_stacks, stacks: [{ stack_id: stack_id, stack_name: stack_name, creation_time: Time.now, stack_status: 'UPDATE_COMPLETE', parameters: parameters, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn'}])
+        cf.stub_responses(:describe_stacks, stacks: [{stack_id: stack_id, stack_name: stack_name, creation_time: Time.now, stack_status: 'UPDATE_COMPLETE', parameters: parameters, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn'}])
         cf.stub_responses(:get_template, template_body: "{}")
         cf.stub_responses(:get_stack_policy, stack_policy_body: stack_policy_body)
       end
@@ -39,7 +39,7 @@ RSpec.describe StackMaster::Stack do
       it 'sets role_arn' do
         expect(stack.role_arn).to eq('test_service_role_arn')
       end
-      
+
       it 'sets notification_arns' do
         expect(stack.notification_arns).to eq(['test_arn'])
       end
@@ -73,12 +73,13 @@ RSpec.describe StackMaster::Stack do
   end
 
   describe '.generate' do
-    let(:tags) { { 'tag1' => 'value1' } }
+    let(:tags) { {'tag1' => 'value1'} }
     let(:stack_definition) { StackMaster::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn', stack_policy_file: 'no_replace_rds.json') }
     let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
     subject(:stack) { StackMaster::Stack.generate(stack_definition, config) }
-    let(:parameter_hash) { { 'DbPassword' => { 'secret' => 'db_password' } } }
-    let(:resolved_parameters) { { 'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium' } }
+    let(:parameter_hash) { {template_parameters: {'DbPassword' => {'secret' => 'db_password'}}, compile_time_parameters: {}} }
+    let(:resolved_template_parameters) { {'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium'} }
+    let(:resolved_compile_time_parameters) { {} }
     let(:template_file_name) { 'template.rb' }
     let(:template_body) { '{"Parameters": { "VpcId": { "Description": "VPC ID" }, "InstanceType": { "Description": "Instance Type", "Default": "t2.micro" }} }' }
     let(:template_format) { :json }
@@ -86,8 +87,9 @@ RSpec.describe StackMaster::Stack do
 
     before do
       allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
-      allow(StackMaster::ParameterResolver).to receive(:resolve).and_return(resolved_parameters)
-      allow(StackMaster::TemplateCompiler).to receive(:compile).with(config, stack_definition.template_file_path, resolved_parameters, stack_definition.compiler_options).and_return(template_body)
+      allow(StackMaster::ParameterResolver).to receive(:resolve).with(config,stack_definition,parameter_hash[:template_parameters]).and_return(resolved_template_parameters)
+      allow(StackMaster::ParameterResolver).to receive(:resolve).with(config,stack_definition,parameter_hash[:compile_time_parameters]).and_return(resolved_compile_time_parameters)
+      allow(StackMaster::TemplateCompiler).to receive(:compile).with(config, stack_definition.template_file_path, resolved_compile_time_parameters, stack_definition.compiler_options).and_return(template_body)
       allow(File).to receive(:read).with(stack_definition.stack_policy_file_path).and_return(stack_policy_body)
     end
 
@@ -104,7 +106,7 @@ RSpec.describe StackMaster::Stack do
     end
 
     it 'resolves the parameters' do
-      expect(stack.parameters).to eq resolved_parameters
+      expect(stack.parameters).to eq resolved_template_parameters
     end
 
     it 'compiles the template body' do
@@ -114,7 +116,7 @@ RSpec.describe StackMaster::Stack do
     it 'has role_arn' do
       expect(stack.role_arn).to eq 'test_service_role_arn'
     end
-    
+
     it 'has notification_arns' do
       expect(stack.notification_arns).to eq ['test_arn']
     end
@@ -168,13 +170,13 @@ RSpec.describe StackMaster::Stack do
     let(:stack) { StackMaster::Stack.new(parameters: parameters, template_body: '{}', template_format: :json) }
 
     context 'when a parameter has a nil value' do
-      let(:parameters) { { 'my_param' => nil } }
+      let(:parameters) { {'my_param' => nil} }
 
       it { should eq true }
     end
 
     context 'when no parameers have a nil value' do
-      let(:parameters) { { 'my_param' => '1' } }
+      let(:parameters) { {'my_param' => '1'} }
 
       it { should eq false }
     end

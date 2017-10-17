@@ -1,10 +1,10 @@
 RSpec.describe StackMaster::TemplateCompilers::Yaml do
   describe '.compile' do
 
-    let(:parameters) { { 'InstanceType' => 't2.medium' } }
+    let(:compile_time_parameters) { {'InstanceType' => 't2.medium'} }
 
     def compile
-      described_class.compile(template_file_path, parameters)
+      described_class.compile(template_file_path, compile_time_parameters)
     end
 
     context 'valid YAML template' do

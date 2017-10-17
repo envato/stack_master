@@ -12,7 +12,7 @@ module StackMaster::TemplateCompilers
       require 'stack_master/sparkle_formation/template_file'
     end
 
-    def self.compile(template_file_path, parameters, compiler_options = {})
+    def self.compile(template_file_path, compile_time_parameters, compiler_options = {})
       if compiler_options['sparkle_path']
         ::SparkleFormation.sparkle_path = File.expand_path(compiler_options['sparkle_path'])
       else
@@ -21,11 +21,10 @@ module StackMaster::TemplateCompilers
       sparkle_template = ::SparkleFormation.compile(template_file_path, :sparkle)
       definitions = sparkle_template.parameters
       validate_definitions(definitions)
-      validate_parameters(definitions, parameters)
+      validate_parameters(definitions, compile_time_parameters)
 
       sparkle_template.compile_time_parameter_setter do
-        sparkle_template.compile_state = create_state(definitions, parameters)
-        remove_compile_parameters(definitions, parameters)
+        sparkle_template.compile_state = create_state(definitions, compile_time_parameters)
       end
 
       JSON.pretty_generate(sparkle_template)
@@ -37,16 +36,12 @@ module StackMaster::TemplateCompilers
       CompileTime::DefinitionsValidator.new(definitions).validate
     end
 
-    def self.validate_parameters(definitions, parameters)
-      CompileTime::ParametersValidator.new(definitions, parameters).validate
+    def self.validate_parameters(definitions, compile_time_parameters)
+      CompileTime::ParametersValidator.new(definitions, compile_time_parameters).validate
     end
 
-    def self.create_state(definitions, parameters)
-      CompileTime::StateBuilder.new(definitions, parameters).build
-    end
-
-    def self.remove_compile_parameters(definitions, parameters)
-      definitions.each {|name, _definition| parameters.delete(name.to_s.camelize)}
+    def self.create_state(definitions, compile_time_parameters)
+      CompileTime::StateBuilder.new(definitions, compile_time_parameters).build
     end
 
     StackMaster::TemplateCompiler.register(:sparkle_formation, self)

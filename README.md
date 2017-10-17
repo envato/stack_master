@@ -155,6 +155,21 @@ A simple parameter file could look like this:
 key_name: myapp-us-east-1
 ```
 
+### Compile Time Parameters
+
+Compile time parameters can be used for [SparkleFormation](http://www.sparkleformation.io) templates. It conforms and 
+allows you to use the [Compile Time Parameters](http://www.sparkleformation.io/docs/sparkle_formation/compile-time-parameters.html) feature
+
+A simple example looks like this
+
+```
+vpc_cidr: 10.0.0.0/16
+compile_time_parameters:
+  subnet_cidrs:
+    - 10.0.0.0/28
+    - 10.0.2.0/28
+```
+
 Keys in parameter files are automatically converted to camel case.
 
 ## Parameter Resolvers
