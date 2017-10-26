@@ -7,6 +7,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::EmptyValidator do
     context 'string validation' do
       let(:definition) { {type: :string} }
       validate_valid_parameter('a')
+      validate_valid_parameter('')
       validate_valid_parameter(['a'])
       validate_invalid_parameter(nil, nil)
       validate_invalid_parameter(['a', nil], ['a', nil])
@@ -20,7 +21,6 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::EmptyValidator do
     context 'string validation with multiples' do
       let(:definition) { {type: :string, multiple: true} }
       validate_valid_parameter('a,b')
-      validate_invalid_parameter('a,,b', 'a,,b')
     end
 
     context 'string validation with multiples and defaults' do
