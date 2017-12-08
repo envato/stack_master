@@ -1,3 +1,5 @@
+require 'securerandom'
+
 module StackMaster
   module TestDriver
     class Stack
