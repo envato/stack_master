@@ -24,7 +24,7 @@ module StackMaster
       private
 
       def stack
-        @stack ||= Stack.find(@stack_definition.region, @stack_definition.stack_name)
+        @stack ||= Stack.find(@stack_definition.region, @stack_definition.raw_stack_name)
       end
     end
   end

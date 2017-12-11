@@ -20,7 +20,7 @@ module StackMaster
       private
 
       def stack_resources
-        @stack_resources = cf.describe_stack_resources(stack_name: @stack_definition.stack_name).stack_resources
+        @stack_resources = cf.describe_stack_resources(stack_name: @stack_definition.raw_stack_name).stack_resources
       rescue Aws::CloudFormation::Errors::ValidationError
         nil
       end

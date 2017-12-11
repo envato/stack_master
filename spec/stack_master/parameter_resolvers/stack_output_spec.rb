@@ -1,7 +1,7 @@
 RSpec.describe StackMaster::ParameterResolvers::StackOutput do
   let(:region) { 'us-east-1' }
   let(:stack_name) { 'my-stack' }
-  let(:resolver) { described_class.new(config, double(region: 'us-east-1')) }
+  let(:resolver) { described_class.new(config, double(environment: 'prod', region: 'us-east-1')) }
   let(:cf) { Aws::CloudFormation::Client.new }
   let(:config) { double(:unalias_region => region) }
 

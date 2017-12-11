@@ -3,10 +3,11 @@ Feature: Validate command
   Background:
     Given a file named "stack_master.yml" with:
       """
-      stacks:
-        us_east_1:
-          stack1:
-            template: stack1.json
+      environments:
+        prod:
+          stacks:
+            stack1:
+              template: stack1.json
       """
     And a directory named "parameters"
     And a file named "parameters/stack1.yml" with:
@@ -37,10 +38,10 @@ Feature: Validate command
 
   Scenario: Validate successfully
     Given I stub CloudFormation validate calls to pass validation
-    And I run `stack_master validate us-east-1 stack1`
+    And I run `stack_master validate prod stack1`
     Then the output should contain "stack1: valid"
 
   Scenario: Validate unsuccessfully
     Given I stub CloudFormation validate calls to fail validation with message "Blah"
-    And I run `stack_master validate us-east-1 stack1`
+    And I run `stack_master validate prod stack1`
     Then the output should contain "stack1: invalid. Blah"

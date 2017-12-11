@@ -13,7 +13,7 @@ module StackMaster
 
       def perform
         tp.set :max_width, self.window_size
-        tp @config.stacks, :region, :stack_name
+        tp @config.stacks, :environment, :stack_name, :region
       end
     end
   end

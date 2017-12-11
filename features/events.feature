@@ -3,10 +3,11 @@ Feature: Events command
   Background:
     Given a file named "stack_master.yml" with:
       """
-      stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.rb
+      environments:
+        prod:
+          stacks:
+            myapp_vpc:
+              template: myapp_vpc.rb
       """
     And a directory named "templates"
     And a file named "templates/myapp_vpc.rb" with:
@@ -26,8 +27,8 @@ Feature: Events command
 
   Scenario: View events
     Given I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
-      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
-    When I run `stack_master events us-east-1 myapp-vpc --trace`
-    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+      | stack_id | event_id | stack_name      | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | prod-myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | prod-myapp-vpc  | prod-myapp-vpc      | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    When I run `stack_master events prod myapp-vpc --trace`
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} prod-myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/

@@ -44,7 +44,7 @@ module StackMaster
     end
 
     def find_stack
-      Stack.find(stack_definition.region, stack_definition.stack_name)
+      Stack.find(stack_definition.region, stack_definition.raw_stack_name)
     rescue Aws::CloudFormation::Errors::ValidationError
     end
 

@@ -11,12 +11,12 @@ module StackMaster
       end
 
       def perform
-        events = StackEvents::Fetcher.fetch(@stack_definition.stack_name, @stack_definition.region)
+        events = StackEvents::Fetcher.fetch(@stack_definition.raw_stack_name, @stack_definition.region)
         filter_events(events).each do |event|
           StackEvents::Presenter.print_event(StackMaster.stdout, event)
         end
         if @options.tail
-          StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout)
+          StackEvents::Streamer.stream(@stack_definition.raw_stack_name, @stack_definition.region, io: StackMaster.stdout)
         end
       end
 

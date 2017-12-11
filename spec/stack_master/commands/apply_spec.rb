@@ -2,11 +2,13 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:cf) { instance_double(Aws::CloudFormation::Client) }
   let(:s3) { instance_double(Aws::S3::Client) }
   let(:region) { 'us-east-1' }
+  let(:environment) { 'prod' }
   let(:stack_name) { 'myapp-vpc' }
+  let(:raw_stack_name) { "#{environment}-#{stack_name}" }
   let(:config) { double(find_stack: stack_definition) }
   let(:role_arn) { 'test_service_role_arn' }
   let(:notification_arn) { 'test_arn' }
-  let(:stack_definition) { StackMaster::StackDefinition.new(base_dir: '/base_dir', region: region, stack_name: stack_name) }
+  let(:stack_definition) { StackMaster::StackDefinition.new(base_dir: '/base_dir', environment: environment, region: region, stack_name: stack_name) }
   let(:template_body) { '{}' }
   let(:template_format) { :json }
   let(:parameters) { { 'param_1' => 'hello' } }
@@ -15,7 +17,7 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:change_set) { double(display: true, failed?: false, id: '1') }
 
   before do
-    allow(StackMaster::Stack).to receive(:find).with(region, stack_name).and_return(stack)
+    allow(StackMaster::Stack).to receive(:find).with(environment, raw_stack_name).and_return(stack)
     allow(StackMaster::Stack).to receive(:generate).with(stack_definition, config).and_return(proposed_stack)
     allow(config).to receive(:stack_defaults).and_return({})
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
@@ -40,7 +42,7 @@ RSpec.describe StackMaster::Commands::Apply do
     it 'creates a change set' do
       apply
       expect(StackMaster::ChangeSet).to have_received(:create).with(
-        stack_name: stack_name,
+        stack_name: raw_stack_name,
         template_body: proposed_stack.template_body,
         parameters: [
           { parameter_key: 'param_1', parameter_value: 'hello' }
@@ -57,14 +59,14 @@ RSpec.describe StackMaster::Commands::Apply do
     it 'streams events' do
       Timecop.freeze(Time.local(1990)) do
         apply
-        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
+        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(raw_stack_name, region, io: STDOUT, from: Time.now)
       end
     end
 
     it 'attaches a stack policy to the stack' do
       apply
       expect(cf).to have_received(:set_stack_policy).with(
-        stack_name: stack_name,
+        stack_name: raw_stack_name,
         stack_policy_body: stack_policy_body
       )
     end
@@ -142,7 +144,7 @@ RSpec.describe StackMaster::Commands::Apply do
     it 'creates a change set for a new stack' do
       apply
       expect(StackMaster::ChangeSet).to have_received(:create).with(
-        stack_name: stack_name,
+        stack_name: raw_stack_name,
         template_body: proposed_stack.template_body,
         parameters: [
           { parameter_key: 'param_1', parameter_value: 'hello' }
@@ -164,7 +166,7 @@ RSpec.describe StackMaster::Commands::Apply do
         StackMaster::Commands::Apply.perform(config, stack_definition, options)
         apply
         expect(cf).to have_received(:create_stack).with(
-          stack_name: stack_name,
+          stack_name: raw_stack_name,
           template_body: proposed_stack.template_body,
           parameters: [
             { parameter_key: 'param_1', parameter_value: 'hello' }
@@ -183,7 +185,7 @@ RSpec.describe StackMaster::Commands::Apply do
     it 'attaches a stack policy to the created stack' do
       apply
       expect(cf).to have_received(:set_stack_policy).with(
-        stack_name: stack_name,
+        stack_name: raw_stack_name,
         stack_policy_body: stack_policy_body
       )
     end
@@ -202,7 +204,7 @@ RSpec.describe StackMaster::Commands::Apply do
     it 'streams events' do
       Timecop.freeze(Time.local(1990)) do
         apply
-        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
+        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(raw_stack_name, region, io: STDOUT, from: Time.now)
       end
     end
 
@@ -215,7 +217,7 @@ RSpec.describe StackMaster::Commands::Apply do
       end
 
       it 'deletes the stack' do
-        expect(cf).to have_received(:delete_stack).with(stack_name: stack_name)
+        expect(cf).to have_received(:delete_stack).with(stack_name: raw_stack_name)
       end
 
       it "doesn't execute the change set" do
