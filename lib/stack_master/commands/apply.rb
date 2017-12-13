@@ -76,16 +76,22 @@ module StackMaster
       end
 
       def create_stack_by_change_set
-        @change_set = ChangeSet.create(stack_options.merge(change_set_type: 'CREATE'))
-        if @change_set.failed?
-          ChangeSet.delete(@change_set.id)
-          halt!(@change_set.status_reason)
-        end
-        @change_set.display(StackMaster.stdout)
-        unless ask?('Create stack (y/n)? ')
+        begin
+          @change_set = ChangeSet.create(stack_options.merge(change_set_type: 'CREATE'))
+          if @change_set.failed?
+            ChangeSet.delete(@change_set.id)
+            halt!(@change_set.status_reason)
+          end
+
+          @change_set.display(StackMaster.stdout)
+          unless ask?('Create stack (y/n)? ')
+            cf.delete_stack(stack_name: stack_name)
+            halt!('Stack creation aborted')
+          end
+        rescue StackMaster::CtrlC
           cf.delete_stack(stack_name: stack_name)
-          halt!('Stack creation aborted')
         end
+
         execute_change_set
       end
 
@@ -109,6 +115,7 @@ module StackMaster
           ChangeSet.delete(@change_set.id)
           halt!(@change_set.status_reason)
         end
+
         @change_set.display(StackMaster.stdout)
         unless ask?("Apply change set (y/n)? ")
           ChangeSet.delete(@change_set.id)
