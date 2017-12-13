@@ -223,6 +223,19 @@ RSpec.describe StackMaster::Commands::Apply do
         expect(StackMaster::ChangeSet).to_not have_received(:execute).with(change_set.id)
       end
     end
+
+    context 'user uses ctrl+c' do
+      before do
+        allow(StackMaster).to receive(:non_interactive_answer).and_return('n')
+        allow(cf).to receive(:delete_stack)
+        allow(StackMaster::ChangeSet).to receive(:create).and_raise(StackMaster::CtrlC)
+      end
+
+      it "deletes the stack" do
+        expect(cf).to receive(:delete_stack).with(stack_name: stack_name)
+        expect { apply }.to raise_error
+      end
+    end
   end
 
   context 'one or more parameters are empty' do
