@@ -90,6 +90,7 @@ module StackMaster
           end
         rescue StackMaster::CtrlC
           cf.delete_stack(stack_name: stack_name)
+          raise
         end
 
         execute_change_set
