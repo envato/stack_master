@@ -85,23 +85,23 @@ module StackMaster
       return unless additional_parameter_lookup_dirs
       additional_parameter_lookup_dirs.map do |a|
         [
-          File.join(base_dir, 'parameters', a, "#{underscored_stack_name}.yml"),
           File.join(base_dir, 'parameters', a, "#{underscored_stack_name}.yaml"),
-      ]
+          File.join(base_dir, 'parameters', a, "#{underscored_stack_name}.yml"),
+        ]
       end
     end
 
     def region_parameter_file_path
       [
-        File.join(base_dir, 'parameters', "#{region}", "#{underscored_stack_name}.yml"),
         File.join(base_dir, 'parameters', "#{region}", "#{underscored_stack_name}.yaml"),
+        File.join(base_dir, 'parameters', "#{region}", "#{underscored_stack_name}.yml"),
       ]
     end
 
     def default_parameter_file_path
       [
-        File.join(base_dir, 'parameters', "#{underscored_stack_name}.yml"),
         File.join(base_dir, 'parameters', "#{underscored_stack_name}.yaml"),
+        File.join(base_dir, 'parameters', "#{underscored_stack_name}.yml"),
       ]
     end
 

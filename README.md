@@ -143,10 +143,13 @@ template_compilers:
 
 ## Parameters
 
-Parameters are loaded from multiple YAML files, merged from the following lookup paths:
+Parameters are loaded from multiple YAML files, merged from the following lookup paths from bottom to top:
 
+- parameters/[stack_name].yaml
 - parameters/[stack_name].yml
+- parameters/[region]/[underscored_stack_name].yaml
 - parameters/[region]/[underscored_stack_name].yml
+- parameters/[region_alias]/[underscored_stack_name].yaml
 - parameters/[region_alias]/[underscored_stack_name].yml
 
 A simple parameter file could look like this:

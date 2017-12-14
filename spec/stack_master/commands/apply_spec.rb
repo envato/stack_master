@@ -242,4 +242,6 @@ RSpec.describe StackMaster::Commands::Apply do
       end
     end
   end
+
+  context ''
 end
