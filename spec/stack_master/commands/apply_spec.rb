@@ -109,6 +109,7 @@ RSpec.describe StackMaster::Commands::Apply do
 
     context 'the changeset failed to create' do
       before do
+        allow(StackMaster::ChangeSet).to receive(:delete)
         allow(change_set).to receive(:failed?).and_return(true)
         allow(change_set).to receive(:status_reason).and_return('reason')
       end
@@ -220,6 +221,19 @@ RSpec.describe StackMaster::Commands::Apply do
 
       it "doesn't execute the change set" do
         expect(StackMaster::ChangeSet).to_not have_received(:execute).with(change_set.id)
+      end
+    end
+
+    context 'user uses ctrl+c' do
+      before do
+        allow(StackMaster).to receive(:non_interactive_answer).and_return('n')
+        allow(cf).to receive(:delete_stack)
+        allow(StackMaster::ChangeSet).to receive(:create).and_raise(StackMaster::CtrlC)
+      end
+
+      it "deletes the stack" do
+        expect(cf).to receive(:delete_stack).with(stack_name: stack_name)
+        expect { apply }.to raise_error
       end
     end
   end
