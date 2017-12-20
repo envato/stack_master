@@ -5,16 +5,20 @@ RSpec.describe StackMaster::Validator do
   let(:stack_name) { 'myapp_vpc' }
   let(:stack_definition) do
     StackMaster::StackDefinition.new(
-      region: 'us-east-1',
-      stack_name: stack_name,
-      template: 'myapp_vpc.json',
-      tags: { 'environment' => 'production' },
-      base_dir: File.expand_path('spec/fixtures'),
+        region: 'us-east-1',
+        stack_name: stack_name,
+        template: 'myapp_vpc.json',
+        tags: {'environment' => 'production'},
+        base_dir: File.expand_path('spec/fixtures'),
     )
   end
   let(:cf) { Aws::CloudFormation::Client.new(region: "us-east-1") }
+  let(:parameter_hash) { {template_parameters: {}, compile_time_parameters: {'DbPassword' => {'secret' => 'db_password'}}} }
+  let(:resolved_parameters) { {'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium'} }
   before do
     allow(Aws::CloudFormation::Client).to receive(:new).and_return cf
+    allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
+    allow(StackMaster::ParameterResolver).to receive(:resolve).and_return(resolved_parameters)
   end
 
   describe "#perform" do
@@ -48,5 +52,5 @@ RSpec.describe StackMaster::Validator do
       end
     end
   end
-  
+
 end

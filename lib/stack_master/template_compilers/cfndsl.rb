@@ -4,7 +4,7 @@ module StackMaster::TemplateCompilers
       require 'cfndsl'
     end
 
-    def self.compile(template_file_path, compiler_options = {})
+    def self.compile(template_file_path, _compile_time_parameters, _compiler_options = {})
       ::CfnDsl.eval_file_with_extras(template_file_path).to_json
     end
 
