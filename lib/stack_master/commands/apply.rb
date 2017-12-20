@@ -114,7 +114,11 @@ module StackMaster
         @change_set = ChangeSet.create(stack_options)
         if @change_set.failed?
           ChangeSet.delete(@change_set.id)
-          halt!(@change_set.status_reason)
+          if @change_set.status_reason == "The submitted information didn't contain changes. Submit different information to create a change set."
+            halt!(@change_set.status_reason)
+          else
+            failed!(@change_set.status_reason)
+          end
         end
 
         @change_set.display(StackMaster.stdout)
@@ -191,7 +195,7 @@ module StackMaster
           @stack_definition.parameter_files.each do |parameter_file|
             StackMaster.stderr.puts " - #{parameter_file}"
           end
-          halt!
+          failed!
         end
       end
 
