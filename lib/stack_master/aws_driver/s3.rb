@@ -48,6 +48,31 @@ module StackMaster
         end
       end
 
+
+      def download_file(bucket, prefix, region, filename)
+        raise StackMaster::AwsDriver::S3ConfigurationError, 'A bucket must be specified in order to use S3' unless bucket
+
+        s3 = new_s3_client(region: region)
+        StackMaster.stdout.puts "Downloading file from S3"
+
+        downloaded_file = File.join(Dir.tmpdir(), filename)
+        response = s3.get_object(
+          {
+            bucket: bucket,
+            key: "#{prefix}/#{filename}",
+          },
+          target: downloaded_file,
+        ) rescue nil
+
+        if response.nil?
+          err_msg = "Check S3 bucket prefix and/or permissions for this S3 object"
+          StackMaster.stderr.puts err_msg
+          raise err_msg
+        end
+        # Return path to downloaded file
+        downloaded_file
+      end
+
       def url(bucket:, prefix:, region:, template:)
         if region == 'us-east-1'
           ["https://s3.amazonaws.com", bucket, prefix, template].compact.join('/')

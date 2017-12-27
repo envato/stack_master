@@ -44,35 +44,9 @@ module StackMaster
     end
 
     def template_file_path
-      # Download S3 template if you have skipped upload
-      # This is used for diff/validate commands
-      if s3_configured? && s3['use_remote']
-
-        StackMaster.stdout.puts "I see use_remote flag. Templates will be referenced from S3 bucket and not locally"
-        s3_obj = ::Aws::S3::Client.new(region: s3['region'])
-        raise "Unable to Get S3 driver for downloading template" if s3_obj.nil?
-
-        # Construct file temporary file location for downloading
-        # template from S3 bucket
-        _template_dir = Dir.tmpdir()
-        _template_file_path = File.join(_template_dir, template)
-
-        # Actually download template from S3
-        response = s3_obj.get_object(
-          {
-            bucket: s3['bucket'],
-            key: "#{s3['prefix']}/#{s3_template_file_name}",
-          },
-          target: _template_file_path,
-        ) rescue nil
-
-        if response.nil?
-          StackMaster.stderr.puts "Please double check S3 parameters in your configuration file."
-          raise "Unable to Download #{template} from S3 bucket: #{s3['bucket']}."
-        end
-
-        return _template_file_path
-      end
+      # Use Downloaded file from S3 to do further
+      # operations
+      template_dir = s3_template_dir if s3.key?("use_remote") && s3["use_remote"] == true
       File.expand_path(File.join(template_dir, template))
     end
 
@@ -109,6 +83,17 @@ module StackMaster
     end
 
     private
+
+    def s3_template_dir
+      File.dirname(
+        StackMaster.s3_driver.download_file(
+          s3['bucket'],
+          s3['prefix'],
+          s3['region'],
+          template
+          )
+      )
+    end
 
     def additional_parameter_lookup_file_paths
       return unless additional_parameter_lookup_dirs
