@@ -46,8 +46,8 @@ module StackMaster
     def template_file_path
       # Use Downloaded file from S3 to do further
       # operations
-      template_dir = s3_template_dir if s3.key?("use_remote") && s3["use_remote"] == true
-      File.expand_path(File.join(template_dir, template))
+      @template_dir = s3_template_dir if s3.key?("use_remote") && s3["use_remote"] == true
+      File.expand_path(File.join(@template_dir, template))
     end
 
     def files_dir
