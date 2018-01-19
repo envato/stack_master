@@ -241,5 +241,5 @@ RSpec.describe StackMaster::Commands::Apply do
         expect { apply }.to output(/#{parameter_file}/).to_stderr
       end
     end
-  end 
+  end
 end
