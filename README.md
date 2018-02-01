@@ -1,5 +1,9 @@
 ![StackMaster](/logo.png?raw=true)
 
+[![License MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/envato/stack_master/blob/master/LICENSE.md)
+[![Gem Version](https://badge.fury.io/rb/stack_master.svg)](https://badge.fury.io/rb/stack_master)
+[![Build Status](https://travis-ci.org/envato/stack_master.svg?branch=master)](https://travis-ci.org/envato/stack_master)
+
 StackMaster is a CLI tool to manage CloudFormation stacks, with the following features:
 
 - Synchronous visibility into stack updates. See exactly what is changing and
