@@ -294,6 +294,15 @@ A set of possible attributes is available in the [AWS documentation](https://doc
 
 Any value can be an array of possible matches.
 
+### Environment Variable
+
+Lookup a environment variable:
+
+```yaml
+db_username:
+  env: DB_USERNAME
+```
+
 ### Custom parameter resolvers
 
 New parameter resolvers can be created in a separate gem.
