@@ -39,11 +39,11 @@ Feature: Apply command with environment parameter
       | 1        | 1        | vpc        | Vpc                 | CREATE_COMPLETE | AWS::EC2::VPC              | 2020-10-29 00:00:00 |
       | 1        | 1        | vpc        | vpc                 | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     And I set the environment variables to:
-      | variable | value        |
-      | VPC_CIDR | 10.0.0.0/16  |
+      | variable | value       |
+      | VPC_CIDR | 10.0.0.0/16 |
     When I run `stack_master apply us-east-2 vpc --trace`
     And the output should contain all of these lines:
-      | +---                    |
-      | +VpcCidr: 10.0.0.0/16   |
+      | +---                  |
+      | +VpcCidr: 10.0.0.0/16 |
     And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0

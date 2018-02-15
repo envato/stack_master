@@ -29,7 +29,6 @@ RSpec.describe StackMaster::ParameterResolvers::Env do
         ENV[environment_variable_name] = ''
         expect { resolver.resolve(environment_variable_name) }
             .to raise_error(ArgumentError, error)
-
       end
     end
 
