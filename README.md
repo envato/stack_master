@@ -296,7 +296,7 @@ Any value can be an array of possible matches.
 
 ### Environment Variable
 
-Lookup a environment variable:
+Lookup an environment variable:
 
 ```yaml
 db_username:

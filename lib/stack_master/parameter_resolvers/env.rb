@@ -1,7 +1,6 @@
 module StackMaster
   module ParameterResolvers
     class Env < Resolver
-      array_resolver
 
       def initialize(config, stack_definition)
         @config = config
@@ -9,7 +8,9 @@ module StackMaster
       end
 
       def resolve(value)
-        ENV[value]
+        environment_variable = ENV[value]
+        raise ArgumentError, "The environment variable #{value} is not set" if environment_variable.to_s.empty?
+        environment_variable
       end
 
     end
