@@ -25,10 +25,9 @@ RSpec.describe StackMaster::ParameterResolvers::Env do
     end
 
     context 'the environment variable is defined but empty' do
-      it 'should raise and error' do
+      it 'should return the empty string' do
         ENV[environment_variable_name] = ''
-        expect { resolver.resolve(environment_variable_name) }
-            .to raise_error(ArgumentError, error)
+        expect(resolver.resolve(environment_variable_name)).to eq ''
       end
     end
 

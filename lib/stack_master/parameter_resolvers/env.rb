@@ -9,7 +9,7 @@ module StackMaster
 
       def resolve(value)
         environment_variable = ENV[value]
-        raise ArgumentError, "The environment variable #{value} is not set" if environment_variable.to_s.empty?
+        raise ArgumentError, "The environment variable #{value} is not set" if environment_variable.nil?
         environment_variable
       end
 
