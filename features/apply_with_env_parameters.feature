@@ -2,36 +2,36 @@ Feature: Apply command with environment parameter
 
   Background:
     Given a file named "stack_master.yml" with:
-    """
-          stacks:
-            us-east-2:
-              vpc:
-                template: vpc.rb
-          """
+      """
+      stacks:
+        us-east-2:
+          vpc:
+            template: vpc.rb
+      """
     And a directory named "parameters"
     And a file named "parameters/vpc.yml" with:
-    """
-          vpc_cidr:
-            env: VPC_CIDR
-          """
+      """
+      vpc_cidr:
+        env: VPC_CIDR
+      """
     And a directory named "templates"
     And a file named "templates/vpc.rb" with:
-    """
-          SparkleFormation.new(:vpc) do
+      """
+      SparkleFormation.new(:vpc) do
 
-            parameters.vpc_cidr do
-              type 'String'
-            end
+        parameters.vpc_cidr do
+          type 'String'
+        end
 
-            resources.vpc do
-              type 'AWS::EC2::VPC'
-              properties do
-                cidr_block ref!(:vpc_cidr)
-              end
-            end
-
+        resources.vpc do
+          type 'AWS::EC2::VPC'
+          properties do
+            cidr_block ref!(:vpc_cidr)
           end
-          """
+        end
+
+      end
+      """
 
   Scenario: Run apply and create a new stack
     Given I stub the following stack events:
