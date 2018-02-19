@@ -60,6 +60,7 @@ module StackMaster
     autoload :SecurityGroup, 'stack_master/parameter_resolvers/security_group'
     autoload :LatestAmiByTags, 'stack_master/parameter_resolvers/latest_ami_by_tags'
     autoload :LatestAmi, 'stack_master/parameter_resolvers/latest_ami'
+    autoload :Env, 'stack_master/parameter_resolvers/env'
   end
 
   module AwsDriver
