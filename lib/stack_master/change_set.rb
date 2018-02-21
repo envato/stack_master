@@ -42,7 +42,9 @@ module StackMaster
     end
 
     def display(io)
-      io.puts "Proposed change set:"
+      io.puts "
+      ==========
+      Proposed change set:"
       @response.changes.each do |change|
         display_resource_change(io, change.resource_change)
       end
