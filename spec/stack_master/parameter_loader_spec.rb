@@ -54,6 +54,23 @@ RSpec.describe StackMaster::ParameterLoader do
     end
   end
 
+  context 'yml and yaml region parameter files' do
+    let(:stack_file_returns) { {exists: false} }
+    let(:region_file_returns) { {exists: true, read: "Param2: value2"} }
+    let(:region_yaml_file_returns) { {exists: true, read: "Param1: value1\nParam2: valueX"} }
+    let(:region_yaml_file_name) { "/base_dir/parameters/us-east-1/stack_name.yaml" }
+
+    subject(:parameters) { StackMaster::ParameterLoader.load([stack_file_name, region_yaml_file_name, region_file_name]) }
+
+    before do
+      file_mock(region_yaml_file_name, region_yaml_file_returns)
+    end
+
+    it 'returns params from the region base stack_name.yml' do
+      expect(parameters).to eq(template_parameters: {'Param1' => 'value1', 'Param2' => 'value2'}, compile_time_parameters: {})
+    end
+  end
+
   context 'compile time parameters' do
 
     context 'stack parameter file' do
