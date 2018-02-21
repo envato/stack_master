@@ -207,9 +207,10 @@ Feature: Apply command
       | Stack diff:                                                                    |
       | -    "TestSg2": {                                                              |
       | Parameters diff: No changes                                                    |
-      | ==========                                                                     |
+      | ========================================                                       |
       | Proposed change set:                                                           |
       | Replace                                                                        |
+      | ========================================                                       |
       | Apply change set (y/n)?                                                              |
     Then the exit status should be 0
 

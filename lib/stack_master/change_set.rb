@@ -44,12 +44,13 @@ module StackMaster
     def display(io)
       io.puts <<-EOL
 
-==========
+========================================
 Proposed change set:
 EOL
       @response.changes.each do |change|
         display_resource_change(io, change.resource_change)
       end
+io.puts "========================================"
     end
 
     def failed?
