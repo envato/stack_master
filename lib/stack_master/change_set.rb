@@ -42,11 +42,11 @@ module StackMaster
     end
 
     def display(io)
-      io.puts <<~EOL
+      io.puts <<-EOL
 
-      ==========
-      Proposed change set:
-      EOL
+==========
+Proposed change set:
+EOL
       @response.changes.each do |change|
         display_resource_change(io, change.resource_change)
       end
