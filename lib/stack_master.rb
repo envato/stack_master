@@ -61,6 +61,7 @@ module StackMaster
     autoload :LatestAmiByTags, 'stack_master/parameter_resolvers/latest_ami_by_tags'
     autoload :LatestAmi, 'stack_master/parameter_resolvers/latest_ami'
     autoload :Env, 'stack_master/parameter_resolvers/env'
+    autoload :ParameterStore, 'stack_master/parameter_resolvers/parameter_store'
   end
 
   module AwsDriver
