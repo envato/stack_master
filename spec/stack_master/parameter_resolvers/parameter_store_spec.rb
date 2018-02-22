@@ -43,7 +43,7 @@ RSpec.describe StackMaster::ParameterResolvers::ParameterStore do
       end
       it 'should raise and error' do
         expect { resolver.resolve(unknown_parameter_name) }
-            .to raise_error(Aws::SSM::Errors::ParameterNotFound, "Parameter #{unknown_parameter_name} not found")
+            .to raise_error(StackMaster::ParameterResolvers::ParameterStore::SecretNotFound, "Unable to find key #{unknown_parameter_name} in Parameter Store")
       end
     end
   end
