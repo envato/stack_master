@@ -2,7 +2,7 @@ module StackMaster
   module ParameterResolvers
     class ParameterStore < Resolver
 
-      SecretNotFound = Class.new(StandardError)
+      ParameterNotFound = Class.new(StandardError)
 
       def initialize(config, stack_definition)
         @config = config
@@ -16,7 +16,7 @@ module StackMaster
             with_decryption: true
           )
         rescue Aws::SSM::Errors::ParameterNotFound
-          raise SecretNotFound, "Unable to find key #{value} in Parameter Store"
+          raise ParameterNotFound, "Unable to find #{value} in Parameter Store"
         end
         resp.parameter.value
       end
