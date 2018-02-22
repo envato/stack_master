@@ -12,9 +12,9 @@ Feature: Apply command with parameter_store parameter
     And a file named "parameters/vpc.yml" with:
       """
       vpc_cidr:
-        parameter_store: CUCUMBER_TEST_VPC_CIDR
+        parameter_store: "/cucumber-test-vpc-cidr"
       """
-    And a SSM parameter named "CUCUMBER_TEST_VPC_CIDR" with value "10.0.0.0/16" in region "us-east-2"
+    And a SSM parameter named "/cucumber-test-vpc-cidr" with value "10.0.0.0/16" in region "us-east-2"
     And a directory named "templates"
     And a file named "templates/vpc.rb" with:
       """
