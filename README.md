@@ -244,7 +244,9 @@ db_password:
 An alternative to the secrets store, uses the AWS SSM Parameter store to protect
 secrets.   Expects a parameter of either `String` or `SecureString` type to be present in the
 same region as the stack. You can store the parameter using a command like this
-`aws-vault exec <whatever> -- aws ssm put-parameter --region <region> --name <parameter name> --value <secret> --type (String|SecureString)`
+
+`aws ssm put-parameter --region <region> --name <parameter name> --value <secret> --type (String|SecureString)`
+
 When doing so make sure you don't accidentally store the secret in your `.bash_history` and
 you will likely want to set the parameter to NoEcho in your template.
 
