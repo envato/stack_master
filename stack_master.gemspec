@@ -38,4 +38,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dotgpg"
   spec.add_dependency "deep_merge"
   spec.add_dependency "cfndsl"
+  spec.add_dependency "multi_json"
 end
