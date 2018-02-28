@@ -28,12 +28,30 @@ module StackMaster::TemplateCompilers
     private
 
     def self.compile_sparkle_template(template_file_path, compiler_options)
-      if compiler_options['sparkle_path']
-        ::SparkleFormation.sparkle_path = File.expand_path(compiler_options['sparkle_path'])
-      else
-        ::SparkleFormation.sparkle_path = File.dirname(template_file_path)
+      sparkle_path = compiler_options['sparkle_path'] ?
+                        File.expand_path(compiler_options['sparkle_path']) : File.dirname(template_file_path)
+
+      collection = ::SparkleFormation::SparkleCollection.new
+      if compiler_options['sparkle_packs']
+        root_pack = ::SparkleFormation::Sparkle.new(
+          :root => sparkle_path,
+        )
+        collection.set_root(root_pack)
+        compiler_options['sparkle_packs'].each_pair do |gem_name, pack_name|
+          require gem_name
+          pack = ::SparkleFormation::SparklePack.new(:name => pack_name)
+          collection.add_sparkle(pack)
+        end
       end
-      ::SparkleFormation.compile(template_file_path, :sparkle)
+
+      sparkle_template = compile_template_with_sparkle_path(template_file_path, sparkle_path)
+      sparkle_template.sparkle.apply(collection)
+      sparkle_template
+    end
+
+    def self.compile_template_with_sparkle_path(template_path, sparkle_path)
+      ::SparkleFormation.sparkle_path = sparkle_path
+      ::SparkleFormation.compile(template_path, :sparkle)
     end
 
     def self.validate_definitions(definitions)
