@@ -477,7 +477,7 @@ stacks:
     my-stack:
       template: my-stack-with-dynamic.rb
       compiler_options:
-        sparkle_pack:
+        sparkle_packs:
           vpc-sparkle-pack: vpc-sparkle-pack
 ```
 
