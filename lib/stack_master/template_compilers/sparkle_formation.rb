@@ -32,11 +32,11 @@ module StackMaster::TemplateCompilers
                         File.expand_path(compiler_options['sparkle_path']) : File.dirname(template_file_path)
 
       collection = ::SparkleFormation::SparkleCollection.new
+      root_pack = ::SparkleFormation::Sparkle.new(
+        :root => sparkle_path,
+      )
+      collection.set_root(root_pack)
       if compiler_options['sparkle_packs']
-        root_pack = ::SparkleFormation::Sparkle.new(
-          :root => sparkle_path,
-        )
-        collection.set_root(root_pack)
         compiler_options['sparkle_packs'].each_pair do |gem_name, pack_name|
           require gem_name
           pack = ::SparkleFormation::SparklePack.new(:name => pack_name)
