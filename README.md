@@ -467,6 +467,20 @@ stacks:
       template: my-stack.rb
 ```
 
+### Loading SparklePacks
+
+[SparklePacks](http://www.sparkleformation.io/docs/sparkle_formation/sparkle-packs.html) can be pre-loaded using compiler options. This requires the name of a rubygem to `require` followed by the name of the SparklePack, which is usually the same name as the Gem.
+
+```yaml
+stacks:
+  us-east-1
+    my-stack:
+      template: my-stack-with-dynamic.rb
+      compiler_options:
+        sparkle_pack:
+          vpc-sparkle-pack: vpc-sparkle-pack
+```
+
 ## Commands
 
 ```bash
