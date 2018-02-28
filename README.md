@@ -481,6 +481,16 @@ stacks:
           vpc-sparkle-pack: vpc-sparkle-pack
 ```
 
+The template can then simply load a dynamic from the sparkle pack like so:
+
+```ruby
+SparkleFormation.new(:my_stack_with_dynamic) do
+   dynamic!(:sparkle_pack_dynamic)
+end
+```
+
+Note though that if a dynamic with the same name exists in your `templates/dynamics/` directory it will get loaded since it has higher precedence.
+
 ## Commands
 
 ```bash
