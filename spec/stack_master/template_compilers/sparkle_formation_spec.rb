@@ -91,7 +91,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
     context 'with a sparkle_pack loaded' do
       let(:template_file_path) { File.join(File.dirname(__FILE__), "..", "..", "fixtures", "sparkle_pack_integration", "templates", "template_with_dynamic_from_pack.rb")}
-      let(:compiler_options) { {"sparkle_packs" => {"my_sparkle_pack" => "my_sparkle_pack"}} }
+      let(:compiler_options) { {"sparkle_packs" => ["my_sparkle_pack"]} }
 
       before do
         lib =  File.join(File.dirname(__FILE__), "..", "..", "fixtures", "sparkle_pack_integration", "my_sparkle_pack", "lib")

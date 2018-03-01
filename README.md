@@ -478,7 +478,7 @@ stacks:
       template: my-stack-with-dynamic.rb
       compiler_options:
         sparkle_packs:
-          vpc-sparkle-pack: vpc-sparkle-pack
+          - vpc-sparkle-pack
 ```
 
 The template can then simply load a dynamic from the sparkle pack like so:
