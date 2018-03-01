@@ -467,6 +467,30 @@ stacks:
       template: my-stack.rb
 ```
 
+### Loading SparklePacks
+
+[SparklePacks](http://www.sparkleformation.io/docs/sparkle_formation/sparkle-packs.html) can be pre-loaded using compiler options. This requires the name of a rubygem to `require` followed by the name of the SparklePack, which is usually the same name as the Gem.
+
+```yaml
+stacks:
+  us-east-1
+    my-stack:
+      template: my-stack-with-dynamic.rb
+      compiler_options:
+        sparkle_packs:
+          - vpc-sparkle-pack
+```
+
+The template can then simply load a dynamic from the sparkle pack like so:
+
+```ruby
+SparkleFormation.new(:my_stack_with_dynamic) do
+   dynamic!(:sparkle_pack_dynamic)
+end
+```
+
+Note though that if a dynamic with the same name exists in your `templates/dynamics/` directory it will get loaded since it has higher precedence.
+
 ## Commands
 
 ```bash
