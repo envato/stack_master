@@ -1,5 +1,9 @@
 ![StackMaster](/logo.png?raw=true)
 
+[![License MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/envato/stack_master/blob/master/LICENSE.md)
+[![Gem Version](https://badge.fury.io/rb/stack_master.svg)](https://badge.fury.io/rb/stack_master)
+[![Build Status](https://travis-ci.org/envato/stack_master.svg?branch=master)](https://travis-ci.org/envato/stack_master)
+
 StackMaster is a CLI tool to manage CloudFormation stacks, with the following features:
 
 - Synchronous visibility into stack updates. See exactly what is changing and
@@ -145,10 +149,13 @@ template_compilers:
 
 ## Parameters
 
-Parameters are loaded from multiple YAML files, merged from the following lookup paths:
+Parameters are loaded from multiple YAML files, merged from the following lookup paths from bottom to top:
 
+- parameters/[stack_name].yaml
 - parameters/[stack_name].yml
+- parameters/[region]/[underscored_stack_name].yaml
 - parameters/[region]/[underscored_stack_name].yml
+- parameters/[region_alias]/[underscored_stack_name].yaml
 - parameters/[region_alias]/[underscored_stack_name].yml
 
 A simple parameter file could look like this:
@@ -235,6 +242,21 @@ db_password:
   secret: db_password
 ```
 
+### Parameter Store
+An alternative to the secrets store, uses the AWS SSM Parameter store to protect
+secrets.   Expects a parameter of either `String` or `SecureString` type to be present in the
+same region as the stack. You can store the parameter using a command like this
+
+`aws ssm put-parameter --region <region> --name <parameter name> --value <secret> --type (String|SecureString)`
+
+When doing so make sure you don't accidentally store the secret in your `.bash_history` and
+you will likely want to set the parameter to NoEcho in your template.
+
+```yaml
+db_password:
+  parameter_store: ssm_parameter_name
+```
+
 ### Security Group
 
 Looks up a security group by name and returns the ARN.
@@ -291,6 +313,15 @@ bastion_ami:
 A set of possible attributes is available in the [AWS documentation](https://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#describe_images-instance_method)
 
 Any value can be an array of possible matches.
+
+### Environment Variable
+
+Lookup an environment variable:
+
+```yaml
+db_username:
+  env: DB_USERNAME
+```
 
 ### Custom parameter resolvers
 
@@ -437,6 +468,30 @@ stacks:
     my-stack:
       template: my-stack.rb
 ```
+
+### Loading SparklePacks
+
+[SparklePacks](http://www.sparkleformation.io/docs/sparkle_formation/sparkle-packs.html) can be pre-loaded using compiler options. This requires the name of a rubygem to `require` followed by the name of the SparklePack, which is usually the same name as the Gem.
+
+```yaml
+stacks:
+  us-east-1
+    my-stack:
+      template: my-stack-with-dynamic.rb
+      compiler_options:
+        sparkle_packs:
+          - vpc-sparkle-pack
+```
+
+The template can then simply load a dynamic from the sparkle pack like so:
+
+```ruby
+SparkleFormation.new(:my_stack_with_dynamic) do
+   dynamic!(:sparkle_pack_dynamic)
+end
+```
+
+Note though that if a dynamic with the same name exists in your `templates/dynamics/` directory it will get loaded since it has higher precedence.
 
 ## Commands
 

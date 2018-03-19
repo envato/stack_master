@@ -76,6 +76,8 @@ module StackMaster
       def url(bucket:, prefix:, region:, template:)
         if region == 'us-east-1'
           ["https://s3.amazonaws.com", bucket, prefix, template].compact.join('/')
+        elsif region.start_with? "cn-"
+          ["https://s3.#{region}.amazonaws.com.cn", bucket, prefix, template].compact.join('/')
         else
           ["https://s3-#{region}.amazonaws.com", bucket, prefix, template].compact.join('/')
         end

@@ -1,3 +1,3 @@
 module StackMaster
-  VERSION = "1.0.1"
+  VERSION = "1.3.1"
 end
