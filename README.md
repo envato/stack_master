@@ -4,7 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/stack_master.svg)](https://badge.fury.io/rb/stack_master)
 [![Build Status](https://travis-ci.org/envato/stack_master.svg?branch=master)](https://travis-ci.org/envato/stack_master)
 
-StackMaster is a CLI tool to manage CloudFormation stacks, with the following features:
+StackMaster is a CLI tool to manage [CloudFormation](https://aws.amazon.com/cloudformation/) stacks, with the following features:
 
 - Synchronous visibility into stack updates. See exactly what is changing and
   what will happen before agreeing to apply a change.
@@ -26,7 +26,7 @@ are displayed for review.
 
 Stack parameters can be dynamically resolved at runtime using one of the
 built in parameter resolvers. Parameters can be sourced from GPG encrypted YAML
-files, other stacks outputs, by querying various AWS API's to get resource ARNs
+files, other stacks outputs, by querying various AWS APIs to get resource ARNs,
 etc.
 
 ## Installation
@@ -103,7 +103,7 @@ stacks:
 ## S3
 
 StackMaster can optionally use S3 to store the templates before creating a stack.
-This requires to configure an S3 bucket in stack_master.yml:
+This requires you to configure an S3 bucket in stack_master.yml:
 
 ```yaml
 stack_defaults:
@@ -125,7 +125,6 @@ stacks:
 ## Directories
 
 - `templates` - CloudFormation, SparkleFormation or CfnDsl templates.
-- `polices` - Stack policies.
 - `parameters` - Parameters as YAML files.
 - `secrets` - GPG encrypted secret files.
 - `policies` - Stack policy JSON files.
@@ -133,7 +132,7 @@ stacks:
 ## Templates
 
 StackMaster supports CloudFormation templates in plain JSON or YAML. Any `.yml` or `.yaml` file will be processed as
-YAML. While any `.json` file will be processed as JSON.
+YAML, while any `.json` file will be processed as JSON.
 
 ### Ruby DSLs
 By default, any template ending with `.rb` will be processed as a [SparkleFormation](https://github.com/sparkleformation/sparkle_formation)
@@ -165,7 +164,7 @@ key_name: myapp-us-east-1
 ### Compile Time Parameters
 
 Compile time parameters can be used for [SparkleFormation](http://www.sparkleformation.io) templates. It conforms and 
-allows you to use the [Compile Time Parameters](http://www.sparkleformation.io/docs/sparkle_formation/compile-time-parameters.html) feature
+allows you to use the [Compile Time Parameters](http://www.sparkleformation.io/docs/sparkle_formation/compile-time-parameters.html) feature.
 
 A simple example looks like this
 
@@ -184,7 +183,7 @@ Keys in parameter files are automatically converted to camel case.
 Parameter values can be sourced dynamically using parameter resolvers.
 
 One benefit of using parameter resolvers instead of hard coding values like VPC
-ID's and resource ARNs is that the same configuration works cross
+IDs and resource ARNs is that the same configuration works cross
 region/account, even though the resolved values will be different.
 
 ### Stack Output
@@ -292,7 +291,7 @@ web_ami:
   latest_ami_by_tags: role=web,application=myapp
 ```
 
-Note that the corresponding array resolver is named `latest_amis_by_tags`
+Note that the corresponding array resolver is named `latest_amis_by_tags`.
 
 ### Latest AMI by attribute
 
@@ -308,7 +307,7 @@ bastion_ami:
       name: ubuntu/images/hvm/ubuntu-wily-15.10-amd64-server-*
 ```
 
-A set of possible attributes is available in the [AWS documentation](https://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#describe_images-instance_method)
+A set of possible attributes is available in the [AWS documentation](https://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#describe_images-instance_method).
 
 Any value can be an array of possible matches.
 
@@ -331,7 +330,7 @@ To create a resolver named my_resolver:
 ```
 lib/stack_master/parameter_resolvers/my_resolver.rb
 ```
-  * That file need to contain a class named `StackMaster::ParameterResolvers::MyResolver`
+  * That file needs to contain a class named `StackMaster::ParameterResolvers::MyResolver`
     that implements a `resolve` method and an initializer taking 2 parameters :
 ```ruby
 module StackMaster
@@ -503,7 +502,7 @@ stack_master apply [region-or-alias] # Create or update stacks in the given regi
 stack_master apply # Create or update all stacks
 stack_master --changed apply # Create or update all stacks that have changed
 stack_master --yes apply [region-or-alias] [stack-name] # Create or update a stack non-interactively (forcing yes)
-stack_master diff [region-or-alias] [stack-name] # Display a stack tempalte and parameter diff
+stack_master diff [region-or-alias] [stack-name] # Display a stack template and parameter diff
 stack_master delete [region-or-alias] [stack-name] # Delete a stack
 stack_master events [region-or-alias] [stack-name] # Display events for a stack
 stack_master outputs [region-or-alias] [stack-name] # Display outputs for a stack
