@@ -63,18 +63,14 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
       }
     }}
     let(:the_password) {{
-      one_password: [
-        title: 'password title',
-        type: 'password',
-        vault: 'Shared'
-      ]
+        'title' => 'password title',
+        'type' => 'password',
+        'vault' => 'Shared'
     }}
     let(:the_secureNote) {{
-      one_password: [
-        title: 'note title',
-        type: 'secureNote',
-        vault: 'Shared'
-      ]
+        'title' => 'note title',
+        'type' => 'secureNote',
+        'vault' => 'Shared'
     }}
 
     context 'when we have set OP_SESSION_ environment' do
