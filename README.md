@@ -253,6 +253,23 @@ you will likely want to set the parameter to NoEcho in your template.
 db_password:
   parameter_store: ssm_parameter_name
 ```
+### 1Password Lookup
+An Alternative to the alternative secret store is accessing 1password secrets using the 1password cli (`op`).
+You declare a 1password lookup with the following parameters in your parameters file:
+
+```
+parameters/database.yml
+database_password:
+  one_password:
+    title: production database
+    vault: Shared
+    type: password
+```
+
+1password stores the name of the secret in the `title`. You can pass the `vault` you expect the secret to be in.
+Currently we support two types of secrets, `password`s and `secureNote`s. All values must be declared, there are no defaults.
+
+For more information on 1password cli please see [here](https://support.1password.com/command-line-getting-started/)
 
 ### Security Group
 
