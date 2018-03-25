@@ -19,11 +19,12 @@ module StackMaster
 
       def op_get_item(item, vault)
         begin
-          %x(op get item --vault='#{vault}' '#{item}')
+          item = %x(op get item --vault='#{vault}' '#{item}' 2>&1)
+          return item if JSON.parse(item)
         rescue Errno::ENOENT
           raise RuntimeError, "The op cli needs to be installed in the PATH"
         rescue => exception
-          raise RuntimeError, exception
+          raise RuntimeError, "Failed to return item from 1password, #{item}"
         end
       end
 
