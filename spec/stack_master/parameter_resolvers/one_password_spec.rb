@@ -6,58 +6,58 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
     subject(:resolver) { described_class.new(config, stack_definition) }
     let(:op_env_unset) { ENV['OP_SESSION_something'].clear  }
     let(:secureNote) {{
-      "uuid": "auuid",
-      "vaultUuid": "avaultuuid",
-      "templateUuid": "003",
-      "createdAt": "2018-01-17 07:28:11 +0000 UTC",
-      "updatedAt": "2018-01-17 07:28:11 +0000 UTC",
-      "changerUuid": "anotheruuid",
-      "overview": {
-        "ainfo": "begin message",
-        "ps": 0,
-        "title": "note title"
+      "uuid" => "auuid",
+      "vaultUuid" => "avaultuuid",
+      "templateUuid" => "003",
+      "createdAt" => "2018-01-17 07:28:11 +0000 UTC",
+      "updatedAt" => "2018-01-17 07:28:11 +0000 UTC",
+      "changerUuid" => "anotheruuid",
+      "overview" => {
+        "ainfo" => "begin message",
+        "ps" => 0,
+        "title" => "note title"
       },
-      "details": {
-        "notesPlain": "decrypted note",
-        "sections": [
+      "details" => {
+        "notesPlain" => "decrypted note",
+        "sections" => [
           {
-            "name": "linked items",
-            "title": "Related Items"
+            "name" => "linked items",
+            "title" => "Related Items"
           }
         ]
       }
     }}
     let(:password) {{
-      "uuid": "auuid",
-      "vaultUuid": "avaultuuid",
-      "templateUuid": "001",
-      "createdAt": "2018-03-24 01:55:07 +0000 UTC",
-      "updatedAt": "2018-03-24 01:55:07 +0000 UTC",
-      "changerUuid": "anotheruuid",
-      "overview": {
-        "ainfo": "pi",
-        "ps": 84,
-        "title": "password title"
+      "uuid" => "auuid",
+      "vaultUuid" => "avaultuuid",
+      "templateUuid" => "001",
+      "createdAt" => "2018-03-24 01:55:07 +0000 UTC",
+      "updatedAt" => "2018-03-24 01:55:07 +0000 UTC",
+      "changerUuid" => "anotheruuid",
+      "overview" => {
+        "ainfo" => "pi",
+        "ps" =>  84,
+        "title" => "password title"
       },
-      "details": {
-        "fields": [
+      "details" => {
+        "fields" => [
           {
-            "designation": "username",
-            "name": "username",
-            "type": "T",
-            "value": "theusername"
+            "designation" => "username",
+            "name" => "username",
+            "type" => "T",
+            "value" => "theusername"
           },
           {
-            "designation": "password",
-            "name": "password",
-            "type": "P",
-            "value": "thepassword"
+            "designation" => "password",
+            "name" => "password",
+            "type" => "P",
+            "value" => "thepassword"
           }
         ],
-        "sections": [
+        "sections" => [
           {
-            "name": "linked items",
-            "title": "Related Items"
+            "name" => "linked items",
+            "title" => "Related Items"
           }
         ]
       }
