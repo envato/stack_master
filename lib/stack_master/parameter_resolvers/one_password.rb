@@ -29,7 +29,7 @@ module StackMaster
       end
 
       def get_password(title, vault)
-        JSON.parse(op_get_item(title, vault)).dig('details', 'fields').select { |k,v| k.key('password') }[0].values_at('value').first
+        JSON.parse(op_get_item(title, vault))['details']['fields'].select { |k,v| k.key('password') }[0].values_at('value').first
       end
       
       def get_secure_note(title, vault)
