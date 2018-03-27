@@ -96,7 +96,8 @@ module StackMaster
 
     def resolve_region_aliases(stacks)
       stacks.inject({}) do |hash, (region, attributes)|
-        hash[unalias_region(region)] = attributes
+        hash[unalias_region(region)] ||= {}
+        hash[unalias_region(region)].merge!(attributes)
         hash
       end
     end
