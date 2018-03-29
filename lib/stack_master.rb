@@ -1,6 +1,10 @@
 require 'commander'
 require 'yaml'
-require 'aws-sdk'
+require "aws-sdk-cloudformation"
+require "aws-sdk-ec2"
+require "aws-sdk-s3"
+require "aws-sdk-sns"
+require "aws-sdk-ssm"
 require "colorize"
 require 'active_support/core_ext/string'
 require 'multi_json'
