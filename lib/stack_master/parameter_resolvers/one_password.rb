@@ -41,12 +41,16 @@ module StackMaster
         end
       end
 
+      def create_struct(title, vault)
+        JSON.parse(op_get_item(title, vault), object_class: OpenStruct)
+      end
+
       def get_password(title, vault)
-        JSON.parse(op_get_item(title, vault))['details']['fields'].select { |k,v| k.key('password') }[0].values_at('value').first
+        create_struct(title, vault).details.fields[1].value
       end
       
       def get_secure_note(title, vault)
-        JSON.parse(op_get_item(title, vault))['details'].values_at('notesPlain').first
+        create_struct(title, vault).details.notesPlain
       end
 
       def get_items(params)
