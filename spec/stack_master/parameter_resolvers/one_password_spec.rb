@@ -105,7 +105,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
       end
       it 'we return an error' do
         allow_any_instance_of(described_class).to receive(:`).with("op get item --vault='Shared' 'password title' 2>&1").and_raise(Errno::ENOENT)
-        expect { resolver.resolve(the_password) }.to raise_error(RuntimeError, "The op cli needs to be installed in the PATH")
+        expect { resolver.resolve(the_password) }.to raise_error(RuntimeError, "The op cli needs to be installed and in the PATH")
       end
     end
     context 'when items are not found' do
