@@ -17,12 +17,25 @@ module StackMaster
 
       private
 
+      def validate_op_installed?
+        %x(op --version)
+        rescue Errno::ENOENT => exception
+          raise RuntimeError, "The op cli needs to be installed and in the PATH, #{exception}"
+      end
+
+      def parseable_json?(item)
+        JSON.parse(item)
+        rescue TypeError => exception
+          raise "item returned is not valid JSON: #{item}"
+        rescue JSON::ParserError => exception
+          raise "Failed to parse JSON returned, #{item}"
+      end
+
       def op_get_item(item, vault)
+        validate_op_installed?
         begin
           item = %x(op get item --vault='#{vault}' '#{item}' 2>&1)
-          return item if JSON.parse(item)
-        rescue Errno::ENOENT
-          raise RuntimeError, "The op cli needs to be installed and in the PATH"
+          item if parseable_json?(item)
         rescue => exception
           raise RuntimeError, "Failed to return item from 1password, #{item}"
         end
