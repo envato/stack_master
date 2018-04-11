@@ -1,8 +1,11 @@
-require "commander"
-require "yaml"
-require "aws-sdk"
+require 'commander'
+require 'yaml'
+require 'aws-sdk'
 require "colorize"
 require 'active_support/core_ext/string'
+require 'multi_json'
+
+MultiJson.use :json_gem
 
 module StackMaster
   extend self
