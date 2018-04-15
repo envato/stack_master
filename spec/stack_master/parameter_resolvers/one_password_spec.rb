@@ -98,7 +98,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
           allow(ENV).to receive_message_chain(:keys, :grep).with(/OP_SESSION_\w+$/).and_return([])
           allow_any_instance_of(described_class).to receive(:`).with("op --version").and_return(true)
           allow_any_instance_of(described_class).to receive(:`).with("op get item --vault='Shared' 'password title' 2>&1").and_return(password.to_json)
-          expect { resolver.resolve(the_password) }.to raise_error(RuntimeError, "1password requires the `OP_SESSION_<name>` to be set")
+          expect { resolver.resolve(the_password) }.to raise_error(StackMaster::ParameterResolvers::OnePassword::OnePasswordNotAbleToAuthenticate, "1password requires the `OP_SESSION_<name>` to be set, (remember to sign in?)")
         end
       end
     end

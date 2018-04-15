@@ -2,6 +2,7 @@ module StackMaster
   module ParameterResolvers
     class OnePassword < Resolver
       OnePasswordNotFound = Class.new(StandardError)
+      OnePasswordNotAbleToAuthenticate = Class.new(StandardError)
       OnePasswordBinaryNotFound = Class.new(StandardError)
       OnePasswordInvalidResponse = Class.new(StandardError)
 
@@ -13,7 +14,7 @@ module StackMaster
       end
 
       def resolve(params={})
-        raise RuntimeError, "1password requires the `OP_SESSION_<name>` to be set" if ENV.keys.grep(/OP_SESSION_\w+$/).empty?    
+        raise OnePasswordNotAbleToAuthenticate, "1password requires the `OP_SESSION_<name>` to be set, (remember to sign in?)" if ENV.keys.grep(/OP_SESSION_\w+$/).empty?    
         get_items(params)
       end
 
