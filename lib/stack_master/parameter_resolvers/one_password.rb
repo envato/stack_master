@@ -21,8 +21,8 @@ module StackMaster
 
       def validate_op_installed?
         %x(op --version)
-        rescue Errno::ENOENT => exception
-          raise OnePasswordBinaryNotFound, "The op cli needs to be installed and in the PATH, #{exception}"
+      rescue Errno::ENOENT => exception
+        raise OnePasswordBinaryNotFound, "The op cli needs to be installed and in the PATH, #{exception}"
       end
 
       def validate_response?(item)
@@ -30,8 +30,8 @@ module StackMaster
           raise OnePasswordNotFound, "Failed to return item from 1password, #{i['error']}"
         end
         JSON.parse(item)
-        rescue JSON::ParserError => exception
-          raise OnePasswordInvalidResponse, "Failed to parse JSON returned, #{item}: #{exception}"
+      rescue JSON::ParserError => exception
+        raise OnePasswordInvalidResponse, "Failed to parse JSON returned, #{item}: #{exception}"
       end
 
       def op_get_item(item, vault)
