@@ -129,7 +129,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
       it 'we return an error' do
         allow_any_instance_of(described_class).to receive(:`).with("op --version").and_return(true)
         allow_any_instance_of(described_class).to receive(:`).with("op get item --vault='Shared' 'password title' 2>&1").and_return('{key: value }')
-        expect { resolver.resolve(the_password) }.to raise_error(StackMaster::ParameterResolvers::OnePassword::OnePasswordInvalidResponse, "Failed to parse JSON returned, {key: value }: 784: unexpected token at '{key: value }'")
+        expect { resolver.resolve(the_password) }.to raise_error(StackMaster::ParameterResolvers::OnePassword::OnePasswordInvalidResponse, /Failed to parse JSON returned, {key: value }: \d+: unexpected token at '{key: value }'/)
       end
     end
   end
