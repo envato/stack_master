@@ -2,6 +2,8 @@ module StackMaster
   module ParameterResolvers
     class OnePassword < Resolver
       OnePasswordNotFound = Class.new(StandardError)
+      OnePasswordBinaryNotFound = Class.new(StandardError)
+      OnePasswordInvalidResponse = Class.new(StandardError)
 
       array_resolver
 
@@ -20,25 +22,22 @@ module StackMaster
       def validate_op_installed?
         %x(op --version)
         rescue Errno::ENOENT => exception
-          raise RuntimeError, "The op cli needs to be installed and in the PATH, #{exception}"
+          raise OnePasswordBinaryNotFound, "The op cli needs to be installed and in the PATH, #{exception}"
       end
 
-      def parseable_json?(item)
+      def validate_response?(item)
+        item.match(/\[LOG\].+(?<error>\(.+)$/)  do |i|
+          raise OnePasswordNotFound, "Failed to return item from 1password, #{i['error']}"
+        end
         JSON.parse(item)
-        rescue TypeError => exception
-          raise "item returned is not valid JSON: #{item}"
         rescue JSON::ParserError => exception
-          raise "Failed to parse JSON returned, #{item}"
+          raise OnePasswordInvalidResponse, "Failed to parse JSON returned, #{item}: #{exception}"
       end
 
       def op_get_item(item, vault)
         validate_op_installed?
-        begin
-          item = %x(op get item --vault='#{vault}' '#{item}' 2>&1)
-          item if parseable_json?(item)
-        rescue => exception
-          raise RuntimeError, "Failed to return item from 1password, #{item}"
-        end
+        item = %x(op get item --vault='#{vault}' '#{item}' 2>&1)
+        item if validate_response?(item)
       end
 
       def create_struct(title, vault)
