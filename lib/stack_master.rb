@@ -57,6 +57,7 @@ module StackMaster
     autoload :Resources, 'stack_master/commands/resources'
     autoload :Delete, 'stack_master/commands/delete'
     autoload :Status, 'stack_master/commands/status'
+    autoload :Print, 'stack_master/commands/print'
   end
 
   module ParameterResolvers
