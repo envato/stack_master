@@ -10,10 +10,12 @@ module StackMaster
       end
 
       def perform
+        parameter_hash = ParameterLoader.load(@stack_definition.parameter_files)
+        compile_time_parameters = ParameterResolver.resolve(@config, @stack_definition, parameter_hash[:compile_time_parameters])
         StackMaster.stdout.puts StackMaster::TemplateCompiler.compile(
           @config,
           @stack_definition.template_file_path,
-          nil,
+          compile_time_parameters,
           @stack_definition.compiler_options
         )
       end
