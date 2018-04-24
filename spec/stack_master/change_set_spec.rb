@@ -7,7 +7,7 @@ RSpec.describe StackMaster::ChangeSet do
   describe '.generate_change_set_name' do
     context 'valid name' do
       it 'creates a valid name' do
-        expect(StackMaster::ChangeSet.generate_change_set_name).to match(/^[a-zA-Z][-a-zA-Z0-9]*$/)
+        expect(StackMaster::ChangeSet.generate_change_set_name('foobar')).to match(/^foobar-StackMaster[-a-zA-Z0-9]*$/)
       end
     end
   end

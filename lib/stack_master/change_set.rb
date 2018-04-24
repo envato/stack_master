@@ -6,13 +6,13 @@ module StackMaster
       'FAILED'
     ]
 
-    def self.generate_change_set_name
-      'StackMaster' + Time.now.strftime('%Y-%m-%d-%H%M-%s')
+    def self.generate_change_set_name(stack_name)
+      stack_name + '-StackMaster' + Time.now.strftime('%Y-%m-%d-%H%M-%s')
     end
 
     def self.create(create_options)
       cf = StackMaster.cloud_formation_driver
-      change_set_name = generate_change_set_name
+      change_set_name = generate_change_set_name(create_options.fetch(:stack_name))
       change_set_id = cf.create_change_set(create_options.merge(change_set_name: change_set_name)).id
       find(change_set_id)
     end
