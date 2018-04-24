@@ -340,6 +340,15 @@ db_username:
   env: DB_USERNAME
 ```
 
+### ACM Certificates
+
+Find an ACM certificate by domain name:
+
+```yaml
+cert:
+  acm_certificate: www.example.com
+```
+
 ### Custom parameter resolvers
 
 New parameter resolvers can be created in a separate gem.

@@ -1,11 +1,12 @@
 require 'commander'
 require 'yaml'
-require "aws-sdk-cloudformation"
-require "aws-sdk-ec2"
-require "aws-sdk-s3"
-require "aws-sdk-sns"
-require "aws-sdk-ssm"
-require "colorize"
+require 'aws-sdk-acm'
+require 'aws-sdk-cloudformation'
+require 'aws-sdk-ec2'
+require 'aws-sdk-s3'
+require 'aws-sdk-sns'
+require 'aws-sdk-ssm'
+require 'colorize'
 require 'active_support/core_ext/string'
 require 'multi_json'
 
@@ -60,6 +61,7 @@ module StackMaster
   end
 
   module ParameterResolvers
+    autoload :AcmCertificate, 'stack_master/parameter_resolvers/acm_certificate'
     autoload :AmiFinder, 'stack_master/parameter_resolvers/ami_finder'
     autoload :StackOutput, 'stack_master/parameter_resolvers/stack_output'
     autoload :Secret, 'stack_master/parameter_resolvers/secret'
