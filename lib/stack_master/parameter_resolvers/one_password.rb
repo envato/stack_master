@@ -35,6 +35,10 @@ module StackMaster
         raise OnePasswordInvalidResponse, "Failed to parse JSON returned, #{item}: #{exception}"
       end
 
+      def is_login_item?(data)
+        data.details.password.nil?
+      end
+
       def op_get_item(item, vault)
         validate_op_installed?
         item = %x(op get item --vault='#{vault}' '#{item}' 2>&1)
@@ -46,9 +50,16 @@ module StackMaster
       end
 
       def get_password(title, vault)
-        create_struct(title, vault).details.fields[1].value
+        # There are two types of password that can be returned.
+        # One is attached to a Login item in 1Password
+        # the other is to a Password item.
+        if is_login_item?(create_struct(title, vault))
+          create_struct(title, vault).details.fields[1].value
+        else
+          create_struct(title, vault).details.password
+        end
       end
-      
+
       def get_secure_note(title, vault)
         create_struct(title, vault).details.notesPlain
       end

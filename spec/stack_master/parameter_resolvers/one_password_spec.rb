@@ -27,7 +27,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
         ]
       }
     }}
-    let(:password) {{
+    let(:login_password) {{
       "uuid" => "auuid",
       "vaultUuid" => "avaultuuid",
       "templateUuid" => "001",
@@ -62,6 +62,28 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
         ]
       }
     }}
+    let(:password) {{
+      "uuid": "auuid",
+      "vaultUuid": "avaultuuid",
+      "templateUuid": "005",
+      "createdAt": "2018-04-24 11:07:34 +0000 UTC",
+      "updatedAt": "2018-04-24 11:07:34 +0000 UTC",
+      "changerUuid": "antheruuid",
+      "overview": {
+        "ainfo": "24 Apr 2018, 9:07:34 pm",
+        "ps": 100,
+        "title": "password title"
+      },
+      "details": {
+        "password": "thepassword",
+        "sections": [
+          {
+            "name": "linked items",
+            "title": "Related Items"
+          }
+        ]
+      }
+    }}
     let(:the_password) {{
         'title' => 'password title',
         'type' => 'password',
@@ -77,12 +99,19 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
       before do
         ENV['OP_SESSION_something'] = 'session'
       end
+      context 'when retrieving a login password' do
+        it 'returns the login password' do
+        allow_any_instance_of(described_class).to receive(:`).with("op --version").and_return(true)
+          allow_any_instance_of(described_class).to receive(:`).with("op get item --vault='Shared' 'password title' 2>&1").and_return(login_password.to_json)
+          expect(resolver.resolve(the_password)).to eq 'thepassword'
+        end
+      end
       context 'when retrieving a password' do
         it 'returns the password' do
         allow_any_instance_of(described_class).to receive(:`).with("op --version").and_return(true)
           allow_any_instance_of(described_class).to receive(:`).with("op get item --vault='Shared' 'password title' 2>&1").and_return(password.to_json)
           expect(resolver.resolve(the_password)).to eq 'thepassword'
-        end      
+        end
       end
       context 'when retrieving a secureNote' do
         it 'returns the secureNote' do
