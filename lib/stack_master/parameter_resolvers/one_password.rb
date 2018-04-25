@@ -39,6 +39,14 @@ module StackMaster
         data.details.password.nil?
       end
 
+      def password_item(data)
+        data.details.password 
+      end
+
+      def login_item(data)
+        data.details.fields[1].value
+      end
+
       def op_get_item(item, vault)
         validate_op_installed?
         item = %x(op get item --vault='#{vault}' '#{item}' 2>&1)
@@ -54,9 +62,9 @@ module StackMaster
         # One is attached to a Login item in 1Password
         # the other is to a Password item.
         if is_login_item?(create_struct(title, vault))
-          create_struct(title, vault).details.fields[1].value
+          login_item(create_struct(title, vault))
         else
-          create_struct(title, vault).details.password
+          password_item(create_struct(title, vault))
         end
       end
 
