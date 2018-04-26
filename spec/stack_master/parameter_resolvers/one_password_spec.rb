@@ -63,23 +63,23 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
       }
     }}
     let(:password) {{
-      "uuid": "auuid",
-      "vaultUuid": "avaultuuid",
-      "templateUuid": "005",
-      "createdAt": "2018-04-24 11:07:34 +0000 UTC",
-      "updatedAt": "2018-04-24 11:07:34 +0000 UTC",
-      "changerUuid": "antheruuid",
-      "overview": {
-        "ainfo": "24 Apr 2018, 9:07:34 pm",
-        "ps": 100,
-        "title": "password title"
+      "uuid" => "auuid",
+      "vaultUuid" => "avaultuuid",
+      "templateUuid" => "005",
+      "createdAt" => "2018-04-24 11:07:34 +0000 UTC",
+      "updatedAt" => "2018-04-24 11:07:34 +0000 UTC",
+      "changerUuid" => "antheruuid",
+      "overview" => {
+        "ainfo" => "24 Apr 2018, 9:07:34 pm",
+        "ps" =>  100,
+        "title" => "password title"
       },
-      "details": {
-        "password": "thepassword",
-        "sections": [
+      "details" => {
+        "password" => "thepassword",
+        "sections" => [
           {
-            "name": "linked items",
-            "title": "Related Items"
+            "name" => "linked items",
+            "title" => "Related Items"
           }
         ]
       }
