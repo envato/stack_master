@@ -1,4 +1,4 @@
-RSpec.describe StackMaster::ParameterResolvers::Secret do
+RSpec.describe StackMaster::ParameterResolvers::Secret, :unless => OS.windows? do
   let(:base_dir) { '/base_dir' }
   let(:config) { double(base_dir: base_dir) }
   let(:stack_definition) { double(secret_file: secrets_file_name, stack_name: 'mystack', region: 'us-east-1') }

@@ -1,15 +1,20 @@
-os: 
-  - linux
-  - osx
 language: ruby
 matrix:
   include:
     - rvm: 2.1
       gemfile: spec/support/gemfiles/Gemfile.activesupport-4.0.0
     - rvm: 2.2
+    - rvm: 2.2
+      os: osx
     - rvm: 2.3
+    - rvm: 2.3
+      os: osx
     - rvm: 2.4
+    - rvm: 2.4
+      os: osx
     - rvm: 2.5
+    - rvm: 2.5
+      os: osx
 sudo: false
 script:
   - bundle exec rake spec features

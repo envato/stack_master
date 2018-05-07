@@ -1,11 +1,14 @@
-require 'dotgpg'
+require 'rbconfig'
 
 module StackMaster
   module ParameterResolvers
     class Secret < Resolver
       SecretNotFound = Class.new(StandardError)
 
-      array_resolver
+      if RbConfig::CONFIG['host_os'] !~ /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+        require 'dotgpg'
+        array_resolver  
+      end
 
       def initialize(config, stack_definition)
         @config = config

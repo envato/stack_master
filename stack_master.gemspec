@@ -2,6 +2,7 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'stack_master/version'
+require 'rbconfig'
 
 Gem::Specification.new do |spec|
   spec.name          = "stack_master"
@@ -26,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "cucumber"
   spec.add_development_dependency "aruba"
   spec.add_development_dependency "timecop"
+  spec.add_development_dependency "os"
   spec.add_dependency "ruby-progressbar"
   spec.add_dependency "commander"
   spec.add_dependency "aws-sdk-cloudformation", "~> 1"
@@ -39,8 +41,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", '>= 4'
   spec.add_dependency "sparkle_formation"
   spec.add_dependency "table_print"
-  spec.add_dependency "dotgpg"
   spec.add_dependency "deep_merge"
   spec.add_dependency "cfndsl"
   spec.add_dependency "multi_json"
+  if RbConfig::CONFIG['host_os'] !~ /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+    spec.add_dependency "dotgpg"
+  end
 end

@@ -1,6 +1,7 @@
 require 'stack_master'
 require 'timecop'
 require 'pry'
+require 'os'
 
 Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
 
