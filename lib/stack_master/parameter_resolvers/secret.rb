@@ -1,11 +1,12 @@
-require 'rbconfig'
+require 'os'
 
 module StackMaster
   module ParameterResolvers
     class Secret < Resolver
       SecretNotFound = Class.new(StandardError)
+      PlatformNotSupported = Class.new(StandardError)
 
-      if RbConfig::CONFIG['host_os'] !~ /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+      unless OS.windows?
         require 'dotgpg'
         array_resolver  
       end
@@ -16,6 +17,7 @@ module StackMaster
       end
 
       def resolve(value)
+        raise PlatformNotSupported, "Windows does not support the GPG Secret Parameter Resolver" if OS.windows?
         secret_key = value
         raise ArgumentError, "No secret_file defined for stack definition #{@stack_definition.stack_name} in #{@stack_definition.region}" unless !@stack_definition.secret_file.nil?
         raise ArgumentError, "Could not find secret file at #{secret_file_path}" unless File.exist?(secret_file_path)
