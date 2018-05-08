@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "cucumber"
   spec.add_development_dependency "aruba"
   spec.add_development_dependency "timecop"
-  spec.add_development_dependency "os"
+  spec.add_dependency "os"
   spec.add_dependency "ruby-progressbar"
   spec.add_dependency "commander"
   spec.add_dependency "aws-sdk-cloudformation", "~> 1"
