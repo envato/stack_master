@@ -4,6 +4,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'stack_master/version'
 require 'rbconfig'
 
+if RbConfig::CONFIG['host_os'] =~ /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+  gem_platform = 'current'
+else
+  gem_platform = Gem::Platform::RUBY
+end
+
+
 Gem::Specification.new do |spec|
   spec.name          = "stack_master"
   spec.version       = StackMaster::VERSION
@@ -19,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
   spec.required_ruby_version = ">= 2.1.0"
+  spec.platform      = gem_platform
 
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"
@@ -44,5 +52,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "deep_merge"
   spec.add_dependency "cfndsl"
   spec.add_dependency "multi_json"
-  spec.add_dependency "dotgpg"
+  spec.add_dependency "dotgpg" if RbConfig::CONFIG['host_os'] !~ /mswin|msys|mingw|cygwin|bccwin|wince|emc/
 end
