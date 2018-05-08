@@ -4,7 +4,9 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'stack_master/version'
 require 'rbconfig'
 
-if RbConfig::CONFIG['host_os'] =~ /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+windows_build = RbConfig::CONFIG['host_os'] =~ /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+
+if windows_build
   gem_platform = 'current'
 else
   gem_platform = Gem::Platform::RUBY
@@ -52,5 +54,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "deep_merge"
   spec.add_dependency "cfndsl"
   spec.add_dependency "multi_json"
-  spec.add_dependency "dotgpg" if RbConfig::CONFIG['host_os'] !~ /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+  spec.add_dependency "dotgpg" unless windows_build
 end
