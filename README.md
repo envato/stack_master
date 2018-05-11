@@ -211,6 +211,8 @@ into parameters of dependent stacks.
 
 ### Secret
 
+Note: This resolver is not supported on Windows, you can instead use the [Parameter Store](#parameter-store).
+
 The secret parameters resolver expects a `secret_file` to be defined in the
 stack definition which is a GPG encrypted YAML file. Once decrypted and parsed,
 the value provided to the secret resolver is used to lookup the associated key
@@ -240,6 +242,7 @@ db_password:
 ```
 
 ### Parameter Store
+
 An alternative to the secrets store, uses the AWS SSM Parameter store to protect
 secrets.   Expects a parameter of either `String` or `SecureString` type to be present in the
 same region as the stack. You can store the parameter using a command like this

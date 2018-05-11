@@ -1,11 +1,15 @@
-require 'dotgpg'
+require 'os'
 
 module StackMaster
   module ParameterResolvers
     class Secret < Resolver
       SecretNotFound = Class.new(StandardError)
+      PlatformNotSupported = Class.new(StandardError)
 
-      array_resolver
+      unless OS.windows?
+        require 'dotgpg'
+        array_resolver  
+      end
 
       def initialize(config, stack_definition)
         @config = config
@@ -13,6 +17,7 @@ module StackMaster
       end
 
       def resolve(value)
+        raise PlatformNotSupported, "The GPG Secret Parameter Resolver does not support Windows" if OS.windows?
         secret_key = value
         raise ArgumentError, "No secret_file defined for stack definition #{@stack_definition.stack_name} in #{@stack_definition.region}" unless !@stack_definition.secret_file.nil?
         raise ArgumentError, "Could not find secret file at #{secret_file_path}" unless File.exist?(secret_file_path)

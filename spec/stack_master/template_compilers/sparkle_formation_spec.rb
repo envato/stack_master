@@ -79,7 +79,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
       it 'expands the given path' do
         compile
-        expect(::SparkleFormation.sparkle_path).to match %r{^/.+/foo}
+        expect(::SparkleFormation.sparkle_path).to match %r{^([A-Z]{1}:)?[\/]+.+[\/]foo}
       end
     end
 

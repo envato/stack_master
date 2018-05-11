@@ -1,4 +1,16 @@
-RSpec.describe StackMaster::ParameterResolvers::Secret do
+RSpec.describe StackMaster::ParameterResolvers::Secret, :if => OS.windows? do
+  let(:config) { double(base_dir: 'C:\base_dir') }
+  let(:stack_definition) { double(secret_file: "my_file.yml.gpg", stack_name: 'mystack', region: 'us-east-1') }
+  subject(:resolve_secret) { StackMaster::ParameterResolvers::Secret.new(config, stack_definition).resolve('my_file/my_secret_key') }
+
+  it 'raises an PlatformNotSupported exception' do
+    expect {
+      resolve_secret
+    }.to raise_error(StackMaster::ParameterResolvers::Secret::PlatformNotSupported)
+  end
+end
+
+RSpec.describe StackMaster::ParameterResolvers::Secret, :unless => OS.windows? do
   let(:base_dir) { '/base_dir' }
   let(:config) { double(base_dir: base_dir) }
   let(:stack_definition) { double(secret_file: secrets_file_name, stack_name: 'mystack', region: 'us-east-1') }
