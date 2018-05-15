@@ -1,7 +1,7 @@
 # Temp Core Image
 FROM microsoft/windowsservercore AS core
 
-ENV RUBY_VERSION 2.4.4
+ENV RUBY_VERSION 2.2.4
 ENV DEVKIT_VERSION 4.7.2
 ENV DEVKIT_BUILD 20130224-1432
 
@@ -14,9 +14,9 @@ RUN C:\\tmp\\DevKit-mingw64-64-%DEVKIT_VERSION%-%DEVKIT_BUILD%-sfx.exe -o"C:\Dev
 # Final Nano Image
 FROM microsoft/nanoserver AS nano
 
-ENV RUBY_VERSION 2.4.4
-ENV RUBYGEMS_VERSION 2.7.6
-ENV BUNDLER_VERSION 1.16.1
+ENV RUBY_VERSION 2.2.4
+ENV RUBYGEMS_VERSION 2.6.13
+ENV BUNDLER_VERSION 1.15.4
 
 COPY --from=core C:\\Ruby_${RUBY_VERSION}_x64 C:\\Ruby_${RUBY_VERSION}_x64
 COPY --from=core C:\\DevKit C:\\DevKit
