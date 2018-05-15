@@ -69,6 +69,7 @@ module StackMaster
     autoload :LatestAmi, 'stack_master/parameter_resolvers/latest_ami'
     autoload :Env, 'stack_master/parameter_resolvers/env'
     autoload :ParameterStore, 'stack_master/parameter_resolvers/parameter_store'
+    autoload :OnePassword, 'stack_master/parameter_resolvers/one_password'
   end
 
   module AwsDriver
