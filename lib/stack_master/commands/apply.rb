@@ -46,9 +46,8 @@ module StackMaster
         !stack.nil?
       end
 
-      def stack_in_review?
-        return false if stack.nil?
-        if stack.stack_status == "REVIEW_IN_PROGRESS"
+      def abort_if_review_in_progress
+        if stack_exists? && stack.stack_status == "REVIEW_IN_PROGRESS"
           StackMaster.stderr.puts "Stack currently exists and is in #{stack.stack_status}"
           failed! "You will need to delete the stack (#{stack.stack_name}) before continuing"
         end
@@ -59,7 +58,7 @@ module StackMaster
       end
 
       def diff_stacks
-        stack_in_review?
+        abort_if_review_in_progress
         StackDiffer.new(proposed_stack, stack).output_diff
       end
 
