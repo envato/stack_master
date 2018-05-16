@@ -238,6 +238,15 @@ RSpec.describe StackMaster::Commands::Apply do
     end
   end
 
+  context 'stack is in review_in_progress' do
+    
+    let(:stack) { StackMaster::Stack.new(stack_id: '1', stack_name: 'mistack', stack_status: 'REVIEW_IN_PROGRESS')}
+
+    it 'fails with error' do
+      expect{ apply }.to output("Stack currently exists and is in REVIEW_IN_PROGRESS\nYou will need to delete the stack (mistack) before continuing\n").to_stderr
+    end
+  end
+
   context 'one or more parameters are empty' do
     let(:stack) { StackMaster::Stack.new(stack_id: '1', parameters: parameters) }
     let(:parameters) { { 'param_1' => nil } }
