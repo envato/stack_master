@@ -46,11 +46,19 @@ module StackMaster
         !stack.nil?
       end
 
+      def abort_if_review_in_progress
+        if stack_exists? && stack.stack_status == "REVIEW_IN_PROGRESS"
+          StackMaster.stderr.puts "Stack currently exists and is in #{stack.stack_status}"
+          failed! "You will need to delete the stack (#{stack.stack_name}) before continuing"
+        end
+      end
+
       def use_s3?
         !@s3_config.empty?
       end
 
       def diff_stacks
+        abort_if_review_in_progress
         StackDiffer.new(proposed_stack, stack).output_diff
       end
 
