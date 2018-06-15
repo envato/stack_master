@@ -17,10 +17,22 @@ RSpec.describe StackMaster::Config do
       additional_parameter_lookup_dirs: ['production']
     )
   }
+  let(:bad_yaml) { "a: b\n- c" }
 
   describe ".load!" do
     it "fails to load the config if no stack_master.yml in parent directories" do
       expect { StackMaster::Config.load!('stack_master.yml') }.to raise_error Errno::ENOENT
+    end
+
+    it "raises exception on invalid yaml" do
+      begin
+        orig_dir = Dir.pwd
+        Dir.chdir './spec/fixtures/'
+        allow(File).to receive(:read).and_return(bad_yaml)
+        expect { StackMaster::Config.load!('stack_master.yml') }.to raise_error StackMaster::Config::ConfigParseError
+      ensure
+        Dir.chdir orig_dir
+      end
     end
 
     it "searches up the tree for stack master yaml" do

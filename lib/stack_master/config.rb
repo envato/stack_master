@@ -3,11 +3,15 @@ require 'active_support/core_ext/object/deep_dup'
 
 module StackMaster
   class Config
+    ConfigParseError = Class.new(StandardError)
+
     def self.load!(config_file = 'stack_master.yml')
       resolved_config_file = search_up_and_chdir(config_file)
       config = YAML.load(File.read(resolved_config_file))
       base_dir = File.dirname(File.expand_path(resolved_config_file))
       new(config, base_dir)
+    rescue Psych::SyntaxError => error
+      raise ConfigParseError, "Unable to parse stack_master.yml: #{error}"
     end
 
     attr_accessor :stacks,
