@@ -11,7 +11,7 @@ module StackMaster
       base_dir = File.dirname(File.expand_path(resolved_config_file))
       new(config, base_dir)
     rescue Psych::SyntaxError => error
-      raise ConfigParseError, "Unable to parse stack_master.yml: #{error}"
+      raise ConfigParseError, "Unable to parse #{resolved_config_file}: #{error}"
     end
 
     attr_accessor :stacks,
