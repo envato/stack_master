@@ -68,7 +68,7 @@ module StackMaster
     end
 
     def parameter_files
-      [ default_parameter_file_path, region_parameter_file_path, additional_parameter_lookup_file_paths ].flatten.compact
+      [ default_parameter_file_path, region_parameter_file_path, additional_parameter_lookup_file_paths, common_parameter_file_path ].flatten.compact
     end
 
     def stack_policy_file_path
@@ -94,6 +94,19 @@ module StackMaster
 
     def default_parameter_file_path
       Dir.glob(File.join(base_dir, 'parameters', "#{underscored_stack_name}.y*ml"))
+    end
+
+    def common_parameter_file_path
+      paths = []
+      if additional_parameter_lookup_dirs
+        paths += additional_parameter_lookup_dirs.map do |a|
+          File.join(base_dir, 'parameters', "#{a}.yml")
+        end
+      end
+
+      paths << File.join(base_dir, 'parameters', "#{region}.yml")
+
+      paths
     end
 
     def underscored_stack_name

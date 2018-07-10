@@ -40,6 +40,8 @@ RSpec.describe StackMaster::StackDefinition do
       "/base_dir/parameters/#{stack_name}.yml",
       "/base_dir/parameters/#{region}/#{stack_name}.yaml",
       "/base_dir/parameters/#{region}/#{stack_name}.yml",
+      "/base_dir/parameters/#{region}.yaml",
+      "/base_dir/parameters/#{region}.yml"
     ])
   end
 
@@ -64,6 +66,8 @@ RSpec.describe StackMaster::StackDefinition do
         "/base_dir/parameters/#{region}/#{stack_name}.yml",
         "/base_dir/parameters/production/#{stack_name}.yaml",
         "/base_dir/parameters/production/#{stack_name}.yml",
+        "/base_dir/parameters/#{region}.yaml",
+        "/base_dir/parameters/#{region}.yml"
       ])
     end
   end
