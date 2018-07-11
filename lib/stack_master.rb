@@ -54,6 +54,7 @@ module StackMaster
     autoload :Diff, 'stack_master/commands/diff'
     autoload :ListStacks, 'stack_master/commands/list_stacks'
     autoload :Validate, 'stack_master/commands/validate'
+    autoload :Lint, 'stack_master/commands/lint'
     autoload :Resources, 'stack_master/commands/resources'
     autoload :Delete, 'stack_master/commands/delete'
     autoload :Status, 'stack_master/commands/status'
