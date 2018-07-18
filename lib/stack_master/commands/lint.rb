@@ -17,7 +17,7 @@ module StackMaster
           return
         end
 
-        Tempfile.open(['stack', '.json']) do |f|
+        Tempfile.open(['stack', ".#{proposed_stack.template_format}"]) do |f|
           f.write(proposed_stack.template_body)
           system('cfn-lint', f.path).nil?
           puts "cfn-lint run complete"
