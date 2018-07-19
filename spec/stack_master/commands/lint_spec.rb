@@ -53,7 +53,7 @@ RSpec.describe StackMaster::Commands::Lint do
 
     it 'outputs a warning' do
       expect_any_instance_of(described_class).to receive(:system).once.with('cfn-lint', '--version').and_return(nil)
-      expect { run }.to output(/Failed to run cfn-lint/).to_stdout
+      expect { run }.to output(/Failed to run cfn-lint/).to_stderr
     end
   end
 end

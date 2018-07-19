@@ -13,8 +13,7 @@ module StackMaster
 
       def perform
         unless cfn_lint_available
-          puts "Failed to run cfn-lint, do you have it installed and available in $PATH?"
-          return
+          failed! "Failed to run cfn-lint, do you have it installed and available in $PATH?"
         end
 
         Tempfile.open(['stack', ".#{proposed_stack.template_format}"]) do |f|
