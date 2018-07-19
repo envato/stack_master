@@ -131,6 +131,28 @@ module StackMaster
         end
       end
 
+      command :lint do |c|
+        c.syntax = 'stack_master lint [region_or_alias] [stack_name]'
+        c.summary = "Check the stack definition locally"
+        c.description = "Runs cfn-lint on the template which would be sent to AWS on apply"
+        c.example 'run cfn-lint on stack myapp-vpc with us-east-1 settings', 'stack_master lint us-east-1 myapp-vpc'
+        c.action do |args, options|
+          options.defaults config: default_config_file
+          execute_stacks_command(StackMaster::Commands::Lint, args, options)
+        end
+      end
+
+      command :compile do |c|
+        c.syntax = 'stack_master compile [region_or_alias] [stack_name]'
+        c.summary = "Print the compiled version of a given stack"
+        c.description = "Processes the stack and prints out a compiled version - same we'd send to AWS"
+        c.example 'print compiled stack myapp-vpc with us-east-1 settings', 'stack_master compile us-east-1 myapp-vpc'
+        c.action do |args, options|
+          options.defaults config: default_config_file
+          execute_stacks_command(StackMaster::Commands::Compile, args, options)
+        end
+      end
+
       command :status do |c|
         c.syntax = 'stack_master status'
         c.summary = 'Check the current status stacks.'
