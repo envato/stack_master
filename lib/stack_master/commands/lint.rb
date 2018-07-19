@@ -20,7 +20,7 @@ module StackMaster
         Tempfile.open(['stack', ".#{proposed_stack.template_format}"]) do |f|
           f.write(proposed_stack.template_body)
           f.flush
-          system('cfn-lint', f.path).nil?
+          system('cfn-lint', f.path)
           puts "cfn-lint run complete"
         end
       end
