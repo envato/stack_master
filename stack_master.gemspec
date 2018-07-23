@@ -40,6 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "os"
   spec.add_dependency "ruby-progressbar"
   spec.add_dependency "commander"
+  spec.add_dependency "aws-sdk-acm", "~> 1"
   spec.add_dependency "aws-sdk-cloudformation", "~> 1"
   spec.add_dependency "aws-sdk-ec2", "~> 1"
   spec.add_dependency "aws-sdk-s3", "~> 1"
