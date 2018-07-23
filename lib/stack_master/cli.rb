@@ -191,6 +191,22 @@ module StackMaster
         end
       end
 
+      command :print do |c|
+        c.syntax = 'stack_master print [region_or_alias] [stack_name]'
+        c.summary = 'Print compiled template for stack.'
+        c.description = 'Prints the compiled JSON for specified stack/'
+        c.example 'description', 'Print JSON template'
+        c.action do |args, options|
+          options.defaults config: default_config_file
+          unless args.size == 2
+            say "Invalid arguments. stack_master print [region_or_alias] [stack_name]"
+            return
+          end
+          config = load_config(options.config)
+          execute_stacks_command(StackMaster::Commands::Print, args, options)
+        end
+      end
+
       run!
     end
 
