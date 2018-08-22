@@ -35,14 +35,11 @@ module StackMaster
             next_token: next_token,
           })
 
-          images.push(resp.image_details)
+          images += resp.image_details
           next_token = resp.next_token
-
-          if resp.next_token.nil?
-            break
-          end
+          break if next_token.nil?
         end
-        images.flatten
+        images
       end
     end
   end
