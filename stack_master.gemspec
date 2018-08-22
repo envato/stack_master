@@ -46,6 +46,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "aws-sdk-s3", "~> 1"
   spec.add_dependency "aws-sdk-sns", "~> 1"
   spec.add_dependency "aws-sdk-ssm", "~> 1"
+  spec.add_dependency "aws-sdk-ecr", "~> 1"
   spec.add_dependency "diffy"
   spec.add_dependency "erubis"
   spec.add_dependency "colorize"

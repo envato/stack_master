@@ -3,6 +3,7 @@ require 'yaml'
 require 'aws-sdk-acm'
 require 'aws-sdk-cloudformation'
 require 'aws-sdk-ec2'
+require 'aws-sdk-ecr'
 require 'aws-sdk-s3'
 require 'aws-sdk-sns'
 require 'aws-sdk-ssm'
@@ -74,6 +75,7 @@ module StackMaster
     autoload :Env, 'stack_master/parameter_resolvers/env'
     autoload :ParameterStore, 'stack_master/parameter_resolvers/parameter_store'
     autoload :OnePassword, 'stack_master/parameter_resolvers/one_password'
+    autoload :LatestContainer, 'stack_master/parameter_resolvers/latest_container'
   end
 
   module AwsDriver

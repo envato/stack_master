@@ -331,6 +331,19 @@ A set of possible attributes is available in the [AWS documentation](https://doc
 
 Any value can be an array of possible matches.
 
+### Latest Container from Repository
+
+Looks up the latest Container Image from an ECR repository. We use this instead of a "latest" tag, because if the tag is latest a CloudFormation update will not trigger a deployment of the container, since nothing has changed.
+As such this resolver will never return the latest tag for a container.
+
+```yaml
+container_image_id:
+  latest_container:
+    repository_name: nginx # Required. The name of the repository
+    registry_id: 012345678910 # The AWS Account ID the repository is located in. Defaults to the current account's default registry
+    region: us-east-1 # Defaults to the region the stack is located in
+```
+
 ### Environment Variable
 
 Lookup an environment variable:
