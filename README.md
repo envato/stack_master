@@ -336,6 +336,8 @@ Any value can be an array of possible matches.
 Looks up the latest Container Image from an ECR repository. We use this instead of a "latest" tag, because if the tag is "latest" a CloudFormation update will not trigger a deployment of the container, since nothing has changed.
 As such this resolver will never return the tag "latest". If no other tag exists on the most recent container, it will return nil.
 
+Returns the docker repository URI, i.e. `aws_account_id.dkr.ecr.region.amazonaws.com/container:tag`
+
 ```yaml
 container_image_id:
   latest_container:
