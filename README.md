@@ -333,8 +333,8 @@ Any value can be an array of possible matches.
 
 ### Latest Container from Repository
 
-Looks up the latest Container Image from an ECR repository. We use this instead of a "latest" tag, because if the tag is latest a CloudFormation update will not trigger a deployment of the container, since nothing has changed.
-As such this resolver will never return the latest tag for a container.
+Looks up the latest Container Image from an ECR repository. We use this instead of a "latest" tag, because if the tag is "latest" a CloudFormation update will not trigger a deployment of the container, since nothing has changed.
+As such this resolver will never return the tag "latest". If no other tag exists on the most recent container, it will return nil.
 
 ```yaml
 container_image_id:
