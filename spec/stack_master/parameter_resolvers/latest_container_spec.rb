@@ -17,20 +17,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
     end
 
     it 'returns the latest one' do
-      expect(resolver.resolve({'repository_name' => 'foo'})).to eq '012345678910.dkr.ecr.us-east-1.amazonaws.com/foo:v2'
-    end
-  end
-
-  context 'when there are multiple tags including latest' do
-    before do
-      ecr.stub_responses(:describe_images, next_token: nil, image_details: [
-        { registry_id: '012345678910', image_digest: 'decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1'] },
-        { registry_id: '012345678910', image_digest: 'deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['latest', 'v2'] }
-      ])
-    end
-
-    it 'does not return the latest tag' do
-      expect(resolver.resolve({'repository_name' => 'foo'})).to eq '012345678910.dkr.ecr.us-east-1.amazonaws.com/foo:v2'
+      expect(resolver.resolve({'repository_name' => 'foo'})).to eq '012345678910.dkr.ecr.us-east-1.amazonaws.com/foo@sha256:deadbeef'
     end
   end
 
@@ -41,6 +28,19 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
 
     it 'returns nil' do
       expect(resolver.resolve({'repository_name' => 'foo'})).to be_nil
+    end
+  end
+
+  context 'when a tag is passed in' do
+    before do
+      ecr.stub_responses(:describe_images, next_token: nil, image_details: [
+        { registry_id: '012345678910', image_digest: 'decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1', 'production'] },
+        { registry_id: '012345678910', image_digest: 'deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['v2'] }
+      ])
+    end
+
+    it 'returns the image with the production tag' do
+      expect(resolver.resolve({'repository_name' => 'foo', 'tag' => 'production'})).to eq '012345678910.dkr.ecr.us-east-1.amazonaws.com/foo@sha256:decafc0ffee'
     end
   end
 
@@ -65,14 +65,14 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
           { registry_id: '012345678910', image_digest: 'deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['latest', 'v2'] }
         ]},
         { next_token: nil, image_details: [
-          { registry_id: '012345678910', image_digest: 'decafc0ffee', image_pushed_at: Time.utc(2015,1,4,0,0), image_tags: ['v3'] },
-          { registry_id: '012345678910', image_digest: 'deadbeef', image_pushed_at: Time.utc(2015,1,5,0,0), image_tags: ['v4'] }
+          { registry_id: '012345678910', image_digest: 'badf00d', image_pushed_at: Time.utc(2015,1,4,0,0), image_tags: ['v3'] },
+          { registry_id: '012345678910', image_digest: 'd15ea5e', image_pushed_at: Time.utc(2015,1,5,0,0), image_tags: ['v4'] }
         ]}
       ])
     end
 
     it 'takes all pages into account' do
-      expect(resolver.resolve({'repository_name' => 'foo'})).to eq '012345678910.dkr.ecr.us-east-1.amazonaws.com/foo:v4'
+      expect(resolver.resolve({'repository_name' => 'foo'})).to eq '012345678910.dkr.ecr.us-east-1.amazonaws.com/foo@sha256:d15ea5e'
     end
   end
 end

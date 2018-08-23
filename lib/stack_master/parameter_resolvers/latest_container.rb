@@ -16,11 +16,13 @@ module StackMaster
         end
         images = fetch_images(parameters['repository_name'], parameters['registry_id'], ecr_client)
         return nil if images.empty?
+        if !parameters['tag'].nil?
+          images.select! { |image| image.image_tags.any? { |tag| tag == parameters['tag'] } }
+        end
         images.sort! { |image_x, image_y| image_y.image_pushed_at <=> image_x.image_pushed_at }
         latest_image = images.first
-        latest_tag = latest_image.image_tags.delete_if { |tag| tag == "latest" }.first
-        # aws_account_id.dkr.ecr.region.amazonaws.com
-        return  "#{latest_image.registry_id}.dkr.ecr.#{@region}.amazonaws.com/#{parameters['repository_name']}:#{latest_tag}"
+        # aws_account_id.dkr.ecr.region.amazonaws.com/repository@sha256:digest
+        return  "#{latest_image.registry_id}.dkr.ecr.#{@region}.amazonaws.com/#{parameters['repository_name']}@sha256:#{latest_image.image_digest}"
       end
 
       private

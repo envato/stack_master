@@ -333,10 +333,12 @@ Any value can be an array of possible matches.
 
 ### Latest Container from Repository
 
-Looks up the latest Container Image from an ECR repository. We use this instead of a "latest" tag, because if the tag is "latest" a CloudFormation update will not trigger a deployment of the container, since nothing has changed.
-As such this resolver will never return the tag "latest". If no other tag exists on the most recent container, it will return nil.
+Looks up the a Container Image from an ECR repository. By default this will return the latest container in a repository.
+If `tag` is specified we return the sha digest of the image with this tag.
+This avoids the issue where CloudFormation won't update a Task Definition if we use a tag such as `latest`, because it only updates resources if a parameter has changed.
+This allows us to tag an image and deploy the latest version of that image via CloudFormation and avoids versioning our tags and having to store the metadata about the latest tag version somewhere.
 
-Returns the docker repository URI, i.e. `aws_account_id.dkr.ecr.region.amazonaws.com/container:tag`
+Returns the docker repository URI, i.e. `aws_account_id.dkr.ecr.region.amazonaws.com/container@sha256:digest`
 
 ```yaml
 container_image_id:
@@ -344,6 +346,7 @@ container_image_id:
     repository_name: nginx # Required. The name of the repository
     registry_id: 012345678910 # The AWS Account ID the repository is located in. Defaults to the current account's default registry
     region: us-east-1 # Defaults to the region the stack is located in
+    tag: production # By default we'll find the latest image pushed to the repository. If tag is specified we return the sha digest of the image with this tag
 ```
 
 ### Environment Variable
