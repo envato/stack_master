@@ -52,7 +52,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
     end
 
     it 'passes registry_id to describe_images' do
-      expect(ecr).to receive(:describe_images).with(repository_name: "foo", registry_id: "012345678910", next_token: nil)
+      expect(ecr).to receive(:describe_images).with(repository_name: "foo", registry_id: "012345678910", next_token: nil, filter: {:tag_status=>"TAGGED"})
       resolver.resolve({'repository_name' => 'foo', 'registry_id' => '012345678910'})
     end
   end
