@@ -22,7 +22,7 @@ module StackMaster
         images.sort! { |image_x, image_y| image_y.image_pushed_at <=> image_x.image_pushed_at }
         latest_image = images.first
         # aws_account_id.dkr.ecr.region.amazonaws.com/repository@sha256:digest
-        return  "#{latest_image.registry_id}.dkr.ecr.#{@region}.amazonaws.com/#{parameters['repository_name']}@sha256:#{latest_image.image_digest}"
+        return  "#{latest_image.registry_id}.dkr.ecr.#{@region}.amazonaws.com/#{parameters['repository_name']}@#{latest_image.image_digest}"
       end
 
       private

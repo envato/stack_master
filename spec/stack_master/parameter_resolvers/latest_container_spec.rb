@@ -11,8 +11,8 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
   context 'when matches are found' do
     before do
       ecr.stub_responses(:describe_images, next_token: nil, image_details: [
-        { registry_id: '012345678910', image_digest: 'decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1'] },
-        { registry_id: '012345678910', image_digest: 'deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['v2'] }
+        { registry_id: '012345678910', image_digest: 'sha256:decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1'] },
+        { registry_id: '012345678910', image_digest: 'sha256:deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['v2'] }
       ])
     end
 
@@ -34,8 +34,8 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
   context 'when a tag is passed in' do
     before do
       ecr.stub_responses(:describe_images, next_token: nil, image_details: [
-        { registry_id: '012345678910', image_digest: 'decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1', 'production'] },
-        { registry_id: '012345678910', image_digest: 'deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['v2'] }
+        { registry_id: '012345678910', image_digest: 'sha256:decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1', 'production'] },
+        { registry_id: '012345678910', image_digest: 'sha256:deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['v2'] }
       ])
     end
 
@@ -47,7 +47,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
   context 'when registry_id is passed in' do
     before do
       ecr.stub_responses(:describe_images, next_token: nil, image_details: [
-        { registry_id: '012345678910', image_digest: 'decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1'] },
+        { registry_id: '012345678910', image_digest: 'sha256:decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1'] },
       ])
     end
 
@@ -61,12 +61,12 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
     before do
       ecr.stub_responses(:describe_images, [
         { next_token: '1', image_details: [
-          { registry_id: '012345678910', image_digest: 'decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1'] },
-          { registry_id: '012345678910', image_digest: 'deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['latest', 'v2'] }
+          { registry_id: '012345678910', image_digest: 'sha256:decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1'] },
+          { registry_id: '012345678910', image_digest: 'sha256:deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['latest', 'v2'] }
         ]},
         { next_token: nil, image_details: [
-          { registry_id: '012345678910', image_digest: 'badf00d', image_pushed_at: Time.utc(2015,1,4,0,0), image_tags: ['v3'] },
-          { registry_id: '012345678910', image_digest: 'd15ea5e', image_pushed_at: Time.utc(2015,1,5,0,0), image_tags: ['v4'] }
+          { registry_id: '012345678910', image_digest: 'sha256:badf00d', image_pushed_at: Time.utc(2015,1,4,0,0), image_tags: ['v3'] },
+          { registry_id: '012345678910', image_digest: 'sha256:d15ea5e', image_pushed_at: Time.utc(2015,1,5,0,0), image_tags: ['v4'] }
         ]}
       ])
     end
