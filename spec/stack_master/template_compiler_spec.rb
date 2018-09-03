@@ -31,7 +31,7 @@ RSpec.describe StackMaster::TemplateCompiler do
         it 'raise TemplateCompilationFailed exception' do
           expect{ StackMaster::TemplateCompiler.compile(config, template_file_path, compile_time_parameters, compile_time_parameters)
           }.to raise_error(
-                 StackMaster::TemplateCompiler::TemplateCompilationFailed,"Failed to compile #{template_file_path}.")
+                 StackMaster::TemplateCompiler::TemplateCompilationFailed, /^Failed to compile #{template_file_path}/)
         end
       end
     end
