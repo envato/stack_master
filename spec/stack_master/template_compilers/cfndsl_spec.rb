@@ -5,8 +5,8 @@ RSpec.describe StackMaster::TemplateCompilers::Cfndsl do
   before(:all) { described_class.require_dependencies }
 
   describe '.compile' do
-    def compile(ctps = compile_time_parameters)
-      described_class.compile(template_file_path, ctps)
+    def compile
+      described_class.compile(template_file_path, compile_time_parameters)
     end
 
     context 'valid cfndsl template' do
@@ -33,7 +33,6 @@ RSpec.describe StackMaster::TemplateCompilers::Cfndsl do
         let(:template_file_path) { 'spec/fixtures/templates/rb/cfndsl/sample-ctp-repeated.rb' }
 
         it 'does not leak compile time params across invocations' do
-          #expect(JSON.parse(compile)["Resources"]["MyInstance"]["Properties"]["DisableApiTermination"]).to eq(compile_time_parameters['DisableApiTermination'])
           expect {
             compile_time_parameters.delete("DisableApiTermination")
           }.to change { JSON.parse(compile)["Resources"]["MyInstance"]["Properties"]["DisableApiTermination"] }.from('true').to(nil)
