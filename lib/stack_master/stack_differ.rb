@@ -1,4 +1,5 @@
 require "diffy"
+require "hashdiff"
 
 module StackMaster
   class StackDiffer
@@ -70,6 +71,14 @@ module StackMaster
       else
         []
       end
+    end
+
+    def single_param_update?(param_name)
+      return false if param_name.blank? || @current_stack.blank? || body_different?
+      differences = HashDiff.diff(@current_stack.parameters_with_defaults, @proposed_stack.parameters_with_defaults)
+      return false if differences.count != 1
+      diff = differences[0]
+      diff[0] == "~" && diff[1] == param_name
     end
 
     private

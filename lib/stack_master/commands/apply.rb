@@ -13,6 +13,7 @@ module StackMaster
         @from_time = Time.now
         @options = options
         @options.on_failure ||= nil
+        @options.yes_param ||= nil
       end
 
       def perform
@@ -59,7 +60,11 @@ module StackMaster
 
       def diff_stacks
         abort_if_review_in_progress
-        StackDiffer.new(proposed_stack, stack).output_diff
+        differ.output_diff
+      end
+
+      def differ
+        @differ ||= StackDiffer.new(proposed_stack, stack)
       end
 
       def create_or_update_stack
@@ -125,12 +130,20 @@ module StackMaster
           halt!(@change_set.status_reason)
         end
 
+        if differ.single_param_update?(@options.yes_param)
+          StackMaster.stdout.puts("Auto-approving update to single parameter #{@options.yes_param}")
+        else
+          ask_update_confirmation!
+        end
         @change_set.display(StackMaster.stdout)
+        execute_change_set
+      end
+
+      def ask_update_confirmation!
         unless ask?("Apply change set (y/n)? ")
           ChangeSet.delete(@change_set.id)
           halt! "Stack update aborted"
         end
-        execute_change_set
       end
 
       def upload_files

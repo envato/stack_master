@@ -13,6 +13,7 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, template_format: template_format, tags: { 'environment' => 'production' } , parameters: parameters, role_arn: role_arn, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
   let(:stack_policy_body) { '{}' }
   let(:change_set) { double(display: true, failed?: false, id: '1') }
+  let(:differ) { instance_double(StackMaster::StackDiffer, output_diff: nil, single_param_update?: false) }
 
   before do
     allow(StackMaster::Stack).to receive(:find).with(region, stack_name).and_return(stack)
@@ -21,7 +22,7 @@ RSpec.describe StackMaster::Commands::Apply do
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
     allow(Aws::S3::Client).to receive(:new).and_return(s3)
     allow(cf).to receive(:create_stack)
-    allow(StackMaster::StackDiffer).to receive(:new).with(proposed_stack, stack).and_return double.as_null_object
+    allow(StackMaster::StackDiffer).to receive(:new).with(proposed_stack, stack).and_return(differ)
     allow(StackMaster::StackEvents::Streamer).to receive(:stream)
     allow(StackMaster).to receive(:interactive?).and_return(false)
     allow(cf).to receive(:create_change_set).and_return(OpenStruct.new(id: '1'))
@@ -133,6 +134,21 @@ RSpec.describe StackMaster::Commands::Apply do
 
       it "doesn't execute the change set" do
         expect(StackMaster::ChangeSet).to_not have_received(:execute).with(change_set.id)
+      end
+    end
+
+    context 'yes_param option is set' do
+      let(:yes_param) { 'YesParam' }
+      let(:options) { double(yes_param: yes_param).as_null_object }
+
+      before do
+        allow(StackMaster).to receive(:non_interactive_answer).and_return('n')
+        allow(differ).to receive(:single_param_update?).with(yes_param).and_return(true)
+      end
+
+      it "skips asking for confirmation on single param updates" do
+        expect(StackMaster::ChangeSet).to receive(:execute).with(change_set.id, stack_name)
+        StackMaster::Commands::Apply.perform(config, stack_definition, options)
       end
     end
   end

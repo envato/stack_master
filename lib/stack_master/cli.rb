@@ -42,6 +42,7 @@ module StackMaster
         c.description = "Creates or updates a stack. Shows a diff of the proposed stack's template and parameters. Tails stack events until CloudFormation has completed."
         c.example 'update a stack named myapp-vpc in us-east-1', 'stack_master apply us-east-1 myapp-vpc'
         c.option '--on-failure ACTION', String, "Action to take on CREATE_FAILURE. Valid Values: [ DO_NOTHING | ROLLBACK | DELETE ]. Default: ROLLBACK\nNote: You cannot use this option with Serverless Application Model (SAM) templates."
+        c.option '--yes-param PARAM_NAME', String, "Auto-approve stack updates when only parameter PARAM_NAME changes"
         c.action do |args, options|
           options.defaults config: default_config_file
           execute_stacks_command(StackMaster::Commands::Apply, args, options)
