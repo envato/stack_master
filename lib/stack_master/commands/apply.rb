@@ -130,12 +130,12 @@ module StackMaster
           halt!(@change_set.status_reason)
         end
 
+        @change_set.display(StackMaster.stdout)
         if differ.single_param_update?(@options.yes_param)
           StackMaster.stdout.puts("Auto-approving update to single parameter #{@options.yes_param}")
         else
           ask_update_confirmation!
         end
-        @change_set.display(StackMaster.stdout)
         execute_change_set
       end
 

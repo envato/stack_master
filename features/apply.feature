@@ -74,10 +74,11 @@ Feature: Apply command
       | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     When I run `stack_master apply us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
-      | Stack diff:                                                                    |
-      | +    "Vpc": {                                                                  |
-      | Parameters diff:                                                               |
-      | KeyName: my-key                                                                |
+      | Stack diff:          |
+      | +    "Vpc": {        |
+      | Parameters diff:     |
+      | KeyName: my-key      |
+      | Proposed change set: |
     And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
@@ -85,11 +86,12 @@ Feature: Apply command
     Given I will answer prompts with "n"
     When I run `stack_master apply us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
-      | Stack diff:      |
-      | +    "Vpc": {    |
-      | Parameters diff: |
-      | KeyName: my-key  |
-      | aborted          |
+      | Stack diff:          |
+      | +    "Vpc": {        |
+      | Parameters diff:     |
+      | KeyName: my-key      |
+      | aborted              |
+      | Proposed change set: |
     And the output should not match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
@@ -211,7 +213,62 @@ Feature: Apply command
       | Proposed change set:                                                           |
       | Replace                                                                        |
       | ========================================                                       |
-      | Apply change set (y/n)?                                                              |
+      | Apply change set (y/n)?                                                        |
+    Then the exit status should be 0
+
+
+  Scenario: Run apply to update a stack and answer no
+    Given I will answer prompts with "n"
+    And I stub the following stack events:
+      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    And I stub the following stacks:
+      | stack_id | stack_name | parameters       | region    |
+      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
+    And I stub a template for the stack "myapp-vpc":
+      """
+      {
+        "Description": "Test template",
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Parameters": {
+          "KeyName": {
+            "Description": "Key Name",
+            "Type": "String"
+          }
+        },
+        "Resources": {
+          "TestSg": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+              "GroupDescription": "Test SG",
+              "VpcId": {
+                "Ref": "VpcId"
+              }
+            }
+          },
+          "TestSg2": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+              "GroupDescription": "Test SG 2",
+              "VpcId": {
+                "Ref": "VpcId"
+              }
+            }
+          }
+        }
+      }
+      """
+    When I run `stack_master apply us-east-1 myapp-vpc --trace`
+    And the output should contain all of these lines:
+      | Stack diff:                                                                    |
+      | -    "TestSg2": {                                                              |
+      | Parameters diff: No changes                                                    |
+      | ========================================                                       |
+      | Proposed change set:                                                           |
+      | Replace                                                                        |
+      | ========================================                                       |
+      | Apply change set (y/n)?                                                        |
     Then the exit status should be 0
 
   Scenario: Update a stack that has changed with --changed
