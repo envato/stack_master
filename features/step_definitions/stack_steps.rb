@@ -1,3 +1,5 @@
+require 'dotgpg'
+
 Before do
   StackMaster.non_interactive_answer = 'y'
 end
@@ -63,6 +65,14 @@ end
 
 Given(/^I stub CloudFormation validate calls to fail validation with message "([^"]*)"$/) do |message|
   allow(StackMaster.cloud_formation_driver).to receive(:validate_template).and_raise(Aws::CloudFormation::Errors::ValidationError.new('', message))
+end
+
+Given(/^I stub DotGPG calls to return a secret for "([^"]*)"$/) do |secret_key|
+  dotgpg_double = double()
+  allow(Dotgpg::Dir).to receive(:closest).and_return(dotgpg_double)
+  expect(dotgpg_double).to receive(:decrypt) do |_, string_io|
+    string_io.write("#{secret_key}: too many secrets")
+  end
 end
 
 When(/^an S3 file in bucket "([^"]*)" with key "([^"]*)" exists with content:$/) do |bucket, key, body|
