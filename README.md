@@ -56,13 +56,11 @@ stack_defaults:
   role_arn: service_role_arn
 region_defaults:
   us-east-1:
-    secret_file: production.yml.gpg
     tags:
       environment: production
     notification_arns:
       - test_arn
   ap-southeast-2:
-    secret_file: staging.yml.gpg
     tags:
       environment: staging
 stacks:
@@ -211,7 +209,9 @@ into parameters of dependent stacks.
 
 ### Secret
 
-Note: This resolver is not supported on Windows, you can instead use the [Parameter Store](#parameter-store).
+**DEPRECATED**: This parameters resolver is deprecated and will be removed in version 2.0. Refer to [Parameter Store](#parameter-store) and [1Password](#1password-lookup) for alternatives for handling secrets.
+
+Note: This resolver is not supported on Windows.
 
 The secret parameters resolver expects a `secret_file` to be defined in the
 stack definition which is a GPG encrypted YAML file. Once decrypted and parsed,
@@ -256,7 +256,9 @@ you will likely want to set the parameter to NoEcho in your template.
 db_password:
   parameter_store: ssm_parameter_name
 ```
+
 ### 1Password Lookup
+
 An Alternative to the alternative secret store is accessing 1password secrets using the 1password cli (`op`).
 You declare a 1password lookup with the following parameters in your parameters file:
 
