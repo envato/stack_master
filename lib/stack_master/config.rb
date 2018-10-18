@@ -5,11 +5,11 @@ module StackMaster
   class Config
     ConfigParseError = Class.new(StandardError)
 
-    def self.load!(config_file = 'stack_master.yml')
+    def self.load!(config_file = 'stack_master.yml', region)
       resolved_config_file = search_up_and_chdir(config_file)
       config = YAML.load(File.read(resolved_config_file))
       base_dir = File.dirname(File.expand_path(resolved_config_file))
-      new(config, base_dir)
+      new(config, base_dir, region)
     rescue Psych::SyntaxError => error
       raise ConfigParseError, "Unable to parse #{resolved_config_file}: #{error}"
     end
@@ -21,6 +21,7 @@ module StackMaster
                   :region_defaults,
                   :region_aliases,
                   :template_compilers,
+                  :region,
 
     def self.search_up_and_chdir(config_file)
       return config_file unless File.dirname(config_file) == "."
@@ -35,7 +36,7 @@ module StackMaster
       File.join(dir, config_file)
     end
 
-    def initialize(config, base_dir)
+    def initialize(config, base_dir, unaliased_region)
       @config = config
       @base_dir = base_dir
       @template_dir = config.fetch('template_dir', nil)
@@ -46,21 +47,22 @@ module StackMaster
         hash[value] << key
         hash
       end
+      @region = unalias_region(unaliased_region)
       @region_defaults = normalise_region_defaults(config.fetch('region_defaults', {}))
       @stacks = []
       load_template_compilers(config)
       load_config
     end
 
-    def filter(region = nil, stack_name = nil)
+    def filter(stack_name = nil)
       @stacks.select do |s|
-        (region.blank? || s.region == region || s.region == region.gsub('_', '-')) &&
+        (@region.blank? || s.region == @region || s.region == @region.gsub('_', '-')) &&
           (stack_name.blank? || s.stack_name == stack_name || s.stack_name == stack_name.gsub('_', '-'))
       end
     end
 
-    def find_stack(region, stack_name)
-      filter(region, stack_name).first
+    def find_stack(stack_name)
+      filter(stack_name).first
     end
 
     def unalias_region(region)
@@ -94,24 +96,14 @@ module StackMaster
     end
 
     def load_config
-      unaliased_stacks = resolve_region_aliases(@config.fetch('stacks'))
-      load_stacks(unaliased_stacks)
-    end
-
-    def resolve_region_aliases(stacks)
-      stacks.inject({}) do |hash, (region, attributes)|
-        hash[unalias_region(region)] = attributes
-        hash
-      end
+      load_stacks(@config.fetch('stacks'))
     end
 
     def load_stacks(stacks)
-      stacks.each do |region, stacks_for_region|
-        region = Utils.underscore_to_hyphen(region)
-        stacks_for_region.each do |stack_name, attributes|
+      stacks.each do |stack_name, attributes|
           stack_name = Utils.underscore_to_hyphen(stack_name)
-          stack_attributes = build_stack_defaults(region).deeper_merge!(attributes).merge(
-            'region' => region,
+        stack_attributes = build_stack_defaults(@region).deeper_merge!(attributes).merge(
+          'region' => @region,
             'stack_name' => stack_name,
             'base_dir' => @base_dir,
             'template_dir' => @template_dir,
@@ -119,7 +111,6 @@ module StackMaster
           @stacks << StackDefinition.new(stack_attributes)
         end
       end
-    end
 
     def build_stack_defaults(region)
       region_defaults = @region_defaults.fetch(region, {}).deep_dup

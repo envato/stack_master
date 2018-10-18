@@ -4,9 +4,8 @@ Feature: Diff command
     Given a file named "stack_master.yml" with:
       """
       stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.json
+        myapp_vpc:
+          template: myapp_vpc.json
       """
     And a directory named "parameters"
     And a file named "parameters/myapp_vpc.yml" with:

@@ -115,7 +115,7 @@ module StackMaster
         c.action do |args, options|
           options.defaults config: default_config_file
           say "Invalid arguments." if args.size > 0
-          config = load_config(options.config)
+          config = load_config(options.config, 'us-east-1')
           StackMaster::Commands::ListStacks.perform(config)
         end
       end
@@ -154,14 +154,13 @@ module StackMaster
       end
 
       command :status do |c|
-        c.syntax = 'stack_master status'
+        c.syntax = 'stack_master status [region]'
         c.summary = 'Check the current status stacks.'
         c.description = 'Checks the status of all stacks defined in the stack_master.yml file. Warning this operation can be somewhat slow.'
         c.example 'description', 'Check the status of all stack definitions'
         c.action do |args, options|
           options.defaults config: default_config_file
-          say "Invalid arguments. stack_master status" and return unless args.size == 0
-          config = load_config(options.config)
+          config = load_config(options.config, args[0])
           StackMaster::Commands::Status.perform(config)
         end
       end
@@ -180,8 +179,8 @@ module StackMaster
 
           # Because delete can work without a stack_master.yml
           if options.config and File.file?(options.config)
-            config = load_config(options.config)
-            region = Utils.underscore_to_hyphen(config.unalias_region(args[0]))
+            config = load_config(options.config, args[0])
+            region = config.region
           else
             region = args[0]
           end
@@ -194,9 +193,9 @@ module StackMaster
       run!
     end
 
-    def load_config(file)
+    def load_config(file, region)
       stack_file = file || default_config_file
-      StackMaster::Config.load!(stack_file)
+      StackMaster::Config.load!(stack_file, region)
     rescue Errno::ENOENT => e
       say "Failed to load config file #{stack_file}"
       exit 1
@@ -204,14 +203,13 @@ module StackMaster
 
     def execute_stacks_command(command, args, options)
       command_results = []
-      config = load_config(options.config)
+      config = load_config(options.config, args[0])
       args = [nil, nil] if args.size == 0
       args.each_slice(2) do |aliased_region, stack_name|
-        region = Utils.underscore_to_hyphen(config.unalias_region(aliased_region))
         stack_name = Utils.underscore_to_hyphen(stack_name)
-        stack_definitions = config.filter(region, stack_name)
+        stack_definitions = config.filter(stack_name)
         if stack_definitions.empty?
-          StackMaster.stdout.puts "Could not find stack definition #{stack_name} in region #{region}"
+          StackMaster.stdout.puts "Could not find stack definition #{stack_name}"
         end
         stack_definitions = stack_definitions.select do |stack_definition|
           StackStatus.new(config, stack_definition).changed?

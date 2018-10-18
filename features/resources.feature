@@ -4,9 +4,8 @@ Feature: Resources command
     Given a file named "stack_master.yml" with:
       """
       stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.rb
+        myapp_vpc:
+          template: myapp_vpc.rb
       """
     And a directory named "templates"
     And a file named "templates/myapp_vpc.rb" with:

@@ -1,11 +1,12 @@
 RSpec.describe StackMaster::Validator do
 
   subject(:validator) { described_class.new(stack_definition, config) }
-  let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
+  let(:region) { 'us-east-1' }
+  let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir', region) }
   let(:stack_name) { 'myapp_vpc' }
   let(:stack_definition) do
     StackMaster::StackDefinition.new(
-        region: 'us-east-1',
+        region: region,
         stack_name: stack_name,
         template: 'myapp_vpc.json',
         tags: {'environment' => 'production'},

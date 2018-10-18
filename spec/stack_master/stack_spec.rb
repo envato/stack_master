@@ -75,7 +75,7 @@ RSpec.describe StackMaster::Stack do
   describe '.generate' do
     let(:tags) { {'tag1' => 'value1'} }
     let(:stack_definition) { StackMaster::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn', stack_policy_file: 'no_replace_rds.json') }
-    let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
+    let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir', region) }
     subject(:stack) { StackMaster::Stack.generate(stack_definition, config) }
     let(:parameter_hash) { {template_parameters: {'DbPassword' => {'secret' => 'db_password'}}, compile_time_parameters: {}} }
     let(:resolved_template_parameters) { {'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium'} }

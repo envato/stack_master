@@ -21,18 +21,16 @@ Feature: Stack defaults
           tags:
             environment: production
       stacks:
-        ap_southeast_2:
-          myapp_vpc:
-            template: myapp_vpc.rb
-            tags:
-              role: network
-            notification_arns:
-              - test_arn_3
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.rb
-            tags:
-              role: network
+        myapp_vpc:
+          template: myapp_vpc.rb
+          tags:
+            role: network
+          notification_arns:
+            - test_arn_3
+        myotherapp_vpc:
+          template: myapp_vpc.rb
+          tags:
+            role: network
       """
     And a directory named "templates"
     And a directory named "policies"

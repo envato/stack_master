@@ -7,12 +7,8 @@ Feature: Region aliases
         staging: ap-southeast-2
         production: us_east_1
       stacks:
-        staging:
-          myapp_vpc:
-            template: myapp_vpc.rb
-        production:
-          myapp_vpc:
-            template: myapp_vpc.rb
+        myapp_vpc:
+          template: myapp_vpc.rb
       """
     And a directory named "templates"
     And a directory named "parameters"

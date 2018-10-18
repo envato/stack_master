@@ -4,11 +4,10 @@ Feature: Apply command
     Given a file named "stack_master.yml" with:
       """
       stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.rb
-          myapp_web:
-            template: myapp_web.rb
+        myapp_vpc:
+          template: myapp_vpc.rb
+        myapp_web:
+          template: myapp_web.rb
       """
     And a directory named "parameters"
     And a file named "parameters/myapp_vpc.yml" with:
@@ -332,12 +331,11 @@ Feature: Apply command
     Given a file named "stack_master.yml" with:
       """
       stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.rb
-            notification_arns:
-              - test_arn
-            stack_policy_file: no_rds_replacement.json
+        myapp_vpc:
+          template: myapp_vpc.rb
+          notification_arns:
+            - test_arn
+          stack_policy_file: no_rds_replacement.json
       """
     And a file named "policies/no_rds_replacement.json" with:
       """

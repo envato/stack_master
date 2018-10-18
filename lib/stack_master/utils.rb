@@ -22,9 +22,9 @@ module StackMaster
     end
 
     def hash_to_aws_parameters(params)
-      params.inject([]) do |params, (key, value)|
-        params << { parameter_key: key, parameter_value: value }
-        params
+      params.inject([]) do |aws_params, (key, value)|
+        aws_params << { parameter_key: key, parameter_value: value }
+        aws_params
       end
     end
 
@@ -41,9 +41,9 @@ module StackMaster
     end
 
     def underscore_keys_to_hyphen(hash)
-      hash.inject({}) do |hash, (key, value)|
-        hash[underscore_to_hyphen(key)] = value
-        hash
+      hash.inject({}) do |hash_with_underscore_keys, (key, value)|
+        hash_with_underscore_keys[underscore_to_hyphen(key)] = value
+        hash_with_underscore_keys
       end
     end
   end

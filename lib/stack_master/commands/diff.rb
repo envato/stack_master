@@ -16,7 +16,7 @@ module StackMaster
       private
 
       def stack_definition
-        @stack_definition ||= @config.find_stack(@region, @stack_name)
+        @stack_definition ||= @config.find_stack(@stack_name)
       end
 
       def stack

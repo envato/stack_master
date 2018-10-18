@@ -1,9 +1,10 @@
 RSpec.describe StackMaster::Config do
-  subject(:loaded_config) { StackMaster::Config.load!('spec/fixtures/stack_master.yml') }
+  let(:region) { 'us-east-1' }
+  subject(:loaded_config) { StackMaster::Config.load!('spec/fixtures/stack_master.yml', region) }
   let(:base_dir) { File.expand_path('spec/fixtures') }
   let(:myapp_vpc_definition) {
     StackMaster::StackDefinition.new(
-      region: 'us-east-1',
+      region: region,
       region_alias: 'production',
       stack_name: 'myapp-vpc',
       template: 'myapp_vpc.json',
@@ -48,25 +49,20 @@ RSpec.describe StackMaster::Config do
 
   describe '#find_stack' do
     it 'returns an object that can find stack definitions' do
-      stack = loaded_config.find_stack('us-east-1', 'myapp-vpc')
+      stack = loaded_config.find_stack('myapp-vpc')
       expect(stack).to eq(myapp_vpc_definition)
     end
 
     it 'can find things with underscores instead of hyphens' do
-      stack = loaded_config.find_stack('us_east_1', 'myapp_vpc')
+      stack = loaded_config.find_stack('myapp_vpc')
       expect(stack).to eq(myapp_vpc_definition)
     end
   end
 
   describe '#filter' do
     it 'returns a list of stack definitions' do
-      stack = loaded_config.filter('us-east-1', 'myapp-vpc')
+      stack = loaded_config.filter('myapp-vpc')
       expect(stack).to eq([myapp_vpc_definition])
-    end
-
-    it 'can filter by region only' do
-      stacks = loaded_config.filter('us-east-1')
-      expect(stacks.size).to eq 3
     end
 
     it 'can return all stack definitions with no filters' do
@@ -82,7 +78,6 @@ RSpec.describe StackMaster::Config do
   it 'loads stack defaults' do
     expect(loaded_config.stack_defaults).to eq({
       'tags' => { 'application' => 'my-awesome-blog' },
-      's3' => { 'bucket' => 'my-bucket', 'region' => 'us-east-1' }
     })
   end
 
@@ -103,13 +98,15 @@ RSpec.describe StackMaster::Config do
         'role_arn' => 'test_service_role_arn',
         'notification_arns' => ['test_arn'],
         'secret_file' => 'production.yml.gpg',
-        'stack_policy_file' => 'my_policy.json'
+        'stack_policy_file' => 'my_policy.json',
+        's3' => { 'bucket' => 'my-bucket', 'region' => 'us-east-1'}
       },
       'ap-southeast-2' => {
         'tags' => {'environment' => 'staging', 'test_override' => 1 },
         'role_arn' => 'test_service_role_arn3',
         'notification_arns' => ['test_arn_3'],
-        'secret_file' => 'staging.yml.gpg'
+        'secret_file' => 'staging.yml.gpg',
+        's3' => { 'bucket' => 'my-bucket', 'region' => 'ap-southeast-2' }
       }
     })
   end
@@ -121,45 +118,46 @@ RSpec.describe StackMaster::Config do
     )
   end
 
-  it 'deep merges stack attributes' do
-    expect(loaded_config.find_stack('ap-southeast-2', 'myapp-vpc')).to eq(StackMaster::StackDefinition.new(
-      stack_name: 'myapp-vpc',
-      region: 'ap-southeast-2',
-      region_alias: 'staging',
-      tags: {
-        'application' => 'my-awesome-blog',
-        'environment' => 'staging',
-        'test_override' => 1
-      },
-      s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
-      role_arn: 'test_service_role_arn4',
-      notification_arns: ['test_arn_3', 'test_arn_4'],
-      template: 'myapp_vpc.rb',
-      base_dir: base_dir,
-      secret_file: 'staging.yml.gpg',
-      additional_parameter_lookup_dirs: ['staging']
-    ))
-    expect(loaded_config.find_stack('ap-southeast-2', 'myapp-web')).to eq(StackMaster::StackDefinition.new(
-      stack_name: 'myapp-web',
-      region: 'ap-southeast-2',
-      region_alias: 'staging',
-      tags: {
-        'application' => 'my-awesome-blog',
-        'environment' => 'staging',
-        'test_override' => 2
-      },
-      s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
-      role_arn: 'test_service_role_arn3',
-      notification_arns: ['test_arn_3'],
-      template: 'myapp_web',
-      base_dir: base_dir,
-      secret_file: 'staging.yml.gpg',
-      additional_parameter_lookup_dirs: ['staging']
-    ))
+  context 'in the staging environment' do
+    let(:region) { 'staging' }
+    it 'deep merges stack attributes' do
+      expect(loaded_config.find_stack('myotherapp-vpc')).to eq(StackMaster::StackDefinition.new(
+        stack_name: 'myotherapp-vpc',
+        region: 'ap-southeast-2',
+        tags: {
+          'application' => 'my-awesome-blog',
+          'environment' => 'staging',
+          'test_override' => 1
+        },
+        s3: { 'bucket' => 'my-bucket', 'region' => 'ap-southeast-2' },
+        role_arn: 'test_service_role_arn4',
+        notification_arns: ['test_arn_3', 'test_arn_4'],
+        template: 'myapp_vpc.rb',
+        base_dir: base_dir,
+        secret_file: 'staging.yml.gpg',
+        additional_parameter_lookup_dirs: ['staging']
+      ))
+      expect(loaded_config.find_stack('myotherapp-web')).to eq(StackMaster::StackDefinition.new(
+        stack_name: 'myotherapp-web',
+        region: 'ap-southeast-2',
+        tags: {
+          'application' => 'my-awesome-blog',
+          'environment' => 'staging',
+          'test_override' => 2
+        },
+        s3: { 'bucket' => 'my-bucket', 'region' => 'ap-southeast-2' },
+        role_arn: 'test_service_role_arn3',
+        notification_arns: ['test_arn_3'],
+        template: 'myapp_web',
+        base_dir: base_dir,
+        secret_file: 'staging.yml.gpg',
+        additional_parameter_lookup_dirs: ['staging']
+      ))
+    end
   end
 
   it 'allows region aliases in region defaults' do
-    config = StackMaster::Config.new({'region_aliases' => { 'production' => 'us-east-1' }, 'region_defaults' => { 'production' => { 'secret_file' => 'production.yml.gpg' }}, 'stacks' => {}}, '/base')
+    config = StackMaster::Config.new({'region_aliases' => { 'production' => 'us-east-1' }, 'region_defaults' => { 'production' => { 'secret_file' => 'production.yml.gpg' }}, 'stacks' => {}}, '/base', 'us-east-1')
     expect(config.region_defaults).to eq('us-east-1' => { 'secret_file' => 'production.yml.gpg' })
   end
 end

@@ -4,9 +4,8 @@ Feature: Validate command
     Given a file named "stack_master.yml" with:
       """
       stacks:
-        us_east_1:
-          stack1:
-            template: stack1.json
+        stack1:
+          template: stack1.json
       """
     And a directory named "parameters"
     And a file named "parameters/stack1.yml" with:

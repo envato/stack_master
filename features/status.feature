@@ -4,13 +4,12 @@ Feature: Status command
     Given a file named "stack_master.yml" with:
       """
       stacks:
-        us_east_1:
-          stack1:
-            template: stack1.json
-          stack2:
-            template: stack2.json
-          stack3:
-            template: stack3.json
+        stack1:
+          template: stack1.json
+        stack2:
+          template: stack2.json
+        stack3:
+          template: stack3.json
       """
     And a directory named "parameters"
     And a file named "parameters/stack1.yml" with:
@@ -106,7 +105,7 @@ Feature: Status command
 }
       """
 
-    When I run `stack_master status --trace`
+    When I run `stack_master status us-east-1 --trace`
     And the output should contain all of these lines:
       | REGION    \| STACK_NAME \| STACK_STATUS    \| DIFFERENT |
       | ----------\|------------\|-----------------\|---------- |

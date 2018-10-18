@@ -4,9 +4,8 @@ Feature: Apply command with environment parameter
     Given a file named "stack_master.yml" with:
       """
       stacks:
-        us-east-2:
-          vpc:
-            template: vpc.rb
+        vpc:
+          template: vpc.rb
       """
     And a directory named "parameters"
     And a file named "parameters/vpc.yml" with:

@@ -9,11 +9,10 @@ Feature: Apply command
           region: us-east-1
           prefix: cfn_templates/my-app
       stacks:
-        us_east_1:
-          myapp_vpc:
-            template: myapp_vpc.rb
-            files:
-              - user_data.sh
+        myapp_vpc:
+          template: myapp_vpc.rb
+          files:
+            - user_data.sh
       """
     And a directory named "parameters"
     And a file named "parameters/myapp_vpc.yml" with:
