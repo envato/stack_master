@@ -344,7 +344,7 @@ Returns the docker repository URI, i.e. `aws_account_id.dkr.ecr.region.amazonaws
 container_image_id:
   latest_container:
     repository_name: nginx # Required. The name of the repository
-    registry_id: 012345678910 # The AWS Account ID the repository is located in. Defaults to the current account's default registry
+    registry_id: "012345678910" # The AWS Account ID the repository is located in. Defaults to the current account's default registry. Must be in quotes.
     region: us-east-1 # Defaults to the region the stack is located in
     tag: production # By default we'll find the latest image pushed to the repository. If tag is specified we return the sha digest of the image with this tag
 ```
