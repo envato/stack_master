@@ -17,12 +17,14 @@ module StackMaster
         ecr_client = Aws::ECR::Client.new(region: @region)
 
         images = fetch_images(parameters['repository_name'], parameters['registry_id'], ecr_client)
-        return nil if images.empty?
 
-        if !parameters['tag'].nil?
+        unless parameters['tag'].nil?
           images.select! { |image| image.image_tags.any? { |tag| tag == parameters['tag'] } }
         end
         images.sort! { |image_x, image_y| image_y.image_pushed_at <=> image_x.image_pushed_at }
+
+        return nil if images.empty?
+
         latest_image = images.first
 
         # aws_account_id.dkr.ecr.region.amazonaws.com/repository@sha256:digest

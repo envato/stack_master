@@ -38,9 +38,17 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
         { registry_id: '012345678910', image_digest: 'sha256:deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['v2'] }
       ])
     end
+  
+    context 'when image exists' do
+      it 'returns the image with the production tag' do
+        expect(resolver.resolve({'repository_name' => 'foo', 'tag' => 'production'})).to eq '012345678910.dkr.ecr.us-east-1.amazonaws.com/foo@sha256:decafc0ffee'
+      end
+    end
 
-    it 'returns the image with the production tag' do
-      expect(resolver.resolve({'repository_name' => 'foo', 'tag' => 'production'})).to eq '012345678910.dkr.ecr.us-east-1.amazonaws.com/foo@sha256:decafc0ffee'
+    context 'when no image exists for this tag' do
+      it 'returns nil' do
+        expect(resolver.resolve({'repository_name' => 'foo', 'tag' => 'nosuchtag'})).to be_nil
+      end
     end
   end
 
