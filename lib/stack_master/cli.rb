@@ -187,8 +187,10 @@ module StackMaster
             region = args[0]
           end
 
+          stack_name = Utils.underscore_to_hyphen(args[1])
+
           StackMaster.cloud_formation_driver.set_region(region)
-          StackMaster::Commands::Delete.perform(region, args[1])
+          StackMaster::Commands::Delete.perform(region, stack_name)
         end
       end
 
