@@ -9,6 +9,7 @@ module StackMaster
                   :base_dir,
                   :template_dir,
                   :secret_file,
+                  :ejson_file,
                   :stack_policy_file,
                   :additional_parameter_lookup_dirs,
                   :s3,
@@ -37,6 +38,7 @@ module StackMaster
         @notification_arns == other.notification_arns &&
         @base_dir == other.base_dir &&
         @secret_file == other.secret_file &&
+        @ejson_file == other.ejson_file &&
         @stack_policy_file == other.stack_policy_file &&
         @additional_parameter_lookup_dirs == other.additional_parameter_lookup_dirs &&
         @s3 == other.s3 &&
