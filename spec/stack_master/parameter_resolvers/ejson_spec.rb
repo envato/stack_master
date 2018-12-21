@@ -1,4 +1,4 @@
-RSpec.describe StackMaster::ParameterResolvers::EJSON do
+RSpec.describe StackMaster::ParameterResolvers::Ejson do
   let(:base_dir) { '/base_dir' }
   let(:config) { double(base_dir: base_dir) }
   let(:ejson_file) { 'staging.ejson' }

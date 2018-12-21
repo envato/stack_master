@@ -67,7 +67,7 @@ module StackMaster
     autoload :AcmCertificate, 'stack_master/parameter_resolvers/acm_certificate'
     autoload :AmiFinder, 'stack_master/parameter_resolvers/ami_finder'
     autoload :StackOutput, 'stack_master/parameter_resolvers/stack_output'
-    autoload :EJSON, 'stack_master/parameter_resolvers/ejson'
+    autoload :Ejson, 'stack_master/parameter_resolvers/ejson'
     autoload :Secret, 'stack_master/parameter_resolvers/secret'
     autoload :SnsTopicName, 'stack_master/parameter_resolvers/sns_topic_name'
     autoload :SecurityGroup, 'stack_master/parameter_resolvers/security_group'

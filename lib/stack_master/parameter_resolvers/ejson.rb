@@ -2,7 +2,7 @@ require 'ejson_wrapper'
 
 module StackMaster
   module ParameterResolvers
-    class EJSON < Resolver
+    class Ejson < Resolver
       SecretNotFound = Class.new(StandardError)
 
       def initialize(config, stack_definition)
