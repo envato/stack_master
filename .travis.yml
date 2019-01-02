@@ -1,9 +1,6 @@
 language: ruby
 matrix:
   include:
-    - rvm: 2.2
-    - rvm: 2.2
-      os: osx
     - rvm: 2.3
     - rvm: 2.3
       os: osx
