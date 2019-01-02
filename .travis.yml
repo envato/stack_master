@@ -1,8 +1,6 @@
 language: ruby
 matrix:
   include:
-    - rvm: 2.1
-      gemfile: spec/support/gemfiles/Gemfile.activesupport-4.0.0
     - rvm: 2.2
     - rvm: 2.2
       os: osx
