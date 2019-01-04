@@ -7,5 +7,8 @@ rvm:
 - 2.4
 - 2.5
 - 2.6
+before_install:
+- gem update --system
+- gem install bundler
 script: bundle exec rake spec features
 sudo: false
