@@ -35,6 +35,9 @@ module StackMaster
       global_option '-d', '--debug', 'Run in debug mode' do
         StackMaster.debug!
       end
+      global_option '-q', '--quiet', 'Do not output the resulting Stack Events, just return immediately' do
+        StackMaster.quiet!
+      end
 
       command :apply do |c|
         c.syntax = 'stack_master apply [region_or_alias] [stack_name]'
