@@ -54,6 +54,7 @@ stack_defaults:
   tags:
     application: my-awesome-app
   role_arn: service_role_arn
+  sleep_between_fetches: 30
 region_defaults:
   us-east-1:
     secret_file: production.yml.gpg
@@ -99,6 +100,17 @@ stacks:
       tags:
         purpose: vpc
 ```
+
+## Sleep between fetches - refresh rate of stack outputs
+
+StackMaster can optionally increase or decrease the time within to fetches of stack outputs of your cloudformation stacks. Use with caution - it can lead to aws api throttling rate exceed errors. Default value is 30:
+
+```yaml
+stack_defaults:
+  sleep_between_fetches: 1
+```
+
+This will try to fetch new stack events every second
 
 ## S3
 
