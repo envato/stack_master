@@ -193,7 +193,9 @@ module StackMaster
           stack_name = Utils.underscore_to_hyphen(args[1])
 
           StackMaster.cloud_formation_driver.set_region(region)
-          StackMaster::Commands::Delete.perform(region, stack_name)
+          success = StackMaster::Commands::Delete.perform(region, stack_name)
+
+          exit 1 if !success
         end
       end
 
@@ -230,7 +232,8 @@ module StackMaster
       end
 
       # Return success/failure
-      command_results.all?
+      success = command_results.all?
+      exit 1 if !success      
     end
   end
 end

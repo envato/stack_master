@@ -12,7 +12,8 @@ module StackMaster
                 :outputs,
                 :stack_policy_body,
                 :tags,
-                :files
+                :files,
+                :sleep_between_fetches
 
     include Utils::Initializable
 
@@ -78,7 +79,8 @@ module StackMaster
           template_format: template_format,
           role_arn: stack_definition.role_arn,
           notification_arns: stack_definition.notification_arns,
-          stack_policy_body: stack_policy_body)
+          stack_policy_body: stack_policy_body,
+          sleep_between_fetches: stack_definition.sleep_between_fetches)
     end
 
     def max_template_size(use_s3)

@@ -58,5 +58,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "multi_json"
   spec.add_dependency "hashdiff"
   spec.add_dependency "dotgpg" unless windows_build
+  spec.add_dependency "oj"
   spec.add_dependency "diff-lcs" if windows_build
 end

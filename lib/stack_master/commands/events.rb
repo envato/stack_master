@@ -16,7 +16,7 @@ module StackMaster
           StackEvents::Presenter.print_event(StackMaster.stdout, event)
         end
         if @options.tail
-          StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout)
+          StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, sleep_between_fetches: @stack_definition.sleep_between_fetches, io: StackMaster.stdout)
         end
       end
 

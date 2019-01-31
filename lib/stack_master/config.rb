@@ -21,6 +21,7 @@ module StackMaster
                   :region_defaults,
                   :region_aliases,
                   :template_compilers,
+                  :sleep_between_fetches
 
     def self.search_up_and_chdir(config_file)
       return config_file unless File.dirname(config_file) == "."

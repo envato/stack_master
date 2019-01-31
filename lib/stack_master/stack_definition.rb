@@ -14,17 +14,17 @@ module StackMaster
                   :s3,
                   :files,
                   :compiler_options,
-                  :attributes
+                  :sleep_between_fetches
 
     include Utils::Initializable
 
     def initialize(attributes = {})
-      puts "Attributes: #{attributes}"
       @additional_parameter_lookup_dirs = []
       @compiler_options = {}
       @notification_arns = []
       @s3 = {}
       @files = []
+      @sleep_between_fetches = 30
       super
       @template_dir ||= File.join(@base_dir, 'templates')
     end

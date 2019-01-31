@@ -1,3 +1,5 @@
+require 'oj'
+
 module StackMaster
   module Commands
     class Apply
@@ -10,7 +12,6 @@ module StackMaster
         @config = config
         @s3_config = stack_definition.s3
         @stack_definition = stack_definition
-        puts "Config: #{config}"
         @from_time = Time.now
         @options = options
         @options.on_failure ||= nil
@@ -196,7 +197,7 @@ module StackMaster
       end
 
       def tail_stack_events
-        StackEvents::Streamer.stream(stack_name, region, io: StackMaster.stdout, from: @from_time)
+        StackEvents::Streamer.stream(stack_name, region, sleep_between_fetches: @stack_definition.sleep_between_fetches, io: StackMaster.stdout, from: @from_time)
       rescue StackMaster::CtrlC
         ask_to_cancel_stack_update
       end
@@ -213,7 +214,7 @@ module StackMaster
           @stack_definition.parameter_files.each do |parameter_file|
             StackMaster.stderr.puts " - #{parameter_file}"
           end
-          halt!
+          failed!
         end
       end
 
