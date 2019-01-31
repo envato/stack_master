@@ -1,5 +1,3 @@
-require 'oj'
-
 module StackMaster
   module Commands
     class Apply
