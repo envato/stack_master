@@ -13,11 +13,13 @@ module StackMaster
                   :additional_parameter_lookup_dirs,
                   :s3,
                   :files,
-                  :compiler_options
+                  :compiler_options,
+                  :attributes
 
     include Utils::Initializable
 
     def initialize(attributes = {})
+      puts "Attributes: #{attributes}"
       @additional_parameter_lookup_dirs = []
       @compiler_options = {}
       @notification_arns = []

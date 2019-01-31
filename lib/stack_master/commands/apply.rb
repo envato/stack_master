@@ -10,6 +10,7 @@ module StackMaster
         @config = config
         @s3_config = stack_definition.s3
         @stack_definition = stack_definition
+        puts "Config: #{config}"
         @from_time = Time.now
         @options = options
         @options.on_failure ||= nil

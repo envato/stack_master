@@ -30,6 +30,7 @@ module StackMaster
                 throw :halt
               end
             end
+            @io.puts "Next fetch of new events will start in #{sleep_between_fetches} seconds") if @io
             sleep @sleep_between_fetches
           end
         end
