@@ -58,7 +58,7 @@ RSpec.describe StackMaster::Commands::Apply do
     it 'streams events' do
       Timecop.freeze(Time.local(1990)) do
         apply
-        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now, sleep_between_fetches: 30})
+        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now, sleep_between_fetches: 30)
       end
     end
 
@@ -219,7 +219,7 @@ RSpec.describe StackMaster::Commands::Apply do
     it 'streams events' do
       Timecop.freeze(Time.local(1990)) do
         apply
-        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now, sleep_between_fetches: 30})
+        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now, sleep_between_fetches: 30)
       end
     end
 
