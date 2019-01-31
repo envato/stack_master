@@ -43,4 +43,4 @@ Feature: Validate command
   Scenario: Validate unsuccessfully
     Given I stub CloudFormation validate calls to fail validation with message "Blah"
     And I run `stack_master validate us-east-1 stack1`
-    Then the output should contain "stack1: invalid. Blah"
+    Then the exit status should be 1
