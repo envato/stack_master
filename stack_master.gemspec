@@ -23,14 +23,14 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/envato/stack_master"
   spec.license       = "MIT"
 
-  spec.files         = Dir.glob("{bin,lib}/**/*") + %w(README.md)
+  spec.files         = Dir.glob("{bin,lib,stacktemplates}/**/*") + %w(README.md)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
   spec.required_ruby_version = ">= 2.1.0"
   spec.platform      = gem_platform
 
-  spec.add_development_dependency "bundler", "~> 1.5"
+  spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "pry"
@@ -39,12 +39,14 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "timecop"
   spec.add_dependency "os"
   spec.add_dependency "ruby-progressbar"
-  spec.add_dependency "commander"
+  spec.add_dependency "commander", "<= 4.4.5"
+  spec.add_dependency "aws-sdk-acm", "~> 1"
   spec.add_dependency "aws-sdk-cloudformation", "~> 1"
   spec.add_dependency "aws-sdk-ec2", "~> 1"
   spec.add_dependency "aws-sdk-s3", "~> 1"
   spec.add_dependency "aws-sdk-sns", "~> 1"
   spec.add_dependency "aws-sdk-ssm", "~> 1"
+  spec.add_dependency "aws-sdk-ecr", "~> 1"
   spec.add_dependency "diffy"
   spec.add_dependency "erubis"
   spec.add_dependency "colorize"
@@ -54,5 +56,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "deep_merge"
   spec.add_dependency "cfndsl"
   spec.add_dependency "multi_json"
+  spec.add_dependency "hashdiff"
   spec.add_dependency "dotgpg" unless windows_build
+  spec.add_dependency "diff-lcs" if windows_build
 end

@@ -1,3 +1,5 @@
+require 'io/console'
+
 module StackMaster
   module Prompter
     def ask?(question)

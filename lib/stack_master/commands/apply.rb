@@ -13,6 +13,7 @@ module StackMaster
         @from_time = Time.now
         @options = options
         @options.on_failure ||= nil
+        @options.yes_param ||= nil
       end
 
       def perform
@@ -20,7 +21,7 @@ module StackMaster
         ensure_valid_parameters!
         ensure_valid_template_body_size!
         create_or_update_stack
-        tail_stack_events
+        tail_stack_events unless StackMaster.quiet?
         set_stack_policy
       end
 
@@ -46,12 +47,24 @@ module StackMaster
         !stack.nil?
       end
 
+      def abort_if_review_in_progress
+        if stack_exists? && stack.stack_status == "REVIEW_IN_PROGRESS"
+          StackMaster.stderr.puts "Stack currently exists and is in #{stack.stack_status}"
+          failed! "You will need to delete the stack (#{stack.stack_name}) before continuing"
+        end
+      end
+
       def use_s3?
         !@s3_config.empty?
       end
 
       def diff_stacks
-        StackDiffer.new(proposed_stack, stack).output_diff
+        abort_if_review_in_progress
+        differ.output_diff
+      end
+
+      def differ
+        @differ ||= StackDiffer.new(proposed_stack, stack)
       end
 
       def create_or_update_stack
@@ -118,11 +131,19 @@ module StackMaster
         end
 
         @change_set.display(StackMaster.stdout)
+        if differ.single_param_update?(@options.yes_param)
+          StackMaster.stdout.puts("Auto-approving update to single parameter #{@options.yes_param}")
+        else
+          ask_update_confirmation!
+        end
+        execute_change_set
+      end
+
+      def ask_update_confirmation!
         unless ask?("Apply change set (y/n)? ")
           ChangeSet.delete(@change_set.id)
           halt! "Stack update aborted"
         end
-        execute_change_set
       end
 
       def upload_files

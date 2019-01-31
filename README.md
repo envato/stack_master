@@ -331,6 +331,24 @@ A set of possible attributes is available in the [AWS documentation](https://doc
 
 Any value can be an array of possible matches.
 
+### Latest Container from Repository
+
+Looks up the a Container Image from an ECR repository. By default this will return the latest container in a repository.
+If `tag` is specified we return the sha digest of the image with this tag.
+This avoids the issue where CloudFormation won't update a Task Definition if we use a tag such as `latest`, because it only updates resources if a parameter has changed.
+This allows us to tag an image and deploy the latest version of that image via CloudFormation and avoids versioning our tags and having to store the metadata about the latest tag version somewhere.
+
+Returns the docker repository URI, i.e. `aws_account_id.dkr.ecr.region.amazonaws.com/container@sha256:digest`
+
+```yaml
+container_image_id:
+  latest_container:
+    repository_name: nginx # Required. The name of the repository
+    registry_id: "012345678910" # The AWS Account ID the repository is located in. Defaults to the current account's default registry. Must be in quotes.
+    region: us-east-1 # Defaults to the region the stack is located in
+    tag: production # By default we'll find the latest image pushed to the repository. If tag is specified we return the sha digest of the image with this tag
+```
+
 ### Environment Variable
 
 Lookup an environment variable:
@@ -338,6 +356,15 @@ Lookup an environment variable:
 ```yaml
 db_username:
   env: DB_USERNAME
+```
+
+### ACM Certificates
+
+Find an ACM certificate by domain name:
+
+```yaml
+cert:
+  acm_certificate: www.example.com
 ```
 
 ### Custom parameter resolvers

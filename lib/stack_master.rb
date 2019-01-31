@@ -1,11 +1,13 @@
 require 'commander'
 require 'yaml'
-require "aws-sdk-cloudformation"
-require "aws-sdk-ec2"
-require "aws-sdk-s3"
-require "aws-sdk-sns"
-require "aws-sdk-ssm"
-require "colorize"
+require 'aws-sdk-acm'
+require 'aws-sdk-cloudformation'
+require 'aws-sdk-ec2'
+require 'aws-sdk-ecr'
+require 'aws-sdk-s3'
+require 'aws-sdk-sns'
+require 'aws-sdk-ssm'
+require 'colorize'
 require 'active_support/core_ext/string'
 require 'multi_json'
 
@@ -54,12 +56,15 @@ module StackMaster
     autoload :Diff, 'stack_master/commands/diff'
     autoload :ListStacks, 'stack_master/commands/list_stacks'
     autoload :Validate, 'stack_master/commands/validate'
+    autoload :Lint, 'stack_master/commands/lint'
+    autoload :Compile, 'stack_master/commands/compile'
     autoload :Resources, 'stack_master/commands/resources'
     autoload :Delete, 'stack_master/commands/delete'
     autoload :Status, 'stack_master/commands/status'
   end
 
   module ParameterResolvers
+    autoload :AcmCertificate, 'stack_master/parameter_resolvers/acm_certificate'
     autoload :AmiFinder, 'stack_master/parameter_resolvers/ami_finder'
     autoload :StackOutput, 'stack_master/parameter_resolvers/stack_output'
     autoload :Secret, 'stack_master/parameter_resolvers/secret'
@@ -70,6 +75,7 @@ module StackMaster
     autoload :Env, 'stack_master/parameter_resolvers/env'
     autoload :ParameterStore, 'stack_master/parameter_resolvers/parameter_store'
     autoload :OnePassword, 'stack_master/parameter_resolvers/one_password'
+    autoload :LatestContainer, 'stack_master/parameter_resolvers/latest_container'
   end
 
   module AwsDriver
@@ -88,6 +94,10 @@ module StackMaster
     autoload :Streamer, 'stack_master/stack_events/streamer'
   end
 
+  NON_INTERACTIVE_DEFAULT = false
+  DEBUG_DEFAULT = false
+  QUIET_DEFAULT = false
+
   def interactive?
     !non_interactive?
   end
@@ -95,7 +105,7 @@ module StackMaster
   def non_interactive?
     @non_interactive
   end
-  @non_interactive = false
+  @non_interactive = NON_INTERACTIVE_DEFAULT
 
   def non_interactive!
     @non_interactive = true
@@ -104,7 +114,7 @@ module StackMaster
   def debug!
     @debug = true
   end
-  @debug = false
+  @debug = DEBUG_DEFAULT
 
   def debug?
     @debug
@@ -113,6 +123,19 @@ module StackMaster
   def debug(message)
     return unless debug?
     stderr.puts "[DEBUG] #{message}".colorize(:green)
+  end
+
+  def quiet!
+    @quiet = true
+  end
+  @quiet = QUIET_DEFAULT
+
+  def quiet?
+    @quiet
+  end
+
+  def reset_flags
+    @quiet = QUIET_DEFAULT
   end
 
   attr_accessor :non_interactive_answer

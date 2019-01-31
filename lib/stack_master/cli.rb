@@ -35,6 +35,9 @@ module StackMaster
       global_option '-d', '--debug', 'Run in debug mode' do
         StackMaster.debug!
       end
+      global_option '-q', '--quiet', 'Do not output the resulting Stack Events, just return immediately' do
+        StackMaster.quiet!
+      end
 
       command :apply do |c|
         c.syntax = 'stack_master apply [region_or_alias] [stack_name]'
@@ -42,6 +45,7 @@ module StackMaster
         c.description = "Creates or updates a stack. Shows a diff of the proposed stack's template and parameters. Tails stack events until CloudFormation has completed."
         c.example 'update a stack named myapp-vpc in us-east-1', 'stack_master apply us-east-1 myapp-vpc'
         c.option '--on-failure ACTION', String, "Action to take on CREATE_FAILURE. Valid Values: [ DO_NOTHING | ROLLBACK | DELETE ]. Default: ROLLBACK\nNote: You cannot use this option with Serverless Application Model (SAM) templates."
+        c.option '--yes-param PARAM_NAME', String, "Auto-approve stack updates when only parameter PARAM_NAME changes"
         c.action do |args, options|
           options.defaults config: default_config_file
           execute_stacks_command(StackMaster::Commands::Apply, args, options)
@@ -131,6 +135,28 @@ module StackMaster
         end
       end
 
+      command :lint do |c|
+        c.syntax = 'stack_master lint [region_or_alias] [stack_name]'
+        c.summary = "Check the stack definition locally"
+        c.description = "Runs cfn-lint on the template which would be sent to AWS on apply"
+        c.example 'run cfn-lint on stack myapp-vpc with us-east-1 settings', 'stack_master lint us-east-1 myapp-vpc'
+        c.action do |args, options|
+          options.defaults config: default_config_file
+          execute_stacks_command(StackMaster::Commands::Lint, args, options)
+        end
+      end
+
+      command :compile do |c|
+        c.syntax = 'stack_master compile [region_or_alias] [stack_name]'
+        c.summary = "Print the compiled version of a given stack"
+        c.description = "Processes the stack and prints out a compiled version - same we'd send to AWS"
+        c.example 'print compiled stack myapp-vpc with us-east-1 settings', 'stack_master compile us-east-1 myapp-vpc'
+        c.action do |args, options|
+          options.defaults config: default_config_file
+          execute_stacks_command(StackMaster::Commands::Compile, args, options)
+        end
+      end
+
       command :status do |c|
         c.syntax = 'stack_master status'
         c.summary = 'Check the current status stacks.'
@@ -164,8 +190,10 @@ module StackMaster
             region = args[0]
           end
 
+          stack_name = Utils.underscore_to_hyphen(args[1])
+
           StackMaster.cloud_formation_driver.set_region(region)
-          StackMaster::Commands::Delete.perform(region, args[1])
+          StackMaster::Commands::Delete.perform(region, stack_name)
         end
       end
 
