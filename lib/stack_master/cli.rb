@@ -233,7 +233,8 @@ module StackMaster
 
       # Return success/failure
       success = command_results.all?
-      exit 1 if !success      
+      exit 1 if !success
+      success
     end
   end
 end
