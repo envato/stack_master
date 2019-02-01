@@ -12,7 +12,7 @@ module StackMaster
 
       def perform
 
-        return unless check_exists
+        failed! unless check_exists
 
         unless ask?("Really delete stack #{@stack_name} (y/n)? ")
           StackMaster.stdout.puts "Stack update aborted"

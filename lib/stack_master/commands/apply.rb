@@ -212,7 +212,7 @@ module StackMaster
           @stack_definition.parameter_files.each do |parameter_file|
             StackMaster.stderr.puts " - #{parameter_file}"
           end
-          halt!
+          failed!
         end
       end
 
