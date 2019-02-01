@@ -230,7 +230,6 @@ module StackMaster
       end
 
       # Return success/failure
-      puts "Command Resulst #{command_results}"
       command_results.all?
     end
   end
