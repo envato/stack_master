@@ -256,6 +256,7 @@ you will likely want to set the parameter to NoEcho in your template.
 db_password:
   parameter_store: ssm_parameter_name
 ```
+
 ### 1Password Lookup
 An Alternative to the alternative secret store is accessing 1password secrets using the 1password cli (`op`).
 You declare a 1password lookup with the following parameters in your parameters file:
@@ -273,6 +274,29 @@ database_password:
 Currently we support two types of secrets, `password`s and `secureNote`s. All values must be declared, there are no defaults.
 
 For more information on 1password cli please see [here](https://support.1password.com/command-line-getting-started/)
+
+### EJSON Store
+
+[ejson](https://github.com/Shopify/ejson) is a tool for managing asymmetrically encrypted values in JSON format. This allows you to keep secrets securely in git/Github and give anyone the ability the capability to add new secrets without requiring access to the private key.
+
+First create the `production.ejson` file and store the secret value in it, then call `ejson encrypt secrets.ejson`. Then add the `ejson_file` argument to your stack in stack_master.yml:
+
+```yaml
+stacks:
+  us-east-1:
+    my_app:
+      template: my_app.json
+      ejson_file: production.ejson
+```
+
+finally refer to the secret key in the parameter file, i.e. parameters/my_app.yml:
+
+```yaml
+my_param:
+  ejson: "my_secret"
+```
+
+You can also use [EJSON Wrapper](https://github.com/envato/ejson_wrapper) to encrypt the private key with KMS and store it in the ejson file.
 
 ### Security Group
 
