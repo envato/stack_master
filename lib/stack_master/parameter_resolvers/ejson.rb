@@ -21,17 +21,13 @@ module StackMaster
       private
 
       def validate_ejson_file_specified
-        if ejson_file.nil?
+        if @stack_definition.ejson_file.nil?
           raise ArgumentError, "No ejson_file defined for stack definition #{@stack_definition.stack_name} in #{@stack_definition.region}"
         end
       end
 
       def decrypt_ejson_file
-        EJSONWrapper.decrypt(@stack_definition.ejson_file, use_kms: true, region: StackMaster.cloud_formation_driver.region)
-      end
-
-      def ejson_file
-        @stack_definition.ejson_file
+        EJSONWrapper.decrypt(ejson_file_path, use_kms: true, region: StackMaster.cloud_formation_driver.region)
       end
 
       def ejson_file_path
@@ -39,7 +35,7 @@ module StackMaster
       end
 
       def secret_path_relative_to_base
-        @secret_path_relative_to_base ||= File.join('secrets', ejson_file)
+        @secret_path_relative_to_base ||= File.join('secrets', @stack_definition.ejson_file)
       end
     end
   end

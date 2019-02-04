@@ -14,6 +14,11 @@ RSpec.describe StackMaster::ParameterResolvers::Ejson do
     expect(ejson.resolve('secret_a')).to eq('value_a')
   end
 
+  it 'decrypts with the correct file path' do
+    ejson.resolve('secret_a')
+    expect(EJSONWrapper).to have_received(:decrypt).with('/base_dir/secrets/staging.ejson', use_kms: true, region: StackMaster.cloud_formation_driver.region)
+  end
+
   context 'when decryption fails' do
     before do
       allow(EJSONWrapper).to receive(:decrypt).and_raise(EJSONWrapper::DecryptionFailed)
