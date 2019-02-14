@@ -13,10 +13,6 @@ module StackMaster
       TablePrint::Config.io = StackMaster.stdout
     end
 
-    def default_config_file
-      "stack_master.yml"
-    end
-
     def execute!
       program :name, 'StackMaster'
       program :version, StackMaster::VERSION
@@ -200,6 +196,12 @@ module StackMaster
       run!
     end
 
+    private
+
+    def default_config_file
+      "stack_master.yml"
+    end
+
     def load_config(file)
       stack_file = file || default_config_file
       StackMaster::Config.load!(stack_file)
@@ -218,6 +220,7 @@ module StackMaster
         stack_definitions = config.filter(region, stack_name)
         if stack_definitions.empty?
           StackMaster.stdout.puts "Could not find stack definition #{stack_name} in region #{region}"
+          command_results.push false
         end
         stack_definitions = stack_definitions.select do |stack_definition|
           StackStatus.new(config, stack_definition).changed?
@@ -229,8 +232,8 @@ module StackMaster
         end
       end
 
-      # Return success/failure
-      command_results.all?
+      # fail command execution if something went wrong
+      @kernel.exit 1 unless command_results.all?
     end
   end
 end
