@@ -144,6 +144,11 @@ Feature: Apply command
     And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
+  Scenario: Run apply with invalid stack
+    When I run `stack_master apply foo bar`
+    Then the output should contain "Could not find stack definition bar in region foo"
+    And the exit status should be 1
+
   Scenario: Create stack with --changed
     Given I stub the following stack events:
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
