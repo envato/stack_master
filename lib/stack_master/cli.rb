@@ -234,6 +234,8 @@ module StackMaster
 
       # fail command execution if something went wrong
       @kernel.exit 1 unless command_results.all?
+
+      true
     end
   end
 end
