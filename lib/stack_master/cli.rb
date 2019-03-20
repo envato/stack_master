@@ -211,7 +211,7 @@ module StackMaster
     end
 
     def execute_stacks_command(command, args, options)
-      command_results = []
+      success = true
       config = load_config(options.config)
       args = [nil, nil] if args.size == 0
       args.each_slice(2) do |aliased_region, stack_name|
@@ -220,7 +220,7 @@ module StackMaster
         stack_definitions = config.filter(region, stack_name)
         if stack_definitions.empty?
           StackMaster.stdout.puts "Could not find stack definition #{stack_name} in region #{region}"
-          command_results.push false
+          success = false
         end
         stack_definitions = stack_definitions.select do |stack_definition|
           StackStatus.new(config, stack_definition).changed?
@@ -228,12 +228,10 @@ module StackMaster
         stack_definitions.each do |stack_definition|
           StackMaster.cloud_formation_driver.set_region(stack_definition.region)
           StackMaster.stdout.puts "Executing #{command.command_name} on #{stack_definition.stack_name} in #{stack_definition.region}"
-          command_results.push command.perform(config, stack_definition, options).success?
+          success = false unless command.perform(config, stack_definition, options).success?
         end
       end
-
-      # fail command execution if something went wrong
-      @kernel.exit 1 unless command_results.all?
+      success
     end
   end
 end
