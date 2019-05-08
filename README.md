@@ -31,10 +31,18 @@ etc.
 
 ## Installation
 
-System-wide: `gem install stack_master`
+### System-wide
 
-With bundler:
+```shell
+gem install stack_master
 
+# if you want linting capabilities:
+pip install cfn-lint
+```
+
+### Bundler
+
+- `pip install cfn-lint` if you need lint functionality
 - Add `gem 'stack_master'` to your Gemfile.
 - Run `bundle install`
 - Run `bundle exec stack_master init` to generate a directory structure and stack_master.yml file
