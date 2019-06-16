@@ -5,23 +5,18 @@ module StackMaster
         @region = region
       end
 
-      def build_filters_from_string(value, prefix = nil)
-        filters = value.split(',').map do |name_with_value|
-          name, value = name_with_value.strip.split('=')
-          name = prefix ? "#{prefix}:#{name}" : name
-          { name: name, values: [value] }
-        end
-        filters
-      end
-
       def build_filters_from_hash(hash)
-        hash.map { |key, value| {name: key, values: Array(value.to_s)}}
+        # create hash with key converted to symbol
+        hash.map { |key, value| [key.to_sym, value.to_s] }.to_h
       end
 
-      def find_latest_file(filters, owners = ['self'])
-        fileversions = s3.list_object_versions(owners: owners, filters: filters).images
-        sorted_file_versions = file_versions.sort do |a, b|
-          Time.parse(a.last_modified) <=> Time.parse(b.last_modified)
+      def find_latest_file(parameters)
+        # STDERR.puts parameters
+        file_versions = s3.list_object_versions(parameters)
+        # STDERR.puts file_versions.versions
+        sorted_file_versions = file_versions.versions.sort do |a, b|
+          # STDERR.puts "last_modified=#{a.last_modified.class}"
+          Time.parse(a.last_modified.to_s) <=> Time.parse(b.last_modified.to_s)
         end
         sorted_file_versions.last
       end
