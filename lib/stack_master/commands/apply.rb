@@ -17,8 +17,8 @@ module StackMaster
       end
 
       def perform
-        diff_stacks
         upload_files
+        diff_stacks
         ensure_valid_parameters!
         ensure_valid_template_body_size!
         create_or_update_stack
