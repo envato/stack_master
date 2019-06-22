@@ -77,7 +77,6 @@ module StackMaster
       end
 
       def create_stack
-        #upload_files
         if use_change_set?
           create_stack_by_change_set
         else
@@ -124,7 +123,6 @@ module StackMaster
       end
 
       def update_stack
-        #upload_files
         @change_set = ChangeSet.create(stack_options)
         if @change_set.failed?
           ChangeSet.delete(@change_set.id)
