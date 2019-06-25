@@ -551,7 +551,7 @@ Note though that if a dynamic with the same name exists in your `templates/dynam
 
 ## Allowed accounts
 
-The AWS account the command is executing in can be restricted to a specific list of allowed account. This is useful in reduicing the possibility of applying non-production changes in a production account. Each stack definition can specify the `allowed_accounts` property with an array of AWS account IDs the stack is allowed to work with.
+The AWS account the command is executing in can be restricted to a specific list of allowed accounts. This is useful in reducing the possibility of applying non-production changes in a production account. Each stack definition can specify the `allowed_accounts` property with an array of AWS account IDs the stack is allowed to work with.
 
 This is an opt-in feature which is enabled by specifying at least one account to allow.
 
