@@ -116,6 +116,7 @@ module StackMaster
             'base_dir' => @base_dir,
             'template_dir' => @template_dir,
             'additional_parameter_lookup_dirs' => @region_to_aliases[region])
+          stack_attributes['allowed_accounts'] = attributes['allowed_accounts'] if attributes['allowed_accounts']
           @stacks << StackDefinition.new(stack_attributes)
         end
       end

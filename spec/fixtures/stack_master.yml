@@ -2,6 +2,8 @@ region_aliases:
   production: us-east-1
   staging: ap-southeast-2
 stack_defaults:
+  allowed_accounts:
+    - '555555555'
   tags:
     application: my-awesome-blog
   s3:

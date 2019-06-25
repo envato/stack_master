@@ -7,6 +7,7 @@ RSpec.describe StackMaster::Config do
       region_alias: 'production',
       stack_name: 'myapp-vpc',
       template: 'myapp_vpc.json',
+      allowed_accounts: ["555555555"],
       tags: { 'application' => 'my-awesome-blog', 'environment' => 'production' },
       s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
       notification_arns: ['test_arn', 'test_arn_2'],
@@ -81,6 +82,7 @@ RSpec.describe StackMaster::Config do
 
   it 'loads stack defaults' do
     expect(loaded_config.stack_defaults).to eq({
+      'allowed_accounts' => ["555555555"],
       'tags' => { 'application' => 'my-awesome-blog' },
       's3' => { 'bucket' => 'my-bucket', 'region' => 'us-east-1' }
     })
@@ -126,6 +128,7 @@ RSpec.describe StackMaster::Config do
       stack_name: 'myapp-vpc',
       region: 'ap-southeast-2',
       region_alias: 'staging',
+      allowed_accounts: ["555555555"],
       tags: {
         'application' => 'my-awesome-blog',
         'environment' => 'staging',
