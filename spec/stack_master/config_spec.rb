@@ -143,6 +143,7 @@ RSpec.describe StackMaster::Config do
       stack_name: 'myapp-web',
       region: 'ap-southeast-2',
       region_alias: 'staging',
+      allowed_accounts: ["1234567890", "9876543210"],
       tags: {
         'application' => 'my-awesome-blog',
         'environment' => 'staging',
