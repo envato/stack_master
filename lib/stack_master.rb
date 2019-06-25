@@ -38,6 +38,7 @@ module StackMaster
   autoload :PagedResponseAccumulator, 'stack_master/paged_response_accumulator'
   autoload :StackDefinition, 'stack_master/stack_definition'
   autoload :TemplateCompiler, 'stack_master/template_compiler'
+  autoload :Identity, 'stack_master/identity'
 
   autoload :StackDiffer, 'stack_master/stack_differ'
   autoload :Validator, 'stack_master/validator'
