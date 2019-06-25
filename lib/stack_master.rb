@@ -98,6 +98,7 @@ module StackMaster
   NON_INTERACTIVE_DEFAULT = false
   DEBUG_DEFAULT = false
   QUIET_DEFAULT = false
+  SKIP_ACCOUNT_CHECK_DEFAULT = false
 
   def interactive?
     !non_interactive?
@@ -137,6 +138,16 @@ module StackMaster
 
   def reset_flags
     @quiet = QUIET_DEFAULT
+    @skip_account_check = SKIP_ACCOUNT_CHECK_DEFAULT
+  end
+
+  def skip_account_check!
+    @skip_account_check = true
+  end
+  @skip_account_check = SKIP_ACCOUNT_CHECK_DEFAULT
+
+  def skip_account_check?
+    @skip_account_check
   end
 
   attr_accessor :non_interactive_answer

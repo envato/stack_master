@@ -79,6 +79,27 @@ RSpec.describe StackMaster::Commands::Status do
         OUTPUT
         expect { status.perform }.to output(out).to_stdout
       end
+
+      context 'when --skip-account-check flag is set' do
+        before do
+          StackMaster.skip_account_check!
+        end
+
+        after do
+          StackMaster.reset_flags
+        end
+
+        it "returns the status of call stacks" do
+          out = <<~OUTPUT
+          REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT
+          ----------|------------|-----------------|----------
+          us-east-1 | stack1     | UPDATE_COMPLETE | Yes      
+          us-east-1 | stack2     | CREATE_COMPLETE | No       
+           * No echo parameters can't be diffed
+          OUTPUT
+          expect { status.perform }.to output(out).to_stdout
+        end
+      end
     end
   end
 

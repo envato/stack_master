@@ -34,6 +34,9 @@ module StackMaster
       global_option '-q', '--quiet', 'Do not output the resulting Stack Events, just return immediately' do
         StackMaster.quiet!
       end
+      global_option '--skip-account-check', 'Do not check if command is allowed to execute in account' do
+        StackMaster.skip_account_check!
+      end
 
       command :apply do |c|
         c.syntax = 'stack_master apply [region_or_alias] [stack_name]'
@@ -251,7 +254,7 @@ module StackMaster
     end
 
     def running_in_allowed_account?(allowed_accounts)
-      identity.running_in_allowed_account?(allowed_accounts)
+      StackMaster.skip_account_check? || identity.running_in_allowed_account?(allowed_accounts)
     end
 
     def identity
