@@ -23,7 +23,13 @@ RSpec.describe StackMaster::Commands::Status do
       let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
 
       it "returns the status of call stacks" do
-        out = "REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT\n----------|------------|-----------------|----------\nus-east-1 | stack1     | UPDATE_COMPLETE | No       \nus-east-1 | stack2     | CREATE_COMPLETE | Yes      \n * No echo parameters can't be diffed\n"
+        out = <<~OUTPUT
+          REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT
+          ----------|------------|-----------------|----------
+          us-east-1 | stack1     | UPDATE_COMPLETE | No       
+          us-east-1 | stack2     | CREATE_COMPLETE | Yes      
+           * No echo parameters can't be diffed
+        OUTPUT
         expect { status.perform }.to output(out).to_stdout
       end
     end
@@ -35,7 +41,13 @@ RSpec.describe StackMaster::Commands::Status do
       let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
 
       it "returns the status of call stacks" do
-        out = "REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT\n----------|------------|-----------------|----------\nus-east-1 | stack1     | UPDATE_COMPLETE | Yes      \nus-east-1 | stack2     | CREATE_COMPLETE | No       \n * No echo parameters can't be diffed\n"
+        out = <<~OUTPUT
+          REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT
+          ----------|------------|-----------------|----------
+          us-east-1 | stack1     | UPDATE_COMPLETE | Yes      
+          us-east-1 | stack2     | CREATE_COMPLETE | No       
+           * No echo parameters can't be diffed
+        OUTPUT
         expect { status.perform }.to output(out).to_stdout
       end
     end
