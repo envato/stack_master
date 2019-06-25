@@ -24,7 +24,7 @@ module StackMaster
       @notification_arns = []
       @s3 = {}
       @files = []
-      @allowed_accounts = []
+      @allowed_accounts = nil
       super
       @template_dir ||= File.join(@base_dir, 'templates')
       @allowed_accounts = Array(@allowed_accounts)
