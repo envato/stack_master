@@ -178,18 +178,22 @@ module StackMaster
             return
           end
 
+          stack_name = Utils.underscore_to_hyphen(args[1])
+          allowed_accounts = []
+
           # Because delete can work without a stack_master.yml
           if options.config and File.file?(options.config)
             config = load_config(options.config)
             region = Utils.underscore_to_hyphen(config.unalias_region(args[0]))
+            allowed_accounts = config.find_stack(region, stack_name)&.allowed_accounts
           else
             region = args[0]
           end
 
-          stack_name = Utils.underscore_to_hyphen(args[1])
-
-          StackMaster.cloud_formation_driver.set_region(region)
-          StackMaster::Commands::Delete.perform(region, stack_name)
+          execute_if_allowed_account(allowed_accounts) do
+            StackMaster.cloud_formation_driver.set_region(region)
+            StackMaster::Commands::Delete.perform(region, stack_name)
+          end
         end
       end
 
@@ -234,6 +238,24 @@ module StackMaster
         end
       end
       success
+    end
+
+    def execute_if_allowed_account(allowed_accounts, &block)
+      raise ArgumentError, "Block required to execute this method" unless block_given?
+      if running_in_allowed_account?(allowed_accounts)
+        block.call
+      else
+        StackMaster.stdout.puts "Account '#{identity.account}' is not an allowed account. Allowed accounts are #{allowed_accounts}."
+        false
+      end
+    end
+
+    def running_in_allowed_account?(allowed_accounts)
+      identity.running_in_allowed_account?(allowed_accounts)
+    end
+
+    def identity
+      @account ||= StackMaster::Identity.new
     end
   end
 end
