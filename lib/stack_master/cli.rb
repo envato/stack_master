@@ -258,7 +258,7 @@ module StackMaster
     end
 
     def identity
-      @account ||= StackMaster::Identity.new
+      @identity ||= StackMaster::Identity.new
     end
   end
 end
