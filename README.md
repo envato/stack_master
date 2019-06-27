@@ -555,32 +555,32 @@ The AWS account the command is executing in can be restricted to a specific list
 
 This is an opt-in feature which is enabled by specifying at least one account to allow.
 
-Unlike other stack defaults, `allowed_accounts` values specified in the stack definition override values in the stack defaults instead of merging them together. This allows specifying allowed accounts in the stack defaults for all stacks and still have different values for specific stacks. See below example config for an example.
+Unlike other stack defaults, the `allowed_accounts` property values specified in the stack definition override values specified in the stack defaults (i.e., other stack property values are merged together with those specified in the stack defaults). This allows specifying allowed accounts in the stack defaults (inherited by all stacks) and override them for specific stacks. See below example config for an example.
 
 ```yaml
 stack_defaults:
   allowed_accounts: '555555555'
 stacks:
   us-east-1:
-    myapp-vpc: # inherits allowed account 555555555
+    myapp-vpc: # only allow account 555555555 (inherited from the stack defaults)
       template: myapp_vpc.rb
       tags:
         purpose: front-end
     myapp-db:
       template: myapp_db.rb
-      allowed_accounts: # only these accounts
+      allowed_accounts: # only allow these accounts (overrides the stack defaults)
         - '1234567890'
         - '9876543210'
       tags:
         purpose: back-end
     myapp-web:
       template: myapp_web.rb
-      allowed_accounts: [] # allow all accounts by overriding stack defaults
+      allowed_accounts: [] # allow all accounts (overrides the stack defaults)
       tags:
         purpose: front-end
     myapp-redis:
       template: myapp_redis.rb
-      allowed_accounts: '888888888' # only this account
+      allowed_accounts: '888888888' # only allow this account (overrides the stack defaults)
       tags:
         purpose: back-end
 ```
