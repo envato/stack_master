@@ -2,6 +2,8 @@ region_aliases:
   production: us-east-1
   staging: ap-southeast-2
 stack_defaults:
+  allowed_accounts:
+    - '555555555'
   tags:
     application: my-awesome-blog
   s3:
@@ -35,6 +37,7 @@ stacks:
       role_arn: test_service_role_arn2
     myapp_web:
       template: myapp_web.rb
+      allowed_accounts: '1234567890'
     myapp_vpc_with_secrets:
       template: myapp_vpc.json
   ap-southeast-2:
@@ -45,5 +48,8 @@ stacks:
       role_arn: test_service_role_arn4
     myapp_web:
       template: myapp_web
+      allowed_accounts:
+        - '1234567890'
+        - '9876543210'
       tags:
         test_override: 2

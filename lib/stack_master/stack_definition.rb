@@ -5,6 +5,7 @@ module StackMaster
                   :template,
                   :tags,
                   :role_arn,
+                  :allowed_accounts,
                   :notification_arns,
                   :base_dir,
                   :template_dir,
@@ -23,8 +24,10 @@ module StackMaster
       @notification_arns = []
       @s3 = {}
       @files = []
+      @allowed_accounts = nil
       super
       @template_dir ||= File.join(@base_dir, 'templates')
+      @allowed_accounts = Array(@allowed_accounts)
     end
 
     def ==(other)
@@ -34,6 +37,7 @@ module StackMaster
         @template == other.template &&
         @tags == other.tags &&
         @role_arn == other.role_arn &&
+        @allowed_accounts == other.allowed_accounts &&
         @notification_arns == other.notification_arns &&
         @base_dir == other.base_dir &&
         @secret_file == other.secret_file &&

@@ -34,6 +34,9 @@ module StackMaster
       global_option '-q', '--quiet', 'Do not output the resulting Stack Events, just return immediately' do
         StackMaster.quiet!
       end
+      global_option '--skip-account-check', 'Do not check if command is allowed to execute in account' do
+        StackMaster.skip_account_check!
+      end
 
       command :apply do |c|
         c.syntax = 'stack_master apply [region_or_alias] [stack_name]'
@@ -178,18 +181,22 @@ module StackMaster
             return
           end
 
+          stack_name = Utils.underscore_to_hyphen(args[1])
+          allowed_accounts = []
+
           # Because delete can work without a stack_master.yml
           if options.config and File.file?(options.config)
             config = load_config(options.config)
             region = Utils.underscore_to_hyphen(config.unalias_region(args[0]))
+            allowed_accounts = config.find_stack(region, stack_name)&.allowed_accounts
           else
             region = args[0]
           end
 
-          stack_name = Utils.underscore_to_hyphen(args[1])
-
-          StackMaster.cloud_formation_driver.set_region(region)
-          StackMaster::Commands::Delete.perform(region, stack_name)
+          execute_if_allowed_account(allowed_accounts) do
+            StackMaster.cloud_formation_driver.set_region(region)
+            StackMaster::Commands::Delete.perform(region, stack_name)
+          end
         end
       end
 
@@ -223,15 +230,35 @@ module StackMaster
           success = false
         end
         stack_definitions = stack_definitions.select do |stack_definition|
-          StackStatus.new(config, stack_definition).changed?
+          running_in_allowed_account?(stack_definition.allowed_accounts) && StackStatus.new(config, stack_definition).changed?
         end if options.changed
         stack_definitions.each do |stack_definition|
           StackMaster.cloud_formation_driver.set_region(stack_definition.region)
           StackMaster.stdout.puts "Executing #{command.command_name} on #{stack_definition.stack_name} in #{stack_definition.region}"
-          success = false unless command.perform(config, stack_definition, options).success?
+          success = execute_if_allowed_account(stack_definition.allowed_accounts) do
+            command.perform(config, stack_definition, options).success?
+          end
         end
       end
       success
+    end
+
+    def execute_if_allowed_account(allowed_accounts, &block)
+      raise ArgumentError, "Block required to execute this method" unless block_given?
+      if running_in_allowed_account?(allowed_accounts)
+        block.call
+      else
+        StackMaster.stdout.puts "Account '#{identity.account}' is not an allowed account. Allowed accounts are #{allowed_accounts}."
+        false
+      end
+    end
+
+    def running_in_allowed_account?(allowed_accounts)
+      StackMaster.skip_account_check? || identity.running_in_allowed_account?(allowed_accounts)
+    end
+
+    def identity
+      @identity ||= StackMaster::Identity.new
     end
   end
 end
