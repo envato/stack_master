@@ -56,7 +56,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "deep_merge"
   spec.add_dependency "cfndsl"
   spec.add_dependency "multi_json"
-  spec.add_dependency "hashdiff"
+  spec.add_dependency "hashdiff", "~> 1"
   spec.add_dependency "dotgpg" unless windows_build
   spec.add_dependency "diff-lcs" if windows_build
 end
