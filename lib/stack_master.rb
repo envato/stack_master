@@ -38,6 +38,7 @@ module StackMaster
   autoload :PagedResponseAccumulator, 'stack_master/paged_response_accumulator'
   autoload :StackDefinition, 'stack_master/stack_definition'
   autoload :TemplateCompiler, 'stack_master/template_compiler'
+  autoload :Identity, 'stack_master/identity'
 
   autoload :StackDiffer, 'stack_master/stack_differ'
   autoload :Validator, 'stack_master/validator'
@@ -95,6 +96,11 @@ module StackMaster
     autoload :Streamer, 'stack_master/stack_events/streamer'
   end
 
+  NON_INTERACTIVE_DEFAULT = false
+  DEBUG_DEFAULT = false
+  QUIET_DEFAULT = false
+  SKIP_ACCOUNT_CHECK_DEFAULT = false
+
   def interactive?
     !non_interactive?
   end
@@ -102,7 +108,7 @@ module StackMaster
   def non_interactive?
     @non_interactive
   end
-  @non_interactive = false
+  @non_interactive = NON_INTERACTIVE_DEFAULT
 
   def non_interactive!
     @non_interactive = true
@@ -111,7 +117,7 @@ module StackMaster
   def debug!
     @debug = true
   end
-  @debug = false
+  @debug = DEBUG_DEFAULT
 
   def debug?
     @debug
@@ -120,6 +126,29 @@ module StackMaster
   def debug(message)
     return unless debug?
     stderr.puts "[DEBUG] #{message}".colorize(:green)
+  end
+
+  def quiet!
+    @quiet = true
+  end
+  @quiet = QUIET_DEFAULT
+
+  def quiet?
+    @quiet
+  end
+
+  def reset_flags
+    @quiet = QUIET_DEFAULT
+    @skip_account_check = SKIP_ACCOUNT_CHECK_DEFAULT
+  end
+
+  def skip_account_check!
+    @skip_account_check = true
+  end
+  @skip_account_check = SKIP_ACCOUNT_CHECK_DEFAULT
+
+  def skip_account_check?
+    @skip_account_check
   end
 
   attr_accessor :non_interactive_answer

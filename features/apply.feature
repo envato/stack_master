@@ -82,6 +82,21 @@ Feature: Apply command
     And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
 
+  Scenario: Run apply and create a new stack quietly
+    Given I stub the following stack events:
+      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | myapp-vpc  | TestSg              | CREATE_COMPLETE | AWS::EC2::SecurityGroup    | 2020-10-29 00:00:00 |
+      | 1        | 1        | myapp-vpc  | myapp-vpc           | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    When I run `stack_master apply us-east-1 myapp-vpc -q`
+    And the output should contain all of these lines:
+      | Stack diff:          |
+      | +    "Vpc": {        |
+      | Parameters diff:     |
+      | KeyName: my-key      |
+      | Proposed change set: |
+    And the output should not match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
+    Then the exit status should be 0
+
   Scenario: Run apply and don't create the stack
     Given I will answer prompts with "n"
     When I run `stack_master apply us-east-1 myapp-vpc --trace`
@@ -128,6 +143,10 @@ Feature: Apply command
     And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
     And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
+
+  Scenario: Run apply with invalid stack
+    When I run `stack_master apply foo bar`
+    Then the output should contain "Could not find stack definition bar in region foo"
 
   Scenario: Create stack with --changed
     Given I stub the following stack events:

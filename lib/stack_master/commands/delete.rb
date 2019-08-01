@@ -20,7 +20,7 @@ module StackMaster
         end
 
         delete_stack
-        tail_stack_events
+        tail_stack_events unless StackMaster.quiet?
       end
 
       private

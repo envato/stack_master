@@ -21,7 +21,7 @@ module StackMaster
         ensure_valid_parameters!
         ensure_valid_template_body_size!
         create_or_update_stack
-        tail_stack_events
+        tail_stack_events unless StackMaster.quiet?
         set_stack_policy
       end
 

@@ -13,7 +13,11 @@ module StackMaster
 
       def perform
         unless cfn_lint_available
-          failed! "Failed to run cfn-lint, do you have it installed and available in $PATH?"
+          failed! 'Failed to run cfn-lint. You may need to install it using'\
+                  '`pip install cfn-lint`, or add it to $PATH.'\
+                  "\n"\
+                  '(See https://github.com/aws-cloudformation/cfn-python-lint'\
+                  ' for package information)'
         end
 
         Tempfile.open(['stack', ".#{proposed_stack.template_format}"]) do |f|

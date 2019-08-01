@@ -1,5 +1,5 @@
 # Temp Core Image
-FROM microsoft/windowsservercore AS core
+FROM mcr.microsoft.com/windows/servercore:ltsc2016 AS core
 
 ENV RUBY_VERSION 2.2.4
 ENV DEVKIT_VERSION 4.7.2
@@ -12,7 +12,7 @@ ADD https://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-64-${DEVKIT_VER
 RUN C:\\tmp\\DevKit-mingw64-64-%DEVKIT_VERSION%-%DEVKIT_BUILD%-sfx.exe -o"C:\DevKit" -y
 
 # Final Nano Image
-FROM microsoft/nanoserver AS nano
+FROM microsoft/nanoserver:sac2016 AS nano
 
 ENV RUBY_VERSION 2.2.4
 ENV RUBYGEMS_VERSION 2.6.13

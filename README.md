@@ -31,10 +31,18 @@ etc.
 
 ## Installation
 
-System-wide: `gem install stack_master`
+### System-wide
 
-With bundler:
+```shell
+gem install stack_master
 
+# if you want linting capabilities:
+pip install cfn-lint
+```
+
+### Bundler
+
+- `pip install cfn-lint` if you need lint functionality
 - Add `gem 'stack_master'` to your Gemfile.
 - Run `bundle install`
 - Run `bundle exec stack_master init` to generate a directory structure and stack_master.yml file
@@ -83,10 +91,14 @@ stacks:
   staging:
     myapp-vpc:
       template: myapp_vpc.rb
+      allowed_accounts: '123456789'
       tags:
         purpose: front-end
     myapp-db:
       template: myapp_db.rb
+      allowed_accounts:
+        - '1234567890'
+        - '9876543210'
       tags:
         purpose: back-end
     myapp-web:
@@ -560,6 +572,44 @@ end
 ```
 
 Note though that if a dynamic with the same name exists in your `templates/dynamics/` directory it will get loaded since it has higher precedence.
+
+## Allowed accounts
+
+The AWS account the command is executing in can be restricted to a specific list of allowed accounts. This is useful in reducing the possibility of applying non-production changes in a production account. Each stack definition can specify the `allowed_accounts` property with an array of AWS account IDs the stack is allowed to work with.
+
+This is an opt-in feature which is enabled by specifying at least one account to allow.
+
+Unlike other stack defaults, the `allowed_accounts` property values specified in the stack definition override values specified in the stack defaults (i.e., other stack property values are merged together with those specified in the stack defaults). This allows specifying allowed accounts in the stack defaults (inherited by all stacks) and override them for specific stacks. See below example config for an example.
+
+```yaml
+stack_defaults:
+  allowed_accounts: '555555555'
+stacks:
+  us-east-1:
+    myapp-vpc: # only allow account 555555555 (inherited from the stack defaults)
+      template: myapp_vpc.rb
+      tags:
+        purpose: front-end
+    myapp-db:
+      template: myapp_db.rb
+      allowed_accounts: # only allow these accounts (overrides the stack defaults)
+        - '1234567890'
+        - '9876543210'
+      tags:
+        purpose: back-end
+    myapp-web:
+      template: myapp_web.rb
+      allowed_accounts: [] # allow all accounts (overrides the stack defaults)
+      tags:
+        purpose: front-end
+    myapp-redis:
+      template: myapp_redis.rb
+      allowed_accounts: '888888888' # only allow this account (overrides the stack defaults)
+      tags:
+        purpose: back-end
+```
+
+In the cases where you want to bypass the account check, there is StackMaster flag `--skip-account-check` that can be used.
 
 ## Commands
 
