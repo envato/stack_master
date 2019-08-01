@@ -175,7 +175,7 @@ key_name: myapp-us-east-1
 
 ### Compile Time Parameters
 
-Compile time parameters can be used for [SparkleFormation](http://www.sparkleformation.io) templates. It conforms and 
+Compile time parameters can be used for [SparkleFormation](http://www.sparkleformation.io) templates. It conforms and
 allows you to use the [Compile Time Parameters](http://www.sparkleformation.io/docs/sparkle_formation/compile-time-parameters.html) feature.
 
 A simple example looks like this
@@ -289,9 +289,21 @@ For more information on 1password cli please see [here](https://support.1passwor
 
 ### EJSON Store
 
-[ejson](https://github.com/Shopify/ejson) is a tool for managing asymmetrically encrypted values in JSON format. This allows you to keep secrets securely in git/Github and give anyone the ability the capability to add new secrets without requiring access to the private key.
+[ejson](https://github.com/Shopify/ejson) is a tool to manage asymmetrically encrypted values in JSON format.
+This allows you to keep secrets securely in git/Github and gives anyone the ability the capability to add new
+secrets without requiring access to the private key. [ejson_wrapper](https://github.com/envato/ejson_wrapper)
+encrypts the underlying EJSON private key with KMS and stores it in the ejson file as `_private_key_enc`. Each
+time an ejson secret is required, the underlying EJSON private key is first decrypted before passing it onto
+ejson to decrypt the file.
 
-First create the `production.ejson` file and store the secret value in it, then call `ejson encrypt secrets.ejson`. Then add the `ejson_file` argument to your stack in stack_master.yml:
+First, generate an ejson file with ejson_wrapper, specifying the KMS key ID to be used:
+
+```shell
+gem install ejson_wrapper
+ejson_wrapper generate --region us-east-1 --kms-key-id [key_id] --file secrets/production.ejson
+```
+
+Then, add the `ejson_file` argument to your stack in stack_master.yml:
 
 ```yaml
 stacks:
@@ -307,8 +319,6 @@ finally refer to the secret key in the parameter file, i.e. parameters/my_app.ym
 my_param:
   ejson: "my_secret"
 ```
-
-You can also use [EJSON Wrapper](https://github.com/envato/ejson_wrapper) to encrypt the private key with KMS and store it in the ejson file.
 
 ### Security Group
 
