@@ -11,6 +11,7 @@ module StackMaster
                   :template_dir,
                   :secret_file,
                   :ejson_file,
+                  :ejson_file_region,
                   :stack_policy_file,
                   :additional_parameter_lookup_dirs,
                   :s3,
@@ -43,6 +44,7 @@ module StackMaster
         @base_dir == other.base_dir &&
         @secret_file == other.secret_file &&
         @ejson_file == other.ejson_file &&
+        @ejson_file_region == other.ejson_file_region &&
         @stack_policy_file == other.stack_policy_file &&
         @additional_parameter_lookup_dirs == other.additional_parameter_lookup_dirs &&
         @s3 == other.s3 &&
