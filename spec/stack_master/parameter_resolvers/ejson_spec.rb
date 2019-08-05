@@ -3,7 +3,7 @@ RSpec.describe StackMaster::ParameterResolvers::Ejson do
   let(:config) { double(base_dir: base_dir) }
   let(:ejson_file) { 'staging.ejson' }
   let(:ejson_file_region) { 'ap-southeast-2' }
-  let(:stack_definition) { double(ejson_file: ejson_file, ejson_file_region: ejson_file_region, stack_name: 'mystack', region: 'us-east-1') }
+  let(:stack_definition) { double(ejson_file: ejson_file, ejson_file_region: ejson_file_region, stack_name: 'mystack', region: 'us-east-1', ejson_file_kms: true) }
   subject(:ejson) { described_class.new(config, stack_definition) }
   let(:secrets) { { secret_a: 'value_a' } }
 

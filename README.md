@@ -320,6 +320,11 @@ my_param:
   ejson: "my_secret"
 ```
 
+Additional configuration options:
+
+- `ejson_file_region` The AWS region to attempt to decrypt private key with
+- `ejson_file_kms` Default: true. Set to false to use ejson without KMS.
+
 ### Security Group
 
 Looks up a security group by name and returns the ARN.
