@@ -27,7 +27,9 @@ module StackMaster
       end
 
       def decrypt_ejson_file
-        EJSONWrapper.decrypt(ejson_file_path, use_kms: true, region: ejson_file_region)
+        @decrypt_ejson_file ||= EJSONWrapper.decrypt(ejson_file_path,
+                                                     use_kms: true,
+                                                     region: ejson_file_region)
       end
 
       def ejson_file_region
