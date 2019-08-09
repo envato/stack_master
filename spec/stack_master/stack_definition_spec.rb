@@ -67,4 +67,8 @@ RSpec.describe StackMaster::StackDefinition do
       ])
     end
   end
+
+  it 'defaults ejson_file_kms to true' do
+    expect(stack_definition.ejson_file_kms).to eq true
+  end
 end

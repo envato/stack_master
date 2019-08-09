@@ -175,7 +175,7 @@ key_name: myapp-us-east-1
 
 ### Compile Time Parameters
 
-Compile time parameters can be used for [SparkleFormation](http://www.sparkleformation.io) templates. It conforms and 
+Compile time parameters can be used for [SparkleFormation](http://www.sparkleformation.io) templates. It conforms and
 allows you to use the [Compile Time Parameters](http://www.sparkleformation.io/docs/sparkle_formation/compile-time-parameters.html) feature.
 
 A simple example looks like this
@@ -268,6 +268,7 @@ you will likely want to set the parameter to NoEcho in your template.
 db_password:
   parameter_store: ssm_parameter_name
 ```
+
 ### 1Password Lookup
 An Alternative to the alternative secret store is accessing 1password secrets using the 1password cli (`op`).
 You declare a 1password lookup with the following parameters in your parameters file:
@@ -285,6 +286,44 @@ database_password:
 Currently we support two types of secrets, `password`s and `secureNote`s. All values must be declared, there are no defaults.
 
 For more information on 1password cli please see [here](https://support.1password.com/command-line-getting-started/)
+
+### EJSON Store
+
+[ejson](https://github.com/Shopify/ejson) is a tool to manage asymmetrically encrypted values in JSON format.
+This allows you to keep secrets securely in git/Github and gives anyone the ability the capability to add new
+secrets without requiring access to the private key. [ejson_wrapper](https://github.com/envato/ejson_wrapper)
+encrypts the underlying EJSON private key with KMS and stores it in the ejson file as `_private_key_enc`. Each
+time an ejson secret is required, the underlying EJSON private key is first decrypted before passing it onto
+ejson to decrypt the file.
+
+First, generate an ejson file with ejson_wrapper, specifying the KMS key ID to be used:
+
+```shell
+gem install ejson_wrapper
+ejson_wrapper generate --region us-east-1 --kms-key-id [key_id] --file secrets/production.ejson
+```
+
+Then, add the `ejson_file` argument to your stack in stack_master.yml:
+
+```yaml
+stacks:
+  us-east-1:
+    my_app:
+      template: my_app.json
+      ejson_file: production.ejson
+```
+
+finally refer to the secret key in the parameter file, i.e. parameters/my_app.yml:
+
+```yaml
+my_param:
+  ejson: "my_secret"
+```
+
+Additional configuration options:
+
+- `ejson_file_region` The AWS region to attempt to decrypt private key with
+- `ejson_file_kms` Default: true. Set to false to use ejson without KMS.
 
 ### Security Group
 
