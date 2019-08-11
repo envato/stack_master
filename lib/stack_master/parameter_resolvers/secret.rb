@@ -21,7 +21,7 @@ module StackMaster
         secret_key = value
         raise ArgumentError, "No secret_file defined for stack definition #{@stack_definition.stack_name} in #{@stack_definition.region}" unless !@stack_definition.secret_file.nil?
         raise ArgumentError, "Could not find secret file at #{secret_file_path}" unless File.exist?(secret_file_path)
-        StackMaster.stderr.puts """[DEPRECATION WARNING] The GPG Parameter Resolver is being deprecated in favour of the Parameter Store and 1Password resolvers.
+        StackMaster.stderr.puts """[DEPRECATION WARNING] The GPG Parameter Resolver is being deprecated and migrated to https://github.com/envato/stack_master-gpg_parameter_resolver.
 Support for GPG encrypted secrets will be removed in StackMaster 2.0"""
         secrets_hash.fetch(secret_key) do
           raise SecretNotFound, "Unable to find key #{secret_key} in file #{secret_file_path}"

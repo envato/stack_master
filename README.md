@@ -209,7 +209,7 @@ into parameters of dependent stacks.
 
 ### Secret
 
-**DEPRECATED**: This parameters resolver is deprecated and will be removed in version 2.0. Refer to [Parameter Store](#parameter-store) and [1Password](#1password-lookup) for alternatives for handling secrets.
+**DEPRECATED**: This parameters resolver is deprecated and will be removed in version 2.0. You may install the [seperate gem](https://github.com/envato/stack_master-gpg_parameter_resolver) or use [Parameter Store](#parameter-store) or [1Password](#1password-lookup).
 
 Note: This resolver is not supported on Windows.
 
