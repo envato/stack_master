@@ -44,6 +44,12 @@ module StackMaster::TemplateCompilers
         end
       end
 
+      # update path if the template comes from an imported sparkle pack
+      if compiler_options['sparkle_pack_template']
+        raise ArgumentError.new("Template #{template_file_path} not found in any sparkle pack") unless collection.templates['aws'].include? template_file_path
+        template_file_path = collection.templates['aws'][template_file_path].top['path']
+      end
+
       sparkle_template = compile_template_with_sparkle_path(template_file_path, sparkle_path)
       sparkle_template.sparkle.apply(collection)
       sparkle_template
