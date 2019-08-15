@@ -249,7 +249,7 @@ RSpec.describe StackMaster::Commands::Apply do
 
       it "deletes the stack" do
         expect(cf).to receive(:delete_stack).with(stack_name: stack_name)
-        expect { apply }.to raise_error
+        expect { apply }.to raise_error(StackMaster::CtrlC)
       end
     end
   end
