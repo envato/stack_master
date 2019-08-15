@@ -588,17 +588,16 @@ end
 
 Note though that if a dynamic with the same name exists in your `templates/dynamics/` directory it will get loaded since it has higher precedence.
 
-Templates can be also loaded from sparkle packs by defining the compiler option `sparkle_pack_template`. No extension should be added in this case:
+Templates can be also loaded from sparkle packs by defining `sparkle_pack_template`. No extension should be added in this case:
 
 ```yaml
 stacks:
   us-east-1
     my-stack:
-      template: template_name
+      sparkle_pack_template: template_name
       compiler_options:
         sparkle_packs:
           - some-sparkle-pack
-        sparkle_pack_template: true
 ```
 
 ## Allowed accounts
