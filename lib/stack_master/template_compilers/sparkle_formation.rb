@@ -35,11 +35,9 @@ module StackMaster::TemplateCompilers
       end
 
       collection = ::SparkleFormation::SparkleCollection.new
-      puts(collection.inspect)
       root_pack = ::SparkleFormation::Sparkle.new(
         :root => sparkle_path,
       )
-      puts(root_pack.inspect)
       collection.set_root(root_pack)
       if compiler_options['sparkle_packs']
         compiler_options['sparkle_packs'].each do |pack_name|
