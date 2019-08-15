@@ -12,8 +12,8 @@ module StackMaster::TemplateCompilers
       require 'stack_master/sparkle_formation/template_file'
     end
 
-    def self.compile(stack_definition, compile_time_parameters, compiler_options = {})
-      sparkle_template = compile_sparkle_template(stack_definition, compiler_options)
+    def self.compile(template_dir, template_file_path, sparkle_pack_template, compile_time_parameters, compiler_options = {})
+      sparkle_template = compile_sparkle_template(template_dir, template_file_path, sparkle_pack_template, compiler_options)
       definitions = sparkle_template.parameters
       validate_definitions(definitions)
       validate_parameters(definitions, compile_time_parameters)
@@ -27,11 +27,11 @@ module StackMaster::TemplateCompilers
 
     private
 
-    def self.compile_sparkle_template(stack_definition, compiler_options)
+    def self.compile_sparkle_template(template_dir, template_file_path, sparkle_pack_template, compiler_options)
       sparkle_path = if compiler_options['sparkle_path']
         File.expand_path(compiler_options['sparkle_path'])
       else
-        stack_definition.template_dir
+        template_dir
       end
 
       collection = ::SparkleFormation::SparkleCollection.new
@@ -47,11 +47,9 @@ module StackMaster::TemplateCompilers
         end
       end
 
-      if template_name = stack_definition.sparkle_pack_template
-        raise ArgumentError.new("Template #{template_name} not found in any sparkle pack") unless collection.templates['aws'].include? template_name
-        template_file_path = collection.templates['aws'][template_name].top['path']
-      else
-        template_file_path = stack_definition.template_file_path
+      if sparkle_pack_template
+        raise ArgumentError.new("Template #{sparkle_pack_template} not found in any sparkle pack") unless collection.templates['aws'].include? sparkle_pack_template
+        template_file_path = collection.templates['aws'][sparkle_pack_template].top['path']
       end
 
       sparkle_template = compile_template_with_sparkle_path(template_file_path, sparkle_path)

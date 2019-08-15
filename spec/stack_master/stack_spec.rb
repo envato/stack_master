@@ -89,7 +89,14 @@ RSpec.describe StackMaster::Stack do
       allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
       allow(StackMaster::ParameterResolver).to receive(:resolve).with(config,stack_definition,parameter_hash[:template_parameters]).and_return(resolved_template_parameters)
       allow(StackMaster::ParameterResolver).to receive(:resolve).with(config,stack_definition,parameter_hash[:compile_time_parameters]).and_return(resolved_compile_time_parameters)
-      allow(StackMaster::TemplateCompiler).to receive(:compile).with(config, stack_definition, resolved_compile_time_parameters, stack_definition.compiler_options).and_return(template_body)
+      allow(StackMaster::TemplateCompiler).to receive(:compile).with(
+        config,
+        stack_definition.template_dir,
+        stack_definition.template_file_path,
+        stack_definition.sparkle_pack_template,
+        resolved_compile_time_parameters,
+        stack_definition.compiler_options
+      ).and_return(template_body)
       allow(File).to receive(:read).with(stack_definition.stack_policy_file_path).and_return(stack_policy_body)
     end
 
