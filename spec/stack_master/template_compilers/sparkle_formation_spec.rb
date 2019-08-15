@@ -1,5 +1,18 @@
 RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
+  let(:sparkle_template) { instance_double(::SparkleFormation) }
+  let(:sparkle_double) { instance_double(::SparkleFormation::SparkleCollection) }
+  let(:compile_time_parameter_definitions) { {} }
+
+  before do
+    allow(sparkle_template).to receive(:sparkle).and_return(sparkle_double)
+    allow(sparkle_template).to receive(:parameters).and_return(compile_time_parameter_definitions)
+    allow(sparkle_template).to receive(:compile_time_parameter_setter).and_yield
+    allow(sparkle_template).to receive(:compile_state=)
+    allow(sparkle_template).to receive(:to_json).and_return("{\n}")
+    allow(sparkle_double).to receive(:apply)
+  end
+
   describe '.compile' do
     def compile
       described_class.compile(stack_definition, compile_time_parameters, compiler_options)
@@ -8,19 +21,16 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
     let(:stack_definition) {
       instance_double(StackMaster::StackDefinition,
         template_file_path: template_file_path,
+        template_dir: File.dirname(template_file_path),
         sparkle_pack_template: nil)
     }
     let(:template_file_path) { '/base_dir/templates/template.rb' }
     let(:compile_time_parameters) { {'Ip' => '10.0.0.0', 'Name' => 'Something'} }
     let(:compiler_options) { {} }
-    let(:compile_time_parameter_definitions) { {} }
 
-    let(:sparkle_template) { instance_double(::SparkleFormation) }
     let(:definitions_validator) { instance_double(StackMaster::SparkleFormation::CompileTime::DefinitionsValidator) }
     let(:parameters_validator) { instance_double(StackMaster::SparkleFormation::CompileTime::ParametersValidator) }
     let(:state_builder) { instance_double(StackMaster::SparkleFormation::CompileTime::StateBuilder) }
-
-    let(:sparkle_double) { instance_double(::SparkleFormation::SparkleCollection) }
 
     before do
       allow(::SparkleFormation).to receive(:compile).with(template_file_path, :sparkle).and_return(sparkle_template)
@@ -30,16 +40,10 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       allow(StackMaster::SparkleFormation::CompileTime::StateBuilder).to receive(:new).and_return(state_builder)
       allow(::SparkleFormation::SparkleCollection).to receive(:new).and_return(sparkle_double)
 
-      allow(sparkle_template).to receive(:parameters).and_return(compile_time_parameter_definitions)
-      allow(sparkle_template).to receive(:sparkle).and_return(sparkle_double)
-      allow(sparkle_double).to receive(:apply)
       allow(sparkle_double).to receive(:set_root)
       allow(definitions_validator).to receive(:validate)
       allow(parameters_validator).to receive(:validate)
       allow(state_builder).to receive(:build).and_return({})
-      allow(sparkle_template).to receive(:compile_time_parameter_setter).and_yield
-      allow(sparkle_template).to receive(:compile_state=)
-      allow(sparkle_template).to receive(:to_json).and_return("{\n}")
     end
 
     it 'compiles with sparkleformation' do
@@ -92,9 +96,11 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
   describe '.compile with sparkle packs' do
     let(:compile_time_parameters) { {} }
+    let(:compiler_options) { {} }
     let(:stack_definition) {
       instance_double(StackMaster::StackDefinition,
         template_file_path: template_file_path,
+        template_dir: File.dirname(template_file_path),
         sparkle_pack_template: nil)
     }
     subject(:compile) { described_class.compile(stack_definition, compile_time_parameters, compiler_options)}
@@ -114,9 +120,45 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       end
     end
 
+    context 'when using sparkle pack template' do
+      let(:template_name) { "foobar_template" }
+      let(:stack_definition) do
+        instance_double(StackMaster::StackDefinition,
+          template_file_path: nil,
+          template_dir: "/base_dir/templates",
+          sparkle_pack_template: template_name)
+      end
+      let(:template_path) { "/base_dir/templates/#{template_name}.rb" }
+      let(:pack_templates) do
+        {'aws' => aws_templates}
+      end
+      let(:collection_double) { instance_double(::SparkleFormation::SparkleCollection, templates: pack_templates) }
+      let(:root_pack) { instance_double(::SparkleFormation::Sparkle, "root_pack") }
+
+      before do
+        allow(::SparkleFormation::SparkleCollection).to receive(:new).and_return(collection_double)
+        allow(collection_double).to receive(:set_root)
+        allow(::SparkleFormation::Sparkle).to receive(:new).and_return(root_pack)
+      end
+
+      context 'when template is found' do
+        let(:pack_template) { instance_double(::SparkleFormation::SparkleCollection::Rainbow, top: {'path' => template_path }) }
+        let(:aws_templates) { {template_name => pack_template} }
+        it 'resolves template location' do
+          expect(::SparkleFormation).to receive(:compile).with(template_path, :sparkle).and_return(sparkle_template)
+          expect(compile).to eq("{\n}")
+        end
+      end
+      context 'when template is not found' do
+        let(:aws_templates) { {} }
+        it 'resolves template location' do
+          expect { compile }.to raise_error(/not found in any sparkle pack/)
+        end
+      end
+    end
+
     context 'without a sparkle_pack loaded' do
       let(:template_file_path) { File.join(File.dirname(__FILE__), "..", "..", "fixtures", "sparkle_pack_integration", "templates", "template_with_dynamic.rb")}
-      let(:compiler_options) { {} }
 
       it 'pulls the dynamic from the local path' do
         expect(compile).to eq(%Q({\n  \"Outputs\": {\n    \"Bar\": {\n      \"Value\": \"local_dynamic\"\n    }\n  }\n}))
