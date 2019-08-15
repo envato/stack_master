@@ -1,6 +1,6 @@
 RSpec.describe StackMaster::TemplateCompiler do
   describe '.compile' do
-    let(:config) { double(template_compilers: { fab: :test_template_compiler }) }
+    let(:config) { double(template_compilers: { fab: :test_template_compiler, rb: :test_template_compiler }) }
     let(:stack_definition) {
       instance_double(StackMaster::StackDefinition,
         template_file_path: '/base_dir/templates/template.fab',
@@ -37,6 +37,22 @@ RSpec.describe StackMaster::TemplateCompiler do
           }.to raise_error(
                  StackMaster::TemplateCompiler::TemplateCompilationFailed, /^Failed to compile #{stack_definition.template_file_path}/)
         end
+      end
+    end
+
+    context 'when a sparkle pack template is being requested' do
+      let(:stack_definition) {
+        instance_double(StackMaster::StackDefinition,
+          sparkle_pack_template: 'foobar')
+      }
+
+      before {
+        StackMaster::TemplateCompiler.register(:test_template_compiler, TestTemplateCompiler)
+      }
+
+      it 'compiles the template using the sparkle pack compiler' do
+        expect(TestTemplateCompiler).to receive(:compile).with(stack_definition, compile_time_parameters, anything)
+        StackMaster::TemplateCompiler.compile(config, stack_definition, compile_time_parameters, compile_time_parameters)
       end
     end
   end
