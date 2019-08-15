@@ -31,7 +31,7 @@ module StackMaster
       compiler_name = config.template_compilers.fetch(:rb)
       @compilers.fetch(compiler_name)
     end
-    private_class_method :template_compiler_for_file
+    private_class_method :sparkle_template_compiler
 
     def self.file_ext(template_file_path)
       File.extname(template_file_path).gsub('.', '').to_sym
