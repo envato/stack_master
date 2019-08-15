@@ -57,6 +57,7 @@ module StackMaster
     end
 
     def template_file_path
+      return unless template
       File.expand_path(File.join(template_dir, template))
     end
 
