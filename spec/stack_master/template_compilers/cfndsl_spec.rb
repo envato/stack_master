@@ -7,7 +7,7 @@ RSpec.describe StackMaster::TemplateCompilers::Cfndsl do
   describe '.compile' do
     let(:stack_definition) { instance_double(StackMaster::StackDefinition, template_file_path: template_file_path) }
     def compile
-      described_class.compile(stack_definition, compile_time_parameters)
+      described_class.compile(nil, stack_definition.template_file_path, nil, compile_time_parameters)
     end
 
     context 'valid cfndsl template' do

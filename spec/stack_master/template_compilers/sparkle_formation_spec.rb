@@ -15,7 +15,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
   describe '.compile' do
     def compile
-      described_class.compile(stack_definition, compile_time_parameters, compiler_options)
+      described_class.compile(template_dir, template_file_path, nil, compile_time_parameters, compiler_options)
     end
 
     let(:stack_definition) {
@@ -25,6 +25,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
         sparkle_pack_template: nil)
     }
     let(:template_file_path) { '/base_dir/templates/template.rb' }
+    let(:template_dir) { File.dirname(template_file_path) }
     let(:compile_time_parameters) { {'Ip' => '10.0.0.0', 'Name' => 'Something'} }
     let(:compiler_options) { {} }
 
@@ -103,7 +104,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
         template_dir: File.dirname(template_file_path),
         sparkle_pack_template: nil)
     }
-    subject(:compile) { described_class.compile(stack_definition, compile_time_parameters, compiler_options)}
+    subject(:compile) { described_class.compile(stack_definition.template_dir, stack_definition.template_file_path, stack_definition.sparkle_pack_template, compile_time_parameters, compiler_options)}
 
     context 'with a sparkle_pack loaded' do
       let(:template_file_path) { File.join(File.dirname(__FILE__), "..", "..", "fixtures", "sparkle_pack_integration", "templates", "template_with_dynamic_from_pack.rb")}
