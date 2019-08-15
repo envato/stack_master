@@ -12,8 +12,8 @@ module StackMaster::TemplateCompilers
       require 'stack_master/sparkle_formation/template_file'
     end
 
-    def self.compile(template_file_path, compile_time_parameters, compiler_options = {})
-      sparkle_template = compile_sparkle_template(template_file_path, compiler_options)
+    def self.compile(stack_definition, compile_time_parameters, compiler_options = {})
+      sparkle_template = compile_sparkle_template(stack_definition, compiler_options)
       definitions = sparkle_template.parameters
       validate_definitions(definitions)
       validate_parameters(definitions, compile_time_parameters)
@@ -27,9 +27,9 @@ module StackMaster::TemplateCompilers
 
     private
 
-    def self.compile_sparkle_template(template_file_path, compiler_options)
+    def self.compile_sparkle_template(stack_definition, compiler_options)
       sparkle_path = compiler_options['sparkle_path'] ?
-                        File.expand_path(compiler_options['sparkle_path']) : File.dirname(template_file_path)
+                        File.expand_path(compiler_options['sparkle_path']) : File.dirname(stack_definition.template_file_path)
 
       collection = ::SparkleFormation::SparkleCollection.new
       root_pack = ::SparkleFormation::Sparkle.new(
@@ -44,10 +44,11 @@ module StackMaster::TemplateCompilers
         end
       end
 
-      # update path if the template comes from an imported sparkle pack
-      if compiler_options['sparkle_pack_template']
-        raise ArgumentError.new("Template #{template_file_path} not found in any sparkle pack") unless collection.templates['aws'].include? template_file_path
-        template_file_path = collection.templates['aws'][template_file_path].top['path']
+      if template_name = stack_definition.sparkle_pack_template
+        raise ArgumentError.new("Template #{template_name} not found in any sparkle pack") unless collection.templates['aws'].include? template_name
+        template_file_path = collection.templates['aws'][template_name].top['path']
+      else
+        template_file_path = stack_definition.template_file_path
       end
 
       sparkle_template = compile_template_with_sparkle_path(template_file_path, sparkle_path)

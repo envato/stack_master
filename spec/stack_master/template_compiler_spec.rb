@@ -1,7 +1,11 @@
 RSpec.describe StackMaster::TemplateCompiler do
   describe '.compile' do
     let(:config) { double(template_compilers: { fab: :test_template_compiler }) }
-    let(:stack_definition) { instance_double(StackMaster::StackDefinition, template_file_path: '/base_dir/templates/template.fab') }
+    let(:stack_definition) {
+      instance_double(StackMaster::StackDefinition,
+        template_file_path: '/base_dir/templates/template.fab',
+        sparkle_pack_template: nil)
+    }
     let(:compile_time_parameters) { { 'InstanceType' => 't2.medium' } }
 
     class TestTemplateCompiler
@@ -15,13 +19,13 @@ RSpec.describe StackMaster::TemplateCompiler do
       }
 
       it 'compiles the template using the relevant template compiler' do
-        expect(TestTemplateCompiler).to receive(:compile).with(stack_definition.template_file_path, compile_time_parameters, anything)
+        expect(TestTemplateCompiler).to receive(:compile).with(stack_definition, compile_time_parameters, anything)
         StackMaster::TemplateCompiler.compile(config, stack_definition, compile_time_parameters, compile_time_parameters)
       end
 
       it 'passes compile_options to the template compiler' do
         opts = {foo: 1, bar: true, baz: "meh"}
-        expect(TestTemplateCompiler).to receive(:compile).with(stack_definition.template_file_path, compile_time_parameters, opts)
+        expect(TestTemplateCompiler).to receive(:compile).with(stack_definition, compile_time_parameters, opts)
         StackMaster::TemplateCompiler.compile(config, stack_definition, compile_time_parameters,opts)
       end
 
