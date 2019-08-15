@@ -14,7 +14,7 @@ module StackMaster
       compile_time_parameters = ParameterResolver.resolve(@config, @stack_definition, parameter_hash[:compile_time_parameters])
 
       StackMaster.stdout.print "#{@stack_definition.stack_name}: "
-      template_body = TemplateCompiler.compile(@config, @stack_definition.template_file_path, compile_time_parameters, @stack_definition.compiler_options)
+      template_body = TemplateCompiler.compile(@config, @stack_definition, compile_time_parameters, @stack_definition.compiler_options)
       cf.validate_template(template_body: TemplateUtils.maybe_compressed_template_body(template_body))
       StackMaster.stdout.puts "valid"
       true
