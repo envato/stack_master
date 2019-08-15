@@ -570,7 +570,7 @@ stacks:
 
 ```yaml
 stacks:
-  us-east-1
+  us-east-1:
     my-stack:
       template: my-stack-with-dynamic.rb
       compiler_options:
@@ -600,7 +600,7 @@ we can use stack defined as follows:
 
 ```yaml
 stacks:
-  us-east-1
+  us-east-1:
     my-stack:
       sparkle_pack_template: template_name
       compiler_options:
