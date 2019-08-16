@@ -4,7 +4,7 @@ module StackMaster::TemplateCompilers
       require 'cfndsl'
     end
 
-    def self.compile(_template_dir, template_file_path, _sparkle_pack_template, compile_time_parameters, _compiler_options = {})
+    def self.compile(_template_dir, template_file_path, compile_time_parameters, _compiler_options = {})
       CfnDsl.disable_binding
       CfnDsl::ExternalParameters.defaults.clear # Ensure there's no leakage across invocations
       CfnDsl::ExternalParameters.defaults(compile_time_parameters.symbolize_keys)

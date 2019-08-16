@@ -3,7 +3,6 @@ module StackMaster
     attr_accessor :region,
                   :stack_name,
                   :template,
-                  :sparkle_pack_template,
                   :tags,
                   :role_arn,
                   :allowed_accounts,
@@ -40,7 +39,6 @@ module StackMaster
         @region == other.region &&
         @stack_name == other.stack_name &&
         @template == other.template &&
-        @sparkle_pack_template == other.sparkle_pack_template &&
         @tags == other.tags &&
         @role_arn == other.role_arn &&
         @allowed_accounts == other.allowed_accounts &&

@@ -602,10 +602,11 @@ we can use stack defined as follows:
 stacks:
   us-east-1:
     my-stack:
-      sparkle_pack_template: template_name
+      template: template_name
       compiler_options:
         sparkle_packs:
           - some-sparkle-pack
+        sparkle_pack_template: true
 ```
 
 ## Allowed accounts

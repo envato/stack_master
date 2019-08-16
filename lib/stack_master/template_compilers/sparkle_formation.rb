@@ -12,8 +12,8 @@ module StackMaster::TemplateCompilers
       require 'stack_master/sparkle_formation/template_file'
     end
 
-    def self.compile(template_dir, template_file_path, sparkle_pack_template, compile_time_parameters, compiler_options = {})
-      sparkle_template = compile_sparkle_template(template_dir, template_file_path, sparkle_pack_template, compiler_options)
+    def self.compile(template_dir, template_file_path, compile_time_parameters, compiler_options = {})
+      sparkle_template = compile_sparkle_template(template_dir, template_file_path, compiler_options)
       definitions = sparkle_template.parameters
       validate_definitions(definitions)
       validate_parameters(definitions, compile_time_parameters)
@@ -27,7 +27,7 @@ module StackMaster::TemplateCompilers
 
     private
 
-    def self.compile_sparkle_template(template_dir, template_file_path, sparkle_pack_template, compiler_options)
+    def self.compile_sparkle_template(template_dir, template_file_path, compiler_options)
       sparkle_path = if compiler_options['sparkle_path']
         File.expand_path(compiler_options['sparkle_path'])
       else
@@ -47,9 +47,10 @@ module StackMaster::TemplateCompilers
         end
       end
 
-      if sparkle_pack_template
-        raise ArgumentError.new("Template #{sparkle_pack_template} not found in any sparkle pack") unless collection.templates['aws'].include? sparkle_pack_template
-        template_file_path = collection.templates['aws'][sparkle_pack_template].top['path']
+      if compiler_options['sparkle_pack_template']
+        template = File.basename(template_file_path)
+        raise ArgumentError.new("Template #{template} not found in any sparkle pack") unless collection.templates['aws'].include? template
+        template_file_path = collection.templates['aws'][template].top['path']
       end
 
       sparkle_template = compile_template_with_sparkle_path(template_file_path, sparkle_path)

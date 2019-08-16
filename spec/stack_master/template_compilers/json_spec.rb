@@ -4,7 +4,7 @@ RSpec.describe StackMaster::TemplateCompilers::Json do
 
   describe '.compile' do
     def compile
-      described_class.compile(nil, template_file_path, nil, compile_time_parameters)
+      described_class.compile(nil, template_file_path, compile_time_parameters)
     end
 
     let(:stack_definition) { instance_double(StackMaster::StackDefinition, template_file_path: template_file_path) }

@@ -5,7 +5,7 @@ module StackMaster::TemplateCompilers
       require 'json'
     end
 
-    def self.compile(_template_dir, template_file_path, _sparkle_pack_template, _compile_time_parameters, _compiler_options = {})
+    def self.compile(_template_dir, template_file_path, _compile_time_parameters, _compiler_options = {})
       File.read(template_file_path)
     end
 
