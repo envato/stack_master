@@ -570,7 +570,7 @@ stacks:
 
 ```yaml
 stacks:
-  us-east-1
+  us-east-1:
     my-stack:
       template: my-stack-with-dynamic.rb
       compiler_options:
@@ -587,6 +587,26 @@ end
 ```
 
 Note though that if a dynamic with the same name exists in your `templates/dynamics/` directory it will get loaded since it has higher precedence.
+
+Templates can be also loaded from sparkle packs by defining `sparkle_pack_template`. The name corresponds to the registered symbol rather than specific name. That means for a sparkle pack containing:
+
+```ruby
+SparkleFormation.new(:template_name) do
+  ...
+end
+```
+
+we can use stack defined as follows:
+
+```yaml
+stacks:
+  us-east-1:
+    my-stack:
+      sparkle_pack_template: template_name
+      compiler_options:
+        sparkle_packs:
+          - some-sparkle-pack
+```
 
 ## Allowed accounts
 
