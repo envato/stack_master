@@ -4,10 +4,11 @@ RSpec.describe StackMaster::TemplateCompilers::Json do
 
   describe '.compile' do
     def compile
-      described_class.compile(nil, template_file_path, compile_time_parameters)
+      described_class.compile(stack_definition.template_dir, stack_definition.template, compile_time_parameters)
     end
 
-    let(:stack_definition) { instance_double(StackMaster::StackDefinition, template_file_path: template_file_path) }
+    let(:stack_definition) { StackMaster::StackDefinition.new(template_dir: File.dirname(template_file_path),
+                                                              template: File.basename(template_file_path)) }
     let(:template_file_path) { '/base_dir/templates/template.json' }
 
     context "small json template" do

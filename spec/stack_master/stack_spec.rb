@@ -92,7 +92,7 @@ RSpec.describe StackMaster::Stack do
       allow(StackMaster::TemplateCompiler).to receive(:compile).with(
         config,
         stack_definition.template_dir,
-        stack_definition.template_file_path,
+        stack_definition.template,
         resolved_compile_time_parameters,
         stack_definition.compiler_options
       ).and_return(template_body)

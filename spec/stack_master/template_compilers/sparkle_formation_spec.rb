@@ -7,7 +7,11 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
   end
 
   def fixture_template(file)
-    project_path("spec/fixtures/templates/rb/sparkle_formation/templates/#{file}")
+    project_path("#{template_dir}/#{file}")
+  end
+
+  def template_dir
+    "spec/fixtures/templates/rb/sparkle_formation/templates"
   end
 
   def sparkle_pack_dir
@@ -20,18 +24,17 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
   describe '.compile' do
     def compile
-      described_class.compile(template_dir, template_file_path, compile_time_parameters, compiler_options)
+      described_class.compile(template_dir, template, compile_time_parameters, compiler_options)
     end
 
     let(:stack_definition) {
       instance_double(StackMaster::StackDefinition,
-        template_file_path: template_file_path,
-        template_dir: File.dirname(template_file_path))
+        template: template,
+        template_dir: template_dir)
     }
-    let(:template_file_path) { fixture_template('template.rb') }
-    let(:template_dir) { File.dirname(template_file_path) }
     let(:compile_time_parameters) { {'Ip' => '10.0.0.0', 'Name' => 'Something'} }
     let(:compiler_options) { {} }
+    let(:template) { 'template.rb' }
 
     context 'without sparkle packs' do
       it 'compiles with sparkleformation' do
@@ -40,7 +43,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
       it 'sets the appropriate sparkle_path' do
         compile
-        expect(::SparkleFormation.sparkle_path).to eq File.dirname(template_file_path)
+        expect(::SparkleFormation.sparkle_path).to eq template_dir
       end
 
       context 'compile time parameters validations' do
@@ -75,11 +78,6 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
     context 'with a custom sparkle_path' do
       let(:compiler_options) { {'sparkle_path' => sparkle_pack_dir} }
 
-      it 'does not use the default path' do
-        compile
-        expect(::SparkleFormation.sparkle_path).to_not eq File.dirname(template_file_path)
-      end
-
       it 'expands the given path' do
         compile
         expect(::SparkleFormation.sparkle_path).to match sparkle_pack_dir
@@ -88,7 +86,6 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
     context 'with sparkle packs' do
       let(:compile_time_parameters) { {} }
-      subject(:compile) { described_class.compile(stack_definition.template_dir, stack_definition.template_file_path, compile_time_parameters, compiler_options)}
       let(:compiler_options) { {"sparkle_packs" => ["my_sparkle_pack"]} }
 
       before do
@@ -97,7 +94,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       end
 
       context 'compiling a sparkle pack dynamic' do
-        let(:template_file_path) { fixture_template('template_with_dynamic_from_pack') }
+        let(:template) { 'template_with_dynamic_from_pack' }
         let(:compiler_options) { {"sparkle_packs" => ["my_sparkle_pack"], "sparkle_pack_template" => true} }
 
         it 'pulls the dynamic from the sparkle pack' do
@@ -106,7 +103,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       end
 
       context 'compiling a sparkle pack template' do
-        let(:template_file_path) { fixture_template('template_with_dynamic') }
+        let(:template) { 'template_with_dynamic' }
         let(:compiler_options) { {"sparkle_packs" => ["my_sparkle_pack"], "sparkle_pack_template" => true} }
 
         context 'when template is found' do
@@ -116,7 +113,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
         end
 
         context 'when template is not found' do
-          let(:template_file_path) { fixture_template('non_existant_template') }
+          let(:template) { 'non_existant_template' }
 
           it 'resolves template location' do
             expect { compile }.to raise_error(/not found in any sparkle pack/)
