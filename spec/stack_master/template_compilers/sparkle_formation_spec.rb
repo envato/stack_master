@@ -67,11 +67,6 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
           expect(state_builder).to receive(:build)
           compile
         end
-
-        xit 'should set the compile state' do
-          expect(sparkle_template).to receive(:compile_state=).with({})
-          compile
-        end
       end
     end
 
