@@ -48,21 +48,21 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
       context 'compile time parameters validations' do
         it 'should validate the compile time definitions' do
-          definitions_validator = double
+          definitions_validator = instance_double(StackMaster::SparkleFormation::CompileTime::DefinitionsValidator)
           expect(StackMaster::SparkleFormation::CompileTime::DefinitionsValidator).to receive(:new).with(compile_time_parameter_definitions).and_return(definitions_validator)
           expect(definitions_validator).to receive(:validate)
           compile
         end
 
         it 'should validate the parameters against any compile time definitions' do
-          parameters_validator = double
+          parameters_validator = instance_double(StackMaster::SparkleFormation::CompileTime::ParametersValidator)
           expect(StackMaster::SparkleFormation::CompileTime::ParametersValidator).to receive(:new).with(compile_time_parameter_definitions, compile_time_parameters).and_return(parameters_validator)
           expect(parameters_validator).to receive(:validate)
           compile
         end
 
         it 'should create the compile state' do
-          state_builder = double
+          state_builder = instance_double(StackMaster::SparkleFormation::CompileTime::StateBuilder)
           expect(StackMaster::SparkleFormation::CompileTime::StateBuilder).to receive(:new).with(compile_time_parameter_definitions, compile_time_parameters).and_return(state_builder)
           expect(state_builder).to receive(:build)
           compile
