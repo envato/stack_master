@@ -35,6 +35,7 @@ RSpec.describe StackMaster::Validator do
       before do
         cf.stub_responses(:validate_template, Aws::CloudFormation::Errors::ValidationError.new('a', 'Problem'))
       end
+
       it "informs the user of their stupdity" do
         expect { validator.perform }.to output(/myapp_vpc: invalid/).to_stdout
       end

@@ -603,6 +603,7 @@ stacks:
   us-east-1:
     my-stack:
       template: template_name
+      compiler: sparkle_formation
       compiler_options:
         sparkle_packs:
           - some-sparkle-pack

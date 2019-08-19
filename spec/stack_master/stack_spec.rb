@@ -91,6 +91,7 @@ RSpec.describe StackMaster::Stack do
       allow(StackMaster::ParameterResolver).to receive(:resolve).with(config,stack_definition,parameter_hash[:compile_time_parameters]).and_return(resolved_compile_time_parameters)
       allow(StackMaster::TemplateCompiler).to receive(:compile).with(
         config,
+        stack_definition.compiler,
         stack_definition.template_dir,
         stack_definition.template,
         resolved_compile_time_parameters,

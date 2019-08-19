@@ -1,4 +1,4 @@
-SparkleFormation.new(:myapp_vpc) do
+SparkleFormation.new(:myapp_vpc_2) do
   description "A test VPC template"
 
   resources.vpc do

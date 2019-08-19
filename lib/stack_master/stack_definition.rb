@@ -17,6 +17,7 @@ module StackMaster
                   :additional_parameter_lookup_dirs,
                   :s3,
                   :files,
+                  :compiler,
                   :compiler_options
 
     include Utils::Initializable
@@ -51,6 +52,7 @@ module StackMaster
         @stack_policy_file == other.stack_policy_file &&
         @additional_parameter_lookup_dirs == other.additional_parameter_lookup_dirs &&
         @s3 == other.s3 &&
+        @compiler == other.compiler &&
         @compiler_options == other.compiler_options
     end
 
