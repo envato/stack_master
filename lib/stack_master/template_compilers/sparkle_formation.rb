@@ -48,7 +48,7 @@ module StackMaster::TemplateCompilers
       end
 
       if compiler_options['sparkle_pack_template']
-        raise ArgumentError.new("Template #{template} not found in any sparkle pack") unless collection.templates['aws'].include? template
+        raise ArgumentError.new("Template #{template.inspect} not found in any sparkle pack") unless collection.templates['aws'].include? template
         template_file_path = collection.templates['aws'][template].top['path']
       else
         template_file_path = File.join(template_dir, template)
