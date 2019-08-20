@@ -4,15 +4,15 @@ RSpec.describe StackMaster::TemplateCompilers::Yaml do
     let(:compile_time_parameters) { {'InstanceType' => 't2.medium'} }
 
     def compile
-      described_class.compile(nil, stack_definition.template_file_path, nil, compile_time_parameters)
+      described_class.compile(stack_definition.template_dir, stack_definition.template, compile_time_parameters)
     end
 
     context 'valid YAML template' do
-      let(:stack_definition) { instance_double(StackMaster::StackDefinition, template_file_path: template_file_path) }
-      let(:template_file_path) { 'spec/fixtures/templates/yml/valid_myapp_vpc.yml' }
+      let(:stack_definition) { StackMaster::StackDefinition.new(template_dir: 'spec/fixtures/templates/yml',
+                                                                template: 'valid_myapp_vpc.yml') }
 
       it 'produces valid YAML' do
-        valid_myapp_vpc_yaml = File.read(template_file_path)
+        valid_myapp_vpc_yaml = File.read(stack_definition.template_file_path)
 
         expect(compile).to eq(valid_myapp_vpc_yaml)
       end

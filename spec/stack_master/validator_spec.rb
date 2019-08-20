@@ -5,11 +5,11 @@ RSpec.describe StackMaster::Validator do
   let(:stack_name) { 'myapp_vpc' }
   let(:stack_definition) do
     StackMaster::StackDefinition.new(
-        region: 'us-east-1',
-        stack_name: stack_name,
-        template: 'myapp_vpc.json',
-        tags: {'environment' => 'production'},
-        base_dir: File.expand_path('spec/fixtures'),
+      region: 'us-east-1',
+      stack_name: stack_name,
+      template: 'myapp_vpc.json',
+      tags: {'environment' => 'production'},
+      base_dir: File.expand_path('spec/fixtures'),
     )
   end
   let(:cf) { Aws::CloudFormation::Client.new(region: "us-east-1") }
@@ -35,6 +35,7 @@ RSpec.describe StackMaster::Validator do
       before do
         cf.stub_responses(:validate_template, Aws::CloudFormation::Errors::ValidationError.new('a', 'Problem'))
       end
+
       it "informs the user of their stupdity" do
         expect { validator.perform }.to output(/myapp_vpc: invalid/).to_stdout
       end

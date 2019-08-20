@@ -3,7 +3,6 @@ module StackMaster
     attr_accessor :region,
                   :stack_name,
                   :template,
-                  :sparkle_pack_template,
                   :tags,
                   :role_arn,
                   :allowed_accounts,
@@ -20,6 +19,8 @@ module StackMaster
                   :files,
                   :compiler_options
 
+    attr_reader :compiler
+
     include Utils::Initializable
 
     def initialize(attributes = {})
@@ -30,6 +31,7 @@ module StackMaster
       @files = []
       @allowed_accounts = nil
       @ejson_file_kms = true
+      @compiler = nil
       super
       @template_dir ||= File.join(@base_dir, 'templates')
       @allowed_accounts = Array(@allowed_accounts)
@@ -40,7 +42,6 @@ module StackMaster
         @region == other.region &&
         @stack_name == other.stack_name &&
         @template == other.template &&
-        @sparkle_pack_template == other.sparkle_pack_template &&
         @tags == other.tags &&
         @role_arn == other.role_arn &&
         @allowed_accounts == other.allowed_accounts &&
@@ -53,7 +54,12 @@ module StackMaster
         @stack_policy_file == other.stack_policy_file &&
         @additional_parameter_lookup_dirs == other.additional_parameter_lookup_dirs &&
         @s3 == other.s3 &&
+        @compiler == other.compiler &&
         @compiler_options == other.compiler_options
+    end
+
+    def compiler=(compiler)
+      @compiler = compiler.&to_sym
     end
 
     def template_file_path
