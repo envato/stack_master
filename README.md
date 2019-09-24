@@ -705,9 +705,6 @@ aws iam create-service-linked-role --aws-service-name es.amazonaws.com
 
 This command will change depending on the aws service which is having issues.
 
-
-
-
 ## Maintainers
 
 - [Steve Hodgkiss](https://github.com/stevehodgkiss)
