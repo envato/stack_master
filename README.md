@@ -685,6 +685,29 @@ Demo:
 
 ![Apply Demo](/apply_demo.gif?raw=true)
 
+## Troubleshooting
+
+### Service-linked Roles
+
+When applying a stack and you see a message like:
+
+```
+AWS::Elasticsearch::Domain CREATE_FAILED Before you can proceed, you must enable a service-linked role to give Amazon ES permissions to access your VPC. (Service: AWSElasticsearch; Status Code: 400; Error Code: ValidationException; Request ID: xxx)
+```
+
+It means that you need to create a service-linked role for AWS to have the correct permissions. This is not handled within code and only requires a single aws cli command to be run on the aws account.
+
+eg. To create a service-linked role to resolve the above error:
+
+```
+aws iam create-service-linked-role --aws-service-name es.amazonaws.com
+```
+
+This command will change depending on the aws service which is having issues.
+
+
+
+
 ## Maintainers
 
 - [Steve Hodgkiss](https://github.com/stevehodgkiss)
