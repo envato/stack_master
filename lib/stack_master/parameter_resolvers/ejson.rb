@@ -14,7 +14,7 @@ module StackMaster
         validate_ejson_file_specified
         secrets = decrypt_ejson_file
         secrets.fetch(secret_key.to_sym) do
-          raise SecretNotFound, "Unable to find key #{secret_key} in file #{ejson_file}"
+          raise SecretNotFound, "Unable to find key #{secret_key} in file #{@stack_definition.ejson_file}"
         end
       end
 
