@@ -89,7 +89,7 @@ RSpec.describe StackMaster::RoleAssumer do
     end
 
     context 'CloudFormation driver' do
-      let(:new_driver) { StackMaster::TestDriver::CloudFormation.new }
+      let(:new_driver) { StackMaster.cloud_formation_driver.class.new }
 
       before do
         allow(StackMaster::AwsDriver::CloudFormation).to receive(:new).and_return(new_driver)

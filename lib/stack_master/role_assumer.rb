@@ -37,7 +37,7 @@ module StackMaster
 
     def replace_cf_driver
       driver = StackMaster.cloud_formation_driver
-      StackMaster.cloud_formation_driver = AwsDriver::CloudFormation.new
+      StackMaster.cloud_formation_driver = driver.class.new
       driver
     end
 
