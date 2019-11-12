@@ -30,6 +30,7 @@ module StackMaster
   autoload :SecurityGroupFinder, 'stack_master/security_group_finder'
   autoload :ParameterLoader, 'stack_master/parameter_loader'
   autoload :ParameterResolver, 'stack_master/parameter_resolver'
+  autoload :RoleAssumer, 'stack_master/role_assumer'
   autoload :ResolverArray, 'stack_master/resolver_array'
   autoload :Resolver, 'stack_master/resolver_array'
   autoload :Utils, 'stack_master/utils'
