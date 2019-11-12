@@ -98,6 +98,91 @@ RSpec.describe StackMaster::ParameterResolver do
     end
   end
 
+  context 'when assuming a role' do
+    let(:role_assumer) { instance_double(StackMaster::RoleAssumer, assume_role: nil ) }
+    let(:account) { '1234567890' }
+    let(:role) { 'my-role' }
+
+    before do
+      allow(StackMaster::RoleAssumer).to receive(:new).and_return(role_assumer)
+    end
+
+    context 'with valid assume role properties' do
+      let(:params) do
+        {
+          param: {
+            'account' => account,
+            'role' => role,
+            'my_resolver' => 2
+          }
+        }
+      end
+
+      it 'assumes the role' do
+        expect(StackMaster::RoleAssumer).to receive(:new)
+        expect(role_assumer).to receive(:assume_role).with(account, role)
+
+        parameter_resolver.resolve
+      end
+    end
+
+    context 'when multiple params assume roles' do
+      let(:params) do
+        {
+          param: {
+            'account' => account,
+            'role' => role,
+            'my_resolver' => 1
+          },
+          param2: {
+            'account' => account,
+            'role' => 'different-role',
+            'my_resolver' => 2
+          }
+        }
+      end
+
+      it 'caches the role assumer' do
+        expect(StackMaster::RoleAssumer).to receive(:new).once
+
+        parameter_resolver.resolve
+      end
+
+      it 'calls assume role once for every param' do
+        expect(role_assumer).to receive(:assume_role).with(account, role).once
+        expect(role_assumer).to receive(:assume_role).with(account, 'different-role').once
+
+        parameter_resolver.resolve
+      end
+    end
+
+    context 'with missing assume role properties' do
+      it 'does not assume a role' do
+        expect(StackMaster::RoleAssumer).not_to receive(:new)
+
+        parameter_resolver.resolve
+      end
+    end
+
+    context "with missing 'account' property" do
+      it 'raises an invalid parameter error' do
+        expect {
+          resolve(param: { 'role' => role, 'my_resolver' => 2 })
+        }.to raise_error StackMaster::ParameterResolver::InvalidParameter,
+                         match("Both 'account' and 'role' are required to assume role for parameter 'param'")
+      end
+    end
+
+    context "with missing 'role' property" do
+      it 'raises an invalid parameter error' do
+        expect {
+          resolve(param: { 'account' => account, 'my_resolver' => 2 })
+        }.to raise_error StackMaster::ParameterResolver::InvalidParameter,
+                         match("Both 'account' and 'role' are required to assume role for parameter 'param'")
+      end
+    end
+  end
+
   context 'resolver class caching' do
     it "uses the same instance of the resolver for the duration of the resolve run" do
       expect(my_resolver).to receive(:new).once.and_call_original
