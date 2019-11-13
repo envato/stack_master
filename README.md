@@ -203,8 +203,10 @@ region/account, even though the resolved values will be different.
 One way to resolve parameter values from different accounts to the one StackMaster runs in, is to
 assume a role in another account with the relevant IAM permissions to execute successfully.
 
-This is supported in StackMaster by specifying the `role` and `account` properties for any
+This is supported in StackMaster by specifying the `role` and `account` properties for the
 parameter resolver in the stack's parameters file.
+
+All parameter resolvers are supported.
 
 ```yaml
 vpc_peering_id:
@@ -226,6 +228,11 @@ another_array_param:
   - role: cross-account-parameter-resolver
     account: 0987654321
     stack_output: stack-in-account2/output
+
+my_secret:
+  role: cross-account-parameter-resolver
+  account: 1234567890
+  parameter_store: ssm_parameter_name
 ```
 
 An example of use case where cross-account parameter resolving is particularly useful is when
