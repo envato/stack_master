@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
   spec.metadata      = {
     "bug_tracker_uri"   => "https://github.com/envato/stack_master/issues",
+    "changelog_uri"     => "https://github.com/envato/stack_master/blob/master/CHANGELOG.md",
     "documentation_uri" => "https://www.rubydoc.info/gems/stack_master/#{spec.version}",
     "source_code_uri"   => "https://github.com/envato/stack_master/tree/v#{spec.version}",
   }
