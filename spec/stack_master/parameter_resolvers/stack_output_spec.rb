@@ -65,6 +65,43 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
         resolver.resolve("ap-southeast-2:#{value}")
         resolver.resolve("ap-southeast-2:#{value}")
       end
+
+      context "when different credentials are used" do
+        let(:outputs_in_account_2) { [ {output_key: 'MyOutput', output_value: 'resolvedvalueinaccount2'} ] }
+        let(:stacks_in_account_2) { [{ stack_name: 'other-stack', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs_in_account_2}] }
+
+        before do
+          cf.stub_responses(
+            :describe_stacks,
+            { stacks: stacks },
+            { stacks: stacks_in_account_2 }
+          )
+        end
+
+        it "caches stacks by credentials" do
+          expect(cf).to receive(:describe_stacks).with(stack_name: 'my-stack').and_call_original.twice
+          resolver.resolve(value)
+          resolver.resolve(value)
+          Aws.config[:credentials] = "my-credentials"
+          resolver.resolve(value)
+          resolver.resolve(value)
+          Aws.config.delete(:credentials)
+        end
+
+        it "caches CF clients by region and credentials" do
+          expect(Aws::CloudFormation::Client).to receive(:new).and_return(cf).exactly(3).times
+          resolver.resolve(value)
+          resolver.resolve(value)
+          resolver.resolve('other-stack/MyOutput')
+          resolver.resolve('other-stack/MyOutput')
+          Aws.config[:credentials] = "my-credentials"
+          resolver.resolve('other-stack/MyOutput')
+          resolver.resolve('other-stack/MyOutput')
+          resolver.resolve('ap-southeast-2:other-stack/MyOutput')
+          resolver.resolve('ap-southeast-2:other-stack/MyOutput')
+          Aws.config.delete(:credentials)
+        end
+      end
     end
 
     context "the stack doesn't exist" do
