@@ -8,6 +8,7 @@ module StackMaster
       def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition
+        @decrypted_ejson_files = {}
       end
 
       def resolve(secret_key)
@@ -27,9 +28,12 @@ module StackMaster
       end
 
       def decrypt_ejson_file
-        @decrypt_ejson_file ||= EJSONWrapper.decrypt(ejson_file_path,
-                                                     use_kms: @stack_definition.ejson_file_kms,
-                                                     region: ejson_file_region)
+        ejson_file_key = credentials_key
+        @decrypted_ejson_files.fetch(ejson_file_key) do
+          @decrypted_ejson_files[ejson_file_key] = EJSONWrapper.decrypt(ejson_file_path,
+                                                                        use_kms: @stack_definition.ejson_file_kms,
+                                                                        region: ejson_file_region)
+        end
       end
 
       def ejson_file_region
@@ -42,6 +46,10 @@ module StackMaster
 
       def secret_path_relative_to_base
         @secret_path_relative_to_base ||= File.join('secrets', @stack_definition.ejson_file)
+      end
+
+      def credentials_key
+        Aws.config[:credentials]&.object_id
       end
     end
   end
