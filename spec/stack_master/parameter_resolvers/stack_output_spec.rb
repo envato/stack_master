@@ -44,13 +44,26 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
     context 'the stack and output exist' do
       let(:outputs) { [{output_key: 'MyOutput', output_value: 'myresolvedvalue'}] }
 
+      before do
+        allow(config).to receive(:unalias_region).with('ap-southeast-2').and_return('ap-southeast-2')
+      end
+
       it 'resolves the value' do
         expect(resolved_value).to eq 'myresolvedvalue'
       end
 
       it 'caches stacks for the lifetime of the instance' do
+        expect(cf).to receive(:describe_stacks).with(stack_name: 'my-stack').and_call_original.once
         resolver.resolve(value)
         resolver.resolve(value)
+      end
+
+      it "caches stacks by region" do
+        expect(cf).to receive(:describe_stacks).with(stack_name: 'my-stack').and_call_original.twice
+        resolver.resolve(value)
+        resolver.resolve(value)
+        resolver.resolve("ap-southeast-2:#{value}")
+        resolver.resolve("ap-southeast-2:#{value}")
       end
     end
 
