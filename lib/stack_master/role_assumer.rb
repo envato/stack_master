@@ -12,38 +12,33 @@ module StackMaster
       raise BlockNotSpecified unless block_given?
       raise ArgumentError, "Both 'account' and 'role' are required to assume a role" if account.nil? || role.nil?
 
-      original_aws_config = replace_aws_global_config
-      Aws.config[:credentials] = assume_role_credentials(account, role)
-      begin
-        original_cf_driver = replace_cf_driver
-        block.call
-      ensure
-        restore_aws_global_config(original_aws_config)
-        restore_cf_driver(original_cf_driver)
+      role_credentials = assume_role_credentials(account, role)
+      with_temporary_credentials(role_credentials) do
+        with_temporary_cf_driver do
+          block.call
+        end
       end
     end
 
     private
 
-    def replace_aws_global_config
-      config = Aws.config
-      Aws.config = config.deep_dup
-      config
+    def with_temporary_credentials(credentials, &block)
+      original_aws_config = Aws.config
+      Aws.config = original_aws_config.deep_dup
+      Aws.config[:credentials] = credentials
+      block.call
+    ensure
+      Aws.config = original_aws_config
     end
 
-    def restore_aws_global_config(config)
-      Aws.config = config
-    end
-
-    def replace_cf_driver
-      driver = StackMaster.cloud_formation_driver
-      StackMaster.cloud_formation_driver = driver.class.new
-      driver
-    end
-
-    def restore_cf_driver(driver)
-      return if driver.nil?
-      StackMaster.cloud_formation_driver = driver
+    def with_temporary_cf_driver(&block)
+      original_driver = StackMaster.cloud_formation_driver
+      new_driver = original_driver.class.new
+      new_driver.set_region(original_driver.region)
+      StackMaster.cloud_formation_driver = new_driver
+      block.call
+    ensure
+      StackMaster.cloud_formation_driver = original_driver
     end
 
     def assume_role_credentials(account, role)
@@ -51,7 +46,7 @@ module StackMaster
       @credentials.fetch(credentials_key) do
         @credentials[credentials_key] = Aws::AssumeRoleCredentials.new(
           role_arn: "arn:aws:iam::#{account}:role/#{role}",
-          role_session_name: "stack-master-assume-role-parameter-resolver"
+          role_session_name: "stack-master-role-assumer"
         )
       end
     end
