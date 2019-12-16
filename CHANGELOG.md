@@ -16,8 +16,11 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Project metadata to the gemspec ([#293]).
 
+- Enable cross-account parameter resolving ([#292])
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v1.17.1...HEAD
 [#293]: https://github.com/envato/stack_master/pull/293
+[#292]: https://github.com/envato/stack_master/pull/292
 
 ## [1.17.1] - 2019-10-3
 
