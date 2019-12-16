@@ -124,6 +124,7 @@ RSpec.describe StackMaster::RoleAssumer do
           role_assumer.assume_role(account, role, &my_block)
         end
       end
+
       context 'with a different account' do
         it 'assumes each role once' do
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
@@ -139,6 +140,7 @@ RSpec.describe StackMaster::RoleAssumer do
           role_assumer.assume_role('another-account', role, &my_block)
         end
       end
+
       context 'with a different role' do
         it 'assumes each role once' do
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
