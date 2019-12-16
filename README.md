@@ -311,7 +311,7 @@ db_password:
 ```
 
 ### 1Password Lookup
-An alternative to the alternative secret store is accessing 1password secrets using the 1password cli (`op`).
+An alternative to the secrets store is accessing 1password secrets using the 1password cli (`op`).
 You declare a 1password lookup with the following parameters in your parameters file:
 
 ```
