@@ -16,8 +16,15 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Project metadata to the gemspec ([#293]).
 
+### Changed
+
+- Not updating RubyGems and Bundler in CI ([#294])
+
+- Drop ruby 2.3 support in CI ([#294])
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v1.17.1...HEAD
 [#293]: https://github.com/envato/stack_master/pull/293
+[#294]: https://github.com/envato/stack_master/pull/294
 
 ## [1.17.1] - 2019-10-3
 
