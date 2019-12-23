@@ -44,13 +44,63 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
     context 'the stack and output exist' do
       let(:outputs) { [{output_key: 'MyOutput', output_value: 'myresolvedvalue'}] }
 
+      before do
+        allow(config).to receive(:unalias_region).with('ap-southeast-2').and_return('ap-southeast-2')
+      end
+
       it 'resolves the value' do
         expect(resolved_value).to eq 'myresolvedvalue'
       end
 
       it 'caches stacks for the lifetime of the instance' do
+        expect(cf).to receive(:describe_stacks).with(stack_name: 'my-stack').and_call_original.once
         resolver.resolve(value)
         resolver.resolve(value)
+      end
+
+      it "caches stacks by region" do
+        expect(cf).to receive(:describe_stacks).with(stack_name: 'my-stack').and_call_original.twice
+        resolver.resolve(value)
+        resolver.resolve(value)
+        resolver.resolve("ap-southeast-2:#{value}")
+        resolver.resolve("ap-southeast-2:#{value}")
+      end
+
+      context "when different credentials are used" do
+        let(:outputs_in_account_2) { [ {output_key: 'MyOutput', output_value: 'resolvedvalueinaccount2'} ] }
+        let(:stacks_in_account_2) { [{ stack_name: 'other-stack', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs_in_account_2}] }
+
+        before do
+          cf.stub_responses(
+            :describe_stacks,
+            { stacks: stacks },
+            { stacks: stacks_in_account_2 }
+          )
+        end
+
+        it "caches stacks by credentials" do
+          expect(cf).to receive(:describe_stacks).with(stack_name: 'my-stack').and_call_original.twice
+          resolver.resolve(value)
+          resolver.resolve(value)
+          Aws.config[:credentials] = "my-credentials"
+          resolver.resolve(value)
+          resolver.resolve(value)
+          Aws.config.delete(:credentials)
+        end
+
+        it "caches CF clients by region and credentials" do
+          expect(Aws::CloudFormation::Client).to receive(:new).and_return(cf).exactly(3).times
+          resolver.resolve(value)
+          resolver.resolve(value)
+          resolver.resolve('other-stack/MyOutput')
+          resolver.resolve('other-stack/MyOutput')
+          Aws.config[:credentials] = "my-credentials"
+          resolver.resolve('other-stack/MyOutput')
+          resolver.resolve('other-stack/MyOutput')
+          resolver.resolve('ap-southeast-2:other-stack/MyOutput')
+          resolver.resolve('ap-southeast-2:other-stack/MyOutput')
+          Aws.config.delete(:credentials)
+        end
       end
     end
 

@@ -11,6 +11,7 @@ module StackMaster
 
       def resolve(value)
         begin
+          ssm = Aws::SSM::Client.new(region: @stack_definition.region)
           resp = ssm.get_parameter(
             name: value,
             with_decryption: true
@@ -19,12 +20,6 @@ module StackMaster
           raise ParameterNotFound, "Unable to find #{value} in Parameter Store"
         end
         resp.parameter.value
-      end
-
-      private
-
-      def ssm
-        @ssm ||= Aws::SSM::Client.new(region: @stack_definition.region)
       end
     end
   end

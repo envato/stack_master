@@ -8,7 +8,6 @@ module StackMaster
       def initialize(config, stack_definition)
         @config = config
         @stack_definition = stack_definition
-        @stacks = {}
       end
 
       def resolve(value)
@@ -18,10 +17,6 @@ module StackMaster
       end
 
       private
-
-      def cf
-        @cf ||= StackMaster.cloud_formation_driver
-      end
 
       def sns_topic_finder
         StackMaster::SnsTopicFinder.new(@stack_definition.region)

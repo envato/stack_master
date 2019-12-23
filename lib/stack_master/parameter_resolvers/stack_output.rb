@@ -32,7 +32,7 @@ module StackMaster
       private
 
       def cf
-        @cf ||= StackMaster.cloud_formation_driver
+        StackMaster.cloud_formation_driver
       end
 
       def parse!(value)
@@ -49,7 +49,7 @@ module StackMaster
 
       def find_stack(stack_name, region)
         unaliased_region = @config.unalias_region(region)
-        stack_key = stack_key(stack_name, unaliased_region)
+        stack_key = "#{unaliased_region}:#{stack_name}:#{credentials_key}"
 
         @stacks.fetch(stack_key) do
           regional_cf = cf_for_region(unaliased_region)
@@ -58,18 +58,18 @@ module StackMaster
         end
       end
 
-      def stack_key(stack_name, region)
-        "#{region}:#{stack_name}"
-      end
-
       def cf_for_region(region)
-        return cf if cf.region == region
+        driver_key = "#{region}:#{credentials_key}"
 
-        @cf_drivers.fetch(region) do
+        @cf_drivers.fetch(driver_key) do
           cloud_formation_driver = cf.class.new
           cloud_formation_driver.set_region(region)
-          @cf_drivers[region] = cloud_formation_driver
+          @cf_drivers[driver_key] = cloud_formation_driver
         end
+      end
+
+      def credentials_key
+        Aws.config[:credentials]&.object_id
       end
     end
   end

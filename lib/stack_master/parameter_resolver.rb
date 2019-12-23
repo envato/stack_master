@@ -49,16 +49,37 @@ module StackMaster
       return parameter_value.to_s if Numeric === parameter_value || parameter_value == true || parameter_value == false
       return resolve_array_parameter_values(key, parameter_value).join(',') if Array === parameter_value
       return parameter_value unless Hash === parameter_value
-      validate_parameter_value!(key, parameter_value)
-
-      resolver_name = parameter_value.keys.first.to_s
-      load_parameter_resolver(resolver_name)
-
-      value = parameter_value.values.first
-      resolver_class_name = resolver_name.camelize
-      call_resolver(resolver_class_name, value)
+      resolve_parameter_resolver_hash(key, parameter_value)
     rescue Aws::CloudFormation::Errors::ValidationError
       raise InvalidParameter, $!.message
+    end
+
+    def resolve_parameter_resolver_hash(key, parameter_value)
+      # strip out account and role
+      resolver_hash = parameter_value.except('account', 'role')
+      account, role = parameter_value.values_at('account', 'role')
+
+      validate_parameter_value!(key, resolver_hash)
+
+      resolver_name = resolver_hash.keys.first.to_s
+      load_parameter_resolver(resolver_name)
+
+      value = resolver_hash.values.first
+      resolver_class_name = resolver_name.camelize
+
+      assume_role_if_present(account, role, key) do
+        call_resolver(resolver_class_name, value)
+      end
+    end
+
+    def assume_role_if_present(account, role, key)
+      return yield if account.nil? && role.nil?
+      if account.nil? || role.nil?
+        raise InvalidParameter, "Both 'account' and 'role' are required to assume role for parameter '#{key}'"
+      end
+      role_assumer.assume_role(account, role) do
+        yield
+      end
     end
 
     def resolve_array_parameter_values(key, parameter_values)
@@ -93,6 +114,10 @@ module StackMaster
       if parameter_value.keys.size != 1
         raise InvalidParameter, "#{key} hash contained more than one key: #{parameter_value.inspect}"
       end
+    end
+
+    def role_assumer
+      @role_assumer ||= RoleAssumer.new
     end
   end
 end

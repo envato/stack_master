@@ -5,7 +5,7 @@ RSpec.describe StackMaster::ParameterResolvers::Ejson do
   let(:ejson_file_region) { 'ap-southeast-2' }
   let(:stack_definition) { double(ejson_file: ejson_file, ejson_file_region: ejson_file_region, stack_name: 'mystack', region: 'us-east-1', ejson_file_kms: true) }
   subject(:ejson) { described_class.new(config, stack_definition) }
-  let(:secrets) { { secret_a: 'value_a' } }
+  let(:secrets) { { secret_a: 'value_a', secret_b: 'value_b' } }
 
   before do
     allow(EJSONWrapper).to receive(:decrypt).and_return(secrets)
@@ -13,6 +13,12 @@ RSpec.describe StackMaster::ParameterResolvers::Ejson do
 
   it 'returns secrets' do
     expect(ejson.resolve('secret_a')).to eq('value_a')
+  end
+
+  it 'caches the decrypted ejson file' do
+    expect(EJSONWrapper).to receive(:decrypt).once
+    ejson.resolve('secret_a')
+    ejson.resolve('secret_b')
   end
 
   context 'when ejson_file_region is unspecified' do
@@ -48,6 +54,18 @@ RSpec.describe StackMaster::ParameterResolvers::Ejson do
 
     it 'raises an error' do
       expect { ejson.resolve('test') }.to raise_error(ArgumentError, /No ejson_file defined/)
+    end
+  end
+
+  context "when different credentials are used" do
+    it 'caches the decrypted file by credentials' do
+      expect(EJSONWrapper).to receive(:decrypt).twice
+      ejson.resolve('secret_a')
+      ejson.resolve('secret_b')
+      Aws.config[:credentials] = "my-credentials"
+      ejson.resolve('secret_a')
+      ejson.resolve('secret_b')
+      Aws.config.delete(:credentials)
     end
   end
 end

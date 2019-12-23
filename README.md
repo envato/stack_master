@@ -198,6 +198,47 @@ One benefit of using parameter resolvers instead of hard coding values like VPC
 IDs and resource ARNs is that the same configuration works cross
 region/account, even though the resolved values will be different.
 
+### Cross-account parameter resolving
+
+One way to resolve parameter values from different accounts to the one StackMaster runs in, is to
+assume a role in another account with the relevant IAM permissions to execute successfully.
+
+This is supported in StackMaster by specifying the `role` and `account` properties for the
+parameter resolver in the stack's parameters file.
+
+All parameter resolvers are supported.
+
+```yaml
+vpc_peering_id:
+  role: cross-account-parameter-resolver
+  account: 1234567890
+  stack_output: vpc-peering-stack-in-other-account/peering_name
+
+an_array_param:
+  role: cross-account-parameter-resolver
+  account: 1234567890
+  stack_outputs:
+    - stack-in-account1/output
+    - stack-in-account1/another_output
+
+another_array_param:
+  - role: cross-account-parameter-resolver
+    account: 1234567890
+    stack_output: stack-in-account1/output
+  - role: cross-account-parameter-resolver
+    account: 0987654321
+    stack_output: stack-in-account2/output
+
+my_secret:
+  role: cross-account-parameter-resolver
+  account: 1234567890
+  parameter_store: ssm_parameter_name
+```
+
+An example of use case where cross-account parameter resolving is particularly useful is when
+setting up VPC peering where you need the VPC ID of the peer. Without the ability to assume
+a role in another account, the only option was to hard code the peer's VPC ID.
+
 ### Stack Output
 
 The stack output parameter resolver looks up outputs from other stacks in the
@@ -270,7 +311,7 @@ db_password:
 ```
 
 ### 1Password Lookup
-An Alternative to the alternative secret store is accessing 1password secrets using the 1password cli (`op`).
+An alternative to the secrets store is accessing 1password secrets using the 1password cli (`op`).
 You declare a 1password lookup with the following parameters in your parameters file:
 
 ```

@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Project metadata to the gemspec ([#293]).
 
+- Enable cross-account parameter resolving ([#292])
+
 ### Changed
 
 - Not updating RubyGems and Bundler in CI ([#294])
@@ -23,6 +25,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 - Drop ruby 2.3 support in CI ([#294])
 
 [Unreleased]: https://github.com/envato/stack_master/compare/v1.17.1...HEAD
+[#292]: https://github.com/envato/stack_master/pull/292
 [#293]: https://github.com/envato/stack_master/pull/293
 [#294]: https://github.com/envato/stack_master/pull/294
 
