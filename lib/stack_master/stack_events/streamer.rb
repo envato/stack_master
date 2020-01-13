@@ -3,8 +3,8 @@ module StackMaster
     class Streamer
       StackFailed = Class.new(StandardError)
 
-      def self.stream(*args, &block)
-        new(*args, &block).stream
+      def self.stream(stack_name, region, **args, &block)
+        new(stack_name, region, **args, &block).stream
       end
 
       def initialize(stack_name, region, from: Time.now, break_on_finish_state: true, sleep_between_fetches: 1, io: nil, &block)

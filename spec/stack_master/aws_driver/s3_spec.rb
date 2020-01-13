@@ -47,7 +47,7 @@ RSpec.describe StackMaster::AwsDriver::S3 do
                                                        key: 'prefix/template',
                                                        body: 'file content',
                                                        metadata: {md5: "d10b4c3ff123b26dc068d43a8bef2d23"})
-        s3_driver.upload_files(options)
+        s3_driver.upload_files(**options)
       end
     end
 
@@ -69,7 +69,7 @@ RSpec.describe StackMaster::AwsDriver::S3 do
                                                        key: 'template',
                                                        body: 'file content',
                                                        metadata: {md5: "d10b4c3ff123b26dc068d43a8bef2d23"})
-        s3_driver.upload_files(options)
+        s3_driver.upload_files(**options)
       end
     end
 
@@ -92,7 +92,7 @@ RSpec.describe StackMaster::AwsDriver::S3 do
                                                        key: 'prefix/template',
                                                        body: 'file content',
                                                        metadata: {md5: "d10b4c3ff123b26dc068d43a8bef2d23"})
-        s3_driver.upload_files(options)
+        s3_driver.upload_files(**options)
       end
     end
 
@@ -123,7 +123,7 @@ RSpec.describe StackMaster::AwsDriver::S3 do
                                                        key: 'template2',
                                                        body: 'file content',
                                                        metadata: {md5: "d10b4c3ff123b26dc068d43a8bef2d23"})
-        s3_driver.upload_files(options)
+        s3_driver.upload_files(**options)
       end
     end
   end

@@ -14,6 +14,11 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Test against Ruby 2.7, ([#296]).
 
+### Changed
+
+- Some method calls changed to be explicit about converting hashes to keyword
+  arguments. Resolves warnings raised by Ruby 2.7, ([#296]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v1.18.0...HEAD
 [#296]: https://github.com/envato/stack_master/pull/296
 
