@@ -148,7 +148,7 @@ module StackMaster
 
       def upload_files
         return unless use_s3?
-        s3.upload_files(s3_options)
+        s3.upload_files(**s3_options)
       end
 
       def template_method

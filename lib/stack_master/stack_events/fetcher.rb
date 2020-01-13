@@ -1,8 +1,8 @@
 module StackMaster
   module StackEvents
     class Fetcher
-      def self.fetch(*args)
-        new(*args).fetch
+      def self.fetch(stack_name, region, **args)
+        new(stack_name, region, **args).fetch
       end
 
       def initialize(stack_name, region, from: nil)
