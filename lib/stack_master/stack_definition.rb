@@ -9,7 +9,6 @@ module StackMaster
                   :notification_arns,
                   :base_dir,
                   :template_dir,
-                  :secret_file,
                   :ejson_file,
                   :ejson_file_region,
                   :ejson_file_kms,
@@ -47,7 +46,6 @@ module StackMaster
         @allowed_accounts == other.allowed_accounts &&
         @notification_arns == other.notification_arns &&
         @base_dir == other.base_dir &&
-        @secret_file == other.secret_file &&
         @ejson_file == other.ejson_file &&
         @ejson_file_region == other.ejson_file_region &&
         @ejson_file_kms == other.ejson_file_kms &&

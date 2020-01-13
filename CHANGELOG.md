@@ -10,11 +10,14 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-### Added
+### Removed
 
-...
+- Extracted GPG secret parameter resolving to a separate gem. Please add
+`stack_master-gpg_parameter_resolver` to your bundle to continue using this
+functionality ([#295]).
 
 [Unreleased]: https://github.com/envato/stack_master/compare/v1.18.0...HEAD
+[#295]: https://github.com/envato/stack_master/pull/295
 
 ## [1.18.0] - 2019-12-23
 
@@ -32,6 +35,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Drop ruby 2.3 support in CI ([#294])
 
+[1.18.0]: https://github.com/envato/stack_master/compare/v1.17.1...v1.18.0
 [#292]: https://github.com/envato/stack_master/pull/292
 [#293]: https://github.com/envato/stack_master/pull/293
 [#294]: https://github.com/envato/stack_master/pull/294

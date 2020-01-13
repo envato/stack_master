@@ -10,14 +10,12 @@ Feature: Stack defaults
         ap_southeast_2:
           notification_arns:
           - test_arn_1
-          secret_file: staging.yml.gpg
           tags:
             environment: staging
           stack_policy_file: my_policy.json
         us_east_1:
           notification_arns:
           - test_arn_2
-          secret_file: production.yml.gpg
           tags:
             environment: production
       stacks:

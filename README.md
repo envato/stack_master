@@ -64,13 +64,11 @@ stack_defaults:
   role_arn: service_role_arn
 region_defaults:
   us-east-1:
-    secret_file: production.yml.gpg
     tags:
       environment: production
     notification_arns:
       - test_arn
   ap-southeast-2:
-    secret_file: staging.yml.gpg
     tags:
       environment: staging
 stacks:

@@ -18,7 +18,6 @@ region_defaults:
     notification_arns:
       - test_arn
     role_arn: test_service_role_arn
-    secret_file: production.yml.gpg
     stack_policy_file: my_policy.json
   staging:
     tags:
@@ -27,7 +26,6 @@ region_defaults:
     notification_arns:
       - test_arn_3
     role_arn: test_service_role_arn3
-    secret_file: staging.yml.gpg
 stacks:
   us-east-1:
     myapp_vpc:
