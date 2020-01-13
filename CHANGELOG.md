@@ -18,9 +18,11 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Some method calls changed to be explicit about converting hashes to keyword
   arguments. Resolves warnings raised by Ruby 2.7, ([#296]).
+- Bump the minimum required Ruby version from 2.1 to 2.4 ([#297]).
 
 [Unreleased]: https://github.com/envato/stack_master/compare/v1.18.0...HEAD
 [#296]: https://github.com/envato/stack_master/pull/296
+[#297]: https://github.com/envato/stack_master/pull/297
 
 ## [1.18.0] - 2019-12-23
 
