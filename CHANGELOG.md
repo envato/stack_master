@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.0.0...HEAD
+
+## [2.0.0] - 2020-01-15
+
 ### Added
 
 - Test against Ruby 2.7, ([#296]).
@@ -23,10 +27,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 ### Removed
 
 - Extracted GPG secret parameter resolving to a separate gem. Please add
-[stack_master-gpg_parameter_resolver] to your bundle to continue using this
-functionality ([#295]).
+  [stack_master-gpg_parameter_resolver] to your bundle to continue using this
+  functionality ([#295]).
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v1.18.0...HEAD
+[2.0.0]: https://github.com/envato/stack_master/compare/v1.18.0...v2.0.0
 [stack_master-gpg_parameter_resolver]: https://rubygems.org/gems/stack_master-gpg_parameter_resolver
 [#295]: https://github.com/envato/stack_master/pull/295
 [#296]: https://github.com/envato/stack_master/pull/296
