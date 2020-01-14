@@ -5,8 +5,8 @@ RSpec.describe StackMaster::ParameterLoader do
   subject(:parameters) { StackMaster::ParameterLoader.load([stack_file_name, region_file_name]) }
 
   before do
-    file_mock(stack_file_name, stack_file_returns)
-    file_mock(region_file_name, region_file_returns)
+    file_mock(stack_file_name, **stack_file_returns)
+    file_mock(region_file_name, **region_file_returns)
   end
 
   context 'no parameter file' do
@@ -63,7 +63,7 @@ RSpec.describe StackMaster::ParameterLoader do
     subject(:parameters) { StackMaster::ParameterLoader.load([stack_file_name, region_yaml_file_name, region_file_name]) }
 
     before do
-      file_mock(region_yaml_file_name, region_yaml_file_returns)
+      file_mock(region_yaml_file_name, **region_yaml_file_returns)
     end
 
     it 'returns params from the region base stack_name.yml' do
