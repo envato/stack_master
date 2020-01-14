@@ -261,7 +261,7 @@ into parameters of dependent stacks.
 
 ### Secret
 
-Note: This resolver has been extracted into a dedicated gem. Please install and
+Note: The GPG parameter resolver has been extracted into a dedicated gem. Please install and
 follow the instructions for the [stack_master-gpg_parameter_resolver] gem.
 
 [stack_master-gpg_parameter_resolver]: https://github.com/envato/stack_master-gpg_parameter_resolver
