@@ -13,7 +13,6 @@ RSpec.describe StackMaster::Config do
       notification_arns: ['test_arn', 'test_arn_2'],
       role_arn: 'test_service_role_arn2',
       base_dir: base_dir,
-      secret_file: 'production.yml.gpg',
       stack_policy_file: 'my_policy.json',
       additional_parameter_lookup_dirs: ['production']
     )
@@ -104,14 +103,12 @@ RSpec.describe StackMaster::Config do
         'tags' => { 'environment' => 'production' },
         'role_arn' => 'test_service_role_arn',
         'notification_arns' => ['test_arn'],
-        'secret_file' => 'production.yml.gpg',
         'stack_policy_file' => 'my_policy.json'
       },
       'ap-southeast-2' => {
         'tags' => {'environment' => 'staging', 'test_override' => 1 },
         'role_arn' => 'test_service_role_arn3',
         'notification_arns' => ['test_arn_3'],
-        'secret_file' => 'staging.yml.gpg'
       }
     })
   end
@@ -139,7 +136,6 @@ RSpec.describe StackMaster::Config do
       notification_arns: ['test_arn_3', 'test_arn_4'],
       template: 'myapp_vpc.rb',
       base_dir: base_dir,
-      secret_file: 'staging.yml.gpg',
       additional_parameter_lookup_dirs: ['staging']
     ))
     expect(loaded_config.find_stack('ap-southeast-2', 'myapp-web')).to eq(StackMaster::StackDefinition.new(
@@ -157,7 +153,6 @@ RSpec.describe StackMaster::Config do
       notification_arns: ['test_arn_3'],
       template: 'myapp_web',
       base_dir: base_dir,
-      secret_file: 'staging.yml.gpg',
       additional_parameter_lookup_dirs: ['staging']
     ))
   end

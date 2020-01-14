@@ -70,7 +70,6 @@ module StackMaster
     autoload :AmiFinder, 'stack_master/parameter_resolvers/ami_finder'
     autoload :StackOutput, 'stack_master/parameter_resolvers/stack_output'
     autoload :Ejson, 'stack_master/parameter_resolvers/ejson'
-    autoload :Secret, 'stack_master/parameter_resolvers/secret'
     autoload :SnsTopicName, 'stack_master/parameter_resolvers/sns_topic_name'
     autoload :SecurityGroup, 'stack_master/parameter_resolvers/security_group'
     autoload :LatestAmiByTags, 'stack_master/parameter_resolvers/latest_ami_by_tags'

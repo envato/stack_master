@@ -20,7 +20,15 @@ The format is based on [Keep a Changelog], and this project adheres to
   arguments. Resolves warnings raised by Ruby 2.7, ([#296]).
 - Bump the minimum required Ruby version from 2.1 to 2.4 ([#297]).
 
+### Removed
+
+- Extracted GPG secret parameter resolving to a separate gem. Please add
+[stack_master-gpg_parameter_resolver] to your bundle to continue using this
+functionality ([#295]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v1.18.0...HEAD
+[stack_master-gpg_parameter_resolver]: https://rubygems.org/gems/stack_master-gpg_parameter_resolver
+[#295]: https://github.com/envato/stack_master/pull/295
 [#296]: https://github.com/envato/stack_master/pull/296
 [#297]: https://github.com/envato/stack_master/pull/297
 
@@ -40,6 +48,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Drop ruby 2.3 support in CI ([#294])
 
+[1.18.0]: https://github.com/envato/stack_master/compare/v1.17.1...v1.18.0
 [#292]: https://github.com/envato/stack_master/pull/292
 [#293]: https://github.com/envato/stack_master/pull/293
 [#294]: https://github.com/envato/stack_master/pull/294

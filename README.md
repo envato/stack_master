@@ -25,9 +25,8 @@ are displayed for review.
 - Stack events will be displayed until an end state is reached.
 
 Stack parameters can be dynamically resolved at runtime using one of the
-built in parameter resolvers. Parameters can be sourced from GPG encrypted YAML
-files, other stacks outputs, by querying various AWS APIs to get resource ARNs,
-etc.
+built in parameter resolvers. Parameters can be sourced from other stacks
+outputs, or by querying various AWS APIs to get resource ARNs, etc.
 
 ## Installation
 
@@ -64,13 +63,11 @@ stack_defaults:
   role_arn: service_role_arn
 region_defaults:
   us-east-1:
-    secret_file: production.yml.gpg
     tags:
       environment: production
     notification_arns:
       - test_arn
   ap-southeast-2:
-    secret_file: staging.yml.gpg
     tags:
       environment: staging
 stacks:
@@ -138,7 +135,7 @@ stacks:
 
 - `templates` - CloudFormation, SparkleFormation or CfnDsl templates.
 - `parameters` - Parameters as YAML files.
-- `secrets` - GPG encrypted secret files.
+- `secrets` - encrypted secret files.
 - `policies` - Stack policy JSON files.
 
 ## Templates
@@ -264,35 +261,10 @@ into parameters of dependent stacks.
 
 ### Secret
 
-Note: This resolver is not supported on Windows, you can instead use the [Parameter Store](#parameter-store).
+Note: The GPG parameter resolver has been extracted into a dedicated gem. Please install and
+follow the instructions for the [stack_master-gpg_parameter_resolver] gem.
 
-The secret parameters resolver expects a `secret_file` to be defined in the
-stack definition which is a GPG encrypted YAML file. Once decrypted and parsed,
-the value provided to the secret resolver is used to lookup the associated key
-in the secret file. A common use case for this is to store database passwords.
-
-stack_master.yml:
-
-```yaml
-stacks:
-  us-east-1:
-    my_app:
-      template: my_app.json
-      secret_file: production.yml.gpg
-```
-
-secrets/production.yml.gpg, when decrypted:
-
-```yaml
-db_password: my-password
-```
-
-parameters/my_app.yml:
-
-```yaml
-db_password:
-  secret: db_password
-```
+[stack_master-gpg_parameter_resolver]: https://github.com/envato/stack_master-gpg_parameter_resolver
 
 ### Parameter Store
 

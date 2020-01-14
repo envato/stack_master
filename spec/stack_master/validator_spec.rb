@@ -40,18 +40,6 @@ RSpec.describe StackMaster::Validator do
         expect { validator.perform }.to output(/myapp_vpc: invalid/).to_stdout
       end
     end
-
-    context "validate is called from from a continuous integration system with no access to secrets" do
-      let(:stack_name) { 'myapp_vpc_with_secrets' }
-      let(:secret) { instance_double(StackMaster::ParameterResolvers::Secret) }
-      before do
-        allow(StackMaster::ParameterResolvers::Secret).to receive(:new).and_return(secret)
-      end
-      it "does not prompt for the secret key" do
-        expect(secret).not_to receive(:resolve)
-        validator.perform
-      end
-    end
   end
 
 end
