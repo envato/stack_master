@@ -12,6 +12,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.0.0...HEAD
 
+## [2.0.1] - 2020-01-22
+
+### Changed
+
+- Pin cfndsl to below 1.0
+
 ## [2.0.0] - 2020-01-15
 
 ### Added
