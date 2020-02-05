@@ -679,6 +679,7 @@ stack_master events [region-or-alias] [stack-name] # Display events for a stack
 stack_master outputs [region-or-alias] [stack-name] # Display outputs for a stack
 stack_master resources [region-or-alias] [stack-name] # Display outputs for a stack
 stack_master status # Displays the status of each stack
+stack_master tidy # Find missing or extra templates or parameter files
 ```
 
 ## Applying updates

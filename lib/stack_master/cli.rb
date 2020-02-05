@@ -169,6 +169,19 @@ module StackMaster
         end
       end
 
+      command :tidy do |c|
+        c.syntax = 'stack_master tidy'
+        c.summary = 'Try to identify extra & missing files.'
+        c.description = 'Cross references stack_master.yml with the template and parameter directories to identify extra or missing files.'
+        c.example 'description', 'Check for missing or extra files'
+        c.action do |args, options|
+          options.defaults config: default_config_file
+          say "Invalid arguments. stack_master tidy" and return unless args.size == 0
+          config = load_config(options.config)
+          StackMaster::Commands::Tidy.perform(config)
+        end
+      end
+
       command :delete do |c|
         c.syntax = 'stack_master delete [region] [stack_name]'
         c.summary = 'Delete an existing stack'
