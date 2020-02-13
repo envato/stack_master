@@ -12,12 +12,16 @@ module StackMaster
 
     attr_reader :sts
 
+    def profile
+      @profile ||= ENV['AWS_PROFILE'] || 'default'
+    end
+
     def region
       @region ||= ENV['AWS_REGION'] || Aws.config[:region] || Aws.shared_config.region || 'us-east-1'
     end
 
     def sts
-      @sts ||= Aws::STS::Client.new(region: region)
+      @sts ||= Aws::STS::Client.new(profile: profile, region: region)
     end
   end
 end
