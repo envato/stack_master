@@ -37,7 +37,7 @@ module StackMaster
         end
       end
 
-      def rel_path path
+      def rel_path(path)
         Pathname.new(path).relative_path_from(Pathname.new(@config.base_dir))
       end
 
