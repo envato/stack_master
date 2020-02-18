@@ -1,7 +1,7 @@
 require 'aruba/cucumber'
 require 'stack_master'
 require 'stack_master/testing'
-require 'aruba/in_process'
+require 'aruba/processes/in_process'
 require 'pry'
 require 'cucumber/rspec/doubles'
 
