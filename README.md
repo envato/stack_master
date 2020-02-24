@@ -157,12 +157,14 @@ template_compilers:
 
 Parameters are loaded from multiple YAML files, merged from the following lookup paths from bottom to top:
 
-- parameters/[stack_name].yaml
-- parameters/[stack_name].yml
+- parameters/[underscored_stack_name].yaml
+- parameters/[underscored_stack_name].yml
 - parameters/[region]/[underscored_stack_name].yaml
 - parameters/[region]/[underscored_stack_name].yml
 - parameters/[region_alias]/[underscored_stack_name].yaml
 - parameters/[region_alias]/[underscored_stack_name].yml
+
+**Note:** The file names must be underscored, not hyphenated, even if the stack names are hyphenated.
 
 A simple parameter file could look like this:
 
