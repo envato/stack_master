@@ -10,13 +10,20 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.0.0...HEAD
+### Changed
+
+- Restrict `sparkle_formation` to version 3 ([#307]).
+
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.0.1...HEAD
+[#307]: https://github.com/envato/stack_master/pull/307
 
 ## [2.0.1] - 2020-01-22
 
 ### Changed
 
 - Pin cfndsl to below 1.0
+
+[2.0.1]: https://github.com/envato/stack_master/compare/v2.0.0...v2.0.1
 
 ## [2.0.0] - 2020-01-15
 
