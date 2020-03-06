@@ -10,12 +10,31 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.1.0...HEAD
+
+## [2.1.0] - 2020-03-06
+
+### Added
+
+- `stack_master tidy` command ([#305]). This provides a way to identify unused
+  parameter files or templates.
+
 ### Changed
+
+- Updated README to be explicit about using underscores in parameter file
+  names ([#306]).
 
 - Restrict `sparkle_formation` to version 3 ([#307]).
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.0.1...HEAD
+- Build one gem for all Platforms ([#309]). This includes adding the `diff-lcs`
+  gem as dependency. Previously, this was only a dependency for the Windows
+  release.
+
+[2.1.0]: https://github.com/envato/stack_master/compare/v2.0.1...v2.1.0
+[#305]: https://github.com/envato/stack_master/pull/305
+[#306]: https://github.com/envato/stack_master/pull/306
 [#307]: https://github.com/envato/stack_master/pull/307
+[#309]: https://github.com/envato/stack_master/pull/309
 
 ## [2.0.1] - 2020-01-22
 
@@ -25,7 +44,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 [2.0.1]: https://github.com/envato/stack_master/compare/v2.0.0...v2.0.1
 
-## [2.0.0] - 2020-01-15
+## [2.0.0] - 2020-01-22
 
 ### Added
 
