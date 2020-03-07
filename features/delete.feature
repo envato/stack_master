@@ -26,15 +26,31 @@ Feature: Delete command
     When I run `stack_master delete us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack does not exist |
-    Then the exit status should be 0
+    Then the exit status should be 1
 
   Scenario: Answer no when asked to delete stack
     Given I will answer prompts with "n"
     And I stub the following stacks:
       | stack_id | stack_name | parameters       | region    |
-      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 | 
+      | 1        | myapp-vpc  | KeyName=my-key   | us-east-1 |
     When I run `stack_master delete us-east-1 myapp-vpc --trace`
     And the output should contain all of these lines:
       | Stack update aborted |
     Then the exit status should be 0
 
+  Scenario: Run a delete command on a stack with the wrong account
+    Given a file named "stack_master.yml" with:
+      """
+      stacks:
+        us_east_1:
+          myapp:
+            template: myapp.rb
+            allowed_accounts: '11111111'
+      """
+    When I use the account "33333333"
+    And I run `stack_master delete us-east-1 myapp`
+    Then the output should contain:
+      """
+      Account '33333333' is not an allowed account. Allowed accounts are ["11111111"].
+      """
+    And the exit status should be 1

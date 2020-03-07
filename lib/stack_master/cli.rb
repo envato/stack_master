@@ -206,10 +206,11 @@ module StackMaster
             region = args[0]
           end
 
-          execute_if_allowed_account(allowed_accounts) do
+          success = execute_if_allowed_account(allowed_accounts) do
             StackMaster.cloud_formation_driver.set_region(region)
-            StackMaster::Commands::Delete.perform(region, stack_name)
+            StackMaster::Commands::Delete.perform(region, stack_name).success?
           end
+          @kernel.exit false unless success
         end
       end
 
