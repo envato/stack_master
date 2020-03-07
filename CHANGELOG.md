@@ -10,7 +10,18 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Exit status is now managed by the `StackMaster::CLI` class rather than the
+  `stack_master` binstub ([#310]). The Cucumber test suite can now accurately
+  validate the exit status of each command line invocation.
+
+### Fixed
+
+- `stack_master --version` now returns an exit status `0` ([#310]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.1.0...HEAD
+[#310]: https://github.com/envato/stack_master/pull/310
 
 ## [2.1.0] - 2020-03-06
 
