@@ -227,7 +227,7 @@ module StackMaster
       StackMaster::Config.load!(stack_file)
     rescue Errno::ENOENT => e
       say "Failed to load config file #{stack_file}"
-      exit 1
+      @kernel.exit false
     end
 
     def execute_stacks_command(command, args, options)
@@ -253,7 +253,7 @@ module StackMaster
           end
         end
       end
-      success
+      @kernel.exit false unless success
     end
 
     def execute_if_allowed_account(allowed_accounts, &block)
