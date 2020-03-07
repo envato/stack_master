@@ -17,7 +17,7 @@ module StackMaster
           tp.set :max_width, self.window_size
           tp stack.outputs, :output_key, :output_value, :description
         else
-          StackMaster.stdout.puts "Stack doesn't exist"
+          failed("Stack doesn't exist")
         end
       end
 
