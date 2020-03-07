@@ -39,4 +39,5 @@ Feature: Resources command
 
   Scenario: Fails when the stack doesn't exist
     When I run `stack_master resources us-east-1 myapp-vpc --trace`
-    And the output should contain "Stack doesn't exist"
+    Then the output should contain "Stack doesn't exist"
+    And the exit status should be 1
