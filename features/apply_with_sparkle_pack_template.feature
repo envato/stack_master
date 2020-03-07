@@ -43,6 +43,7 @@ Feature: Apply command with compile time parameters
     When I run `stack_master apply us-east-1 sparkle_pack_test -q --trace`
     Then the output should contain all of these lines:
       | Template "template_unknown" not found in any sparkle pack |
+    And the exit status should be 1
 
   Scenario: An unknown compiler
     Given a file named "stack_master.yml" with:
@@ -56,3 +57,4 @@ Feature: Apply command with compile time parameters
     When I run `stack_master apply us-east-1 sparkle_pack_test -q --trace`
     Then the output should contain all of these lines:
       | Unknown compiler "foobar" |
+    And the exit status should be 1
