@@ -36,6 +36,13 @@ module StackMaster
     def error_message(e)
       msg = "#{e.class} #{e.message}"
       msg << "\n Caused by: #{e.cause.class} #{e.cause.message}" if e.cause
+      if defined?(@options)
+        if @options&.trace
+          msg << "\n" << e.full_message
+        else
+          msg << "\n Use --trace to view backtrace"
+        end
+      end
       msg
     end
 
