@@ -43,7 +43,7 @@ Feature: Apply command with allowed accounts
     And I run `stack_master apply us-east-1 myapp-db`
     And the output should contain all of these lines:
       | Account '11111111' is not an allowed account. Allowed accounts are ["22222222"].|
-    Then the exit status should be 0
+    Then the exit status should be 1
 
   Scenario: Run apply with stack overriding allowed accounts to allow all accounts
     Given I stub the following stack events:

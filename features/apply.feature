@@ -123,6 +123,7 @@ Feature: Apply command
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
       | KeyName: my-key                                                                |
+    And the exit status should be 0
 
   Scenario: Run apply nothing and create 2 stacks
     Given I stub the following stack events:
@@ -147,6 +148,7 @@ Feature: Apply command
   Scenario: Run apply with invalid stack
     When I run `stack_master apply foo bar`
     Then the output should contain "Could not find stack definition bar in region foo"
+    And the exit status should be 1
 
   Scenario: Create stack with --changed
     Given I stub the following stack events:
@@ -161,6 +163,7 @@ Feature: Apply command
       | +    "Vpc": {                                                                  |
       | Parameters diff:                                                               |
       | KeyName: my-key                                                                |
+    And the exit status should be 0
 
   Scenario: Run apply with 2 specific stacks and create 2 stacks
     Given I stub the following stack events:

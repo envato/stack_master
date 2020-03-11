@@ -33,9 +33,10 @@ Feature: Outputs command
       }
       """
     When I run `stack_master outputs us-east-1 myapp-vpc --trace`
-    And the output should contain all of these lines:
+    Then the output should contain all of these lines:
       | VpcId      |
       | vpc-123456 |
+    And the exit status should be 0
 
   Scenario: Fails when the stack doesn't exist
     When I run `stack_master outputs us-east-1 myapp-vpc --trace`

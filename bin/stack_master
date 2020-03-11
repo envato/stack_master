@@ -10,8 +10,7 @@ end
 trap("SIGINT") { raise StackMaster::CtrlC }
 
 begin
-  result = StackMaster::CLI.new(ARGV.dup).execute!
-  exit !!result
+  StackMaster::CLI.new(ARGV.dup).execute!
 rescue StackMaster::CtrlC
   StackMaster.stdout.puts "Exiting..."
 end
