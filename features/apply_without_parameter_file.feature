@@ -32,7 +32,7 @@ Feature: Apply command without parameter files
       | - parameters/myapp.y*ml                                                    |
       | - parameters/us-east-1/myapp.y*ml                                          |
       | - parameters/production/myapp.y*ml                                         |
-    And the exit status should be 0
+    And the exit status should be 1
 
   Scenario: Without a region alias
     Given a file named "stack_master.yml" with:
@@ -49,4 +49,4 @@ Feature: Apply command without parameter files
       | - parameters/myapp.y*ml                                                    |
       | - parameters/us-east-1/myapp.y*ml                                          |
     And the output should not contain "- parameters/production/myapp.y*ml"
-    And the exit status should be 0
+    And the exit status should be 1

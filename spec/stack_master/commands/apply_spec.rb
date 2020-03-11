@@ -270,14 +270,17 @@ RSpec.describe StackMaster::Commands::Apply do
       expect { apply }.to_not output(/Continue and apply the stack/).to_stdout
     end
 
-    it 'outputs a description of the problem' do
-      expect { apply }.to output(/Empty\/blank parameters detected/).to_stderr
+    it 'outputs a description of the problem including where param files are loaded from' do
+      expect { apply }.to output(<<~OUTPUT).to_stderr
+        Empty/blank parameters detected, ensure values exist for those parameters.
+        Parameters will be read from the following locations:
+         - parameters/myapp_vpc.y*ml
+         - parameters/us-east-1/myapp_vpc.y*ml
+      OUTPUT
     end
 
-    it 'outputs where param files are loaded from' do
-      stack_definition.parameter_files.each do |parameter_file|
-        expect { apply }.to output(/#{parameter_file}/).to_stderr
-      end
+    specify 'the command is not successful' do
+      expect(apply.success?).to be(false)
     end
   end
 end
