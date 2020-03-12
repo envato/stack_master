@@ -16,12 +16,18 @@ The format is based on [Keep a Changelog], and this project adheres to
   `stack_master` binstub ([#310]). The Cucumber test suite can now accurately
   validate the exit status of each command line invocation.
 
+- Unpin and use the latest release of the `commander` gem ([#314]). This
+  latest release includes fixes for the global option parsing defect reported
+  in [#248].
+
 ### Fixed
 
 - `stack_master --version` now returns an exit status `0` ([#310]).
 
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.1.0...HEAD
+[#248]: https://github.com/envato/stack_master/issues/248
 [#310]: https://github.com/envato/stack_master/pull/310
+[#314]: https://github.com/envato/stack_master/pull/314
 
 ## [2.1.0] - 2020-03-06
 
