@@ -27,6 +27,9 @@ The format is based on [Keep a Changelog], and this project adheres to
 - `delete`, `outputs`, and `resources` commands now exit with a status `1` if
   the specified stack is not in AWS ([#313]).
 
+- The `delete` command now exits with status `1` if using a disallowed AWS
+  account ([#313]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.1.0...HEAD
 [#248]: https://github.com/envato/stack_master/issues/248
 [#310]: https://github.com/envato/stack_master/pull/310
