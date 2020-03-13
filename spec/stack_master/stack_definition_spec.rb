@@ -43,9 +43,16 @@ RSpec.describe StackMaster::StackDefinition do
     ])
   end
 
+  it 'returns all globs' do
+    expect(stack_definition.parameter_file_globs).to eq([
+      "/base_dir/parameters/#{stack_name}.y*ml",
+      "/base_dir/parameters/#{region}/#{stack_name}.y*ml",
+    ])
+  end
+
   context 'with additional parameter lookup dirs' do
     before do
-      stack_definition.send(:additional_parameter_lookup_dirs=, ['production'])
+      stack_definition.additional_parameter_lookup_dirs = ['production']
       allow(Dir).to receive(:glob).with(
         File.join(base_dir, 'parameters', "production", "#{stack_name}.y*ml")
       ).and_return(
@@ -64,6 +71,14 @@ RSpec.describe StackMaster::StackDefinition do
         "/base_dir/parameters/#{region}/#{stack_name}.yml",
         "/base_dir/parameters/production/#{stack_name}.yaml",
         "/base_dir/parameters/production/#{stack_name}.yml",
+      ])
+    end
+
+    it 'returns all globs' do
+      expect(stack_definition.parameter_file_globs).to eq([
+        "/base_dir/parameters/#{stack_name}.y*ml",
+        "/base_dir/parameters/#{region}/#{stack_name}.y*ml",
+        "/base_dir/parameters/production/#{stack_name}.y*ml",
       ])
     end
   end

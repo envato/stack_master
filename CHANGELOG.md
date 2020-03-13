@@ -14,6 +14,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Fixed
 
+- `stack_master apply` prints list of parameter file locations if no stack
+  parameters files found ([#316]).
+
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.2.0...HEAD
+[#316]: https://github.com/envato/stack_master/pull/316
+
 ## [2.2.0]
 
 ### Changed
@@ -40,7 +46,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 - The `delete` command now exits with status `1` if using a disallowed AWS
   account ([#313]).
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.1.0...HEAD
+[2.2.0]: https://github.com/envato/stack_master/compare/v2.1.0...v2.2.0
 [#248]: https://github.com/envato/stack_master/issues/248
 [#310]: https://github.com/envato/stack_master/pull/310
 [#313]: https://github.com/envato/stack_master/pull/313
