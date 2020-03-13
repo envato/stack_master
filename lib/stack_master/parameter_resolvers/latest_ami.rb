@@ -12,7 +12,7 @@ module StackMaster
         owners = Array(value.fetch('owners', 'self').to_s)
         ami_finder = AmiFinder.new(@stack_definition.region)
         filters = ami_finder.build_filters_from_hash(value.fetch('filters'))
-        ami_finder.find_latest_ami(filters, owners).try(:image_id)
+        ami_finder.find_latest_ami(filters, owners)&.image_id
       end
     end
   end

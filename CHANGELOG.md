@@ -12,6 +12,9 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Changed
 
+- Load fewer Ruby files: remove several ActiveSupport core extensions
+  ([#318]).
+
 ### Fixed
 
 - `stack_master apply` prints list of parameter file locations if no stack
@@ -23,6 +26,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.2.0...HEAD
 [#316]: https://github.com/envato/stack_master/pull/316
 [#317]: https://github.com/envato/stack_master/pull/317
+[#318]: https://github.com/envato/stack_master/pull/318
 
 ## [2.2.0]
 
