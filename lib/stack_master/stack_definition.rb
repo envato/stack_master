@@ -23,7 +23,6 @@ module StackMaster
     include Utils::Initializable
 
     def initialize(attributes = {})
-      @additional_parameter_lookup_dirs = []
       @compiler_options = {}
       @notification_arns = []
       @s3 = {}
@@ -32,6 +31,7 @@ module StackMaster
       @ejson_file_kms = true
       @compiler = nil
       super
+      @additional_parameter_lookup_dirs ||= []
       @template_dir ||= File.join(@base_dir, 'templates')
       @allowed_accounts = Array(@allowed_accounts)
     end
@@ -86,7 +86,11 @@ module StackMaster
     end
 
     def parameter_files
-      [ default_parameter_file_path, region_parameter_file_path, additional_parameter_lookup_file_paths ].flatten.compact
+      parameter_file_globs.map(&Dir.method(:glob)).flatten
+    end
+
+    def parameter_file_globs
+      [ default_parameter_glob, region_parameter_glob ] + additional_parameter_lookup_globs
     end
 
     def stack_policy_file_path
@@ -99,19 +103,18 @@ module StackMaster
 
     private
 
-    def additional_parameter_lookup_file_paths
-      return unless additional_parameter_lookup_dirs
+    def additional_parameter_lookup_globs
       additional_parameter_lookup_dirs.map do |a|
-        Dir.glob(File.join(base_dir, 'parameters', a, "#{underscored_stack_name}.y*ml"))
+        File.join(base_dir, 'parameters', a, "#{underscored_stack_name}.y*ml")
       end
     end
 
-    def region_parameter_file_path
-      Dir.glob(File.join(base_dir, 'parameters', "#{region}", "#{underscored_stack_name}.y*ml"))
+    def region_parameter_glob
+      File.join(base_dir, 'parameters', "#{region}", "#{underscored_stack_name}.y*ml")
     end
 
-    def default_parameter_file_path
-      Dir.glob(File.join(base_dir, 'parameters', "#{underscored_stack_name}.y*ml"))
+    def default_parameter_glob
+      File.join(base_dir, 'parameters', "#{underscored_stack_name}.y*ml")
     end
 
     def underscored_stack_name
