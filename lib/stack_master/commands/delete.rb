@@ -33,7 +33,7 @@ module StackMaster
         cf.describe_stacks({stack_name: @stack_name})
         true
       rescue Aws::CloudFormation::Errors::ValidationError
-        StackMaster.stdout.puts "Stack does not exist"
+        failed("Stack does not exist")
         false
       end
 

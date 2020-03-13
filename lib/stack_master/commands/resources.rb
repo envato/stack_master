@@ -1,3 +1,5 @@
+require 'table_print'
+
 module StackMaster
   module Commands
     class Resources
@@ -13,14 +15,14 @@ module StackMaster
         if stack_resources
           tp stack_resources, :logical_resource_id, :resource_type, :timestamp, :resource_status, :resource_status_reason, :description
         else
-          StackMaster.stdout.puts "Stack doesn't exist"
+          failed("Stack doesn't exist")
         end
       end
 
       private
 
       def stack_resources
-        @stack_resources = cf.describe_stack_resources(stack_name: @stack_definition.stack_name).stack_resources
+        @stack_resources ||= cf.describe_stack_resources(stack_name: @stack_definition.stack_name).stack_resources
       rescue Aws::CloudFormation::Errors::ValidationError
         nil
       end

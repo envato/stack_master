@@ -24,9 +24,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - `stack_master --version` now returns an exit status `0` ([#310]).
 
+- `delete`, `outputs`, and `resources` commands now exit with a status `1` if
+  the specified stack is not in AWS ([#313]).
+
+- The `delete` command now exits with status `1` if using a disallowed AWS
+  account ([#313]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.1.0...HEAD
 [#248]: https://github.com/envato/stack_master/issues/248
 [#310]: https://github.com/envato/stack_master/pull/310
+[#313]: https://github.com/envato/stack_master/pull/313
 [#314]: https://github.com/envato/stack_master/pull/314
 
 ## [2.1.0] - 2020-03-06
