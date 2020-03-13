@@ -49,7 +49,7 @@ RSpec.describe StackMaster::Commands::Apply do
         tags: [
           { key: 'environment', value: 'production' }
         ],
-        capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+        capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM', 'CAPABILITY_AUTO_EXPAND'],
         role_arn: role_arn,
         notification_arns: [notification_arn]
       )
@@ -167,7 +167,7 @@ RSpec.describe StackMaster::Commands::Apply do
         tags: [
           { key: 'environment', value: 'production' }
         ],
-        capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+        capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM', 'CAPABILITY_AUTO_EXPAND'],
         role_arn: role_arn,
         notification_arns: [notification_arn],
         change_set_type: 'CREATE'
@@ -189,7 +189,7 @@ RSpec.describe StackMaster::Commands::Apply do
           tags: [
             { key: 'environment', value: 'production' }
           ],
-          capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+          capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM', 'CAPABILITY_AUTO_EXPAND'],
           role_arn: role_arn,
           notification_arns: [notification_arn],
           on_failure: 'ROLLBACK'
