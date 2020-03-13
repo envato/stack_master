@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
 require 'stack_master'
 
 if ENV['STUB_AWS'] == 'true'

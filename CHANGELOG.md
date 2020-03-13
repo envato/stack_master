@@ -12,8 +12,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Changed
 
-- Load fewer Ruby files: remove several ActiveSupport core extensions
-  ([#318]).
+- Load fewer Ruby files: remove several ActiveSupport core extensions and
+  Rubygems `require`s ([#318]).
 
 ### Fixed
 
