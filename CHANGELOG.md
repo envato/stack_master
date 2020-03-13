@@ -12,6 +12,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Changed
 
+### Fixed
+
+## [2.2.0]
+
+### Changed
+
 - Exit status is now managed by the `StackMaster::CLI` class rather than the
   `stack_master` binstub ([#310]). The Cucumber test suite can now accurately
   validate the exit status of each command line invocation.
@@ -21,6 +27,8 @@ The format is based on [Keep a Changelog], and this project adheres to
   in [#248].
 
 - Speed up CI: Only run one build job on macOS ([#315]).
+
+- Add CAPABILITY_AUTO_EXPAND to support macros ([#312]).
 
 ### Fixed
 
