@@ -20,6 +20,8 @@ The format is based on [Keep a Changelog], and this project adheres to
   latest release includes fixes for the global option parsing defect reported
   in [#248].
 
+- Speed up CI: Only run one build job on macOS ([#315]).
+
 ### Fixed
 
 - `stack_master --version` now returns an exit status `0` ([#310]).
@@ -35,6 +37,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [#310]: https://github.com/envato/stack_master/pull/310
 [#313]: https://github.com/envato/stack_master/pull/313
 [#314]: https://github.com/envato/stack_master/pull/314
+[#315]: https://github.com/envato/stack_master/pull/315
 
 ## [2.1.0] - 2020-03-06
 
