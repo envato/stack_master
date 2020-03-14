@@ -7,6 +7,7 @@ module StackMaster
       def initialize(config, stack_definition, options = {})
         @config = config
         @stack_definition = stack_definition
+        @options = options
       end
 
       def perform
