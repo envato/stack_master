@@ -11,7 +11,7 @@ module StackMaster
       compiler.require_dependencies
       compiler.compile(template_dir, template, compile_time_parameters, compiler_options)
     rescue StandardError => e
-      raise TemplateCompilationFailed.new("Failed to compile #{template} with error #{e}.\n#{e.backtrace}")
+      raise TemplateCompilationFailed, "Failed to compile #{template}"
     end
 
     def self.register(name, klass)
