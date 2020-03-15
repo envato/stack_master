@@ -274,8 +274,8 @@ RSpec.describe StackMaster::Commands::Apply do
       expect { apply }.to output(<<~OUTPUT).to_stderr
         Empty/blank parameters detected, ensure values exist for those parameters.
         Parameters will be read from the following locations:
-         - parameters/myapp_vpc.y*ml
-         - parameters/us-east-1/myapp_vpc.y*ml
+         - parameters/myapp[-_]vpc.y*ml
+         - parameters/us-east-1/myapp[-_]vpc.y*ml
       OUTPUT
     end
 

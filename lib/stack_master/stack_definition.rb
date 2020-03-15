@@ -105,20 +105,20 @@ module StackMaster
 
     def additional_parameter_lookup_globs
       additional_parameter_lookup_dirs.map do |a|
-        File.join(base_dir, 'parameters', a, "#{underscored_stack_name}.y*ml")
+        File.join(base_dir, 'parameters', a, "#{stack_name_glob}.y*ml")
       end
     end
 
     def region_parameter_glob
-      File.join(base_dir, 'parameters', "#{region}", "#{underscored_stack_name}.y*ml")
+      File.join(base_dir, 'parameters', "#{region}", "#{stack_name_glob}.y*ml")
     end
 
     def default_parameter_glob
-      File.join(base_dir, 'parameters', "#{underscored_stack_name}.y*ml")
+      File.join(base_dir, 'parameters', "#{stack_name_glob}.y*ml")
     end
 
-    def underscored_stack_name
-      stack_name.gsub('-', '_')
+    def stack_name_glob
+      stack_name.gsub('-', '[-_]')
     end
   end
 end
