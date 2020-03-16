@@ -71,7 +71,7 @@ module StackMaster
             newlines = lines.split("\n").map do |line|
               "#{line}#{newlines.pop}"
             end
-            if lines.starts_with?("\n")
+            if lines.start_with?("\n")
               newlines.insert(0, "\n")
             end
             newlines

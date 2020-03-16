@@ -8,7 +8,9 @@ require 'aws-sdk-s3'
 require 'aws-sdk-sns'
 require 'aws-sdk-ssm'
 require 'colorize'
-require 'active_support/core_ext/string'
+require 'active_support/core_ext/hash/keys'
+require 'active_support/core_ext/object/blank'
+require 'active_support/core_ext/string/inflections'
 require 'multi_json'
 
 MultiJson.use :json_gem
