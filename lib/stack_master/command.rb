@@ -38,12 +38,22 @@ module StackMaster
       msg << "\n Caused by: #{e.cause.class} #{e.cause.message}" if e.cause
       if defined?(@options)
         if @options&.trace
-          msg << "\n" << e.full_message
+          msg << "\n#{backtrace(e)}"
         else
           msg << "\n Use --trace to view backtrace"
         end
       end
       msg
+    end
+
+    def backtrace(error)
+      if error.respond_to?(:full_message)
+        error.full_message
+      else
+        # full_message was introduced in Ruby 2.5
+        # remove this conditional when StackMaster no longer supports Ruby 2.4
+        error.backtrace.join("\n")
+      end
     end
 
     def failed(message = nil)

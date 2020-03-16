@@ -62,9 +62,11 @@ RSpec.describe StackMaster::Command do
     context 'when the error has a cause' do
       let(:error_proc) do
         proc = proc do
-          raise RuntimeError, 'the cause message'
-        rescue
-          raise StackMaster::TemplateCompiler::TemplateCompilationFailed, 'the message'
+          begin
+            raise RuntimeError, 'the cause message'
+          rescue
+            raise StackMaster::TemplateCompiler::TemplateCompilationFailed, 'the message'
+          end
         end
       end
 
