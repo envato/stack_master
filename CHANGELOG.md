@@ -57,6 +57,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [2.2.0]: https://github.com/envato/stack_master/compare/v2.1.0...v2.2.0
 [#248]: https://github.com/envato/stack_master/issues/248
 [#310]: https://github.com/envato/stack_master/pull/310
+[#312]: https://github.com/envato/stack_master/pull/312
 [#313]: https://github.com/envato/stack_master/pull/313
 [#314]: https://github.com/envato/stack_master/pull/314
 [#315]: https://github.com/envato/stack_master/pull/315
