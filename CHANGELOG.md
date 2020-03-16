@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - When a stack name includes a dash (`-`), the corresponding parameter files
   can have either dash, or underscore (`_`) in the filename ([#321]).
+  `stack_master init` will use filenames that match the provided stack name.
 
 ### Fixed
 
