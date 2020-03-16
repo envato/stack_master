@@ -17,8 +17,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 - `stack_master apply` prints list of parameter file locations if no stack
   parameters files found ([#316]).
 
+- `stack_master apply` exits with status `1` if there are missing stack
+  parameters ([#317]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.2.0...HEAD
 [#316]: https://github.com/envato/stack_master/pull/316
+[#317]: https://github.com/envato/stack_master/pull/317
 
 ## [2.2.0]
 

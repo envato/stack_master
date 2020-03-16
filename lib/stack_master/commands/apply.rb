@@ -210,16 +210,16 @@ module StackMaster
 
       def ensure_valid_parameters!
         if @proposed_stack.missing_parameters?
-          StackMaster.stderr.puts <<~MESSAGE
+          message = <<~MESSAGE
             Empty/blank parameters detected, ensure values exist for those parameters.
             Parameters will be read from the following locations:
           MESSAGE
           base_dir = Pathname.new(@stack_definition.base_dir)
           @stack_definition.parameter_file_globs.each do |glob|
             parameter_file = Pathname.new(glob).relative_path_from(base_dir)
-            StackMaster.stderr.puts " - #{parameter_file}"
+            message << " - #{parameter_file}\n"
           end
-          halt!
+          failed!(message)
         end
       end
 
