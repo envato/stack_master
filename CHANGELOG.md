@@ -10,6 +10,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Print backtrace when given the `--trace` option, for in-process rescued
+  errors ([#319]). `StackMaster::TemplateCompiler::TemplateCompilationFailed`
+  and `Aws::CloudFormation::Errors::ServiceError` are two such errors.
+
 ### Changed
 
 - Load fewer Ruby files: remove several ActiveSupport core extensions and
@@ -23,10 +29,14 @@ The format is based on [Keep a Changelog], and this project adheres to
 - `stack_master apply` exits with status `1` if there are missing stack
   parameters ([#317]).
 
+- Don't print unreadable error backtrace on template compilation errors
+  ([#319]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.2.0...HEAD
 [#316]: https://github.com/envato/stack_master/pull/316
 [#317]: https://github.com/envato/stack_master/pull/317
 [#318]: https://github.com/envato/stack_master/pull/318
+[#319]: https://github.com/envato/stack_master/pull/319
 
 ## [2.2.0]
 
