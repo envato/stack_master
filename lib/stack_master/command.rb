@@ -42,12 +42,10 @@ module StackMaster
     def error_message(e)
       msg = "#{e.class} #{e.message}"
       msg << "\n Caused by: #{e.cause.class} #{e.cause.message}" if e.cause
-      if defined?(@options)
-        if @options&.trace
-          msg << "\n#{backtrace(e)}"
-        else
-          msg << "\n Use --trace to view backtrace"
-        end
+      if options.trace
+        msg << "\n#{backtrace(e)}"
+      else
+        msg << "\n Use --trace to view backtrace"
       end
       msg
     end
@@ -75,6 +73,10 @@ module StackMaster
     def halt!(message = nil)
       StackMaster.stdout.puts(message) if message
       throw :halt
+    end
+
+    def options
+      @options ||= Commander::Command::Options.new
     end
   end
 end
