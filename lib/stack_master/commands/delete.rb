@@ -5,10 +5,10 @@ module StackMaster
       include StackMaster::Prompter
 
       def initialize(region, stack_name, options)
+        super(nil, nil, options)
         @region = region
         @stack_name = stack_name
         @from_time = Time.now
-        @options = options
       end
 
       def perform

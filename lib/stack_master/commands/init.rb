@@ -6,7 +6,7 @@ module StackMaster
       include Command
 
       def initialize(options, region, stack_name)
-        @options = options
+        super(nil, nil, options)
         @region = region
         @stack_name = stack_name
       end
