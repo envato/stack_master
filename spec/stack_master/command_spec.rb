@@ -61,7 +61,7 @@ RSpec.describe StackMaster::Command do
 
     context 'when the error has a cause' do
       let(:error_proc) do
-        proc = proc do
+        proc do
           begin
             raise RuntimeError, 'the cause message'
           rescue
