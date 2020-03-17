@@ -8,7 +8,7 @@ module StackMaster
       include StackMaster::Commands::TerminalHelper
 
       def initialize(config, show_progress = true)
-        @config = config
+        super(config)
         @show_progress = show_progress
       end
 
