@@ -71,7 +71,7 @@ module StackMaster
           unless args.size == 2
             say "Invalid arguments. stack_master init [region] [stack_name]"
           else
-            StackMaster::Commands::Init.perform(options.overwrite, *args)
+            StackMaster::Commands::Init.perform(options, *args)
           end
         end
       end
@@ -119,7 +119,7 @@ module StackMaster
           options.defaults config: default_config_file
           say "Invalid arguments." if args.size > 0
           config = load_config(options.config)
-          StackMaster::Commands::ListStacks.perform(config)
+          StackMaster::Commands::ListStacks.perform(config, nil, options)
         end
       end
 
@@ -165,7 +165,7 @@ module StackMaster
           options.defaults config: default_config_file
           say "Invalid arguments. stack_master status" and return unless args.size == 0
           config = load_config(options.config)
-          StackMaster::Commands::Status.perform(config)
+          StackMaster::Commands::Status.perform(config, nil, options)
         end
       end
 
@@ -178,7 +178,7 @@ module StackMaster
           options.defaults config: default_config_file
           say "Invalid arguments. stack_master tidy" and return unless args.size == 0
           config = load_config(options.config)
-          StackMaster::Commands::Tidy.perform(config)
+          StackMaster::Commands::Tidy.perform(config, options)
         end
       end
 
@@ -208,7 +208,7 @@ module StackMaster
 
           success = execute_if_allowed_account(allowed_accounts) do
             StackMaster.cloud_formation_driver.set_region(region)
-            StackMaster::Commands::Delete.perform(region, stack_name).success?
+            StackMaster::Commands::Delete.perform(region, stack_name, options).success?
           end
           @kernel.exit false unless success
         end
