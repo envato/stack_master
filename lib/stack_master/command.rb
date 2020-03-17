@@ -27,6 +27,12 @@ module StackMaster
       end
     end
 
+    def initialize(config, stack_definition, options = Commander::Command::Options.new)
+      @config = config
+      @stack_definition = stack_definition
+      @options = options
+    end
+
     def success?
       @failed != true
     end

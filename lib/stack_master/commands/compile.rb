@@ -4,12 +4,6 @@ module StackMaster
       include Command
       include Commander::UI
 
-      def initialize(config, stack_definition, options = {})
-        @config = config
-        @stack_definition = stack_definition
-        @options = options
-      end
-
       def perform
         puts(proposed_stack.template_body)
       end

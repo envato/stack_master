@@ -8,12 +8,10 @@ module StackMaster
       include StackMaster::Prompter
       TEMPLATE_TOO_LARGE_ERROR_MESSAGE = 'The (space compressed) stack is larger than the limit set by AWS. See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'.freeze
 
-      def initialize(config, stack_definition, options = Commander::Command::Options.new)
-        @config = config
-        @s3_config = stack_definition.s3
-        @stack_definition = stack_definition
+      def initialize(*_args)
+        super
+        @s3_config = @stack_definition.s3
         @from_time = Time.now
-        @options = options
         @options.on_failure ||= nil
         @options.yes_param ||= nil
       end
