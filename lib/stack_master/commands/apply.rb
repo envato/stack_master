@@ -12,8 +12,6 @@ module StackMaster
         super
         @s3_config = @stack_definition.s3
         @from_time = Time.now
-        @options.on_failure ||= nil
-        @options.yes_param ||= nil
       end
 
       def perform
