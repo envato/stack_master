@@ -178,7 +178,7 @@ module StackMaster
           options.defaults config: default_config_file
           say "Invalid arguments. stack_master tidy" and return unless args.size == 0
           config = load_config(options.config)
-          StackMaster::Commands::Tidy.perform(config, options)
+          StackMaster::Commands::Tidy.perform(config, nil, options)
         end
       end
 
