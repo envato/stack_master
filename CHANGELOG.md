@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.3.0...HEAD
+
+## [2.3.0] - 2020-03-19
+
 ### Added
 
 - Print backtrace when given the `--trace` option, for in-process rescued
@@ -36,7 +40,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 - Don't print unreadable error backtrace on template compilation errors
   ([#319]).
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.2.0...HEAD
+[2.3.0]: https://github.com/envato/stack_master/compare/v2.2.0...v2.3.0
 [#316]: https://github.com/envato/stack_master/pull/316
 [#317]: https://github.com/envato/stack_master/pull/317
 [#318]: https://github.com/envato/stack_master/pull/318
