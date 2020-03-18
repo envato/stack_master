@@ -50,6 +50,17 @@ RSpec.describe StackMaster::StackDefinition do
     ])
   end
 
+  context 'given a stack_name with a dash' do
+    let(:stack_name) { 'stack-name' }
+
+    it 'returns globs supporting dashes and underscores in the parameter filenames' do
+      expect(stack_definition.parameter_file_globs).to eq([
+        "/base_dir/parameters/stack[-_]name.y*ml",
+        "/base_dir/parameters/#{region}/stack[-_]name.y*ml",
+      ])
+    end
+  end
+
   context 'with additional parameter lookup dirs' do
     before do
       stack_definition.additional_parameter_lookup_dirs = ['production']
@@ -80,6 +91,18 @@ RSpec.describe StackMaster::StackDefinition do
         "/base_dir/parameters/#{region}/#{stack_name}.y*ml",
         "/base_dir/parameters/production/#{stack_name}.y*ml",
       ])
+    end
+
+    context 'given a stack_name with a dash' do
+      let(:stack_name) { 'stack-name' }
+
+      it 'returns globs supporting dashes and underscores in the parameter filenames' do
+        expect(stack_definition.parameter_file_globs).to eq([
+          "/base_dir/parameters/stack[-_]name.y*ml",
+          "/base_dir/parameters/#{region}/stack[-_]name.y*ml",
+          "/base_dir/parameters/production/stack[-_]name.y*ml",
+        ])
+      end
     end
   end
 

@@ -21,6 +21,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 - Load fewer Ruby files: remove several ActiveSupport core extensions and
   Rubygems `require`s ([#318]).
 
+- When a stack name includes a dash (`-`), the corresponding parameter files
+  can have either dash, or underscore (`_`) in the filename ([#321]).
+  `stack_master init` will use filenames that match the provided stack name.
+
 ### Fixed
 
 - `stack_master apply` prints list of parameter file locations if no stack
@@ -37,6 +41,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [#317]: https://github.com/envato/stack_master/pull/317
 [#318]: https://github.com/envato/stack_master/pull/318
 [#319]: https://github.com/envato/stack_master/pull/319
+[#321]: https://github.com/envato/stack_master/pull/321
 
 ## [2.2.0]
 

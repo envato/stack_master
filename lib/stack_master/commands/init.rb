@@ -24,8 +24,8 @@ module StackMaster
       def check_files
         @stack_master_filename = "stack_master.yml"
         @stack_json_filename = "templates/#{@stack_name}.json"
-        @parameters_filename = File.join("parameters", "#{underscored_stack_name}.yml")
-        @region_parameters_filename = File.join("parameters", @region, "#{underscored_stack_name}.yml")
+        @parameters_filename = File.join("parameters", "#{@stack_name}.yml")
+        @region_parameters_filename = File.join("parameters", @region, "#{@stack_name}.yml")
 
         if !@options.overwrite
           [@stack_master_filename, @stack_json_filename, @parameters_filename, @region_parameters_filename].each do |filename|
@@ -87,10 +87,6 @@ module StackMaster
 
       def parameter_region_template
         File.join(StackMaster.base_dir, "stacktemplates", "parameter_region.yml")
-      end
-
-      def underscored_stack_name
-        @stack_name.gsub('-', '_')
       end
 
       def render(renderer)
