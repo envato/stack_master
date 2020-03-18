@@ -4,10 +4,6 @@ module StackMaster
       include Command
       include StackMaster::Commands::TerminalHelper
 
-      def initialize(config)
-        @config = config
-      end
-
       def perform
         used_templates = []
         used_parameter_files = []

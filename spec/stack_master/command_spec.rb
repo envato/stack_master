@@ -47,20 +47,52 @@ RSpec.describe StackMaster::Command do
   end
 
   context 'when a template compilation error occurs' do
-    it 'outputs the message' do
-      error_proc = proc {
-        raise StackMaster::TemplateCompiler::TemplateCompilationFailed.new('the message')
-      }
-      expect { command_class.perform(error_proc) }.to output(/the message/).to_stderr
+    subject(:command) { command_class.new(error_proc) }
+
+    let(:error_proc) do
+      proc do
+        raise StackMaster::TemplateCompiler::TemplateCompilationFailed, 'the message'
+      end
     end
 
-    it 'outputs the exception\'s cause' do
-      exception_with_cause = StackMaster::TemplateCompiler::TemplateCompilationFailed.new('the message')
-      allow(exception_with_cause).to receive(:cause).and_return(RuntimeError.new('the cause message'))
-      error_proc = proc {
-        raise exception_with_cause
-      }
-      expect { command_class.perform(error_proc) }.to output(/Caused by: RuntimeError the cause message/).to_stderr
+    it 'outputs the message' do
+      expect { command.perform }.to output(/the message/).to_stderr
+    end
+
+    context 'when the error has a cause' do
+      let(:error_proc) do
+        proc do
+          begin
+            raise RuntimeError, 'the cause message'
+          rescue
+            raise StackMaster::TemplateCompiler::TemplateCompilationFailed, 'the message'
+          end
+        end
+      end
+
+      it 'outputs the cause message' do
+        expect { command.perform }.to output(/Caused by: RuntimeError the cause message/).to_stderr
+      end
+    end
+
+    context 'when --trace is set' do
+      before { command.instance_variable_set(:@options, spy(trace: true)) }
+
+      it 'outputs the backtrace' do
+        expect { command.perform }.to output(%r{spec/stack_master/command_spec.rb:[\d]*:in }).to_stderr
+      end
+    end
+
+    context 'when --trace is not set' do
+      before { command.instance_variable_set(:@options, spy(trace: nil)) }
+
+      it 'does not output the backtrace' do
+        expect { command.perform }.not_to output(%r{spec/stack_master/command_spec.rb:[\d]*:in }).to_stderr
+      end
+
+      it 'informs to set --trace option to see the backtrace' do
+        expect { command.perform }.to output(/Use --trace to view backtrace/).to_stderr
+      end
     end
   end
 end

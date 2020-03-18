@@ -7,11 +7,6 @@ module StackMaster
       include Commander::UI
       include StackMaster::Commands::TerminalHelper
 
-      def initialize(config, stack_definition, options = {})
-        @config = config
-        @stack_definition = stack_definition
-      end
-
       def perform
         if stack
           tp.set :max_width, self.window_size

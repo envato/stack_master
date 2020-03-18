@@ -5,8 +5,8 @@ module StackMaster
     class Init
       include Command
 
-      def initialize(overwrite, region, stack_name)
-        @overwrite = overwrite
+      def initialize(options, region, stack_name)
+        super(nil, nil, options)
         @region = region
         @stack_name = stack_name
       end
@@ -27,7 +27,7 @@ module StackMaster
         @parameters_filename = File.join("parameters", "#{underscored_stack_name}.yml")
         @region_parameters_filename = File.join("parameters", @region, "#{underscored_stack_name}.yml")
 
-        if !@overwrite
+        if !@options.overwrite
           [@stack_master_filename, @stack_json_filename, @parameters_filename, @region_parameters_filename].each do |filename|
             if File.exists?(filename)
               StackMaster.stderr.puts("Aborting: #{filename} already exists. Use --overwrite to force overwriting file.")

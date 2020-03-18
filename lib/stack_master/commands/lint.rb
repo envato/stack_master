@@ -6,11 +6,6 @@ module StackMaster
       include Command
       include Commander::UI
 
-      def initialize(config, stack_definition, options = {})
-        @config = config
-        @stack_definition = stack_definition
-      end
-
       def perform
         unless cfn_lint_available
           failed! 'Failed to run cfn-lint. You may need to install it using'\

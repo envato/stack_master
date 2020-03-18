@@ -1,5 +1,5 @@
 RSpec.describe StackMaster::Commands::Status do
-  subject(:status) { described_class.new(config, false) }
+  subject(:status) { described_class.new(config, Commander::Command::Options.new, false) }
   let(:config) { instance_double(StackMaster::Config, stacks: stacks) }
   let(:stacks) { [stack_definition_1, stack_definition_2] }
   let(:stack_definition_1) { double(:stack_definition_1, region: 'us-east-1', stack_name: 'stack1', allowed_accounts: []) }

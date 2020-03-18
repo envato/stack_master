@@ -6,11 +6,6 @@ module StackMaster
       include Command
       include Commander::UI
 
-      def initialize(config, stack_definition, options = {})
-        @config = config
-        @stack_definition = stack_definition
-      end
-
       def perform
         if stack_resources
           tp stack_resources, :logical_resource_id, :resource_type, :timestamp, :resource_status, :resource_status_reason, :description

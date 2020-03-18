@@ -7,8 +7,8 @@ module StackMaster
       include Command
       include StackMaster::Commands::TerminalHelper
 
-      def initialize(config, show_progress = true)
-        @config = config
+      def initialize(config, options, show_progress = true)
+        super(config, nil, options)
         @show_progress = show_progress
       end
 

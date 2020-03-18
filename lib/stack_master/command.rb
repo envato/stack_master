@@ -27,6 +27,12 @@ module StackMaster
       end
     end
 
+    def initialize(config, stack_definition = nil, options = Commander::Command::Options.new)
+      @config = config
+      @stack_definition = stack_definition
+      @options = options
+    end
+
     def success?
       @failed != true
     end
@@ -36,7 +42,22 @@ module StackMaster
     def error_message(e)
       msg = "#{e.class} #{e.message}"
       msg << "\n Caused by: #{e.cause.class} #{e.cause.message}" if e.cause
+      if options.trace
+        msg << "\n#{backtrace(e)}"
+      else
+        msg << "\n Use --trace to view backtrace"
+      end
       msg
+    end
+
+    def backtrace(error)
+      if error.respond_to?(:full_message)
+        error.full_message
+      else
+        # full_message was introduced in Ruby 2.5
+        # remove this conditional when StackMaster no longer supports Ruby 2.4
+        error.backtrace.join("\n")
+      end
     end
 
     def failed(message = nil)
@@ -52,6 +73,10 @@ module StackMaster
     def halt!(message = nil)
       StackMaster.stdout.puts(message) if message
       throw :halt
+    end
+
+    def options
+      @options ||= Commander::Command::Options.new
     end
   end
 end

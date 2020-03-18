@@ -1,9 +1,10 @@
 RSpec.describe StackMaster::Commands::Delete do
 
-  subject(:delete) { described_class.new(stack_name, region) }
+  subject(:delete) { described_class.new(stack_name, region, options) }
   let(:cf) { spy(Aws::CloudFormation::Client.new) }
   let(:region) { 'us-east-1' }
   let(:stack_name) { 'mystack' }
+  let(:options) { Commander::Command::Options.new }
 
   before do
     StackMaster.cloud_formation_driver.set_region(region)

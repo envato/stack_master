@@ -4,11 +4,6 @@ module StackMaster
       include Command
       include Commander::UI
 
-      def initialize(config, stack_definition, options = {})
-        @config = config
-        @stack_definition = stack_definition
-      end
-
       def perform
         StackMaster::StackDiffer.new(proposed_stack, stack).output_diff
       end

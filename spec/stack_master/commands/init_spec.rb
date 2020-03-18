@@ -1,8 +1,9 @@
 RSpec.describe StackMaster::Commands::Init do
 
-  subject(:init_command) { described_class.new(false, region, stack_name) }
+  subject(:init_command) { described_class.new(options, region, stack_name) }
   let(:region) { "us-east-1" }
   let(:stack_name) { "test-stack" }
+  let(:options) { double(overwrite: false)}
 
   describe "#perform" do
     it "creates all the expected files" do
