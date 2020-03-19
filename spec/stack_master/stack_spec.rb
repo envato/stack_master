@@ -188,4 +188,24 @@ RSpec.describe StackMaster::Stack do
       it { should eq false }
     end
   end
+
+  describe '#missing_parameters' do
+    subject(:missing_parameters) { stack.missing_parameters }
+
+    let(:stack) { StackMaster::Stack.new(parameters: parameters, template_body: '{}', template_format: :json) }
+
+    context 'when some parameters have a nil value' do
+      let(:parameters) { {'non_nil' => true, 'nil_param1' => nil, 'nil_param2' => nil} }
+
+      it 'returns the parameter names with nil values' do
+        expect(missing_parameters).to eq(['nil_param1', 'nil_param2'])
+      end
+    end
+
+    context 'when no parameters have a nil value' do
+      let(:parameters) { {'my_param' => '1'} }
+
+      it { should eq([]) }
+    end
+  end
 end

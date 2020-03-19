@@ -10,7 +10,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- `stack_master apply` prints names of parameters with missing values
+  ([#322]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.3.0...HEAD
+[#322]: https://github.com/envato/stack_master/pull/322
 
 ## [2.3.0] - 2020-03-19
 

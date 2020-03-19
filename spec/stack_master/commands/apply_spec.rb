@@ -264,7 +264,7 @@ RSpec.describe StackMaster::Commands::Apply do
 
   context 'one or more parameters are empty' do
     let(:stack) { StackMaster::Stack.new(stack_id: '1', parameters: parameters) }
-    let(:parameters) { { 'param_1' => nil } }
+    let(:parameters) { {'param1' => nil, 'param2' => nil, 'param3' => true} }
 
     it "doesn't allow apply" do
       expect { apply }.to_not output(/Continue and apply the stack/).to_stdout
@@ -272,8 +272,10 @@ RSpec.describe StackMaster::Commands::Apply do
 
     it 'outputs a description of the problem including where param files are loaded from' do
       expect { apply }.to output(<<~OUTPUT).to_stderr
-        Empty/blank parameters detected, ensure values exist for those parameters.
-        Parameters will be read from the following locations:
+        Empty/blank parameters detected. Please provide values for these parameters:
+         - param1
+         - param2
+        Parameters will be read from files matching the following globs:
          - parameters/myapp[-_]vpc.y*ml
          - parameters/us-east-1/myapp[-_]vpc.y*ml
       OUTPUT
