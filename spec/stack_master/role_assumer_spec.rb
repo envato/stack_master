@@ -3,6 +3,7 @@ RSpec.describe StackMaster::RoleAssumer do
 
   let(:account) { '1234567890' }
   let(:role) { 'my-role' }
+  let(:role_arn) { "arn:aws:iam::#{account}:role/#{role}" }
 
   describe '#assume_role' do
     let(:assume_role) { role_assumer.assume_role(account, role, &my_block) }
@@ -15,7 +16,7 @@ RSpec.describe StackMaster::RoleAssumer do
 
     it 'calls the assume role API once' do
       expect(Aws::AssumeRoleCredentials).to receive(:new).with(
-        role_arn: "arn:aws:iam::#{account}:role/#{role}",
+        role_arn: role_arn,
         role_session_name: instance_of(String)
       ).once
 
@@ -32,7 +33,7 @@ RSpec.describe StackMaster::RoleAssumer do
 
     it 'assumes the role before calling block' do
       expect(Aws::AssumeRoleCredentials).to receive(:new).with(
-        role_arn: "arn:aws:iam::#{account}:role/#{role}",
+        role_arn: role_arn,
         role_session_name: instance_of(String)
       ).ordered
       expect(my_block).to receive(:call).ordered
@@ -116,7 +117,7 @@ RSpec.describe StackMaster::RoleAssumer do
       context 'with the same account and role' do
         it 'assumes the role once' do
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
-            role_arn: "arn:aws:iam::#{account}:role/#{role}",
+            role_arn: role_arn,
             role_session_name: instance_of(String)
           ).once
 
@@ -128,7 +129,7 @@ RSpec.describe StackMaster::RoleAssumer do
       context 'with a different account' do
         it 'assumes each role once' do
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
-            role_arn: "arn:aws:iam::#{account}:role/#{role}",
+            role_arn: role_arn,
             role_session_name: instance_of(String)
           ).once
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
@@ -144,7 +145,7 @@ RSpec.describe StackMaster::RoleAssumer do
       context 'with a different role' do
         it 'assumes each role once' do
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
-            role_arn: "arn:aws:iam::#{account}:role/#{role}",
+            role_arn: role_arn,
             role_session_name: instance_of(String)
           ).once
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
