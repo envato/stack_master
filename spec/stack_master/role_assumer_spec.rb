@@ -16,6 +16,7 @@ RSpec.describe StackMaster::RoleAssumer do
 
     it 'calls the assume role API once' do
       expect(Aws::AssumeRoleCredentials).to receive(:new).with(
+        region: instance_of(String),
         role_arn: role_arn,
         role_session_name: instance_of(String)
       ).once
@@ -33,10 +34,22 @@ RSpec.describe StackMaster::RoleAssumer do
 
     it 'assumes the role before calling block' do
       expect(Aws::AssumeRoleCredentials).to receive(:new).with(
+        region: instance_of(String),
         role_arn: role_arn,
         role_session_name: instance_of(String)
       ).ordered
       expect(my_block).to receive(:call).ordered
+
+      assume_role
+    end
+
+    it "uses the cloudformation driver's region" do
+      StackMaster.cloud_formation_driver.set_region('my-region')
+      expect(Aws::AssumeRoleCredentials).to receive(:new).with(
+        region: 'my-region',
+        role_arn: instance_of(String),
+        role_session_name: instance_of(String)
+      )
 
       assume_role
     end
@@ -117,6 +130,7 @@ RSpec.describe StackMaster::RoleAssumer do
       context 'with the same account and role' do
         it 'assumes the role once' do
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
+            region: instance_of(String),
             role_arn: role_arn,
             role_session_name: instance_of(String)
           ).once
@@ -129,10 +143,12 @@ RSpec.describe StackMaster::RoleAssumer do
       context 'with a different account' do
         it 'assumes each role once' do
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
+            region: instance_of(String),
             role_arn: role_arn,
             role_session_name: instance_of(String)
           ).once
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
+            region: instance_of(String),
             role_arn: "arn:aws:iam::another-account:role/#{role}",
             role_session_name: instance_of(String)
           ).once
@@ -145,10 +161,12 @@ RSpec.describe StackMaster::RoleAssumer do
       context 'with a different role' do
         it 'assumes each role once' do
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
+            region: instance_of(String),
             role_arn: role_arn,
             role_session_name: instance_of(String)
           ).once
           expect(Aws::AssumeRoleCredentials).to receive(:new).with(
+            region: instance_of(String),
             role_arn: "arn:aws:iam::#{account}:role/another-role",
             role_session_name: instance_of(String)
           ).once
