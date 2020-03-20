@@ -10,12 +10,8 @@ module StackMaster
     end
 
     def perform
-      parameter_hash = ParameterLoader.load(@stack_definition.parameter_files)
-      compile_time_parameters = ParameterResolver.resolve(@config, @stack_definition, parameter_hash[:compile_time_parameters])
-
       StackMaster.stdout.print "#{@stack_definition.stack_name}: "
-      template_body = TemplateCompiler.compile(@config, @stack_definition.compiler, @stack_definition.template_dir, @stack_definition.template, compile_time_parameters, @stack_definition.compiler_options)
-      cf.validate_template(template_body: TemplateUtils.maybe_compressed_template_body(template_body))
+      cf.validate_template(template_body: TemplateUtils.maybe_compressed_template_body(stack.template_body))
       StackMaster.stdout.puts "valid"
       true
     rescue Aws::CloudFormation::Errors::ValidationError => e
@@ -27,6 +23,10 @@ module StackMaster
 
     def cf
       @cf ||= StackMaster.cloud_formation_driver
+    end
+
+    def stack
+      @stack ||= Stack.generate(@stack_definition, @config)
     end
   end
 end
