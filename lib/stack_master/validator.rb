@@ -11,6 +11,10 @@ module StackMaster
 
     def perform
       StackMaster.stdout.print "#{@stack_definition.stack_name}: "
+      if parameter_validator.missing_parameters?
+        StackMaster.stdout.puts "invalid\n#{parameter_validator.error_message}"
+        return false
+      end
       cf.validate_template(template_body: TemplateUtils.maybe_compressed_template_body(stack.template_body))
       StackMaster.stdout.puts "valid"
       true
@@ -27,6 +31,10 @@ module StackMaster
 
     def stack
       @stack ||= Stack.generate(@stack_definition, @config)
+    end
+
+    def parameter_validator
+      @parameter_validator ||= ParameterValidator.new(stack: stack, stack_definition: @stack_definition)
     end
   end
 end
