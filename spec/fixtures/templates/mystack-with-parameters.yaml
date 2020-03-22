@@ -1,0 +1,6 @@
+Parameters:
+  ParamOne:
+    Type: string
+  ParamTwo:
+    Type: string
+

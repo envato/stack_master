@@ -3,16 +3,17 @@ RSpec.describe StackMaster::Validator do
   subject(:validator) { described_class.new(stack_definition, config) }
   let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
   let(:stack_name) { 'myapp_vpc' }
+  let(:template_file) { 'myapp_vpc.json' }
   let(:stack_definition) do
     StackMaster::StackDefinition.new(
       region: 'us-east-1',
       stack_name: stack_name,
-      template: 'myapp_vpc.json',
+      template: template_file,
       tags: {'environment' => 'production'},
       base_dir: File.expand_path('spec/fixtures'),
     )
   end
-  let(:cf) { Aws::CloudFormation::Client.new(region: "us-east-1") }
+  let(:cf) { spy(Aws::CloudFormation::Client, validate_template: nil) }
   let(:parameter_hash) { {template_parameters: {}, compile_time_parameters: {'DbPassword' => {'secret' => 'db_password'}}} }
   let(:resolved_parameters) { {'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium'} }
   before do
@@ -23,9 +24,6 @@ RSpec.describe StackMaster::Validator do
 
   describe "#perform" do
     context "template body is valid" do
-      before do
-        cf.stub_responses(:validate_template, nil)
-      end
       it "tells the user everything will be fine" do
         expect { validator.perform }.to output(/myapp_vpc: valid/).to_stdout
       end
@@ -33,11 +31,27 @@ RSpec.describe StackMaster::Validator do
 
     context "invalid template body" do
       before do
-        cf.stub_responses(:validate_template, Aws::CloudFormation::Errors::ValidationError.new('a', 'Problem'))
+        allow(cf).to receive(:validate_template).and_raise(Aws::CloudFormation::Errors::ValidationError.new('a', 'Problem'))
       end
 
       it "informs the user of their stupdity" do
         expect { validator.perform }.to output(/myapp_vpc: invalid/).to_stdout
+      end
+    end
+
+    context "missing parameters" do
+      let(:template_file) { 'mystack-with-parameters.yaml' }
+
+      it "informs the user of the problem" do
+        expect { validator.perform }.to output(<<~OUTPUT).to_stdout
+          myapp_vpc: invalid
+          Empty/blank parameters detected. Please provide values for these parameters:
+           - ParamOne
+           - ParamTwo
+          Parameters will be read from files matching the following globs:
+           - parameters/myapp_vpc.y*ml
+           - parameters/us-east-1/myapp_vpc.y*ml
+        OUTPUT
       end
     end
   end
