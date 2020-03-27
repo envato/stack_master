@@ -12,6 +12,7 @@ RSpec.describe StackMaster::RoleAssumer do
 
     before do
       allow(Aws::AssumeRoleCredentials).to receive(:new).and_return(credentials)
+      StackMaster.cloud_formation_driver.set_region('us-east-1')
     end
 
     it 'calls the assume role API once' do
