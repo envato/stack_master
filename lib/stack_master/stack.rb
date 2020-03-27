@@ -27,14 +27,6 @@ module StackMaster
       template_default_parameters.merge(parameters)
     end
 
-    def missing_parameters
-      parameters_with_defaults.select { |_key, value| value.nil? }.keys
-    end
-
-    def missing_parameters?
-      missing_parameters.any?
-    end
-
     def self.find(region, stack_name)
       cf = StackMaster.cloud_formation_driver
       cf_stack = cf.describe_stacks(stack_name: stack_name).stacks.first
