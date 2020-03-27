@@ -17,9 +17,15 @@ The format is based on [Keep a Changelog], and this project adheres to
 - `stack_master apply` prints names of parameters with missing values
   ([#322]).
 
+### Fixed
+
+- Error assuming role when default aws region not configured in the
+  environment ([#324])
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.3.0...HEAD
 [#322]: https://github.com/envato/stack_master/pull/322
 [#323]: https://github.com/envato/stack_master/pull/323
+[#324]: https://github.com/envato/stack_master/pull/324
 
 ## [2.3.0] - 2020-03-19
 
