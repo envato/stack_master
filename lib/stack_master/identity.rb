@@ -8,6 +8,9 @@ module StackMaster
       @account ||= sts.get_caller_identity.account
     end
 
+    def account_aliases
+      @aliases ||= iam.list_account_aliases.account_aliases
+    end
 
     private
 
@@ -17,6 +20,10 @@ module StackMaster
 
     def sts
       @sts ||= Aws::STS::Client.new(region: region)
+    end
+
+    def iam
+      @iam ||= Aws::IAM::Client.new(region: region)
     end
   end
 end

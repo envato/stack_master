@@ -1,9 +1,12 @@
 RSpec.describe StackMaster::Identity do
   let(:sts) { Aws::STS::Client.new(stub_responses: true) }
+  let(:iam) { Aws::IAM::Client.new(stub_responses: true) }
+
   subject(:identity) { StackMaster::Identity.new }
 
   before do
     allow(Aws::STS::Client).to receive(:new).and_return(sts)
+    allow(Aws::IAM::Client).to receive(:new).and_return(iam)
   end
 
   describe '#running_in_allowed_account?' do
@@ -58,6 +61,19 @@ RSpec.describe StackMaster::Identity do
 
     it 'returns the current identity account' do
       expect(identity.account).to eq('account-id')
+    end
+  end
+
+  describe '#account_aliases' do
+    before do
+      iam.stub_responses(:list_account_aliases, {
+        account_aliases: %w(my-account new-account-name),
+        is_truncated: false
+      })
+    end
+
+    it 'returns the current identity account alliases' do
+      expect(identity.account_aliases).to eq(%w(my-account new-account-name))
     end
   end
 end
