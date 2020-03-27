@@ -8,9 +8,8 @@ module StackMaster
       @account ||= sts.get_caller_identity.account
     end
 
-    private
 
-    attr_reader :sts
+    private
 
     def region
       @region ||= ENV['AWS_REGION'] || Aws.config[:region] || Aws.shared_config.region || 'us-east-1'
