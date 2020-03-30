@@ -270,7 +270,7 @@ module StackMaster
     end
 
     def running_in_allowed_account?(allowed_accounts)
-      StackMaster.skip_account_check? || identity.running_in_allowed_account?(allowed_accounts)
+      StackMaster.skip_account_check? || identity.running_in_account?(allowed_accounts)
     end
 
     def identity

@@ -1,10 +1,10 @@
 module StackMaster
   class Identity
-    def running_in_allowed_account?(allowed_accounts)
-      allowed_accounts.nil? ||
-        allowed_accounts.empty? ||
-        allowed_accounts.include?(account) ||
-        contains_account_alias?(allowed_accounts)
+    def running_in_account?(accounts)
+      accounts.nil? ||
+        accounts.empty? ||
+        contains_account_id?(accounts) ||
+        contains_account_alias?(accounts)
     end
 
     def account
@@ -27,6 +27,10 @@ module StackMaster
 
     def iam
       @iam ||= Aws::IAM::Client.new(region: region)
+    end
+
+    def contains_account_id?(ids)
+      ids.include?(account)
     end
 
     def contains_account_alias?(aliases)

@@ -9,9 +9,9 @@ RSpec.describe StackMaster::Identity do
     allow(Aws::IAM::Client).to receive(:new).and_return(iam)
   end
 
-  describe '#running_in_allowed_account?' do
+  describe '#running_in_account?' do
     let(:account) { '1234567890' }
-    let(:running_in_allowed_account) { identity.running_in_allowed_account?(allowed_accounts) }
+    let(:running_in_allowed_account) { identity.running_in_account?(allowed_accounts) }
 
     before do
       allow(identity).to receive(:account).and_return(account)
