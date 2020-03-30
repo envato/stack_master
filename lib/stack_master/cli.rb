@@ -262,7 +262,9 @@ module StackMaster
       if running_in_allowed_account?(allowed_accounts)
         block.call
       else
-        StackMaster.stdout.puts "Account '#{identity.account}' is not an allowed account. Allowed accounts are #{allowed_accounts}."
+        account_text = "'#{identity.account}'"
+        account_text << " (#{identity.account_aliases.join(', ')})" if identity.account_aliases.any?
+        StackMaster.stdout.puts "Account #{account_text} is not an allowed account. Allowed accounts are #{allowed_accounts}."
         false
       end
     end

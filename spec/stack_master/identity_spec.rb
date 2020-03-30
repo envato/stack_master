@@ -48,6 +48,41 @@ RSpec.describe StackMaster::Identity do
         expect(running_in_allowed_account).to eq(false)
       end
     end
+
+    describe 'with account aliases' do
+      let(:account_aliases) { ['allowed-account'] }
+
+      before do
+        iam.stub_responses(:list_account_aliases, {
+          account_aliases: account_aliases,
+          is_truncated: false
+        })
+      end
+
+      context "when it's allowed" do
+        let(:allowed_accounts) { ['allowed-account'] }
+
+        it 'returns true' do
+          expect(running_in_allowed_account).to eq(true)
+        end
+      end
+
+      context "when it's not allowed" do
+        let(:allowed_accounts) { ['disallowed-account'] }
+
+        it 'returns false' do
+          expect(running_in_allowed_account).to eq(false)
+        end
+      end
+
+      context 'with a combination of account id and alias' do
+        let(:allowed_accounts) { %w(1928374 allowed-account another-account) }
+
+        it 'returns true' do
+          expect(running_in_allowed_account).to eq(true)
+        end
+      end
+    end
   end
 
   describe '#account' do

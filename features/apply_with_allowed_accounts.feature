@@ -16,6 +16,9 @@ Feature: Apply command with allowed accounts
           myapp_web:
             template: myapp.rb
             allowed_accounts: []
+          myapp_cache:
+            template: myapp.rb
+            allowed_accounts: my-account-alias
       """
     And a directory named "templates"
     And a file named "templates/myapp.rb" with:
@@ -53,3 +56,22 @@ Feature: Apply command with allowed accounts
     And I run `stack_master apply us-east-1 myapp-web`
     And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-web AWS::CloudFormation::Stack CREATE_COMPLETE/
     Then the exit status should be 0
+
+  Scenario: Run apply with stack specifying allowed account alias
+    Given I stub the following stack events:
+      | stack_id | event_id | stack_name  | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | myapp-cache | myapp-cache         | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    When I use the account "44444444" with alias "my-account-alias"
+    And I run `stack_master apply us-east-1 myapp-cache`
+    And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-cache AWS::CloudFormation::Stack CREATE_COMPLETE/
+    Then the exit status should be 0
+
+  Scenario: Run apply with stack specifying disallowed account alias
+    Given I stub the following stack events:
+      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | myapp-db   | myapp-db            | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+    When I use the account "11111111" with alias "an-account-alias"
+    And I run `stack_master apply us-east-1 myapp-db`
+    And the output should contain all of these lines:
+      | Account '11111111' (an-account-alias) is not an allowed account. Allowed accounts are ["22222222"].|
+    Then the exit status should be 1
