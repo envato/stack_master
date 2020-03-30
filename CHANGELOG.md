@@ -17,6 +17,9 @@ The format is based on [Keep a Changelog], and this project adheres to
 - `stack_master apply` prints names of parameters with missing values
   ([#322]).
 
+- `allowed_accounts` stack definition property supports specifying
+  account aliases along with account IDs ([#325])
+
 ### Fixed
 
 - Error assuming role when default aws region not configured in the
@@ -26,6 +29,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [#322]: https://github.com/envato/stack_master/pull/322
 [#323]: https://github.com/envato/stack_master/pull/323
 [#324]: https://github.com/envato/stack_master/pull/324
+[#325]: https://github.com/envato/stack_master/pull/325
 
 ## [2.3.0] - 2020-03-19
 
