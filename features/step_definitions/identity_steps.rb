@@ -18,5 +18,8 @@ Given(/^I use the account "([^"]*)"(?: with alias "([^"]*)")?$/) do |account_id,
         }
       }
     }
+  else
+    # ensure stubs don't leak between steps
+    Aws.config[:iam]&.delete(:stub_responses)
   end
 end
