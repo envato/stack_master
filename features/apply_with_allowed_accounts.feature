@@ -68,10 +68,10 @@ Feature: Apply command with allowed accounts
 
   Scenario: Run apply with stack specifying disallowed account alias
     Given I stub the following stack events:
-      | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
-      | 1        | 1        | myapp-db   | myapp-db            | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
+      | stack_id | event_id | stack_name  | logical_resource_id | resource_status | resource_type              | timestamp           |
+      | 1        | 1        | myapp-cache | myapp-cache         | CREATE_COMPLETE | AWS::CloudFormation::Stack | 2020-10-29 00:00:00 |
     When I use the account "11111111" with alias "an-account-alias"
-    And I run `stack_master apply us-east-1 myapp-db`
-    And the output should contain all of these lines:
-      | Account '11111111' (an-account-alias) is not an allowed account. Allowed accounts are ["22222222"].|
-    Then the exit status should be 1
+    And I run `stack_master apply us-east-1 myapp-cache`
+    Then the output should contain all of these lines:
+      | Account '11111111' (an-account-alias) is not an allowed account. Allowed accounts are ["my-account-alias"].|
+    And the exit status should be 1
