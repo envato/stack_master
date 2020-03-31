@@ -18,7 +18,8 @@ The format is based on [Keep a Changelog], and this project adheres to
   ([#322]).
 
 - `allowed_accounts` stack definition property supports specifying
-  account aliases along with account IDs ([#325])
+  account aliases along with account IDs ([#325]). This change requires
+  the `iam:ListAccountAliases` permission to work.
 
 ### Fixed
 
