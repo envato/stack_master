@@ -110,5 +110,23 @@ RSpec.describe StackMaster::Identity do
     it 'returns the current identity account aliases' do
       expect(identity.account_aliases).to eq(%w(my-account new-account-name))
     end
+
+    context "when identity doesn't have the required iam permissions" do
+      before do
+        allow(iam).to receive(:list_account_aliases).and_raise(
+          Aws::IAM::Errors.error_class('AccessDenied').new(
+            an_instance_of(Seahorse::Client::RequestContext),
+            'User: arn:aws:sts::123456789:assumed-role/my-role/987654321000 is not authorized to perform: iam:ListAccountAliases on resource: *'
+          )
+        )
+      end
+
+      it 'raises an error' do
+        expect { identity.account_aliases }.to raise_error(
+          StackMaster::Identity::MissingIamPermissionsError,
+          'Failed to retrieve account aliases. Missing required IAM permission: iam:ListAccountAliases'
+        )
+      end
+    end
   end
 end
