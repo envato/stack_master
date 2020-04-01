@@ -107,7 +107,7 @@ RSpec.describe StackMaster::Identity do
       })
     end
 
-    it 'returns the current identity account alliases' do
+    it 'returns the current identity account aliases' do
       expect(identity.account_aliases).to eq(%w(my-account new-account-name))
     end
   end
