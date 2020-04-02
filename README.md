@@ -625,7 +625,7 @@ stacks:
 
 ## Allowed accounts
 
-The AWS account the command is executing in can be restricted to a specific list of allowed accounts. This is useful in reducing the possibility of applying non-production changes in a production account. Each stack definition can specify the `allowed_accounts` property with an array of AWS account IDs the stack is allowed to work with.
+The AWS account the command is executing in can be restricted to a specific list of allowed accounts. This is useful in reducing the possibility of applying non-production changes in a production account. Each stack definition can specify the `allowed_accounts` property with an array of AWS account IDs or aliases the stack is allowed to work with.
 
 This is an opt-in feature which is enabled by specifying at least one account to allow.
 
@@ -644,7 +644,7 @@ stacks:
       template: myapp_db.rb
       allowed_accounts: # only allow these accounts (overrides the stack defaults)
         - '1234567890'
-        - '9876543210'
+        - my-account-alias
       tags:
         purpose: back-end
     myapp-web:
@@ -659,7 +659,7 @@ stacks:
         purpose: back-end
 ```
 
-In the cases where you want to bypass the account check, there is StackMaster flag `--skip-account-check` that can be used.
+In the cases where you want to bypass the account check, there is the StackMaster flag `--skip-account-check` that can be used.
 
 ## Commands
 
