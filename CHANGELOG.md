@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.4.0...HEAD
+
+## [2.4.0] - 2020-04-03
+
 ### Added
 
 - `stack_master validate` checks for missing parameter values ([#323]).
@@ -26,7 +30,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 - Error assuming role when default aws region not configured in the
   environment ([#324])
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.3.0...HEAD
+[2.4.0]: https://github.com/envato/stack_master/compare/v2.3.0...v2.4.0
 [#322]: https://github.com/envato/stack_master/pull/322
 [#323]: https://github.com/envato/stack_master/pull/323
 [#324]: https://github.com/envato/stack_master/pull/324
