@@ -53,7 +53,7 @@ Stacks are defined inside a `stack_master.yml` YAML file. When running
 directory, or that the file is passed in with `--config
 /path/to/stack_master.yml`.  Here's an example configuration file:
 
-```
+```yaml
 region_aliases:
   production: us-east-1
   staging: ap-southeast-2
@@ -166,7 +166,7 @@ Parameters are loaded from multiple YAML files, merged from the following lookup
 
 A simple parameter file could look like this:
 
-```
+```yaml
 key_name: myapp-us-east-1
 ```
 
@@ -177,7 +177,7 @@ allows you to use the [Compile Time Parameters](http://www.sparkleformation.io/d
 
 A simple example looks like this
 
-```
+```yaml
 vpc_cidr: 10.0.0.0/16
 compile_time_parameters:
   subnet_cidrs:
@@ -286,8 +286,8 @@ db_password:
 An alternative to the secrets store is accessing 1password secrets using the 1password cli (`op`).
 You declare a 1password lookup with the following parameters in your parameters file:
 
-```
-parameters/database.yml
+```yaml
+# parameters/database.yml
 database_password:
   one_password:
     title: production database
@@ -477,7 +477,7 @@ name of the original resolver.
 
 When creating a new resolver, one can automatically create the array resolver by adding a `array_resolver` statement
 in the class definition, with an optional class name if different from the default one.
-```
+```ruby
 module StackMaster
   module ParameterResolvers
     class MyResolver < Resolver
@@ -488,7 +488,7 @@ module StackMaster
 end
 ```
 In that example, using the array resolver would look like:
-```
+```yaml
 my_parameter:
   my_custom_array_resolver:
     - value1
@@ -498,13 +498,13 @@ my_parameter:
 Array parameter values can include nested parameter resolvers.
 
 For example, given the following parameter definition:
-```
+```yaml
 my_parameter:
   - stack_output: my-stack/output # value resolves to 'value1'
   - value2
 ```
 The parameter value will resolve to:
-```
+```yaml
 my_parameter: 'value1,value2'
 ```
 
@@ -520,7 +520,7 @@ ROLE=<%= role %>
 
 And used like this in SparkleFormation templates:
 
-```
+```ruby
 # templates/app.rb
   user_data user_data_file!('app.erb', role: :worker)
 ```
@@ -533,7 +533,7 @@ my_variable=<%= ref!(:foo) %>
 my_other_variable=<%= account_id! %>
 ```
 
-```
+```ruby
 # templates/ecs_task.rb
 container_definitions array!(
   -> {
@@ -565,7 +565,7 @@ project-root
 
 Your env-1/stack_master.yml files can reference common templates by setting:
 
-```
+```yaml
 template_dir: ../../sparkle/templates
 stack_defaults:
   compiler_options:
