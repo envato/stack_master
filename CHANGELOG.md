@@ -10,7 +10,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Include the license document in the gem package ([#328]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.4.0...HEAD
+[#328]: https://github.com/envato/stack_master/pull/328
 
 ## [2.4.0] - 2020-04-03
 

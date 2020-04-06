@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
     "source_code_uri"   => "https://github.com/envato/stack_master/tree/v#{spec.version}",
   }
 
-  spec.files         = Dir.glob("{bin,lib,stacktemplates}/**/*") + %w(README.md)
+  spec.files         = Dir.glob("{bin,lib,stacktemplates}/**/*") + %w(README.md LICENSE.txt)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
