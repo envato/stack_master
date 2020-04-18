@@ -2,7 +2,7 @@ RSpec.describe StackMaster::ParameterLoader do
   let(:stack_file_name) { '/base_dir/parameters/stack_name.yml' }
   let(:region_file_name) { '/base_dir/parameters/us-east-1/stack_name.yml' }
 
-  subject(:parameters) { StackMaster::ParameterLoader.load([stack_file_name, region_file_name]) }
+  subject(:parameters) { StackMaster::ParameterLoader.load(parameter_files: [stack_file_name, region_file_name]) }
 
   before do
     file_mock(stack_file_name, **stack_file_returns)
@@ -60,7 +60,7 @@ RSpec.describe StackMaster::ParameterLoader do
     let(:region_yaml_file_returns) { {exists: true, read: "Param1: value1\nParam2: valueX"} }
     let(:region_yaml_file_name) { "/base_dir/parameters/us-east-1/stack_name.yaml" }
 
-    subject(:parameters) { StackMaster::ParameterLoader.load([stack_file_name, region_yaml_file_name, region_file_name]) }
+    subject(:parameters) { StackMaster::ParameterLoader.load(parameter_files: [stack_file_name, region_yaml_file_name, region_file_name]) }
 
     before do
       file_mock(region_yaml_file_name, **region_yaml_file_returns)
