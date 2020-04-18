@@ -16,7 +16,8 @@ module StackMaster
                   :additional_parameter_lookup_dirs,
                   :s3,
                   :files,
-                  :compiler_options
+                  :compiler_options,
+                  :parameters
 
     attr_reader :compiler
 
@@ -34,6 +35,7 @@ module StackMaster
       @additional_parameter_lookup_dirs ||= []
       @template_dir ||= File.join(@base_dir, 'templates')
       @allowed_accounts = Array(@allowed_accounts)
+      @parameters ||= {}
     end
 
     def ==(other)
