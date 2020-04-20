@@ -67,7 +67,15 @@ module StackMaster
       @region_aliases.fetch(region) { region }
     end
 
+    def build_stack_definition(yaml_file)
+      stack_name = yaml_file.sub('.yml', '').sub('.yaml', '')
+      attributes = YAML.load(File.read(yaml_file))
+      stack_attributes = merge_stack_attributes(nil, stack_name, attributes)
+      StackDefinition.new(stack_attributes)
+    end
+
     private
+
     def load_template_compilers(config)
       @template_compilers = {}
       populate_template_compilers(config.fetch('template_compilers', {}))
@@ -94,7 +102,7 @@ module StackMaster
     end
 
     def load_config
-      unaliased_stacks = resolve_region_aliases(@config.fetch('stacks'))
+      unaliased_stacks = resolve_region_aliases(@config.fetch('stacks', {}))
       load_stacks(unaliased_stacks)
     end
 
@@ -110,16 +118,23 @@ module StackMaster
         region = Utils.underscore_to_hyphen(region)
         stacks_for_region.each do |stack_name, attributes|
           stack_name = Utils.underscore_to_hyphen(stack_name)
-          stack_attributes = build_stack_defaults(region).deeper_merge!(attributes).merge(
-            'region' => region,
-            'stack_name' => stack_name,
-            'base_dir' => @base_dir,
-            'template_dir' => @template_dir,
-            'additional_parameter_lookup_dirs' => @region_to_aliases[region])
-          stack_attributes['allowed_accounts'] = attributes['allowed_accounts'] if attributes['allowed_accounts']
+          stack_attributes = merge_stack_attributes(region, stack_name, attributes)
           @stacks << StackDefinition.new(stack_attributes)
         end
       end
+    end
+
+    def merge_stack_attributes(region, stack_name, attributes)
+      stack_attributes = build_stack_defaults(region)
+        .deeper_merge!(attributes)
+        .merge(
+        'region' => region,
+        'stack_name' => stack_name,
+        'base_dir' => @base_dir,
+        'template_dir' => @template_dir,
+        'additional_parameter_lookup_dirs' => @region_to_aliases[region])
+      stack_attributes['allowed_accounts'] = attributes['allowed_accounts'] if attributes['allowed_accounts']
+      stack_attributes
     end
 
     def build_stack_defaults(region)

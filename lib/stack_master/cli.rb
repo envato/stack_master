@@ -234,27 +234,39 @@ module StackMaster
     def execute_stacks_command(command, args, options)
       success = true
       config = load_config(options.config)
-      args = [nil, nil] if args.size == 0
-      args.each_slice(2) do |aliased_region, stack_name|
-        region = Utils.underscore_to_hyphen(config.unalias_region(aliased_region))
-        stack_name = Utils.underscore_to_hyphen(stack_name)
-        stack_definitions = config.filter(region, stack_name)
-        if stack_definitions.empty?
-          StackMaster.stdout.puts "Could not find stack definition #{stack_name} in region #{region}"
-          success = false
-        end
-        stack_definitions = stack_definitions.select do |stack_definition|
-          running_in_allowed_account?(stack_definition.allowed_accounts) && StackStatus.new(config, stack_definition).changed?
-        end if options.changed
-        stack_definitions.each do |stack_definition|
-          StackMaster.cloud_formation_driver.set_region(stack_definition.region)
-          StackMaster.stdout.puts "Executing #{command.command_name} on #{stack_definition.stack_name} in #{stack_definition.region}"
-          success = execute_if_allowed_account(stack_definition.allowed_accounts) do
-            command.perform(config, stack_definition, options).success?
+      if args.size == 1 && (args.first.end_with?('.yml') || args.first.end_with?('.yaml'))
+        yaml_file_name = args.first
+        stack_definition = config.build_stack_definition(yaml_file_name)
+        success = run_command_with_stack_definition(command, stack_definition, config, options)
+        @kernel.exit false unless success
+      else
+        args = [nil, nil] if args.size == 0
+        args.each_slice(2) do |aliased_region, stack_name|
+          region = Utils.underscore_to_hyphen(config.unalias_region(aliased_region))
+          stack_name = Utils.underscore_to_hyphen(stack_name)
+          stack_definitions = config.filter(region, stack_name)
+          if stack_definitions.empty?
+            StackMaster.stdout.puts "Could not find stack definition #{stack_name} in region #{region}"
+            success = false
+          end
+          stack_definitions = stack_definitions.select do |stack_definition|
+            running_in_allowed_account?(stack_definition.allowed_accounts) && StackStatus.new(config, stack_definition).changed?
+          end if options.changed
+          stack_definitions.each do |stack_definition|
+            success = run_command_with_stack_definition(command, stack_definition, config, options)
           end
         end
+        @kernel.exit false unless success
       end
-      @kernel.exit false unless success
+    end
+
+    def run_command_with_stack_definition(command, stack_definition, config, options)
+      StackMaster.cloud_formation_driver.set_region(stack_definition.region)
+
+      StackMaster.stdout.puts "Executing #{command.command_name} on #{stack_definition.stack_name} in #{stack_definition.region}"
+      execute_if_allowed_account(stack_definition.allowed_accounts) do
+        command.perform(config, stack_definition, options).success?
+      end
     end
 
     def execute_if_allowed_account(allowed_accounts, &block)
