@@ -17,7 +17,8 @@ module StackMaster
                   :s3,
                   :files,
                   :compiler_options,
-                  :parameters
+                  :parameters,
+                  :parameter_files
 
     attr_reader :compiler
 
@@ -36,6 +37,7 @@ module StackMaster
       @template_dir ||= File.join(@base_dir, 'templates')
       @allowed_accounts = Array(@allowed_accounts)
       @parameters ||= {}
+      @parameter_files ||= []
     end
 
     def ==(other)
@@ -87,7 +89,11 @@ module StackMaster
       Utils.change_extension(template, 'json')
     end
 
-    def parameter_files
+    def all_parameter_files
+      parameter_files_from_globs + parameter_files
+    end
+
+    def parameter_files_from_globs
       parameter_file_globs.map(&Dir.method(:glob)).flatten
     end
 
