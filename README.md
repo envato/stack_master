@@ -123,6 +123,7 @@ stack_defaults:
 ```
 
 Additional files can be configured to be uploaded to S3 alongside the templates:
+
 ```yaml
 stacks:
   production:
@@ -131,6 +132,7 @@ stacks:
       files:
         - userdata.sh
 ```
+
 ## Directories
 
 - `templates` - CloudFormation, SparkleFormation or CfnDsl templates.

@@ -56,7 +56,7 @@ module StackMaster
     end
 
     def self.generate(stack_definition, config)
-      parameter_hash = ParameterLoader.load(parameter_files: stack_definition.parameter_files, parameters: stack_definition.parameters)
+      parameter_hash = ParameterLoader.load(parameter_files: stack_definition.all_parameter_files, parameters: stack_definition.parameters)
       template_parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash[:template_parameters])
       compile_time_parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash[:compile_time_parameters])
       template_body = TemplateCompiler.compile(config, stack_definition.compiler, stack_definition.template_dir, stack_definition.template, compile_time_parameters, stack_definition.compiler_options)
@@ -76,7 +76,7 @@ module StackMaster
     end
 
     def self.generate_without_parameters(stack_definition, config)
-      parameter_hash = ParameterLoader.load(stack_definition.parameter_files)
+      parameter_hash = ParameterLoader.load(parameter_files: stack_definition.all_parameter_files, parameters: stack_definition.parameters)
       compile_time_parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash[:compile_time_parameters])
       template_body = TemplateCompiler.compile(config, stack_definition.compiler, stack_definition.template_dir, stack_definition.template, compile_time_parameters, stack_definition.compiler_options)
       template_format = TemplateUtils.identify_template_format(template_body)

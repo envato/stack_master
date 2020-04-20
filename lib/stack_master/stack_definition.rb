@@ -17,7 +17,9 @@ module StackMaster
                   :s3,
                   :files,
                   :compiler_options,
-                  :parameters
+                  :parameters_dir,
+                  :parameters,
+                  :parameter_files
 
     attr_reader :compiler
 
@@ -33,9 +35,12 @@ module StackMaster
       @compiler = nil
       super
       @additional_parameter_lookup_dirs ||= []
+      @base_dir ||= ""
       @template_dir ||= File.join(@base_dir, 'templates')
+      @parameters_dir ||= File.join(@base_dir, 'parameters')
       @allowed_accounts = Array(@allowed_accounts)
       @parameters ||= {}
+      @parameter_files ||= []
     end
 
     def ==(other)
@@ -59,7 +64,7 @@ module StackMaster
     end
 
     def compiler=(compiler)
-      @compiler = compiler.&to_sym
+      @compiler = compiler&.to_sym
     end
 
     def template_file_path
@@ -87,7 +92,11 @@ module StackMaster
       Utils.change_extension(template, 'json')
     end
 
-    def parameter_files
+    def all_parameter_files
+      parameter_files_from_globs + parameter_files
+    end
+
+    def parameter_files_from_globs
       parameter_file_globs.map(&Dir.method(:glob)).flatten
     end
 
@@ -103,20 +112,26 @@ module StackMaster
       !s3.nil?
     end
 
+    def parameter_files
+      Array(@parameter_files).map do |file|
+        File.expand_path(File.join(parameters_dir, file))
+      end
+    end
+
     private
 
     def additional_parameter_lookup_globs
       additional_parameter_lookup_dirs.map do |a|
-        File.join(base_dir, 'parameters', a, "#{stack_name_glob}.y*ml")
+        File.join(parameters_dir, a, "#{stack_name_glob}.y*ml")
       end
     end
 
     def region_parameter_glob
-      File.join(base_dir, 'parameters', "#{region}", "#{stack_name_glob}.y*ml")
+      File.join(parameters_dir, "#{region}", "#{stack_name_glob}.y*ml")
     end
 
     def default_parameter_glob
-      File.join(base_dir, 'parameters', "#{stack_name_glob}.y*ml")
+      File.join(parameters_dir, "#{stack_name_glob}.y*ml")
     end
 
     def stack_name_glob
