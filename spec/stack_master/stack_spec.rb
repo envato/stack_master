@@ -72,6 +72,73 @@ RSpec.describe StackMaster::Stack do
     end
   end
 
+  describe '.generate_without_parameters' do
+    let(:tags) { {'tag1' => 'value1'} }
+    let(:stack_definition) { StackMaster::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn', stack_policy_file: 'no_replace_rds.json') }
+    let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
+    subject(:stack) { StackMaster::Stack.generate_without_parameters(stack_definition, config) }
+    let(:parameter_hash) { {template_parameters: {'DbPassword' => {'secret' => 'db_password'}}, compile_time_parameters: {}} }
+    let(:resolved_compile_time_parameters) { {} }
+    let(:template_file_name) { 'template.rb' }
+    let(:template_body) { '{"Parameters": { "VpcId": { "Description": "VPC ID" }, "InstanceType": { "Description": "Instance Type", "Default": "t2.micro" }} }' }
+    let(:template_format) { :json }
+    let(:stack_policy_body) { '{}' }
+
+    before do
+      allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
+      allow(StackMaster::ParameterResolver).to receive(:resolve).with(config,stack_definition,parameter_hash[:compile_time_parameters]).and_return(resolved_compile_time_parameters)
+      allow(StackMaster::TemplateCompiler).to receive(:compile).with(
+        config,
+        stack_definition.compiler,
+        stack_definition.template_dir,
+        stack_definition.template,
+        resolved_compile_time_parameters,
+        stack_definition.compiler_options
+      ).and_return(template_body)
+      allow(File).to receive(:read).with(stack_definition.stack_policy_file_path).and_return(stack_policy_body)
+    end
+
+    it 'has the stack definitions region' do
+      expect(stack.region).to eq region
+    end
+
+    it 'has the stack definitions name' do
+      expect(stack.stack_name).to eq stack_name
+    end
+
+    it 'has the stack definitions tags' do
+      expect(stack.tags).to eq tags
+    end
+
+    it 'resolves the parameters' do
+      expect(stack.parameters).to eq({})
+    end
+
+    it 'compiles the template body' do
+      expect(stack.template_body).to eq template_body
+    end
+
+    it 'has role_arn' do
+      expect(stack.role_arn).to eq 'test_service_role_arn'
+    end
+
+    it 'has notification_arns' do
+      expect(stack.notification_arns).to eq ['test_arn']
+    end
+
+    it 'has the stack policy' do
+      expect(stack.stack_policy_body).to eq stack_policy_body
+    end
+
+    it 'extracts default template parameters' do
+      expect(stack.template_default_parameters).to eq('VpcId' => nil, 'InstanceType' => 't2.micro')
+    end
+
+    specify 'parameters_with_defaults does not resolve parameters (only defaults)' do
+      expect(stack.parameters_with_defaults).to eq('InstanceType' => 't2.micro', 'VpcId' => nil)
+    end
+  end
+
   describe '.generate' do
     let(:tags) { {'tag1' => 'value1'} }
     let(:stack_definition) { StackMaster::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn', stack_policy_file: 'no_replace_rds.json') }

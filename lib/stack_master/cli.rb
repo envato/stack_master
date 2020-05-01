@@ -128,8 +128,9 @@ module StackMaster
         c.summary = 'Validate a template'
         c.description = 'Validate a template'
         c.example 'validate a stack named myapp-vpc in us-east-1', 'stack_master validate us-east-1 myapp-vpc'
+        c.option '--[no-]validate-template-parameters', 'Validate template parameters. Default: validate'
         c.action do |args, options|
-          options.default config: default_config_file
+          options.default config: default_config_file, validate_template_parameters: true
           execute_stacks_command(StackMaster::Commands::Validate, args, options)
         end
       end

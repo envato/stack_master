@@ -1,7 +1,8 @@
 RSpec.describe StackMaster::Validator do
 
-  subject(:validator) { described_class.new(stack_definition, config) }
+  subject(:validator) { described_class.new(stack_definition, config, options) }
   let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
+  let(:options) { Commander::Command::Options.new }
   let(:stack_name) { 'myapp_vpc' }
   let(:template_file) { 'myapp_vpc.json' }
   let(:stack_definition) do
@@ -42,16 +43,28 @@ RSpec.describe StackMaster::Validator do
     context "missing parameters" do
       let(:template_file) { 'mystack-with-parameters.yaml' }
 
-      it "informs the user of the problem" do
-        expect { validator.perform }.to output(<<~OUTPUT).to_stdout
-          myapp_vpc: invalid
-          Empty/blank parameters detected. Please provide values for these parameters:
-           - ParamOne
-           - ParamTwo
-          Parameters will be read from files matching the following globs:
-           - parameters/myapp_vpc.y*ml
-           - parameters/us-east-1/myapp_vpc.y*ml
-        OUTPUT
+      context "--validate-template-parameters" do
+        before { options.validate_template_parameters = true }
+
+        it "informs the user of the problem" do
+          expect { validator.perform }.to output(<<~OUTPUT).to_stdout
+            myapp_vpc: invalid
+            Empty/blank parameters detected. Please provide values for these parameters:
+             - ParamOne
+             - ParamTwo
+            Parameters will be read from files matching the following globs:
+             - parameters/myapp_vpc.y*ml
+             - parameters/us-east-1/myapp_vpc.y*ml
+          OUTPUT
+        end
+      end
+
+      context "--no-validate-template-parameters" do
+        before { options.validate_template_parameters = false }
+
+        it "reports the stack as valid" do
+          expect { validator.perform }.to output(/myapp_vpc: valid/).to_stdout
+        end
       end
     end
   end

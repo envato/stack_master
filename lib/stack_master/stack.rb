@@ -75,6 +75,25 @@ module StackMaster
           stack_policy_body: stack_policy_body)
     end
 
+    def self.generate_without_parameters(stack_definition, config)
+      parameter_hash = ParameterLoader.load(stack_definition.parameter_files)
+      compile_time_parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash[:compile_time_parameters])
+      template_body = TemplateCompiler.compile(config, stack_definition.compiler, stack_definition.template_dir, stack_definition.template, compile_time_parameters, stack_definition.compiler_options)
+      template_format = TemplateUtils.identify_template_format(template_body)
+      stack_policy_body = if stack_definition.stack_policy_file_path
+                            File.read(stack_definition.stack_policy_file_path)
+                          end
+      new(region: stack_definition.region,
+          stack_name: stack_definition.stack_name,
+          tags: stack_definition.tags,
+          parameters: {},
+          template_body: template_body,
+          template_format: template_format,
+          role_arn: stack_definition.role_arn,
+          notification_arns: stack_definition.notification_arns,
+          stack_policy_body: stack_policy_body)
+    end
+
     def max_template_size(use_s3)
       return TemplateUtils::MAX_S3_TEMPLATE_SIZE if use_s3
       TemplateUtils::MAX_TEMPLATE_SIZE

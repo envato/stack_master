@@ -1,17 +1,18 @@
 module StackMaster
   class Validator
-    def self.valid?(stack_definition, config)
-      new(stack_definition, config).perform
+    def self.valid?(stack_definition, config, options)
+      new(stack_definition, config, options).perform
     end
 
-    def initialize(stack_definition, config)
+    def initialize(stack_definition, config, options)
       @stack_definition = stack_definition
       @config = config
+      @options = options
     end
 
     def perform
       StackMaster.stdout.print "#{@stack_definition.stack_name}: "
-      if parameter_validator.missing_parameters?
+      if validate_template_parameters? && parameter_validator.missing_parameters?
         StackMaster.stdout.puts "invalid\n#{parameter_validator.error_message}"
         return false
       end
@@ -25,12 +26,20 @@ module StackMaster
 
     private
 
+    def validate_template_parameters?
+      @options.validate_template_parameters
+    end
+
     def cf
       @cf ||= StackMaster.cloud_formation_driver
     end
 
     def stack
-      @stack ||= Stack.generate(@stack_definition, @config)
+      @stack ||= if validate_template_parameters?
+        Stack.generate(@stack_definition, @config)
+      else
+        Stack.generate_without_parameters(@stack_definition, @config)
+      end
     end
 
     def parameter_validator

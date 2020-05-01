@@ -42,3 +42,23 @@ Feature: Validate command with missing parameters
       | - parameters/stack1.y*ml                                                     |
       | - parameters/us-east-1/stack1.y*ml                                           |
     And the exit status should be 1
+
+  Scenario: Given the --validate-template-parameters option, it reports the missing parameter values
+    Given I stub CloudFormation validate calls to pass validation
+    When I run `stack_master validate --validate-template-parameters us-east-1 stack1`
+    Then the output should contain all of these lines:
+      | stack1: invalid                                                              |
+      | Empty/blank parameters detected. Please provide values for these parameters: |
+      | - ParameterTwo                                                               |
+      | - ParameterThree                                                             |
+      | Parameters will be read from files matching the following globs:             |
+      | - parameters/stack1.y*ml                                                     |
+      | - parameters/us-east-1/stack1.y*ml                                           |
+    And the exit status should be 1
+
+  Scenario: Given the --no-validate-template-parameters option, it doesn't report the missing parameter values
+    Given I stub CloudFormation validate calls to pass validation
+    When I run `stack_master validate --no-validate-template-parameters us-east-1 stack1`
+    Then the output should contain all of these lines:
+      | stack1: valid                                                                |
+    And the exit status should be 0
