@@ -46,7 +46,7 @@ module StackMaster
         c.option '--on-failure ACTION', String, "Action to take on CREATE_FAILURE. Valid Values: [ DO_NOTHING | ROLLBACK | DELETE ]. Default: ROLLBACK\nNote: You cannot use this option with Serverless Application Model (SAM) templates."
         c.option '--yes-param PARAM_NAME', String, "Auto-approve stack updates when only parameter PARAM_NAME changes"
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Apply, args, options)
         end
       end
@@ -56,7 +56,7 @@ module StackMaster
         c.summary = 'Displays outputs for a stack'
         c.description = "Displays outputs for a stack"
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Outputs, args, options)
         end
       end
@@ -67,7 +67,7 @@ module StackMaster
         c.description = 'Initialises the expected directory structure and stack_master.yml file'
         c.option('--overwrite', 'Overwrite existing files')
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           unless args.size == 2
             say "Invalid arguments. stack_master init [region] [stack_name]"
           else
@@ -82,7 +82,7 @@ module StackMaster
         c.description = "Shows a diff of the proposed stack's template and parameters"
         c.example 'diff a stack named myapp-vpc in us-east-1', 'stack_master diff us-east-1 myapp-vpc'
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Diff, args, options)
         end
       end
@@ -96,7 +96,7 @@ module StackMaster
         c.option '--all', 'Show all events'
         c.option '--tail', 'Tail events'
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Events, args, options)
         end
       end
@@ -106,7 +106,7 @@ module StackMaster
         c.summary = "Shows stack resources"
         c.description = "Shows stack resources"
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Resources, args, options)
         end
       end
@@ -116,7 +116,7 @@ module StackMaster
         c.summary = 'List stack definitions'
         c.description = 'List stack definitions'
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           say "Invalid arguments." if args.size > 0
           config = load_config(options.config)
           StackMaster::Commands::ListStacks.perform(config, nil, options)
@@ -129,7 +129,7 @@ module StackMaster
         c.description = 'Validate a template'
         c.example 'validate a stack named myapp-vpc in us-east-1', 'stack_master validate us-east-1 myapp-vpc'
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Validate, args, options)
         end
       end
@@ -140,7 +140,7 @@ module StackMaster
         c.description = "Runs cfn-lint on the template which would be sent to AWS on apply"
         c.example 'run cfn-lint on stack myapp-vpc with us-east-1 settings', 'stack_master lint us-east-1 myapp-vpc'
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Lint, args, options)
         end
       end
@@ -151,7 +151,7 @@ module StackMaster
         c.description = "Processes the stack and prints out a compiled version - same we'd send to AWS"
         c.example 'print compiled stack myapp-vpc with us-east-1 settings', 'stack_master compile us-east-1 myapp-vpc'
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Compile, args, options)
         end
       end
@@ -162,7 +162,7 @@ module StackMaster
         c.description = 'Checks the status of all stacks defined in the stack_master.yml file. Warning this operation can be somewhat slow.'
         c.example 'description', 'Check the status of all stack definitions'
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           say "Invalid arguments. stack_master status" and return unless args.size == 0
           config = load_config(options.config)
           StackMaster::Commands::Status.perform(config, nil, options)
@@ -175,7 +175,7 @@ module StackMaster
         c.description = 'Cross references stack_master.yml with the template and parameter directories to identify extra or missing files.'
         c.example 'description', 'Check for missing or extra files'
         c.action do |args, options|
-          options.defaults config: default_config_file
+          options.default config: default_config_file
           say "Invalid arguments. stack_master tidy" and return unless args.size == 0
           config = load_config(options.config)
           StackMaster::Commands::Tidy.perform(config, nil, options)
