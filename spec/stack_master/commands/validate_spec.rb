@@ -4,7 +4,7 @@ RSpec.describe StackMaster::Commands::Validate do
   let(:config) { instance_double(StackMaster::Config) }
   let(:region) { "us-east-1" }
   let(:stack_name) { "mystack" }
-  let(:options) { }
+  let(:options) { Commander::Command::Options.new }
   let(:stack_definition) do
     StackMaster::StackDefinition.new(
       region: region,
@@ -18,7 +18,7 @@ RSpec.describe StackMaster::Commands::Validate do
   describe "#perform" do
     context "can find stack" do
       it "calls the validator to validate the stack definition" do
-        expect(StackMaster::Validator).to receive(:valid?).with(stack_definition, config)
+        expect(StackMaster::Validator).to receive(:valid?).with(stack_definition, config, options)
         validate.perform
       end
     end

@@ -5,7 +5,7 @@ module StackMaster
       include Commander::UI
 
       def perform
-        failed unless Validator.valid?(@stack_definition, @config)
+        failed unless Validator.valid?(@stack_definition, @config, @options)
       end
     end
   end
