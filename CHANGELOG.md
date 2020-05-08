@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.5.0...HEAD
+
+## [2.5.0] - 2020-05-08
+
 ### Added
 
 - Include the license document in the gem package ([#328]).
@@ -17,7 +21,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 - Add an option `stack_master validate --no-validate-template-parameters`
   that disables the validation of template parameters ([#331]).
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.4.0...HEAD
+[2.5.0]: https://github.com/envato/stack_master/compare/v2.4.0...v2.5.0
 [#328]: https://github.com/envato/stack_master/pull/328
 [#331]: https://github.com/envato/stack_master/pull/331
 
