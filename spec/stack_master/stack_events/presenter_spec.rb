@@ -12,7 +12,7 @@ RSpec.describe StackMaster::StackEvents::Presenter do
     subject(:print_event) { described_class.print_event($stdout, event) }
 
     it "nicely presents event data" do
-      expect { print_event }.to output("\e[0;33;49m2001-01-01 02:02:02 #{time.strftime('%z')} MyAwesomeQueue AWS::SQS::Queue CREATE_IN_PROGRESS Resource creation Initiated\e[0m\n").to_stdout
+      expect { print_event }.to output("\e[33m2001-01-01 02:02:02 #{time.strftime('%z')} MyAwesomeQueue AWS::SQS::Queue CREATE_IN_PROGRESS Resource creation Initiated\e[0m\n").to_stdout
     end
   end
 end
