@@ -10,7 +10,17 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.5.0...HEAD
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.6.0...HEAD
+
+## [2.6.0] - 2020-05-15
+
+### Changed
+
+- Replaced GPL-licensed `colorize` dependency with MIT-licensed `rainbow` gem
+  ([#333]).
+
+[2.6.0]: https://github.com/envato/stack_master/compare/v2.5.0...v2.6.0
+[#333]: https://github.com/envato/stack_master/pull/333
 
 ## [2.5.0] - 2020-05-08
 
