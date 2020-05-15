@@ -75,7 +75,7 @@ io.puts "========================================"
                     end
       message = "#{action_name} #{resource_change.resource_type} #{resource_change.logical_resource_id}"
       color = action_color(action_name)
-      io.puts message.colorize(color)
+      io.puts Rainbow(message).color(color)
       resource_change.details.each do |detail|
         display_resource_change_detail(io, action_name, color, detail)
       end
@@ -92,7 +92,7 @@ io.puts "========================================"
         triggered_by << "(#{detail.evaluation})"
       end
       detail_messages << "Triggered by: #{triggered_by}"
-      io.puts "- #{detail_messages.join('. ')}. ".colorize(color)
+      io.puts Rainbow("- #{detail_messages.join('. ')}. ").color(color)
     end
 
     def action_color(action_name)

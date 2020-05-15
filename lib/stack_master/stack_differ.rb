@@ -107,7 +107,7 @@ module StackMaster
 
     def colorize(text, color)
       if colorize?
-        text.colorize(color)
+        Rainbow(text).color(color)
       else
         text
       end

@@ -8,7 +8,7 @@ require 'aws-sdk-s3'
 require 'aws-sdk-sns'
 require 'aws-sdk-ssm'
 require 'aws-sdk-iam'
-require 'colorize'
+require 'rainbow'
 require 'active_support/core_ext/hash/keys'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/string/inflections'
@@ -130,7 +130,7 @@ module StackMaster
 
   def debug(message)
     return unless debug?
-    stderr.puts "[DEBUG] #{message}".colorize(:green)
+    stderr.puts Rainbow("[DEBUG] #{message}").color(:green)
   end
 
   def quiet!

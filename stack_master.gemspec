@@ -46,7 +46,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "aws-sdk-iam", "~> 1"
   spec.add_dependency "diffy"
   spec.add_dependency "erubis"
-  spec.add_dependency "colorize"
+  spec.add_dependency "rainbow"
   spec.add_dependency "activesupport", '>= 4'
   spec.add_dependency "sparkle_formation", "~> 3"
   spec.add_dependency "table_print"
