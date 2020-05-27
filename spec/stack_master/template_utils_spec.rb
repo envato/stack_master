@@ -6,6 +6,12 @@ RSpec.describe StackMaster::TemplateUtils do
       let(:template_body) { '{"AWSTemplateFormatVersion": "2010-09-09"}' }
 
       it { is_expected.to eq(:json) }
+
+      context "starting with a blank line with whitespace" do
+        let(:template_body) { "\n " + '{"AWSTemplateFormatVersion" : "2010-09-09"}' }
+
+        it { is_expected.to eq(:json) }
+      end
     end
 
     context "with a non-json template body" do

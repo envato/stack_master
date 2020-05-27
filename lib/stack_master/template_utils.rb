@@ -6,8 +6,14 @@ module StackMaster
     extend self
 
     def identify_template_format(template_body)
-      return :json if template_body =~ /^{/x # ignore leading whitespaces
-      :yaml
+      # if the first non-whitespace character across all lines is a '{'
+      json_pattern = Regexp.new('\A\s*{', Regexp::MULTILINE)
+
+      if template_body =~ json_pattern
+        :json
+      else
+        :yaml
+      end
     end
 
     def template_hash(template_body=nil)
