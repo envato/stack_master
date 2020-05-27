@@ -3,20 +3,19 @@ require "hashdiff"
 
 module StackMaster
   class StackDiffer
-    def initialize(proposed_stack, current_stack)
+    def initialize(proposed_stack, current_stack, force_template_json: false)
       @proposed_stack = proposed_stack
       @current_stack = current_stack
+      @force_template_json = force_template_json
     end
 
     def proposed_template
-      return @proposed_stack.template_body unless @proposed_stack.template_format == :json
-      JSON.pretty_generate(JSON.parse(@proposed_stack.template_body))
+      transform_body(@proposed_stack)
     end
 
     def current_template
       return '' unless @current_stack
-      return @current_stack.template_body unless @current_stack.template_format == :json
-      JSON.pretty_generate(TemplateUtils.template_hash(@current_stack.template_body))
+      transform_body(@current_stack)
     end
 
     def current_parameters
@@ -115,6 +114,17 @@ module StackMaster
 
     def colorize?
       ENV.fetch('COLORIZE') { 'true' } == 'true'
+    end
+
+    def transform_body(stack)
+      if @force_template_json
+        parsed = TemplateUtils.template_hash(stack.template_body)
+        return JSON.pretty_generate(parsed)
+      end
+
+      return stack.template_body unless @proposed_stack.template_format == :json
+
+      JSON.pretty_generate(JSON.parse(stack.template_body))
     end
   end
 end

@@ -81,6 +81,7 @@ module StackMaster
         c.summary = "Shows a diff of the proposed stack's template and parameters"
         c.description = "Shows a diff of the proposed stack's template and parameters"
         c.example 'diff a stack named myapp-vpc in us-east-1', 'stack_master diff us-east-1 myapp-vpc'
+        c.option '--force-template-json', 'Ignore template formats, diff as JSON on both sides'
         c.action do |args, options|
           options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Diff, args, options)
