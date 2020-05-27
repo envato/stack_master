@@ -5,7 +5,7 @@ module StackMaster
       include Commander::UI
 
       def perform
-        StackMaster::StackDiffer.new(proposed_stack, stack, force_template_json: @options.force_template_json).output_diff
+        StackMaster::StackDiffer.new(proposed_stack, stack).output_diff
       end
 
       private
