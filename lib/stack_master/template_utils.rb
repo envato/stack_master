@@ -2,14 +2,14 @@ module StackMaster
   module TemplateUtils
     MAX_TEMPLATE_SIZE = 51200
     MAX_S3_TEMPLATE_SIZE = 460800
+    # Matches if the first non-whitespace character is a '{', handling cases
+    # with leading whitespace and extra (whitespace-only) lines.
+    JSON_IDENTIFICATION_PATTERN = Regexp.new('\A\s*{', Regexp::MULTILINE)
 
     extend self
 
     def identify_template_format(template_body)
-      # if the first non-whitespace character across all lines is a '{'
-      json_pattern = Regexp.new('\A\s*{', Regexp::MULTILINE)
-
-      if template_body =~ json_pattern
+      if template_body =~ JSON_IDENTIFICATION_PATTERN
         :json
       else
         :yaml
