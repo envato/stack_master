@@ -10,7 +10,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- JSON template bodies with whitespace on leading lines would incorrectly be
+  identified as YAML, leading to `diff` issues. ([#335])
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.6.0...HEAD
+[#335]: https://github.com/envato/stack_master/pull/335
 
 ## [2.6.0] - 2020-05-15
 
