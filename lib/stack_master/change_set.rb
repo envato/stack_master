@@ -89,7 +89,7 @@ io.puts "========================================"
       detail_messages = [target_name]
       if action_name == 'Replace'
         detail_messages << "#{detail.target.requires_recreation} requires recreation"
-      elif action_name == 'Maybe replace'
+      elsif action_name == 'Maybe replace'
         detail_messages << "#{detail.target.requires_recreation} may require recreation"
       end
       triggered_by = [detail.change_source, detail.causing_entity].compact.join('.')
