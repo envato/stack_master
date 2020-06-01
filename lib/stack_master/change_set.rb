@@ -72,7 +72,7 @@ io.puts "========================================"
                     when 'True'
                       'Replace'
                     when 'Conditional'
-                      'Maybe replace'
+                      'Conditional replace'
                     else
                       resource_change.action
                     end
@@ -89,7 +89,7 @@ io.puts "========================================"
       detail_messages = [target_name]
       if action_name == 'Replace'
         detail_messages << "#{detail.target.requires_recreation} requires recreation"
-      elsif action_name == 'Maybe replace'
+      elsif action_name == 'Conditional replace'
         detail_messages << "#{detail.target.requires_recreation} may require recreation"
       end
       triggered_by = [detail.change_source, detail.causing_entity].compact.join('.')
