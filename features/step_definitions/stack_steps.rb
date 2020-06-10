@@ -73,3 +73,9 @@ When(/^an S3 file in bucket "([^"]*)" with key "([^"]*)" exists with content:$/)
   file = StackMaster.s3_driver.find_file(bucket: bucket, object_key: key)
   expect(file).to eq body
 end
+
+When(/^an S3 file in bucket "([^"]*)" with key "([^"]*)" exists with JSON content:$/) do |bucket, key, body|
+  file = StackMaster.s3_driver.find_file(bucket: bucket, object_key: key)
+  parsed_file = JSON.parse(file)
+  expect(parsed_file).to eq JSON.parse(body)
+end
