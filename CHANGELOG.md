@@ -10,6 +10,15 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- `parameter_dir` is now configurable to match the existing `template_dir`.
+- A `parameter_files` array allows configuring an array of *explicit* parameter
+  files relative to `parameter_dir`. If this option is specified, automatic
+  parameter files based on region and the stack name will be be used.
+- A `parameters` hash key allows defining parameters directly on the stack
+  definition rather than requiring an external parameter file.
+
 ### Fixed
 
 - JSON template bodies with whitespace on leading lines would incorrectly be
