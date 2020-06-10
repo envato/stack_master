@@ -13,7 +13,7 @@ RSpec.describe StackMaster::TemplateCompiler do
     context 'when a template compiler is explicitly specified' do
       it 'uses it' do
         expect(StackMaster::TemplateCompilers::SparkleFormation).to receive(:compile).with('/base_dir/templates', 'template', compile_time_parameters, anything)
-        StackMaster::TemplateCompiler.compile(config, :sparkle_formation, '/base_dir/templates', 'template', compile_time_parameters, {})
+        StackMaster::TemplateCompiler.compile(config, :sparkle_formation, '/base_dir/templates', 'template', compile_time_parameters, compile_time_parameters)
       end
     end
 
