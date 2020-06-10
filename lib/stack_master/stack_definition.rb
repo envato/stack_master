@@ -63,10 +63,6 @@ module StackMaster
         @compiler_options == other.compiler_options
     end
 
-    def compiler=(compiler)
-      @compiler = compiler&.to_sym
-    end
-
     def template_file_path
       return unless template
       File.expand_path(File.join(template_dir, template))
