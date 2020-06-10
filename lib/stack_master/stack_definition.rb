@@ -93,7 +93,11 @@ module StackMaster
     end
 
     def all_parameter_files
-      parameter_files_from_globs + parameter_files
+      if parameter_files.empty?
+        parameter_files_from_globs
+      else
+        parameter_files
+      end
     end
 
     def parameter_files_from_globs

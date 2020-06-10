@@ -13,6 +13,10 @@ Feature: Apply command with explicit parameter files
             parameter_files:
             - myapp-web-parameters.yml
       """
+    And a file named "parameters/us-east-1/myapp-web.yml" with:
+      """
+      Color: blue
+      """
     And a file named "parameters/myapp-web-parameters.yml" with:
       """
       KeyName: my-key
@@ -26,6 +30,12 @@ Feature: Apply command with explicit parameter files
         parameters.key_name do
           description 'Key name'
           type 'String'
+        end
+
+        parameters.color do
+          description 'Color'
+          type 'String'
+          default 'red'
         end
 
         resources.instance do
@@ -50,4 +60,6 @@ Feature: Apply command with explicit parameter files
       | Parameters diff:     |
       | KeyName: my-key      |
       | Proposed change set: |
+    And the output should not contain "Color: blue"
+    And the output should contain "Color: red"
     And the exit status should be 0
