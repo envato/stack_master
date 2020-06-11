@@ -12,12 +12,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Added
 
-- `parameter_dir` is now configurable to match the existing `template_dir`.
-- A `parameter_files` array allows configuring an array of *explicit* parameter
-  files relative to `parameter_dir`. If this option is specified, automatic
-  parameter files based on region and the stack name will not be used.
-- A `parameters` hash key allows defining parameters directly on the stack
-  definition rather than requiring an external parameter file.
+- `parameters_dir` is now configurable to match the existing `template_dir`.
+- `parameter_files` configures an array of parameter files relative to
+  `parameters_dir` that will be used instead of automatic parameter file globs
+  based on region and stack name.
+- `parameters` configures stack parameters directly on the stack definition
+  rather than requiring an external parameter file.
 
 ### Fixed
 
