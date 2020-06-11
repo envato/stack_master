@@ -115,8 +115,8 @@ RSpec.describe StackMaster::StackDefinition do
   context "with explicit parameter_files" do
     let(:parameter_files) { ["my-stack.yml", "../my-stack.yml"] }
 
-    it "resolves them relative to parameters_dir" do
-      expect(stack_definition.parameter_files).to eq ["/base_dir/parameters/my-stack.yml", "/base_dir/my-stack.yml"]
+    it "ignores parameter globs and resolves them relative to parameters_dir" do
+      expect(stack_definition.all_parameter_files).to eq ["/base_dir/parameters/my-stack.yml", "/base_dir/my-stack.yml"]
     end
   end
 end
