@@ -20,6 +20,7 @@ Feature: Apply command with explicit parameter files
     And a file named "parameters/myapp-web-parameters.yml" with:
       """
       KeyName: my-key
+      Color: red
       """
     And a directory named "templates"
     And a file named "templates/myapp.rb" with:
@@ -35,7 +36,6 @@ Feature: Apply command with explicit parameter files
         parameters.color do
           description 'Color'
           type 'String'
-          default 'red'
         end
 
         resources.instance do
