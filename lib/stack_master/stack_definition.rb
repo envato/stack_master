@@ -65,7 +65,7 @@ module StackMaster
 
     def template_file_path
       return unless template
-      File.expand_path(File.join(template_dir, template))
+      File.expand_path(template, template_dir)
     end
 
     def files_dir
@@ -114,7 +114,7 @@ module StackMaster
 
     def parameter_files
       Array(@parameter_files).map do |file|
-        File.expand_path(File.join(parameters_dir, file))
+        File.expand_path(file, parameters_dir)
       end
     end
 
