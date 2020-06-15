@@ -16,7 +16,10 @@ module StackMaster
                   :additional_parameter_lookup_dirs,
                   :s3,
                   :files,
-                  :compiler_options
+                  :compiler_options,
+                  :parameters_dir,
+                  :parameters,
+                  :parameter_files
 
     attr_reader :compiler
 
@@ -32,8 +35,12 @@ module StackMaster
       @compiler = nil
       super
       @additional_parameter_lookup_dirs ||= []
+      @base_dir ||= ""
       @template_dir ||= File.join(@base_dir, 'templates')
+      @parameters_dir ||= File.join(@base_dir, 'parameters')
       @allowed_accounts = Array(@allowed_accounts)
+      @parameters ||= {}
+      @parameter_files ||= []
     end
 
     def ==(other)
@@ -56,13 +63,9 @@ module StackMaster
         @compiler_options == other.compiler_options
     end
 
-    def compiler=(compiler)
-      @compiler = compiler.&to_sym
-    end
-
     def template_file_path
       return unless template
-      File.expand_path(File.join(template_dir, template))
+      File.expand_path(template, template_dir)
     end
 
     def files_dir
@@ -85,7 +88,15 @@ module StackMaster
       Utils.change_extension(template, 'json')
     end
 
-    def parameter_files
+    def all_parameter_files
+      if parameter_files.empty?
+        parameter_files_from_globs
+      else
+        parameter_files
+      end
+    end
+
+    def parameter_files_from_globs
       parameter_file_globs.map(&Dir.method(:glob)).flatten
     end
 
@@ -101,20 +112,26 @@ module StackMaster
       !s3.nil?
     end
 
+    def parameter_files
+      Array(@parameter_files).map do |file|
+        File.expand_path(file, parameters_dir)
+      end
+    end
+
     private
 
     def additional_parameter_lookup_globs
       additional_parameter_lookup_dirs.map do |a|
-        File.join(base_dir, 'parameters', a, "#{stack_name_glob}.y*ml")
+        File.join(parameters_dir, a, "#{stack_name_glob}.y*ml")
       end
     end
 
     def region_parameter_glob
-      File.join(base_dir, 'parameters', "#{region}", "#{stack_name_glob}.y*ml")
+      File.join(parameters_dir, "#{region}", "#{stack_name_glob}.y*ml")
     end
 
     def default_parameter_glob
-      File.join(base_dir, 'parameters', "#{stack_name_glob}.y*ml")
+      File.join(parameters_dir, "#{stack_name_glob}.y*ml")
     end
 
     def stack_name_glob

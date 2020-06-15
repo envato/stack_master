@@ -12,7 +12,7 @@ module StackMaster
         parameter_files = Set.new(find_parameter_files())
 
         status = @config.stacks.each do |stack_definition|
-          parameter_files.subtract(stack_definition.parameter_files)
+          parameter_files.subtract(stack_definition.parameter_files_from_globs)
           template = File.absolute_path(stack_definition.template_file_path)
 
           if template

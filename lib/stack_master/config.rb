@@ -17,6 +17,7 @@ module StackMaster
     attr_accessor :stacks,
                   :base_dir,
                   :template_dir,
+                  :parameters_dir,
                   :stack_defaults,
                   :region_defaults,
                   :region_aliases,
@@ -39,6 +40,7 @@ module StackMaster
       @config = config
       @base_dir = base_dir
       @template_dir = config.fetch('template_dir', nil)
+      @parameters_dir = config.fetch('parameters_dir', nil)
       @stack_defaults = config.fetch('stack_defaults', {})
       @region_aliases = Utils.underscore_keys_to_hyphen(config.fetch('region_aliases', {}))
       @region_to_aliases = @region_aliases.inject({}) do |hash, (key, value)|
@@ -115,6 +117,7 @@ module StackMaster
             'stack_name' => stack_name,
             'base_dir' => @base_dir,
             'template_dir' => @template_dir,
+            'parameters_dir' => @parameters_dir,
             'additional_parameter_lookup_dirs' => @region_to_aliases[region])
           stack_attributes['allowed_accounts'] = attributes['allowed_accounts'] if attributes['allowed_accounts']
           @stacks << StackDefinition.new(stack_attributes)

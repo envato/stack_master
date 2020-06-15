@@ -5,7 +5,8 @@ RSpec.describe StackMaster::StackDefinition do
       stack_name: stack_name,
       template: template,
       tags: tags,
-      base_dir: base_dir)
+      base_dir: base_dir,
+      parameter_files: parameter_files)
   end
 
   let(:region) { 'us-east-1' }
@@ -13,6 +14,7 @@ RSpec.describe StackMaster::StackDefinition do
   let(:template) { 'template.json' }
   let(:tags) { {'environment' => 'production'} }
   let(:base_dir) { '/base_dir' }
+  let(:parameter_files) { nil }
 
   before do
     allow(Dir).to receive(:glob).with(
@@ -35,7 +37,7 @@ RSpec.describe StackMaster::StackDefinition do
   end
 
   it 'has default and region specific parameter file locations' do
-    expect(stack_definition.parameter_files).to eq([
+    expect(stack_definition.all_parameter_files).to eq([
       "/base_dir/parameters/#{stack_name}.yaml",
       "/base_dir/parameters/#{stack_name}.yml",
       "/base_dir/parameters/#{region}/#{stack_name}.yaml",
@@ -75,7 +77,7 @@ RSpec.describe StackMaster::StackDefinition do
     end
 
     it 'includes a parameter lookup dir for it' do
-      expect(stack_definition.parameter_files).to eq([
+      expect(stack_definition.all_parameter_files).to eq([
         "/base_dir/parameters/#{stack_name}.yaml",
         "/base_dir/parameters/#{stack_name}.yml",
         "/base_dir/parameters/#{region}/#{stack_name}.yaml",
@@ -108,5 +110,13 @@ RSpec.describe StackMaster::StackDefinition do
 
   it 'defaults ejson_file_kms to true' do
     expect(stack_definition.ejson_file_kms).to eq true
+  end
+
+  context "with explicit parameter_files" do
+    let(:parameter_files) { ["my-stack.yml", "../my-stack.yml"] }
+
+    it "ignores parameter globs and resolves them relative to parameters_dir" do
+      expect(stack_definition.all_parameter_files).to eq ["/base_dir/parameters/my-stack.yml", "/base_dir/my-stack.yml"]
+    end
   end
 end

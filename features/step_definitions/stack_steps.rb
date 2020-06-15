@@ -69,7 +69,13 @@ Given(/^I stub the CloudFormation driver$/) do
   allow(StackMaster.cloud_formation_driver.class).to receive(:new).and_return(StackMaster.cloud_formation_driver)
 end
 
-When(/^an S3 file in bucket "([^"]*)" with key "([^"]*)" exists with content:$/) do |bucket, key, body|
+Then(/^an S3 file in bucket "([^"]*)" with key "([^"]*)" exists with content:$/) do |bucket, key, body|
   file = StackMaster.s3_driver.find_file(bucket: bucket, object_key: key)
   expect(file).to eq body
+end
+
+Then(/^an S3 file in bucket "([^"]*)" with key "([^"]*)" exists with JSON content:$/) do |bucket, key, body|
+  file = StackMaster.s3_driver.find_file(bucket: bucket, object_key: key)
+  parsed_file = JSON.parse(file)
+  expect(parsed_file).to eq JSON.parse(body)
 end

@@ -123,6 +123,7 @@ stack_defaults:
 ```
 
 Additional files can be configured to be uploaded to S3 alongside the templates:
+
 ```yaml
 stacks:
   production:
@@ -131,6 +132,7 @@ stacks:
       files:
         - userdata.sh
 ```
+
 ## Directories
 
 - `templates` - CloudFormation, SparkleFormation or CfnDsl templates.
@@ -155,7 +157,8 @@ template_compilers:
 
 ## Parameters
 
-Parameters are loaded from multiple YAML files, merged from the following lookup paths from bottom to top:
+By default, parameters are loaded from multiple YAML files, merged from the
+following lookup paths from bottom to top:
 
 - parameters/[stack_name].yaml
 - parameters/[stack_name].yml
@@ -168,6 +171,30 @@ A simple parameter file could look like this:
 
 ```yaml
 key_name: myapp-us-east-1
+```
+
+Alternatively, a `parameter_files` array can be defined to explicitly list
+parameter files that will be loaded. If `parameter_files` are defined, the
+automatic search locations will not be used.
+
+```yaml
+parameters_dir: parameters # the default
+stacks:
+  us-east-1:
+    my-app:
+      parameter_files:
+        - my-app.yml # parameters/my-app.yml
+```
+
+Parameters can also be defined inline with stack definitions:
+
+```yaml
+stacks:
+  us-east-1:
+    my-app:
+      parameters:
+        VpcId:
+          stack_output: my-vpc/VpcId
 ```
 
 ### Compile Time Parameters

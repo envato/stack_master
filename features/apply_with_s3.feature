@@ -69,7 +69,7 @@ Feature: Apply command
       | Parameters diff:                                                               |
       | KeyName: my-key                                                                |
     And the output should match /2020-10-29 00:00:00 (\+|\-)[0-9]{4} myapp-vpc AWS::CloudFormation::Stack CREATE_COMPLETE/
-    And an S3 file in bucket "my-bucket" with key "cfn_templates/my-app/myapp_vpc.json" exists with content:
+    And an S3 file in bucket "my-bucket" with key "cfn_templates/my-app/myapp_vpc.json" exists with JSON content:
       """
       {
         "Description": "Test template",

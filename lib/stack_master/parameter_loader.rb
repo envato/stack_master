@@ -5,10 +5,10 @@ module StackMaster
 
     COMPILE_TIME_PARAMETERS_KEY = 'compile_time_parameters'
 
-    def self.load(parameter_files)
+    def self.load(parameter_files: [], parameters: {})
       StackMaster.debug 'Searching for parameter files...'
-      parameter_files.reduce({template_parameters: {}, compile_time_parameters: {}}) do |hash, file_name|
-        parameters = load_parameters(file_name)
+      all_parameters = parameter_files.map { |file_name| load_parameters(file_name) } + [parameters]
+      all_parameters.reduce({template_parameters: {}, compile_time_parameters: {}}) do |hash, parameters|
         template_parameters = create_template_parameters(parameters)
         compile_time_parameters = create_compile_time_parameters(parameters)
 
@@ -16,7 +16,6 @@ module StackMaster
         merge_and_camelize(hash[:compile_time_parameters], compile_time_parameters)
         hash
       end
-
     end
 
     private

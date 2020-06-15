@@ -8,7 +8,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [Unreleased]
+## [2.7.0] - 2020-06-15
+
+### Added
+
+- `parameters_dir` is now configurable to match the existing `template_dir`.
+- `parameter_files` configures an array of parameter files relative to
+  `parameters_dir` that will be used instead of automatic parameter file globs
+  based on region and stack name.
+- `parameters` configures stack parameters directly on the stack definition
+  rather than requiring an external parameter file.
 
 ### Fixed
 
