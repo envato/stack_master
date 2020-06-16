@@ -106,7 +106,7 @@ io.puts "========================================"
         :green
       when 'Modify'
         :yellow
-      when 'Remove', 'Replace', 'Maybe replace'
+      when 'Remove', 'Replace', 'Conditional replace'
         :red
       end
     end
