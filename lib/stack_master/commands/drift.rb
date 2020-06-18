@@ -15,7 +15,7 @@ module StackMaster
         detect_stack_drift_result = cf.detect_stack_drift(stack_name: stack_name)
         drift_results = wait_for_drift_results(detect_stack_drift_result.stack_drift_detection_id)
 
-        puts StackMaster.colorize("Stack Drift Status: #{drift_results.stack_drift_status}", stack_drift_status_color(drift_results.stack_drift_status))
+        puts colorize("Drift Status: #{drift_results.stack_drift_status}", stack_drift_status_color(drift_results.stack_drift_status))
         return if drift_results.stack_drift_status == 'IN_SYNC'
 
         failed
@@ -34,24 +34,27 @@ module StackMaster
 
       def display_drift(drift)
         color = drift_color(drift)
-        puts StackMaster.colorize("#{drift.stack_resource_drift_status} #{drift.resource_type} #{drift.logical_resource_id} #{drift.physical_resource_id}", color)
+        puts colorize("#{drift.stack_resource_drift_status} #{drift.resource_type} #{drift.logical_resource_id} #{drift.physical_resource_id}", color)
         return unless drift.stack_resource_drift_status == 'MODIFIED'
 
-        drift.property_differences.each do |property_difference|
-          puts StackMaster.colorize("  #{property_difference.difference_type} #{property_difference.property_path}", color)
+        unless drift.property_differences.empty?
+          puts colorize("  Property differences:", color)
         end
+        drift.property_differences.each do |property_difference|
+          puts colorize("  - #{property_difference.difference_type} #{property_difference.property_path}", color)
+        end
+        puts colorize("  Resource diff:", color)
         StackMaster.display_colorized_diff(diff(drift))
       end
 
       def diff(drift)
         Diffy::Diff.new(prettify_json(drift.expected_properties),
                         prettify_json(drift.actual_properties),
-                        context: 7,
                         include_diff_info: false).to_s
       end
 
       def prettify_json(string)
-        JSON.pretty_generate(JSON.parse(string))
+        JSON.pretty_generate(JSON.parse(string)) + "\n"
       rescue => e
         puts "Failed to prettify drifted resource: #{e.message}"
         string
@@ -104,6 +107,7 @@ module StackMaster
 
       extend Forwardable
       def_delegators :@stack_definition, :stack_name, :region
+      def_delegators :StackMaster, :colorize
 
       SLEEP_SECONDS = 1
     end

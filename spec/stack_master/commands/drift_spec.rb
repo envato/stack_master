@@ -39,7 +39,7 @@ RSpec.describe StackMaster::Commands::Drift do
 
   context "when the stack hasn't drifted" do
     it 'outputs drift status' do
-      expect { drift.perform }.to output(/Stack Drift Status: IN_SYNC/).to_stdout
+      expect { drift.perform }.to output(/Drift Status: IN_SYNC/).to_stdout
     end
 
     it 'exits with success' do
@@ -73,7 +73,7 @@ RSpec.describe StackMaster::Commands::Drift do
     ] }
 
     it 'outputs drift status' do
-      expect { drift.perform }.to output(/Stack Drift Status: DRIFTED/).to_stdout
+      expect { drift.perform }.to output(/Drift Status: DRIFTED/).to_stdout
     end
 
     it 'reports resource status', aggregate_failures: true do
