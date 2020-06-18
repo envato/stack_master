@@ -56,6 +56,7 @@ module StackMaster
   module Commands
     autoload :TerminalHelper, 'stack_master/commands/terminal_helper'
     autoload :Apply, 'stack_master/commands/apply'
+    autoload :Drift, 'stack_master/commands/drift'
     autoload :Events, 'stack_master/commands/events'
     autoload :Outputs, 'stack_master/commands/outputs'
     autoload :Init, 'stack_master/commands/init'
@@ -197,5 +198,29 @@ module StackMaster
 
   def stderr=(io)
     @stderr = io
+  end
+
+  def colorize(text, color)
+    if colorize?
+      Rainbow(text).color(color)
+    else
+      text
+    end
+  end
+
+  def colorize?
+    ENV.fetch('COLORIZE') { 'true' } == 'true'
+  end
+
+  def display_colorized_diff(diff)
+    diff.each_line do |line|
+      if line.start_with?('+')
+        stdout.print colorize(line, :green)
+      elsif line.start_with?('-')
+        stdout.print colorize(line, :red)
+      else
+        stdout.print line
+      end
+    end
   end
 end

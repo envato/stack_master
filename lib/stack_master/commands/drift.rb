@@ -1,0 +1,111 @@
+require 'diffy'
+
+module StackMaster
+  module Commands
+    class Drift
+      include Command
+      include Commander::UI
+
+      DETECTION_COMPLETE_STATES = [
+        'DETECTION_COMPLETE',
+        'DETECTION_FAILED'
+      ]
+
+      def perform
+        detect_stack_drift_result = cf.detect_stack_drift(stack_name: stack_name)
+        drift_results = wait_for_drift_results(detect_stack_drift_result.stack_drift_detection_id)
+
+        puts StackMaster.colorize("Stack Drift Status: #{drift_results.stack_drift_status}", stack_drift_status_color(drift_results.stack_drift_status))
+        return if drift_results.stack_drift_status == 'IN_SYNC'
+
+        failed
+
+        resp = cf.describe_stack_resource_drifts(stack_name: stack_name)
+        resp.stack_resource_drifts.each do |drift|
+          display_drift(drift)
+        end
+      end
+
+      private
+
+      def cf
+        @cf ||= StackMaster.cloud_formation_driver
+      end
+
+      def display_drift(drift)
+        color = drift_color(drift)
+        puts StackMaster.colorize("#{drift.stack_resource_drift_status} #{drift.resource_type} #{drift.logical_resource_id} #{drift.physical_resource_id}", color)
+        return unless drift.stack_resource_drift_status == 'MODIFIED'
+
+        drift.property_differences.each do |property_difference|
+          puts StackMaster.colorize("  #{property_difference.difference_type} #{property_difference.property_path}", color)
+        end
+        StackMaster.display_colorized_diff(diff(drift))
+      end
+
+      def diff(drift)
+        Diffy::Diff.new(prettify_json(drift.expected_properties),
+                        prettify_json(drift.actual_properties),
+                        context: 7,
+                        include_diff_info: false).to_s
+      end
+
+      def prettify_json(string)
+        JSON.pretty_generate(JSON.parse(string))
+      rescue => e
+        puts "Failed to prettify drifted resource: #{e.message}"
+        string
+      end
+
+      def stack_drift_status_color(stack_drift_status)
+        case stack_drift_status
+        when 'IN_SYNC'
+          :green
+        when 'DRIFTED'
+          :yellow
+        else
+          :blue
+        end
+      end
+
+      def drift_color(drift)
+        case drift.stack_resource_drift_status
+        when 'IN_SYNC'
+          :green
+        when 'MODIFIED'
+          :yellow
+        when 'DELETED'
+          :red
+        else
+          :blue
+        end
+      end
+
+      def wait_for_drift_results(detection_id)
+        try_count = 0
+        resp = nil
+        loop do
+          if try_count >= 10
+            raise 'Failed to wait for stack drift detection after 10 tries'
+          end
+
+          resp = cf.describe_stack_drift_detection_status(stack_drift_detection_id: detection_id)
+          break if DETECTION_COMPLETE_STATES.include?(resp.detection_status)
+
+          try_count += 1
+          sleep SLEEP_SECONDS
+        end
+        resp
+      end
+
+      def puts(string)
+        StackMaster.stdout.puts(string)
+      end
+
+      extend Forwardable
+      def_delegators :@stack_definition, :stack_name, :region
+
+      SLEEP_SECONDS = 1
+    end
+  end
+end

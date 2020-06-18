@@ -89,32 +89,12 @@ module StackMaster
         StackMaster.stdout.puts "No changes"
       else
         StackMaster.stdout.puts
-        diff.each_line do |line|
-          if line.start_with?('+')
-            StackMaster.stdout.print colorize(line, :green)
-          elsif line.start_with?('-')
-            StackMaster.stdout.print colorize(line, :red)
-          else
-            StackMaster.stdout.print line
-          end
-        end
+        StackMaster.display_colorized_diff(diff)
       end
     end
 
     def sort_params(hash)
       hash.sort.to_h
-    end
-
-    def colorize(text, color)
-      if colorize?
-        Rainbow(text).color(color)
-      else
-        text
-      end
-    end
-
-    def colorize?
-      ENV.fetch('COLORIZE') { 'true' } == 'true'
     end
   end
 end

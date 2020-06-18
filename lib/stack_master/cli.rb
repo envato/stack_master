@@ -215,6 +215,17 @@ module StackMaster
         end
       end
 
+      command :drift do |c|
+        c.syntax = 'stack_master drift [region_or_alias] [stack_name]'
+        c.summary = 'Detects and displays stack drift'
+        c.description = "Detects and displays stack drift"
+        c.example 'view stack drift for a stack named myapp-vpc in us-east-1', 'stack_master drift us-east-1 myapp-vpc'
+        c.action do |args, options|
+          options.default config: default_config_file
+          execute_stacks_command(StackMaster::Commands::Drift, args, options)
+        end
+      end
+
       run!
     end
 

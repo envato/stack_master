@@ -28,7 +28,10 @@ module StackMaster
                           :update_stack,
                           :create_stack,
                           :validate_template,
-                          :describe_stacks
+                          :describe_stacks,
+                          :detect_stack_drift,
+                          :describe_stack_drift_detection_status,
+                          :describe_stack_resource_drifts
 
       private
 
