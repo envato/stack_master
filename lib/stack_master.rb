@@ -24,6 +24,7 @@ module StackMaster
   autoload :CLI, 'stack_master/cli'
   autoload :CtrlC, 'stack_master/ctrl_c'
   autoload :Command, 'stack_master/command'
+  autoload :Diff, 'stack_master/diff'
   autoload :VERSION, 'stack_master/version'
   autoload :Stack, 'stack_master/stack'
   autoload :Prompter, 'stack_master/prompter'
@@ -210,17 +211,5 @@ module StackMaster
 
   def colorize?
     ENV.fetch('COLORIZE') { 'true' } == 'true'
-  end
-
-  def display_colorized_diff(diff)
-    diff.each_line do |line|
-      if line.start_with?('+')
-        stdout.print colorize(line, :green)
-      elsif line.start_with?('-')
-        stdout.print colorize(line, :red)
-      else
-        stdout.print line
-      end
-    end
   end
 end

@@ -47,13 +47,13 @@ module StackMaster
           puts colorize("  - #{property_difference.difference_type} #{property_difference.property_path}", color)
         end
         puts colorize('  Resource diff:', color)
-        StackMaster.display_colorized_diff(diff(drift))
+        display_resource_drift(drift)
       end
 
-      def diff(drift)
-        Diffy::Diff.new(prettify_json(drift.expected_properties),
-                        prettify_json(drift.actual_properties),
-                        include_diff_info: false).to_s
+      def display_resource_drift(drift)
+        diff = ::StackMaster::Diff.new(before: prettify_json(drift.expected_properties),
+                        after: prettify_json(drift.actual_properties))
+        diff.display_colorized_diff
       end
 
       def prettify_json(string)

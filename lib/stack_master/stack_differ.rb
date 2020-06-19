@@ -39,24 +39,30 @@ module StackMaster
     end
 
     def body_different?
-      body_diff != ''
+      body_diff.different?
     end
 
     def body_diff
-      @body_diff ||= Diffy::Diff.new(current_template, proposed_template, context: 7, include_diff_info: true).to_s
+      @body_diff ||= Diff.new(name: 'Stack',
+                              before: current_template,
+                              after: proposed_template,
+                              context: 7)
     end
 
     def params_different?
-      params_diff != ''
+      parameters_diff.different?
     end
 
-    def params_diff
-      @param_diff ||= Diffy::Diff.new(current_parameters, proposed_parameters, {}).to_s
+    def parameters_diff
+      @param_diff ||= Diff.new(name: 'Parameters',
+                               before: current_parameters,
+                               after: proposed_parameters)
     end
 
     def output_diff
-      display_diff('Stack', body_diff)
-      display_diff('Parameters', params_diff)
+      body_diff.display
+      parameters_diff.display
+
       unless noecho_keys.empty?
         StackMaster.stdout.puts " * can not tell if NoEcho parameters are different."
       end
@@ -82,16 +88,6 @@ module StackMaster
     end
 
     private
-
-    def display_diff(thing, diff)
-      StackMaster.stdout.print "#{thing} diff: "
-      if diff == ''
-        StackMaster.stdout.puts "No changes"
-      else
-        StackMaster.stdout.puts
-        StackMaster.display_colorized_diff(diff)
-      end
-    end
 
     def sort_params(hash)
       hash.sort.to_h
