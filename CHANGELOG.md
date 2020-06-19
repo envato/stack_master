@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [2.8.0] - Unreleased
+
+### Added
+
+- A new command, `stack_master drift`, uses the CloudFormation drift APIs to
+  detect and display resources that have changed outside of the CloudFormation
+  stack.
+
 ## [2.7.0] - 2020-06-15
 
 ### Added
