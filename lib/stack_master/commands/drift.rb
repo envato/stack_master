@@ -34,16 +34,19 @@ module StackMaster
 
       def display_drift(drift)
         color = drift_color(drift)
-        puts colorize("#{drift.stack_resource_drift_status} #{drift.resource_type} #{drift.logical_resource_id} #{drift.physical_resource_id}", color)
+        puts colorize([drift.stack_resource_drift_status,
+                       drift.resource_type,
+                       drift.logical_resource_id,
+                       drift.physical_resource_id].join(' '), color)
         return unless drift.stack_resource_drift_status == 'MODIFIED'
 
         unless drift.property_differences.empty?
-          puts colorize("  Property differences:", color)
+          puts colorize('  Property differences:', color)
         end
         drift.property_differences.each do |property_difference|
           puts colorize("  - #{property_difference.difference_type} #{property_difference.property_path}", color)
         end
-        puts colorize("  Resource diff:", color)
+        puts colorize('  Resource diff:', color)
         StackMaster.display_colorized_diff(diff(drift))
       end
 
