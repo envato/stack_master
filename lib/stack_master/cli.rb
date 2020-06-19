@@ -217,7 +217,7 @@ module StackMaster
 
       command :drift do |c|
         c.syntax = 'stack_master drift [region_or_alias] [stack_name]'
-        c.summary = 'Detects and displays stack drift'
+        c.summary = 'Detects and displays stack drift using the CloudFormation Drift API'
         c.description = "Detects and displays stack drift"
         c.example 'view stack drift for a stack named myapp-vpc in us-east-1', 'stack_master drift us-east-1 myapp-vpc'
         c.action do |args, options|
