@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [2.8.0] - Unreleased
+
+### Changed
+
+- The diff in `stack_master apply` and `stack_master diff` has been improved to
+  no longer display temporary file path context, and remove the empty newline
+
 ## [2.7.0] - 2020-06-15
 
 ### Added
