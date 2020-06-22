@@ -10,13 +10,13 @@ module StackMaster
 
     def proposed_template
       return @proposed_stack.template_body unless @proposed_stack.template_format == :json
-      JSON.pretty_generate(JSON.parse(@proposed_stack.template_body))
+      JSON.pretty_generate(JSON.parse(@proposed_stack.template_body)) + "\n"
     end
 
     def current_template
       return '' unless @current_stack
       return @current_stack.template_body unless @current_stack.template_format == :json
-      JSON.pretty_generate(TemplateUtils.template_hash(@current_stack.template_body))
+      JSON.pretty_generate(TemplateUtils.template_hash(@current_stack.template_body)) + "\n"
     end
 
     def current_parameters

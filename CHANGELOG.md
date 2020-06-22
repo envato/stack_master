@@ -16,6 +16,11 @@ The format is based on [Keep a Changelog], and this project adheres to
   detect and display resources that have changed outside of the CloudFormation
   stack.
 
+### Changed
+
+- The diff in `stack_master apply` and `stack_master diff` has been improved to
+  no longer display temporary file path context, and remove the empty newline
+
 ## [2.7.0] - 2020-06-15
 
 ### Added
