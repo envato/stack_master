@@ -1,3 +1,5 @@
+Aws.config[:stub_responses] = true
+
 module AwsHelpers
   def stub_drift_detection(stack_drift_detection_id: "1", stack_drift_status: "IN_SYNC")
     cfn.stub_responses(:detect_stack_drift,
