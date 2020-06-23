@@ -58,7 +58,7 @@ module StackMaster
 
       def prettify_json(string)
         JSON.pretty_generate(JSON.parse(string)) + "\n"
-      rescue => StandardError e
+      rescue StandardError => e
         puts "Failed to prettify drifted resource: #{e.message}"
         string
       end
