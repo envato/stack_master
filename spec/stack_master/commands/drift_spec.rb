@@ -29,6 +29,7 @@ RSpec.describe StackMaster::Commands::Drift do
   ] }
 
   before do
+    options.timeout = 10
     allow(StackMaster).to receive(:cloud_formation_driver).and_return(cf)
     allow(cf).to receive(:detect_stack_drift).and_return(detect_stack_drift_response)
 
