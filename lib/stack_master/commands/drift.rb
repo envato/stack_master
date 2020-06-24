@@ -88,17 +88,17 @@ module StackMaster
       end
 
       def wait_for_drift_results(detection_id)
-        try_count = 0
         resp = nil
+        start_time = Time.now
         loop do
-          if try_count >= 10
-            raise 'Failed to wait for stack drift detection after 10 tries'
-          end
-
           resp = cf.describe_stack_drift_detection_status(stack_drift_detection_id: detection_id)
           break if DETECTION_COMPLETE_STATES.include?(resp.detection_status)
 
-          try_count += 1
+          elapsed_time = Time.now - start_time
+          if elapsed_time > @options.timeout
+            raise "Timeout waiting for stack drift detection"
+          end
+
           sleep SLEEP_SECONDS
         end
         resp

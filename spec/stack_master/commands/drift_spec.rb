@@ -29,6 +29,7 @@ RSpec.describe StackMaster::Commands::Drift do
   ] }
 
   before do
+    options.timeout = 10
     allow(StackMaster).to receive(:cloud_formation_driver).and_return(cf)
     allow(cf).to receive(:detect_stack_drift).and_return(detect_stack_drift_response)
 
@@ -91,10 +92,11 @@ RSpec.describe StackMaster::Commands::Drift do
   context "when stack drift detection doesn't complete" do
     before do
       describe_stack_drift_detection_status_response.detection_status = 'UNKNOWN'
+      options.timeout = 0
     end
 
     it 'raises an error' do
-      expect { drift.perform }.to raise_error(/Failed to wait for stack drift detection after 10 tries/)
+      expect { drift.perform }.to raise_error(/Timeout waiting for stack drift detection/)
     end
   end
 end
