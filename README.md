@@ -688,6 +688,7 @@ stacks:
 
 In the cases where you want to bypass the account check, there is the StackMaster flag `--skip-account-check` that can be used.
 
+
 ## Commands
 
 ```bash
@@ -701,6 +702,7 @@ stack_master apply # Create or update all stacks
 stack_master --changed apply # Create or update all stacks that have changed
 stack_master --yes apply [region-or-alias] [stack-name] # Create or update a stack non-interactively (forcing yes)
 stack_master diff [region-or-alias] [stack-name] # Display a stack template and parameter diff
+stack_master drift [region-or-alias] [stack-name] # Detects and displays stack drift using the CloudFormation Drift API
 stack_master delete [region-or-alias] [stack-name] # Delete a stack
 stack_master events [region-or-alias] [stack-name] # Display events for a stack
 stack_master outputs [region-or-alias] [stack-name] # Display outputs for a stack
@@ -709,7 +711,7 @@ stack_master status # Displays the status of each stack
 stack_master tidy # Find missing or extra templates or parameter files
 ```
 
-## Applying updates
+## Applying updates - `stack_master apply`
 
 The apply command does the following:
 
@@ -725,6 +727,18 @@ The apply command does the following:
 Demo:
 
 ![Apply Demo](/apply_demo.gif?raw=true)
+
+## Drift Detection - `stack_master drift`
+
+`stack_master drift us-east-1 mystack` uses the CloudFormation APIs to trigger drift detection and display resources
+that have changed outside of the CloudFormation stack. This can happen if a resource has been updated via the console or
+CLI directly rather than via a stack update.
+
+## Diff - `stack_master diff`
+
+`stack_master diff us-east-1 mystack` displays whether the computed parameters or template differ to what was last
+applied in CloudFormation. This can happen if the template or computed parameters have changed in code and the change
+hasn't been applied to this stack.
 
 ## Maintainers
 

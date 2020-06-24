@@ -27,6 +27,8 @@ Aws.config[:stub_responses] = true
 RSpec.configure do |config|
   config.before do
     StackMaster.cloud_formation_driver = nil
+    StackMaster.stdout = nil
+    StackMaster.stderr = nil
   end
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

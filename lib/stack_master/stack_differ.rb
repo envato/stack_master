@@ -39,24 +39,30 @@ module StackMaster
     end
 
     def body_different?
-      body_diff != ''
+      body_diff.different?
     end
 
     def body_diff
-      @body_diff ||= Diffy::Diff.new(current_template, proposed_template, context: 7).to_s
+      @body_diff ||= Diff.new(name: 'Stack',
+                              before: current_template,
+                              after: proposed_template,
+                              context: 7)
     end
 
     def params_different?
-      params_diff != ''
+      parameters_diff.different?
     end
 
-    def params_diff
-      @param_diff ||= Diffy::Diff.new(current_parameters, proposed_parameters, {}).to_s
+    def parameters_diff
+      @param_diff ||= Diff.new(name: 'Parameters',
+                               before: current_parameters,
+                               after: proposed_parameters)
     end
 
     def output_diff
-      display_diff('Stack', body_diff)
-      display_diff('Parameters', params_diff)
+      body_diff.display
+      parameters_diff.display
+
       unless noecho_keys.empty?
         StackMaster.stdout.puts " * can not tell if NoEcho parameters are different."
       end
@@ -83,38 +89,8 @@ module StackMaster
 
     private
 
-    def display_diff(thing, diff)
-      StackMaster.stdout.print "#{thing} diff: "
-      if diff == ''
-        StackMaster.stdout.puts "No changes"
-      else
-        StackMaster.stdout.puts
-        diff.each_line do |line|
-          if line.start_with?('+')
-            StackMaster.stdout.print colorize(line, :green)
-          elsif line.start_with?('-')
-            StackMaster.stdout.print colorize(line, :red)
-          else
-            StackMaster.stdout.print line
-          end
-        end
-      end
-    end
-
     def sort_params(hash)
       hash.sort.to_h
-    end
-
-    def colorize(text, color)
-      if colorize?
-        Rainbow(text).color(color)
-      else
-        text
-      end
-    end
-
-    def colorize?
-      ENV.fetch('COLORIZE') { 'true' } == 'true'
     end
   end
 end

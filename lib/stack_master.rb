@@ -24,6 +24,7 @@ module StackMaster
   autoload :CLI, 'stack_master/cli'
   autoload :CtrlC, 'stack_master/ctrl_c'
   autoload :Command, 'stack_master/command'
+  autoload :Diff, 'stack_master/diff'
   autoload :VERSION, 'stack_master/version'
   autoload :Stack, 'stack_master/stack'
   autoload :Prompter, 'stack_master/prompter'
@@ -56,6 +57,7 @@ module StackMaster
   module Commands
     autoload :TerminalHelper, 'stack_master/commands/terminal_helper'
     autoload :Apply, 'stack_master/commands/apply'
+    autoload :Drift, 'stack_master/commands/drift'
     autoload :Events, 'stack_master/commands/events'
     autoload :Outputs, 'stack_master/commands/outputs'
     autoload :Init, 'stack_master/commands/init'
@@ -197,5 +199,17 @@ module StackMaster
 
   def stderr=(io)
     @stderr = io
+  end
+
+  def colorize(text, color)
+    if colorize?
+      Rainbow(text).color(color)
+    else
+      text
+    end
+  end
+
+  def colorize?
+    ENV.fetch('COLORIZE') { 'true' } == 'true'
   end
 end
