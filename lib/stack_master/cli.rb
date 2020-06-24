@@ -219,9 +219,10 @@ module StackMaster
         c.syntax = 'stack_master drift [region_or_alias] [stack_name]'
         c.summary = 'Detects and displays stack drift using the CloudFormation Drift API'
         c.description = 'Detects and displays stack drift'
+        c.option '--timeout SECONDS', Integer, "The number of seconds to wait for drift detection to complete"
         c.example 'view stack drift for a stack named myapp-vpc in us-east-1', 'stack_master drift us-east-1 myapp-vpc'
         c.action do |args, options|
-          options.default config: default_config_file
+          options.default config: default_config_file, timeout: 120
           execute_stacks_command(StackMaster::Commands::Drift, args, options)
         end
       end
