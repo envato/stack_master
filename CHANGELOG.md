@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [2.10.0] - 2020-07-02
+
+### Added
+
+- A new command, `stack_master nag`, uses the open-source cfn_nag tool to perform
+  static analysis of templates for patterns that may indicate insecure infrastructure
+
 ## [2.9.0] - 2020-06-24
 
 ### Added
