@@ -21,44 +21,22 @@ RSpec.describe StackMaster::Commands::Nag do
     described_class.perform(config, stack_definition)
   end
 
-  def set_exit_status(status)
-    `(exit #{status})`
-  end
+  context "with a json stack" do
+    let(:template_body) { '{}' }
+    let(:template_format) { :json }
 
-  context "when cfn_nag is installed" do
-    before do
-      expect_any_instance_of(described_class).to receive(:system).once.with('type -a cfn_nag >/dev/null 2>&1').and_return(0)
-      set_exit_status 0
-    end
-
-    context "with a json stack" do
-      let(:template_body) { '{}' }
-      let(:template_format) { :json }
-
-      it 'outputs the template' do
-        expect_any_instance_of(described_class).to receive(:system).once.with('cfn_nag', /.*\.json/)
-        run
-      end
-    end
-
-    context "with a yaml stack" do
-      let(:template_body) { '---' }
-      let(:template_format) { :yaml }
-
-      it 'outputs a warning' do
-        expect { run }.to output(/cfn_nag doesn't support yaml formatted templates/).to_stderr
-      end
+    it 'outputs the template' do
+      expect_any_instance_of(described_class).to receive(:system).once.with('cfn_nag', /.*\.json/)
+      run
     end
   end
 
-  context "when cfn_nag is missing" do
-    let(:template_body) { '' }
-    let(:template_format) { :json}
+  context "with a yaml stack" do
+    let(:template_body) { '---' }
+    let(:template_format) { :yaml }
 
-    it 'outputs a warning' do
-      expect_any_instance_of(described_class).to receive(:system).once.with('type -a cfn_nag >/dev/null 2>&1').and_return(1)
-      set_exit_status 1
-      expect { run }.to output(/Failed to run cfn_nag/).to_stderr
+    it 'outputs an error' do
+      expect { run }.to output(/cfn_nag doesn't support yaml formatted templates/).to_stderr
     end
   end
 end
