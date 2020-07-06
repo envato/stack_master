@@ -5,10 +5,6 @@ module StackMaster
       include Commander::UI
 
       def perform
-        if proposed_stack.template_format == :yaml
-          failed! 'cfn_nag doesn\'t support yaml formatted templates.'
-        end
-
         Tempfile.open(['stack', "___#{stack_definition.stack_name}.#{proposed_stack.template_format}"]) do |f|
           f.write(proposed_stack.template_body)
           f.flush
