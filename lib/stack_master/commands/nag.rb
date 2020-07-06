@@ -9,7 +9,7 @@ module StackMaster
           f.write(proposed_stack.template_body)
           f.flush
           system('cfn_nag', f.path)
-          puts "cfn_nag run complete"
+          STDERR.puts "cfn_nag run complete"
         end
       end
 
