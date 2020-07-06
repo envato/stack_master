@@ -25,7 +25,7 @@ RSpec.describe StackMaster::Commands::Nag do
     let(:template_body) { '{}' }
     let(:template_format) { :json }
 
-    it 'outputs the template' do
+    it 'calls the nag gem' do
       expect_any_instance_of(described_class).to receive(:system).once.with('cfn_nag', /.*\.json/)
       run
     end
@@ -35,8 +35,9 @@ RSpec.describe StackMaster::Commands::Nag do
     let(:template_body) { '---' }
     let(:template_format) { :yaml }
 
-    it 'outputs an error' do
-      expect { run }.to output(/cfn_nag doesn't support yaml formatted templates/).to_stderr
+    it 'calls the nag gem' do
+      expect_any_instance_of(described_class).to receive(:system).once.with('cfn_nag', /.*\.yaml/)
+      run
     end
   end
 end
