@@ -275,7 +275,7 @@ module StackMaster
       candidates = config.filter(stack_name=stack_name)
       return if candidates.empty?
 
-      StackMaster.stdout.puts "Stack name #{stack_name} exists in regions: #{candidates.map(:&region).join(', ')}"
+      StackMaster.stdout.puts "Stack name #{stack_name} exists in regions: #{candidates.map(&:region).join(', ')}"
     end
 
     def execute_if_allowed_account(allowed_accounts, &block)
