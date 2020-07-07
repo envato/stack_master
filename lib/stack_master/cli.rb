@@ -254,6 +254,7 @@ module StackMaster
         stack_definitions = config.filter(region, stack_name)
         if stack_definitions.empty?
           StackMaster.stdout.puts "Could not find stack definition #{stack_name} in region #{region}"
+          show_other_region_candidates(stack_name)
           success = false
         end
         stack_definitions = stack_definitions.select do |stack_definition|
@@ -268,6 +269,13 @@ module StackMaster
         end
       end
       @kernel.exit false unless success
+    end
+
+    def show_other_region_candidates(stack_name)
+      candidates = config.filter(stack_name=stack_name)
+      return if candidates.empty?
+
+      StackMaster.stdout.puts "Stack name #{stack_name} exists in regions: #{candidates.map(:&region).join(', ')}"
     end
 
     def execute_if_allowed_account(allowed_accounts, &block)

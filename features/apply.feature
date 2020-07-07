@@ -150,6 +150,11 @@ Feature: Apply command
     Then the output should contain "Could not find stack definition bar in region foo"
     And the exit status should be 1
 
+  Scenario: Run apply with stack in wrong region
+    When I run `stack_master apply foo myapp_web`
+    Then the output should contain "Stack name myapp_web exists in regions: us-east-1"
+    And the exit status should be 1
+
   Scenario: Create stack with --changed
     Given I stub the following stack events:
       | stack_id | event_id | stack_name | logical_resource_id | resource_status | resource_type              | timestamp           |
