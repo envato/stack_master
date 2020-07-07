@@ -12,19 +12,20 @@ RSpec.describe StackMaster::Commands::Nag do
   }
   let(:tempfile) { double(Tempfile) }
   let(:path) { double(String) }
+  let(:template_body) { '{}' }
+  let(:template_format) { :json }
+  let(:exitstatus) { 0 }
 
   before do
     allow(StackMaster::Stack).to receive(:generate).with(stack_definition, config).and_return(proposed_stack)
   end
 
   def run
+    `(exit #{exitstatus})` # Makes calling $?.exitstatus work
     described_class.perform(config, stack_definition)
   end
 
   context "with a json stack" do
-    let(:template_body) { '{}' }
-    let(:template_format) { :json }
-
     it 'calls the nag gem' do
       expect_any_instance_of(File).to receive(:write).once
       expect_any_instance_of(File).to receive(:flush).once
@@ -44,4 +45,22 @@ RSpec.describe StackMaster::Commands::Nag do
       run
     end
   end
+
+  context "when check is successful" do
+    it 'exits with a zero exit status' do
+      expect_any_instance_of(described_class).to receive(:system).once.with('cfn_nag', /.*\.json/)
+      result = run
+      expect(result.success?).to eq true
+    end
+  end
+
+  context "when check fails" do
+    let(:exitstatus) { 1 }
+    it 'exits with non-zero exit status' do
+      expect_any_instance_of(described_class).to receive(:system).once.with('cfn_nag', /.*\.json/)
+      result = run
+      expect(result.success?).to eq false
+    end
+  end
+
 end
