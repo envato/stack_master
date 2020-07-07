@@ -151,8 +151,8 @@ Feature: Apply command
     And the exit status should be 1
 
   Scenario: Run apply with stack in wrong region
-    When I run `stack_master apply foo myapp_web`
-    Then the output should contain "Stack name myapp_web exists in regions: us-east-1"
+    When I run `stack_master apply foo myapp-web`
+    Then the output should contain "Stack name myapp-web exists in regions: us-east-1"
     And the exit status should be 1
 
   Scenario: Create stack with --changed
