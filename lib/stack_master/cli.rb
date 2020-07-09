@@ -146,6 +146,17 @@ module StackMaster
         end
       end
 
+      command :nag do |c|
+        c.syntax = 'stack_master nag [region_or_alias] [stack_name]'
+        c.summary = "Check this stack's template with cfn_nag"
+        c.description = "Runs SAST scan cfn_nag on the template"
+        c.example 'run cfn_nag on stack myapp-vpc with us-east-1 settings', 'stack_master nag us-east-1 myapp-vpc'
+        c.action do |args, options|
+          options.default config: default_config_file
+          execute_stacks_command(StackMaster::Commands::Nag, args, options)
+        end
+      end
+
       command :compile do |c|
         c.syntax = 'stack_master compile [region_or_alias] [stack_name]'
         c.summary = "Print the compiled version of a given stack"
