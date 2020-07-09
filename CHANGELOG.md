@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - A new command, `stack_master nag`, uses the open-source cfn_nag tool to perform
   static analysis of templates for patterns that may indicate insecure infrastructure
+- Print available regions if the specified stack is not available in the chosen one.
 
 ## [2.9.0] - 2020-06-24
 
