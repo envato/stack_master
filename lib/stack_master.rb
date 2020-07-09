@@ -70,6 +70,7 @@ module StackMaster
     autoload :Delete, 'stack_master/commands/delete'
     autoload :Status, 'stack_master/commands/status'
     autoload :Tidy, 'stack_master/commands/tidy'
+    autoload :Nag, 'stack_master/commands/nag'
   end
 
   module ParameterResolvers
