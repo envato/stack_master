@@ -238,6 +238,17 @@ module StackMaster
         end
       end
 
+      command :dep_tree do |c|
+        c.syntax = 'stack_master dep_tree [region_or_alias] [stack_name]'
+        c.summary = 'Displays the stack dependency tree'
+        c.description = 'Detects and displays stack drift'
+        c.example 'display dependency tree for stack foo', 'stack_master deps us-east-1 foo'
+        c.action do |args, options|
+          options.default config: default_config_file, timeout: 120
+          execute_stacks_command(StackMaster::Commands::DepTree, args, options)
+        end
+      end
+
       run!
     end
 

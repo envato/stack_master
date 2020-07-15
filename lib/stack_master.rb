@@ -57,6 +57,7 @@ module StackMaster
   module Commands
     autoload :TerminalHelper, 'stack_master/commands/terminal_helper'
     autoload :Apply, 'stack_master/commands/apply'
+    autoload :DepTree, 'stack_master/commands/dep_tree'
     autoload :Drift, 'stack_master/commands/drift'
     autoload :Events, 'stack_master/commands/events'
     autoload :Outputs, 'stack_master/commands/outputs'
