@@ -1,0 +1,7 @@
+- op: move
+  from: Resources/EcrRepository
+  to: Resources/PythonEcr
+
+- op: move
+  from: Outputs/EcrUrl
+  to: Outputs/PythonEcrUrl

@@ -1,0 +1,10 @@
+stacks:
+  ap_southeast_2:
+    ruby_ecr:
+      template: base_ecr.yml
+      json_patches:
+        - patches/rename_ruby_ecr.yml
+    python_ecr:
+      template: base_ecr.yml
+      json_patches:
+        - patches/rename_python_ecr.yml

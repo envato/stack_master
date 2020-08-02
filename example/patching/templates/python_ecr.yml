@@ -1,0 +1,14 @@
+Parameters:
+  RepositoryName:
+    Description: ECR repository name
+    Type: String
+
+Resources:
+  PythonEcr:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Ref 'RepositoryName'
+
+Outputs:
+  PythonEcrUrl:
+    Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${RepositoryName}"
