@@ -20,7 +20,7 @@ module StackMaster
                   :parameters_dir,
                   :parameters,
                   :parameter_files,
-                  :json_patches
+                  :json_patch_files
 
     attr_reader :compiler
 
@@ -42,7 +42,7 @@ module StackMaster
       @allowed_accounts = Array(@allowed_accounts)
       @parameters ||= {}
       @parameter_files ||= []
-      @json_patches ||= []
+      @json_patch_files ||= []
     end
 
     def ==(other)
@@ -63,7 +63,7 @@ module StackMaster
         @s3 == other.s3 &&
         @compiler == other.compiler &&
         @compiler_options == other.compiler_options &&
-        @json_patches == other.json_patches
+        @json_patch_files == other.json_patch_files
     end
 
     def template_file_path
@@ -121,8 +121,8 @@ module StackMaster
       end
     end
 
-    def json_patch_files
-      Array(@json_patches).map do |file|
+    def json_patch_file_paths
+      Array(@json_patch_files).map do |file|
         File.expand_path(file, base_dir)
       end
     end
