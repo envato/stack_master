@@ -27,6 +27,17 @@ module StackMaster
       end
     end
 
+    def unhash_template(template_hash=nil, template_format=:yaml)
+      return unless template_hash
+
+      case template_format
+      when :json
+        JSON.dump(template_hash)
+      when :yaml
+        YAML.dump(template_hash)
+      end
+    end
+
     def maybe_compressed_template_body(template_body)
       # Do not compress the template if it's not JSON because parsing YAML as a hash ignores
       # CloudFormation-specific tags such as !Ref
