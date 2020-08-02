@@ -13,6 +13,7 @@ require 'active_support/core_ext/hash/keys'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/string/inflections'
 require 'multi_json'
+require 'hana'
 
 MultiJson.use :json_gem
 
@@ -38,6 +39,7 @@ module StackMaster
   autoload :ResolverArray, 'stack_master/resolver_array'
   autoload :Resolver, 'stack_master/resolver_array'
   autoload :Utils, 'stack_master/utils'
+  autoload :TemplatePatcher, 'stack_master/template_patcher'
   autoload :TemplateUtils, 'stack_master/template_utils'
   autoload :Config, 'stack_master/config'
   autoload :PagedResponseAccumulator, 'stack_master/paged_response_accumulator'

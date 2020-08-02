@@ -57,4 +57,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "ejson_wrapper"
   spec.add_dependency "diff-lcs"
   spec.add_dependency "cfn-nag", "~> 0.6.7"
+  spec.add_dependency "hana", "~> 1.3.6"
 end

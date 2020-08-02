@@ -59,7 +59,9 @@ module StackMaster
       parameter_hash = ParameterLoader.load(parameter_files: stack_definition.all_parameter_files, parameters: stack_definition.parameters)
       template_parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash[:template_parameters])
       compile_time_parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash[:compile_time_parameters])
-      template_body = TemplateCompiler.compile(config, stack_definition.compiler, stack_definition.template_dir, stack_definition.template, compile_time_parameters, stack_definition.compiler_options)
+      json_patches = TemplatePatcher.load_json_patches(stack_definition.json_patch_files)
+      unpatched_template_body = TemplateCompiler.compile(config, stack_definition.compiler, stack_definition.template_dir, stack_definition.template, compile_time_parameters, stack_definition.compiler_options)
+      template_body = TemplatePatcher.patch(stack_definition.stack_name, unpatched_template_body, json_patches)
       template_format = TemplateUtils.identify_template_format(template_body)
       stack_policy_body = if stack_definition.stack_policy_file_path
                             File.read(stack_definition.stack_policy_file_path)
@@ -78,7 +80,9 @@ module StackMaster
     def self.generate_without_parameters(stack_definition, config)
       parameter_hash = ParameterLoader.load(parameter_files: stack_definition.all_parameter_files, parameters: stack_definition.parameters)
       compile_time_parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash[:compile_time_parameters])
-      template_body = TemplateCompiler.compile(config, stack_definition.compiler, stack_definition.template_dir, stack_definition.template, compile_time_parameters, stack_definition.compiler_options)
+      json_patches = TemplatePatcher.load_json_patches(stack_definition.json_patch_files)
+      unpatched_template_body = TemplateCompiler.compile(config, stack_definition.compiler, stack_definition.template_dir, stack_definition.template, compile_time_parameters, stack_definition.compiler_options)
+      template_body = TemplatePatcher.patch(stack_definition.stack_name, unpatched_template_body, json_patches)
       template_format = TemplateUtils.identify_template_format(template_body)
       stack_policy_body = if stack_definition.stack_policy_file_path
                             File.read(stack_definition.stack_policy_file_path)
