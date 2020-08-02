@@ -7,8 +7,10 @@ Resources:
   EcrRepository:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: !Ref 'RepositoryName'
+      RepositoryName:
+        Ref: 'RepositoryName'
 
 Outputs:
   EcrUrl:
-    Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${RepositoryName}"
+    Value:
+      Fn::Sub: "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${RepositoryName}"
