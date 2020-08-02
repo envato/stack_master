@@ -1,7 +1,7 @@
 - op: move
-  from: Resources/EcrRepository
-  to: Resources/RubyEcr
+  from: /Resources/EcrRepository
+  path: /Resources/RubyEcr
 
 - op: move
-  from: Outputs/EcrUrl
-  to: Outputs/RubyEcrUrl
+  from: /Outputs/EcrUrl
+  path: /Outputs/RubyEcrUrl
