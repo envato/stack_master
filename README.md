@@ -709,6 +709,10 @@ stack_master outputs [region-or-alias] [stack-name] # Display outputs for a stac
 stack_master resources [region-or-alias] [stack-name] # Display outputs for a stack
 stack_master status # Displays the status of each stack
 stack_master tidy # Find missing or extra templates or parameter files
+stack_master compile # Print the compiled version of a given stack
+stack_master validate # Validate a template
+stack_master lint # Check the stack definition locally using cfn-lint
+stack_master nag # Check the stack template with cfn_nag
 ```
 
 ## Applying updates - `stack_master apply`
