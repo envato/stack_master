@@ -307,6 +307,9 @@ you will likely want to set the parameter to NoEcho in your template.
 ```yaml
 db_password:
   parameter_store: ssm_parameter_name
+saas_api_key:
+  # Parameter in a different region in the same account
+  parameter_store: us-east-1:ssm_parameter_name
 ```
 
 ### 1Password Lookup
