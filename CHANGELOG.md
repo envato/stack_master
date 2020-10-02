@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [2.11.0] - 2020-10-02
+
+### Added
+
+- Support for empty strings in compile time parameters.
+
 ## [2.10.0] - 2020-07-02
 
 ### Added
