@@ -19,7 +19,7 @@ module StackMaster
 
         def has_invalid_values?
           values = build_values(@definition, @parameter)
-          values.include?(nil) || values.include?('')
+          values.include?(nil)
         end
 
         def create_error
