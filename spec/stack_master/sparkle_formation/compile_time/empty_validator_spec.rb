@@ -20,7 +20,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::EmptyValidator do
     context 'string validation with multiples' do
       let(:definition) { {type: :string, multiple: true} }
       validate_valid_parameter('a,b')
-      validate_invalid_parameter('a,,b', 'a,,b')
+      validate_valid_parameter('a,,b')
     end
 
     context 'string validation with multiples and defaults' do
