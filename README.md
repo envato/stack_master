@@ -143,7 +143,8 @@ stacks:
 ## Templates
 
 StackMaster supports CloudFormation templates in plain JSON or YAML. Any `.yml` or `.yaml` file will be processed as
-YAML, while any `.json` file will be processed as JSON.
+YAML, while any `.json` file will be processed as JSON. Additionally, YAML files can be pre-processed using ERB and
+compile-time parameters.
 
 ### Ruby DSLs
 By default, any template ending with `.rb` will be processed as a [SparkleFormation](https://github.com/sparkleformation/sparkle_formation)
@@ -199,12 +200,13 @@ stacks:
 
 ### Compile Time Parameters
 
-Compile time parameters can be used for [SparkleFormation](http://www.sparkleformation.io) templates. It conforms and
-allows you to use the [Compile Time Parameters](http://www.sparkleformation.io/docs/sparkle_formation/compile-time-parameters.html) feature.
+Compile time parameters can be defined in a stack's parameters file, using the key `compile_time_parameters`. Keys in
+parameter files are automatically converted to camel case.
 
-A simple example looks like this
+As an example:
 
 ```yaml
+# parameters/some_stack.yml
 vpc_cidr: 10.0.0.0/16
 compile_time_parameters:
   subnet_cidrs:
@@ -212,7 +214,37 @@ compile_time_parameters:
     - 10.0.2.0/28
 ```
 
-Keys in parameter files are automatically converted to camel case.
+#### SparkleFormation
+
+Compile time parameters can be used for [SparkleFormation](http://www.sparkleformation.io) templates. It conforms and
+allows you to use the [Compile Time Parameters](http://www.sparkleformation.io/docs/sparkle_formation/compile-time-parameters.html) feature.
+
+#### CloudFormation YAML ERB
+
+Compile time parameters can be used to pre-process YAML CloudFormation templates. An example template:
+
+```yaml
+# templates/some_stack_template.yml.erb
+Parameters:
+  VpcCidr:
+    Type: String
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+  # Given the two subnet_cidrs parameters, this creates two resources:
+  # SubnetPrivate0 with a CidrBlock of 10.0.0.0/28, and
+  # SubnetPrivate1 with a CidrBlock of 10.0.2.0/28
+  <% params["SubnetCidrs"].each_with_index do |cidr, index| %>
+  SubnetPrivate<%= index %>:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: ap-southeast-2
+      CidrBlock: <%= cidr %>
+  <% end %>
+```
 
 ## Parameter Resolvers
 

@@ -1,0 +1,20 @@
+---
+<% cidr_az_pairs = params['SubnetCidrs'].map { |pair| pair.split(":") }%>
+Description: "A test case for generating subnet resources in a loop"
+Parameters:
+  VpcCidr:
+    type: String
+
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+  <% cidr_az_pairs.each_with_index do |pair, index| %>
+  SubnetPrivate<%= index %>:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      CidrBlock: <%= pair[0] %>
+      AvailabilityZone: <%= pair[1] %>
+  <% end %>

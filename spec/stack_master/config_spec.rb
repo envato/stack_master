@@ -93,7 +93,7 @@ RSpec.describe StackMaster::Config do
                                                      json: :json,
                                                      yml: :yaml,
                                                      yaml: :yaml,
-
+                                                     erb: :yaml_erb,
                                                    })
   end
 
