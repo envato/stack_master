@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [Unreleased]
+
+- Added YAML/ERB support, allowing a YAML CloudFormation template to be pre-processed
+  via ERB, with compile-time parameters. ([#350])
+
+[#350]: https://github.com/envato/stack_master/pull/350
+
 ## [2.11.0] - 2020-10-02
 
 ### Added

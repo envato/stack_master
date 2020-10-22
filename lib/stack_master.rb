@@ -52,6 +52,7 @@ module StackMaster
   require 'stack_master/template_compilers/sparkle_formation'
   require 'stack_master/template_compilers/json'
   require 'stack_master/template_compilers/yaml'
+  require 'stack_master/template_compilers/yaml_erb'
   require 'stack_master/template_compilers/cfndsl'
 
   module Commands
