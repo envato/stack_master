@@ -10,9 +10,14 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.12.0...HEAD
+
+## [2.12.0] - 2020-10-22
+
 - Added YAML/ERB support, allowing a YAML CloudFormation template to be pre-processed
   via ERB, with compile-time parameters. ([#350])
 
+[2.12.0]: https://github.com/envato/stack_master/compare/v2.11.0...v2.12.0
 [#350]: https://github.com/envato/stack_master/pull/350
 
 ## [2.11.0] - 2020-10-02
@@ -20,6 +25,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 ### Added
 
 - Support for empty strings in compile time parameters.
+
+[2.11.0]: https://github.com/envato/stack_master/compare/v2.10.0...v2.11.0
 
 ## [2.10.0] - 2020-07-02
 
@@ -29,11 +36,15 @@ The format is based on [Keep a Changelog], and this project adheres to
   static analysis of templates for patterns that may indicate insecure infrastructure
 - Print available regions if the specified stack is not available in the chosen one.
 
+[2.10.0]: https://github.com/envato/stack_master/compare/v2.9.0...v2.10.0
+
 ## [2.9.0] - 2020-06-24
 
 ### Added
 
 - Added `--timeout 120` option to drift command with a default of 2 minutes.
+
+[2.9.0]: https://github.com/envato/stack_master/compare/v2.8.0...v2.9.0
 
 ## [2.8.0] - 2020-06-24
 
@@ -47,6 +58,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - The diff in `stack_master apply` and `stack_master diff` has been improved to
   no longer display temporary file path context, and remove the empty newline
+
+[2.8.0]: https://github.com/envato/stack_master/compare/v2.7.0...v2.8.0
 
 ## [2.7.0] - 2020-06-15
 
@@ -64,7 +77,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 - JSON template bodies with whitespace on leading lines would incorrectly be
   identified as YAML, leading to `diff` issues. ([#335])
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.6.0...HEAD
+[2.7.0]: https://github.com/envato/stack_master/compare/v2.6.0...v2.7.0
 [#335]: https://github.com/envato/stack_master/pull/335
 
 ## [2.6.0] - 2020-05-15
