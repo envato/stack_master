@@ -2,7 +2,7 @@
 
 [![License MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/envato/stack_master/blob/master/LICENSE.md)
 [![Gem Version](https://badge.fury.io/rb/stack_master.svg)](https://badge.fury.io/rb/stack_master)
-[![Build Status](https://travis-ci.org/envato/stack_master.svg?branch=master)](https://travis-ci.org/envato/stack_master)
+[![Build Status](https://github.com/envato/stack_master/workflows/tests/badge.svg?branch=master)](https://github.com/envato/stack_master/actions?query=workflow%3Atests+branch%3Amaster)
 
 StackMaster is a CLI tool to manage [CloudFormation](https://aws.amazon.com/cloudformation/) stacks, with the following features:
 

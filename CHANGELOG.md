@@ -10,7 +10,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Use GitHub Actions for the CI build instead of Travis CI ([#353]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.12.0...HEAD
+[#353]: https://github.com/envato/stack_master/pull/353
 
 ## [2.12.0] - 2020-10-22
 
