@@ -5,7 +5,7 @@ module StackMaster
       include Commander::UI
 
       def perform
-        puts(proposed_stack.template_body)
+        StackMaster.stdout.puts(proposed_stack.template_body)
       end
 
       private
