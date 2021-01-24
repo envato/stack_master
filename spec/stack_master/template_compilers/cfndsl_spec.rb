@@ -36,7 +36,7 @@ RSpec.describe StackMaster::TemplateCompilers::Cfndsl do
         it 'does not leak compile time params across invocations' do
           expect {
             compile_time_parameters.delete("DisableApiTermination")
-          }.to change { JSON.parse(compile)["Resources"]["MyInstance"]["Properties"]["DisableApiTermination"] }.from('true').to(nil)
+          }.to change { JSON.parse(compile)["Resources"]["MyInstance"]["Properties"]["DisableApiTermination"] }.from('true').to('false')
         end
       end
     end
