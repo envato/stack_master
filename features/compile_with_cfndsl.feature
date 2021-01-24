@@ -41,5 +41,29 @@ Feature: Compile command with a CfnDsl template
     When I run `stack_master compile us-east-1 myapp-vpc`
     Then the output should contain all of these lines:
       | Executing compile on myapp-vpc in us-east-1 |
-      | {"AWSTemplateFormatVersion":"2010-09-09","Description":"Test template","Parameters":{"KeyName":{"Type":"String","Description":"Key name"}},"Resources":{"Vpc":{"Properties":{"CidrBlock":"10.200.0.0/16"},"Type":"AWS::EC2::VPC"}},"Outputs":{"VpcId":{"Description":"A VPC ID","Value":{"Ref":"Vpc"}}} |
+      |   "AWSTemplateFormatVersion": "2010-09-09", |
+      |   "Description": "Test template",           |
+      |   "Parameters": {                           |
+      |     "KeyName": {                            |
+      |       "Type": "String"                      |
+      |       "Description": "Key name"             |
+      |     }                                       |
+      |   },                                        |
+      |   "Resources": {                            |
+      |     "Vpc": {                                |
+      |       "Properties": {                       |
+      |         "CidrBlock": "10.200.0.0/16"        |
+      |       },                                    |
+      |       "Type": "AWS::EC2::VPC"               |
+      |     }                                       |
+      |   },                                        |
+      |   "Outputs": {                              |
+      |     "VpcId": {                              |
+      |       "Description": "A VPC ID",            |
+      |       "Value": {                            |
+      |         "Ref": "Vpc"                        |
+      |       }                                     |
+      |     }                                       |
+      |   }                                         |
+      | }                                           |
     And the exit status should be 0
