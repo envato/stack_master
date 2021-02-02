@@ -23,7 +23,7 @@ module StackMaster
         end
 
         def create_error
-          "#{@name} cannot contain empty parameters:#{@parameter.inspect}"
+          "#{@name} is not present inside the 'compile_time_parameters' entry, or has an empty value; found: #{@parameter.inspect}"
         end
 
       end
