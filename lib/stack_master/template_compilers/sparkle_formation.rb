@@ -22,7 +22,7 @@ module StackMaster::TemplateCompilers
         sparkle_template.compile_state = create_state(definitions, compile_time_parameters)
       end
 
-      JSON.pretty_generate(sparkle_template)
+      JSON.pretty_generate(sparkle_template.dump)
     end
 
     private

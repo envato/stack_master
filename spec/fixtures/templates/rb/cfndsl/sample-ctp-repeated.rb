@@ -10,7 +10,7 @@ CloudFormation {
   Output(:One,FnBase64( Ref("One")))
 
   EC2_Instance(:MyInstance) {
-    DisableApiTermination external_parameters["DisableApiTermination"]
+    DisableApiTermination external_parameters.fetch(:DisableApiTermination, "false")
     InstanceType external_parameters["InstanceType"]
     ImageId "ami-12345678"
   }
