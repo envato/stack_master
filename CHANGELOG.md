@@ -14,7 +14,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Use GitHub Actions for the CI build instead of Travis CI ([#353]).
 - Templates compiled with `cfndsl` have a pretty format ([#356]).
-- Update `cfndsl` requirement from < 1.0 to ~> 1 ([#356]).
+- Update `cfndsl` requirement from < 1.0 to ~> 1 ([#356]). The changes in
+  version 1 are potentially breaking for projects using `cfndsl` templates.
 
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.12.0...HEAD
 [#353]: https://github.com/envato/stack_master/pull/353
