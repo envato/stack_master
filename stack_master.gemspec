@@ -56,5 +56,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "hashdiff", "~> 1"
   spec.add_dependency "ejson_wrapper"
   spec.add_dependency "diff-lcs"
-  spec.add_dependency "cfn-nag", "~> 0.6.7"
+  spec.add_dependency "cfn-nag", ">= 0.6.7", "< 0.8.0"
 end
