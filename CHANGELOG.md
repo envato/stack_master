@@ -10,15 +10,21 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.0...HEAD
+
+## [2.13.0] - 2021-02-10
+
 ### Changed
 
 - Use GitHub Actions for the CI build instead of Travis CI ([#353]).
+- Update `cfn-nag` requirement from `~> 0.6.7` to `>= 0.6.7, < 0.8.0` ([#354]).
 - Templates compiled with `cfndsl` have a pretty format ([#356]).
-- Update `cfndsl` requirement from < 1.0 to ~> 1 ([#356]). The changes in
+- Update `cfndsl` requirement from `< 1.0` to `~> 1` ([#356]). The changes in
   version 1 are potentially breaking for projects using `cfndsl` templates.
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.12.0...HEAD
+[2.13.0]: https://github.com/envato/stack_master/compare/v2.12.0...v2.13.0
 [#353]: https://github.com/envato/stack_master/pull/353
+[#354]: https://github.com/envato/stack_master/pull/354
 [#356]: https://github.com/envato/stack_master/pull/356
 
 ## [2.12.0] - 2020-10-22
