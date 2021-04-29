@@ -1,0 +1,22 @@
+version: 2
+registries:
+  rubygems-server-rubygems-envato-net:
+    type: rubygems-server
+    url: https://rubygems.envato.net/
+    username: "${{secrets.RUBYGEMS_SERVER_RUBYGEMS_ENVATO_NET_USERNAME}}"
+    password: "${{secrets.RUBYGEMS_SERVER_RUBYGEMS_ENVATO_NET_PASSWORD}}"
+  rubygems-server-gems-contribsys-com:
+    type: rubygems-server
+    url: https://gems.contribsys.com/
+    username: "${{secrets.RUBYGEMS_SERVER_GEMS_CONTRIBSYS_COM_USERNAME}}"
+    password: "${{secrets.RUBYGEMS_SERVER_GEMS_CONTRIBSYS_COM_PASSWORD}}"
+
+updates:
+- package-ecosystem: bundler
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "19:00"
+  registries:
+  - rubygems-server-rubygems-envato-net
+  - rubygems-server-gems-contribsys-com
