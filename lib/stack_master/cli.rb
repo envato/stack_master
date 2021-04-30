@@ -7,7 +7,7 @@ module StackMaster
 
     def initialize(argv, stdin=STDIN, stdout=STDOUT, stderr=STDERR, kernel=Kernel)
       @argv, @stdin, @stdout, @stderr, @kernel = argv, stdin, stdout, stderr, kernel
-      Commander::Runner.instance_variable_set('@singleton', Commander::Runner.new(argv))
+      Commander::Runner.instance_variable_set('@instance', Commander::Runner.new(argv))
       StackMaster.stdout = @stdout
       StackMaster.stderr = @stderr
       TablePrint::Config.io = StackMaster.stdout
