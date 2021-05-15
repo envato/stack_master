@@ -26,7 +26,7 @@ RSpec.describe StackMaster::ParameterResolvers::ParameterStore do
           }
         }
       end
-  
+
       it 'should return the parameter value' do
         expect(resolver.resolve(parameter_name)).to eq parameter_value
       end
@@ -36,14 +36,14 @@ RSpec.describe StackMaster::ParameterResolvers::ParameterStore do
       before do
         Aws.config[:ssm] = {
           stub_responses: {
-            get_parameter: 
+            get_parameter:
               Aws::SSM::Errors::ParameterNotFound.new(unknown_parameter_name, "Parameter #{unknown_parameter_name} not found")
           }
         }
       end
       it 'should raise and error' do
         expect { resolver.resolve(unknown_parameter_name) }
-            .to raise_error(StackMaster::ParameterResolvers::ParameterStore::ParameterNotFound, "Unable to find #{unknown_parameter_name} in Parameter Store")
+            .to raise_error(StackMaster::ParameterResolvers::ParameterStore::ParameterNotFound, "Unable to find #{unknown_parameter_name} in Parameter Store in us-east-1")
       end
     end
   end
