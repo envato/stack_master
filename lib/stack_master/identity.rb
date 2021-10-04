@@ -1,5 +1,6 @@
 module StackMaster
   class Identity
+    AllowedAccountAliasesError = Class.new(StandardError)
     MissingIamPermissionsError = Class.new(StandardError)
 
     def running_in_account?(accounts)
@@ -7,6 +8,8 @@ module StackMaster
         accounts.empty? ||
         contains_account_id?(accounts) ||
         contains_account_alias?(accounts)
+    rescue MissingIamPermissionsError
+      raise AllowedAccountAliasesError, "Unable to validate whether the current AWS account is allowed"
     end
 
     def account
