@@ -11,7 +11,7 @@ module StackMaster
 
       contains_account_alias?(accounts)
     rescue MissingIamPermissionsError
-      raise AllowedAccountAliasesError, "Unable to validate whether the current AWS account is allowed"
+      raise AllowedAccountAliasesError, 'Failed to validate whether the current AWS account is allowed'
     end
 
     def account
@@ -43,8 +43,6 @@ module StackMaster
     end
 
     def contains_account_alias?(aliases)
-      return false if aliases.empty?
-
       account_aliases.any? { |account_alias| aliases.include?(account_alias) }
     end
 

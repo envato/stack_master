@@ -48,7 +48,7 @@ RSpec.describe StackMaster::Identity do
         expect(running_in_allowed_account).to eq(false)
       end
 
-      context "without list account aliases permissions" do
+      context 'without list account aliases permissions' do
         before do
           allow(iam).to receive(:list_account_aliases).and_raise(
             Aws::IAM::Errors.error_class('AccessDenied').new(
@@ -98,7 +98,7 @@ RSpec.describe StackMaster::Identity do
         end
       end
 
-      context "without list account aliases permissions" do
+      context 'without list account aliases permissions' do
         let(:allowed_accounts) { ['an-account-alias'] }
 
         before do
