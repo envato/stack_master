@@ -10,7 +10,17 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.0...HEAD
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.1...HEAD
+
+## [2.13.1] - 2021-10-11
+
+### Changed
+
+- Avoid an API call to check account aliases if all `allowed_accounts` look like AWS account IDs ([#363])
+- Provide a more contextual error message if fetching account aliases failed during allowed accounts check ([#363])
+
+[2.13.1]: https://github.com/envato/stack_master/compare/v2.13.0...v2.13.1
+[#363]: https://github.com/envato/stack_master/pull/363
 
 ## [2.13.0] - 2021-02-10
 
