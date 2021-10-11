@@ -10,7 +10,7 @@ RSpec.describe StackMaster::Identity do
   end
 
   describe '#running_in_account?' do
-    let(:account) { '1234567890' }
+    let(:account) { '123456789012' }
     let(:running_in_allowed_account) { identity.running_in_account?(allowed_accounts) }
 
     before do
@@ -42,10 +42,25 @@ RSpec.describe StackMaster::Identity do
     end
 
     context 'with no allowed account' do
-      let(:allowed_accounts) { ['9876543210'] }
+      let(:allowed_accounts) { ['210987654321'] }
 
       it 'returns false' do
         expect(running_in_allowed_account).to eq(false)
+      end
+
+      context 'without list account aliases permissions' do
+        before do
+          allow(iam).to receive(:list_account_aliases).and_raise(
+            Aws::IAM::Errors.error_class('AccessDenied').new(
+              an_instance_of(Seahorse::Client::RequestContext),
+              'User: arn:aws:sts::123456789:assumed-role/my-role/123456789012 is not authorized to perform: iam:ListAccountAliases on resource: *'
+            )
+          )
+        end
+
+        it 'returns false' do
+          expect(running_in_allowed_account).to eq(false)
+        end
       end
     end
 
@@ -76,10 +91,27 @@ RSpec.describe StackMaster::Identity do
       end
 
       context 'with a combination of account id and alias' do
-        let(:allowed_accounts) { %w(1928374 allowed-account another-account) }
+        let(:allowed_accounts) { %w(192837471659 allowed-account another-account) }
 
         it 'returns true' do
           expect(running_in_allowed_account).to eq(true)
+        end
+      end
+
+      context 'without list account aliases permissions' do
+        let(:allowed_accounts) { ['an-account-alias'] }
+
+        before do
+          allow(iam).to receive(:list_account_aliases).and_raise(
+            Aws::IAM::Errors.error_class('AccessDenied').new(
+              an_instance_of(Seahorse::Client::RequestContext),
+              'User: arn:aws:sts::123456789:assumed-role/my-role/123456789012 is not authorized to perform: iam:ListAccountAliases on resource: *'
+            )
+          )
+        end
+
+        it 'raises the correct error' do
+          expect { running_in_allowed_account }.to raise_error(StackMaster::Identity::AllowedAccountAliasesError)
         end
       end
     end

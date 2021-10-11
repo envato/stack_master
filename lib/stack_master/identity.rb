@@ -1,12 +1,17 @@
 module StackMaster
   class Identity
+    AllowedAccountAliasesError = Class.new(StandardError)
     MissingIamPermissionsError = Class.new(StandardError)
 
     def running_in_account?(accounts)
-      accounts.nil? ||
-        accounts.empty? ||
-        contains_account_id?(accounts) ||
-        contains_account_alias?(accounts)
+      return true if accounts.nil? || accounts.empty? || contains_account_id?(accounts)
+
+      # skip alias check (which makes an API call) if all values are account IDs
+      return false if accounts.all? { |account| account_id?(account) }
+
+      contains_account_alias?(accounts)
+    rescue MissingIamPermissionsError
+      raise AllowedAccountAliasesError, 'Failed to validate whether the current AWS account is allowed'
     end
 
     def account
@@ -39,6 +44,12 @@ module StackMaster
 
     def contains_account_alias?(aliases)
       account_aliases.any? { |account_alias| aliases.include?(account_alias) }
+    end
+
+    def account_id?(id_or_alias)
+      # While it's not explicitly documented as prohibited, it cannot (currently) be possible to set an account alias of
+      # 12 digits, as that could cause one console sign-in URL to resolve to two separate accounts.
+      /^[0-9]{12}$/.match?(id_or_alias)
     end
   end
 end
