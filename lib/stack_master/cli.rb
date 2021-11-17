@@ -277,6 +277,7 @@ module StackMaster
           success = execute_if_allowed_account(stack_definition.allowed_accounts) do
             command.perform(config, stack_definition, options).success?
           end
+          break if !success
         end
       end
       @kernel.exit false unless success
