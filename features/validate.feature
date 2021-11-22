@@ -66,3 +66,14 @@ Feature: Validate command
     And I run `stack_master validate us-east-1 stack1 us-east-1 stack2`
     Then the output should contain "stack1: invalid. Blah"
     And the exit status should be 1
+
+  Scenario: Missing parameter from resolver
+    Given I skip this test
+    And I stub CloudFormation validate calls to fail validation with message "Blah"
+    And I stub CloudFormation validate calls to pass validation
+    And I run `stack_master validate`
+    Then the output should contain all of these lines:
+      | stack0: error: Unable to resolve parameter "output" value causing error: Stack with id nonexistantstack does not exist. Use --trace to view backtrace |
+      | stack1: invalid. Blah                                                                                                                                 |
+      | stack2: valid                                                                                                                                         |
+    And the exit status should be 1
