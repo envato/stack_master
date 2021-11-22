@@ -274,9 +274,9 @@ module StackMaster
         stack_definitions.each do |stack_definition|
           StackMaster.cloud_formation_driver.set_region(stack_definition.region)
           StackMaster.stdout.puts "Executing #{command.command_name} on #{stack_definition.stack_name} in #{stack_definition.region}"
-          success = success && execute_if_allowed_account(stack_definition.allowed_accounts) do
+          success = execute_if_allowed_account(stack_definition.allowed_accounts) do
             command.perform(config, stack_definition, options).success?
-          end
+          end && success
         end
       end
       @kernel.exit false unless success
