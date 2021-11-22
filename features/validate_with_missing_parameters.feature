@@ -7,11 +7,19 @@ Feature: Validate command with missing parameters
         us_east_1:
           stack1:
             template: stack1.rb
+          stack2:
+            template: stack1.rb
       """
     And a directory named "parameters"
     And a file named "parameters/stack1.yml" with:
       """
       ParameterOne: populated
+      """
+    And a file named "parameters/stack2.yml" with:
+      """
+      ParameterOne: populated
+      ParameterTwo: populated
+      ParameterThree: populated
       """
     And a directory named "templates"
     And a file named "templates/stack1.rb" with:
@@ -31,7 +39,6 @@ Feature: Validate command with missing parameters
       """
 
   Scenario: Reports the missing parameter values
-    Given I stub CloudFormation validate calls to pass validation
     When I run `stack_master validate us-east-1 stack1`
     Then the output should contain all of these lines:
       | stack1: invalid                                                              |
@@ -62,3 +69,17 @@ Feature: Validate command with missing parameters
     Then the output should contain all of these lines:
       | stack1: valid                                                                |
     And the exit status should be 0
+
+  Scenario: Returns non-zero exit code when only one stack fails validation
+    Given I stub CloudFormation validate calls to pass validation
+    When I run `stack_master validate`
+    Then the output should contain all of these lines:
+      | stack1: invalid                                                              |
+      | Empty/blank parameters detected. Please provide values for these parameters: |
+      | - ParameterTwo                                                               |
+      | - ParameterThree                                                             |
+      | Parameters will be read from files matching the following globs:             |
+      | - parameters/stack1.y*ml                                                     |
+      | - parameters/us-east-1/stack1.y*ml                                           |
+      | stack2: valid                                                                |
+    And the exit status should be 1
