@@ -10,11 +10,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.2...HEAD
+
+## [2.13.2] - 2022-01-25
+
 ### Fixed
 
 - Add support for ActiveSupport 7 ([#368])
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.1...HEAD
+[2.13.2]: https://github.com/envato/stack_master/compare/v2.13.1...v2.13.2
 
 [#368]: https://github.com/envato/stack_master/pull/368
 
