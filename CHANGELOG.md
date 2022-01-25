@@ -14,8 +14,18 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Test on Ruby 3.0 and 3.1 in the CI build ([#366]).
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.1...HEAD
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.2...HEAD
 [#366]: https://github.com/envato/stack_master/pull/366
+
+## [2.13.2] - 2022-01-25
+
+### Fixed
+
+- Add support for ActiveSupport 7 ([#368])
+
+[2.13.2]: https://github.com/envato/stack_master/compare/v2.13.1...v2.13.2
+
+[#368]: https://github.com/envato/stack_master/pull/368
 
 ## [2.13.1] - 2021-10-11
 
