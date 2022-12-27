@@ -38,7 +38,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
 
     before do
       allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
-      cf.stub_responses(:describe_stacks, stacks: stacks)
+      cf.stub_responses(:describe_stacks, { stacks: stacks })
     end
 
     context 'the stack and output exist' do
@@ -53,13 +53,13 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
       end
 
       it 'caches stacks for the lifetime of the instance' do
-        expect(cf).to receive(:describe_stacks).with(stack_name: 'my-stack').and_call_original.once
+        expect(cf).to receive(:describe_stacks).with({ stack_name: 'my-stack' }).and_call_original.once
         resolver.resolve(value)
         resolver.resolve(value)
       end
 
       it "caches stacks by region" do
-        expect(cf).to receive(:describe_stacks).with(stack_name: 'my-stack').and_call_original.twice
+        expect(cf).to receive(:describe_stacks).with({ stack_name: 'my-stack' }).and_call_original.twice
         resolver.resolve(value)
         resolver.resolve(value)
         resolver.resolve("ap-southeast-2:#{value}")
@@ -79,7 +79,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
         end
 
         it "caches stacks by credentials" do
-          expect(cf).to receive(:describe_stacks).with(stack_name: 'my-stack').and_call_original.twice
+          expect(cf).to receive(:describe_stacks).with({ stack_name: 'my-stack' }).and_call_original.twice
           resolver.resolve(value)
           resolver.resolve(value)
           Aws.config[:credentials] = "my-credentials"
@@ -132,7 +132,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
 
     before do
       allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
-      cf.stub_responses(:describe_stacks, stacks: stacks)
+      cf.stub_responses(:describe_stacks, { stacks: stacks })
     end
 
     context 'the stack and output exist' do

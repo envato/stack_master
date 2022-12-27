@@ -21,22 +21,22 @@ RSpec.describe StackMaster::ChangeSet do
 
     context 'successful response' do
       before do
-        allow(cf).to receive(:describe_change_set).with(change_set_name: 'id-1', next_token: nil).and_return(double(next_token: nil, changes: [], :changes= => nil, :next_token= => nil, status: 'CREATE_COMPLETE'))
+        allow(cf).to receive(:describe_change_set).with({ change_set_name: 'id-1', next_token: nil }).and_return(double(next_token: nil, changes: [], :changes= => nil, :next_token= => nil, status: 'CREATE_COMPLETE'))
       end
 
       it 'calls the create change set API with the addition of a name' do
         change_set = StackMaster::ChangeSet.create(stack_name: '123')
-        expect(cf).to have_received(:create_change_set).with(
+        expect(cf).to have_received(:create_change_set).with({
           stack_name: '123',
           change_set_name: change_set_name
-        )
+        })
         expect(change_set.failed?).to eq false
       end
     end
 
     context 'unsuccessful response' do
       before do
-        allow(cf).to receive(:describe_change_set).with(change_set_name: 'id-1', next_token: nil).and_return(double(next_token: nil, changes: [], :changes= => nil, :next_token= => nil, status: 'FAILED', status_reason: 'No changes'))
+        allow(cf).to receive(:describe_change_set).with({ change_set_name: 'id-1', next_token: nil }).and_return(double(next_token: nil, changes: [], :changes= => nil, :next_token= => nil, status: 'FAILED', status_reason: 'No changes'))
       end
 
       it 'is marked as failed' do

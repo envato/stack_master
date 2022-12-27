@@ -8,7 +8,7 @@ RSpec.describe StackMaster::Commands::Delete do
 
   before do
     StackMaster.cloud_formation_driver.set_region(region)
-    allow(Aws::CloudFormation::Client).to receive(:new).with(region: region, retry_limit: 10).and_return(cf)
+    allow(Aws::CloudFormation::Client).to receive(:new).with({ region: region, retry_limit: 10 }).and_return(cf)
     allow(delete).to receive(:ask?).and_return('y')
     allow(StackMaster::StackEvents::Streamer).to receive(:stream)
   end

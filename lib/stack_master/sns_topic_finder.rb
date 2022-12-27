@@ -3,7 +3,7 @@ module StackMaster
     TopicNotFound = Class.new(StandardError)
 
     def initialize(region)
-      @resource = Aws::SNS::Resource.new(region: region)
+      @resource = Aws::SNS::Resource.new({ region: region })
     end
 
     def find(reference)

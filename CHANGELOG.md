@@ -14,8 +14,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Test on Ruby 3.0 and 3.1 in the CI build ([#366]).
 
+### Changed
+
+- Pass an options hash to the AWS SDK, instead of keyword arguments ([#371]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.13.2...HEAD
 [#366]: https://github.com/envato/stack_master/pull/366
+[#371]: https://github.com/envato/stack_master/pull/371
 
 ## [2.13.2] - 2022-01-25
 

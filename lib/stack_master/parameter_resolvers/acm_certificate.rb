@@ -19,9 +19,9 @@ module StackMaster
       def all_certs
         certs = []
         next_token = nil
-        client = Aws::ACM::Client.new(region: @stack_definition.region)
+        client = Aws::ACM::Client.new({ region: @stack_definition.region })
         loop do
-          resp = client.list_certificates(certificate_statuses: ['ISSUED'], next_token: next_token)
+          resp = client.list_certificates({ certificate_statuses: ['ISSUED'], next_token: next_token })
           certs << resp.certificate_summary_list
           next_token = resp.next_token
           break if next_token.nil?

@@ -17,10 +17,10 @@ module StackMaster
 
         s3 = new_s3_client(region: region)
 
-        current_objects = s3.list_objects(
+        current_objects = s3.list_objects({
           prefix: prefix,
           bucket: bucket
-        ).map(&:contents).flatten.inject({}){|h,obj|
+        }).map(&:contents).flatten.inject({}){|h,obj|
           h.merge(obj.key => obj)
         }
 
@@ -38,12 +38,12 @@ module StackMaster
           s3_uri = "s3://#{bucket}/#{object_key}"
           StackMaster.stdout.print "- #{File.basename(path)} => #{s3_uri} "
 
-          s3.put_object(
+          s3.put_object({
             bucket: bucket,
             key: object_key,
             body: body,
             metadata: { md5: compiled_template_md5 }
-          )
+          })
           StackMaster.stdout.puts "done."
         end
       end
@@ -61,7 +61,7 @@ module StackMaster
       private
 
       def new_s3_client(region: nil)
-        Aws::S3::Client.new(region: region || @region)
+        Aws::S3::Client.new({ region: region || @region })
       end
     end
   end

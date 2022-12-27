@@ -31,11 +31,11 @@ module StackMaster
     end
 
     def sts
-      @sts ||= Aws::STS::Client.new(region: region)
+      @sts ||= Aws::STS::Client.new({ region: region })
     end
 
     def iam
-      @iam ||= Aws::IAM::Client.new(region: region)
+      @iam ||= Aws::IAM::Client.new({ region: region })
     end
 
     def contains_account_id?(ids)

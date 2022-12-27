@@ -19,9 +19,24 @@ RSpec.describe StackMaster::Stack do
         ]
       }
       before do
-        cf.stub_responses(:describe_stacks, stacks: [{stack_id: stack_id, stack_name: stack_name, creation_time: Time.now, stack_status: 'UPDATE_COMPLETE', parameters: parameters, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn'}])
-        cf.stub_responses(:get_template, template_body: "{}")
-        cf.stub_responses(:get_stack_policy, stack_policy_body: stack_policy_body)
+        cf.stub_responses(
+          :describe_stacks,
+          {
+            stacks: [
+              {
+                stack_id: stack_id,
+                stack_name: stack_name,
+                creation_time: Time.now,
+                stack_status: 'UPDATE_COMPLETE',
+                parameters: parameters,
+                notification_arns: ['test_arn'],
+                role_arn: 'test_service_role_arn'
+              }
+            ]
+          }
+        )
+        cf.stub_responses(:get_template, { template_body: "{}" })
+        cf.stub_responses(:get_stack_policy, { stack_policy_body: stack_policy_body })
       end
 
       it 'returns a stack object with a stack_id' do
@@ -62,7 +77,7 @@ RSpec.describe StackMaster::Stack do
 
     context 'when CF returns no stacks' do
       before do
-        cf.stub_responses(:describe_stacks, stacks: [])
+        cf.stub_responses(:describe_stacks, { stacks: [] })
       end
 
       it 'returns nil' do

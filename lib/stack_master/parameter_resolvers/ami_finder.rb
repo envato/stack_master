@@ -19,7 +19,7 @@ module StackMaster
       end
 
       def find_latest_ami(filters, owners = ['self'])
-        images = ec2.describe_images(owners: owners, filters: filters).images
+        images = ec2.describe_images({ owners: owners, filters: filters }).images
         sorted_images = images.sort do |a, b|
           Time.parse(a.creation_date) <=> Time.parse(b.creation_date)
         end
@@ -29,7 +29,7 @@ module StackMaster
       private
 
       def ec2
-        @ec2 ||= Aws::EC2::Client.new(region: @region)
+        @ec2 ||= Aws::EC2::Client.new({ region: @region })
       end
     end
   end

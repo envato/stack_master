@@ -10,10 +10,15 @@ RSpec.describe StackMaster::ParameterResolvers::LatestAmi do
 
   context 'when matches are found' do
     before do
-      ec2.stub_responses(:describe_images, images: [
-        { image_id: '1', creation_date: '2015-01-02 00:00:00', name: 'foo' },
-        { image_id: '2', creation_date: '2015-01-03 00:00:00', name: 'foo' }
-      ])
+      ec2.stub_responses(
+        :describe_images,
+        {
+          images: [
+            { image_id: '1', creation_date: '2015-01-02 00:00:00', name: 'foo' },
+            { image_id: '2', creation_date: '2015-01-03 00:00:00', name: 'foo' }
+          ]
+        }
+      )
     end
 
     it 'returns the latest one' do
@@ -23,7 +28,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestAmi do
 
   context 'when no matches are found' do
     before do
-      ec2.stub_responses(:describe_images, images: [])
+      ec2.stub_responses(:describe_images, { images: [] })
     end
 
     it 'returns nil' do
