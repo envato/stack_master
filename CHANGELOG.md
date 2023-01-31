@@ -10,17 +10,29 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.3...HEAD
+
+## [2.13.3] - 2023-02-01
+
 ### Added
 
-- Test on Ruby 3.0 and 3.1 in the CI build ([#366]).
+- Test on Ruby 3.0, 3.1, and 3.2 in the CI build ([#366], [#372]).
 
 ### Changed
 
 - Pass an options hash to the AWS SDK, instead of keyword arguments ([#371]).
+- Widen the version constraint on the `cfn-nag` runtime dependency ([#364]).
+  Allow >= 0.6.7 and < 0.9.0.
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.2...HEAD
+### Fixed
+
+- Resolve Ruby deprecation: replace `File.exists?` with `File.exist?` ([#372]).
+
+[2.13.3]: https://github.com/envato/stack_master/compare/v2.13.2...v2.13.3
+[#364]: https://github.com/envato/stack_master/pull/364
 [#366]: https://github.com/envato/stack_master/pull/366
 [#371]: https://github.com/envato/stack_master/pull/371
+[#372]: https://github.com/envato/stack_master/pull/372
 
 ## [2.13.2] - 2022-01-25
 
