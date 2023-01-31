@@ -14,7 +14,7 @@ module StackMaster
         end
 
         @region = parameters['region'] || @stack_definition.region
-        ecr_client = Aws::ECR::Client.new(region: @region)
+        ecr_client = Aws::ECR::Client.new({ region: @region })
 
         images = fetch_images(parameters['repository_name'], parameters['registry_id'], ecr_client)
 

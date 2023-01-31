@@ -10,10 +10,16 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
 
   context 'when matches are found' do
     before do
-      ecr.stub_responses(:describe_images, next_token: nil, image_details: [
-        { registry_id: '012345678910', image_digest: 'sha256:decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1'] },
-        { registry_id: '012345678910', image_digest: 'sha256:deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['v2'] }
-      ])
+      ecr.stub_responses(
+        :describe_images,
+        {
+          next_token: nil,
+          image_details: [
+            { registry_id: '012345678910', image_digest: 'sha256:decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1'] },
+            { registry_id: '012345678910', image_digest: 'sha256:deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['v2'] }
+          ]
+        }
+      )
     end
 
     it 'returns the latest one' do
@@ -23,7 +29,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
 
   context 'when no matches are found' do
     before do
-      ecr.stub_responses(:describe_images, next_token: nil, image_details: [])
+      ecr.stub_responses(:describe_images, { next_token: nil, image_details: [] })
     end
 
     it 'returns nil' do
@@ -33,10 +39,16 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
 
   context 'when a tag is passed in' do
     before do
-      ecr.stub_responses(:describe_images, next_token: nil, image_details: [
-        { registry_id: '012345678910', image_digest: 'sha256:decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1', 'production'] },
-        { registry_id: '012345678910', image_digest: 'sha256:deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['v2'] }
-      ])
+      ecr.stub_responses(
+        :describe_images,
+        {
+          next_token: nil,
+          image_details: [
+            { registry_id: '012345678910', image_digest: 'sha256:decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1', 'production'] },
+            { registry_id: '012345678910', image_digest: 'sha256:deadbeef', image_pushed_at: Time.utc(2015,1,3,0,0), image_tags: ['v2'] }
+          ]
+        }
+      )
     end
   
     context 'when image exists' do
@@ -54,13 +66,19 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
 
   context 'when registry_id is passed in' do
     before do
-      ecr.stub_responses(:describe_images, next_token: nil, image_details: [
-        { registry_id: '012345678910', image_digest: 'sha256:decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1'] },
-      ])
+      ecr.stub_responses(
+        :describe_images,
+        {
+          next_token: nil,
+          image_details: [
+            { registry_id: '012345678910', image_digest: 'sha256:decafc0ffee', image_pushed_at: Time.utc(2015,1,2,0,0), image_tags: ['v1'] },
+          ]
+        }
+      )
     end
 
     it 'passes registry_id to describe_images' do
-      expect(ecr).to receive(:describe_images).with(repository_name: "foo", registry_id: "012345678910", next_token: nil, filter: {:tag_status=>"TAGGED"})
+      expect(ecr).to receive(:describe_images).with({repository_name: "foo", registry_id: "012345678910", next_token: nil, filter: {:tag_status=>"TAGGED"}})
       resolver.resolve({'repository_name' => 'foo', 'registry_id' => '012345678910'})
     end
   end

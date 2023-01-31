@@ -36,7 +36,7 @@ module StackMaster
       private
 
       def cf
-        @cf ||= Aws::CloudFormation::Client.new(region: region, retry_limit: 10)
+        @cf ||= Aws::CloudFormation::Client.new({ region: region, retry_limit: 10 })
       end
 
     end

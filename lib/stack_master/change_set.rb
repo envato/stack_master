@@ -25,12 +25,12 @@ module StackMaster
     end
 
     def self.delete(id)
-      cf.delete_change_set(change_set_name: id)
+      cf.delete_change_set({ change_set_name: id })
     end
 
     def self.execute(id, stack_name)
-      cf.execute_change_set(change_set_name: id,
-                            stack_name: stack_name)
+      cf.execute_change_set({ change_set_name: id,
+                              stack_name: stack_name })
     end
 
     def self.cf

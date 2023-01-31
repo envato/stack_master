@@ -10,10 +10,15 @@ RSpec.describe StackMaster::ParameterResolvers::AcmCertificate do
 
   context 'when a certificate is found' do
     before do
-      acm.stub_responses(:list_certificates, certificate_summary_list: [
-        { certificate_arn: 'arn:aws:acm:us-east-1:12345:certificate/abc', domain_name: 'abc' },
-        { certificate_arn: 'arn:aws:acm:us-east-1:12345:certificate/def', domain_name: 'def' }
-      ])
+      acm.stub_responses(
+        :list_certificates,
+        {
+          certificate_summary_list: [
+            { certificate_arn: 'arn:aws:acm:us-east-1:12345:certificate/abc', domain_name: 'abc' },
+            { certificate_arn: 'arn:aws:acm:us-east-1:12345:certificate/def', domain_name: 'def' }
+          ]
+        }
+      )
     end
 
     it 'returns the certificate' do
@@ -23,7 +28,7 @@ RSpec.describe StackMaster::ParameterResolvers::AcmCertificate do
 
   context 'when no certificate is found' do
     before do
-      acm.stub_responses(:list_certificates, certificate_summary_list: [])
+      acm.stub_responses(:list_certificates, { certificate_summary_list: [] })
     end
 
     it 'raises an error' do

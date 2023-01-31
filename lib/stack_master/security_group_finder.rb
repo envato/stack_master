@@ -4,7 +4,7 @@ module StackMaster
     MultipleSecurityGroupsFound = Class.new(StandardError)
 
     def initialize(region)
-      @resource = Aws::EC2::Resource.new(region: region)
+      @resource = Aws::EC2::Resource.new({ region: region })
     end
 
     def find(reference)

@@ -29,15 +29,15 @@ module StackMaster
 
     def self.find(region, stack_name)
       cf = StackMaster.cloud_formation_driver
-      cf_stack = cf.describe_stacks(stack_name: stack_name).stacks.first
+      cf_stack = cf.describe_stacks({ stack_name: stack_name }).stacks.first
       return unless cf_stack
       parameters = cf_stack.parameters.inject({}) do |params_hash, param_struct|
         params_hash[param_struct.parameter_key] = param_struct.parameter_value
         params_hash
       end
-      template_body ||= cf.get_template(stack_name: stack_name, template_stage: 'Original').template_body
+      template_body ||= cf.get_template({ stack_name: stack_name, template_stage: 'Original' }).template_body
       template_format = TemplateUtils.identify_template_format(template_body)
-      stack_policy_body ||= cf.get_stack_policy(stack_name: stack_name).stack_policy_body
+      stack_policy_body ||= cf.get_stack_policy({ stack_name: stack_name }).stack_policy_body
       outputs = cf_stack.outputs
 
       new(region: region,
