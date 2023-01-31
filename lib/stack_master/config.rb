@@ -28,7 +28,7 @@ module StackMaster
 
       dir = Dir.pwd
       parent_dir = File.expand_path("..", Dir.pwd)
-      while parent_dir != dir && !File.exists?(File.join(dir, config_file))
+      while parent_dir != dir && !File.exist?(File.join(dir, config_file))
         dir = parent_dir
         parent_dir = File.expand_path("..", dir)
       end

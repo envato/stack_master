@@ -37,6 +37,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
     let(:outputs) { [] }
 
     before do
+      allow(StackMaster.cloud_formation_driver).to receive(:region).and_return(region)
       allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
       cf.stub_responses(:describe_stacks, { stacks: stacks })
     end

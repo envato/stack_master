@@ -21,7 +21,7 @@ module StackMaster
     private
 
     def self.load_parameters(file_name)
-      file_exists = File.exists?(file_name)
+      file_exists = File.exist?(file_name)
       StackMaster.debug file_exists ? "  #{file_name} found" : "  #{file_name} not found"
       file_exists ? load_file(file_name) : {}
     end
