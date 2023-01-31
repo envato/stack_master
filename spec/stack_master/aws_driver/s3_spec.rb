@@ -9,10 +9,6 @@ RSpec.describe StackMaster::AwsDriver::S3 do
   end
 
   describe '#upload_files' do
-    before do
-      allow(File).to receive(:read).and_return('file content')
-    end
-
     context 'when set_region is called' do
       it 'defaults to that region' do
         s3_driver.set_region('default')
