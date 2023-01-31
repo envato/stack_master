@@ -29,7 +29,7 @@ module StackMaster
 
         if !@options.overwrite
           [@stack_master_filename, @stack_json_filename, @parameters_filename, @region_parameters_filename].each do |filename|
-            if File.exists?(filename)
+            if File.exist?(filename)
               StackMaster.stderr.puts("Aborting: #{filename} already exists. Use --overwrite to force overwriting file.")
               return false
             end

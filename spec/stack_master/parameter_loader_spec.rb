@@ -103,7 +103,7 @@ RSpec.describe StackMaster::ParameterLoader do
   end
 
   def file_mock(file_name, exists: false, read: nil)
-    allow(File).to receive(:exists?).with(file_name).and_return(exists)
+    allow(File).to receive(:exist?).with(file_name).and_return(exists)
     allow(File).to receive(:read).with(file_name).and_return(read) if read
   end
 
