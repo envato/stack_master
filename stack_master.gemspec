@@ -44,6 +44,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "aws-sdk-ssm", "~> 1"
   spec.add_dependency "aws-sdk-ecr", "~> 1"
   spec.add_dependency "aws-sdk-iam", "~> 1"
+  spec.add_dependency "sorted_set" # remove once new version of sparkle_formation released (> v3.0.40). See https://github.com/sparkleformation/sparkle_formation/pull/271.
   spec.add_dependency "diffy"
   spec.add_dependency "erubis"
   spec.add_dependency "rainbow"
