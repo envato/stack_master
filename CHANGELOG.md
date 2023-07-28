@@ -10,7 +10,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.3...HEAD
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.4...HEAD
+
+## [2.13.4] - 2023-07-31
+
+### Fixed
+
+- Resolve error caused by `SortedSet` class being removed from the `set` library ([#374]).
+
+[2.13.3]: https://github.com/envato/stack_master/compare/v2.13.3...v2.13.4
+[#374]: https://github.com/envato/stack_master/pull/374
 
 ## [2.13.3] - 2023-02-01
 
