@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Fixed
 
-- Resolve error caused by `SortedSet` class being removed from the `set` library ([#374]).
+- Resolve SparkleFormation template error caused by `SortedSet` class being removed from the `set` library in Ruby 3 ([#374]).
 
 [2.13.3]: https://github.com/envato/stack_master/compare/v2.13.3...v2.13.4
 [#374]: https://github.com/envato/stack_master/pull/374
