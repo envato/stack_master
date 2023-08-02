@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.13.4...HEAD
 
-## [2.13.4] - 2023-07-31
+## [2.13.4] - 2023-08-02
 
 ### Fixed
 
