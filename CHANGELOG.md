@@ -14,8 +14,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Test on Ruby 3.3 in the CI build ([#376]).
 
+- Introduce `user_data_file`, `user_data_file_as_lines`, and `include_file`
+  convenience methods to the YAML ERB template compiler ([#377]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.13.4...HEAD
 [#376]: https://github.com/envato/stack_master/pull/376
+[#377]: https://github.com/envato/stack_master/pull/377
 
 ## [2.13.4] - 2023-08-02
 

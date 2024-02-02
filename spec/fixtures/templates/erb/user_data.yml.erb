@@ -1,0 +1,7 @@
+Description: A test case for storing the userdata script in a dedicated file
+
+Resources:
+  LaunchConfig:
+    Type: 'AWS::AutoScaling::LaunchConfiguration'
+    Properties:
+      UserData: <%= user_data_file(File.join(__dir__, 'user_data.sh.erb')) %>
