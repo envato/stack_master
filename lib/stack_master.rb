@@ -45,6 +45,7 @@ module StackMaster
   autoload :StackDefinition, 'stack_master/stack_definition'
   autoload :TemplateCompiler, 'stack_master/template_compiler'
   autoload :Identity, 'stack_master/identity'
+  autoload :CloudFormationInterpolatingEruby, 'stack_master/cloudformation_interpolating_eruby'
 
   autoload :StackDiffer, 'stack_master/stack_differ'
   autoload :Validator, 'stack_master/validator'
