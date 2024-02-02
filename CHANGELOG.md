@@ -10,7 +10,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Test on Ruby 3.3 in the CI build ([#376]).
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.13.4...HEAD
+[#376]: https://github.com/envato/stack_master/pull/376
 
 ## [2.13.4] - 2023-08-02
 
