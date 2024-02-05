@@ -10,12 +10,24 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.4...HEAD
+
+## [2.14.0] - 2024-02-05
+
 ### Added
+
+- Allow the use of [commander](https://github.com/commander-rb/commander)
+  major version 5 ([#375]).
 
 - Test on Ruby 3.3 in the CI build ([#376]).
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.4...HEAD
+- Introduce `user_data_file`, `user_data_file_as_lines`, and `include_file`
+  convenience methods to the YAML ERB template compiler ([#377]).
+
+[2.13.4]: https://github.com/envato/stack_master/compare/v2.13.4...v2.14.0
+[#375]: https://github.com/envato/stack_master/pull/375
 [#376]: https://github.com/envato/stack_master/pull/376
+[#377]: https://github.com/envato/stack_master/pull/377
 
 ## [2.13.4] - 2023-08-02
 
@@ -23,7 +35,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Resolve SparkleFormation template error caused by `SortedSet` class being removed from the `set` library in Ruby 3 ([#374]).
 
-[2.13.3]: https://github.com/envato/stack_master/compare/v2.13.3...v2.13.4
+[2.13.4]: https://github.com/envato/stack_master/compare/v2.13.3...v2.13.4
 [#374]: https://github.com/envato/stack_master/pull/374
 
 ## [2.13.3] - 2023-02-01

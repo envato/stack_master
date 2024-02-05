@@ -5,19 +5,6 @@ module StackMaster
   module SparkleFormation
     TemplateFileNotFound = ::Class.new(StandardError)
 
-    class SfEruby < Erubis::Eruby
-      include Erubis::ArrayEnhancer
-
-      def add_expr(src, code, indicator)
-        case indicator
-          when '='
-            src << " #{@bufvar} << (" << code << ');'
-          else
-            super
-        end
-      end
-    end
-
     class TemplateContext < AttributeStruct
       include ::SparkleFormation::SparkleAttribute
       include ::SparkleFormation::SparkleAttribute::Aws
@@ -49,47 +36,12 @@ module StackMaster
       end
     end
 
-    # Splits up long strings with multiple lines in them to multiple strings
-    # in the CF array. Makes the compiled template and diffs more readable.
-    class CloudFormationLineFormatter
-      def self.format(template)
-        new(template).format
-      end
-
-      def initialize(template)
-        @template = template
-      end
-
-      def format
-        @template.flat_map do |lines|
-          lines = lines.to_s if Symbol === lines
-          if String === lines
-            newlines = []
-            lines.count("\n").times do
-              newlines << "\n"
-            end
-            newlines = lines.split("\n").map do |line|
-              "#{line}#{newlines.pop}"
-            end
-            if lines.start_with?("\n")
-              newlines.insert(0, "\n")
-            end
-            newlines
-          else
-            lines
-          end
-        end
-      end
-    end
-
     module Template
       def self.render(prefix, file_name, vars)
         file_path = File.join(::SparkleFormation.sparkle_path, prefix, file_name)
-        template = File.read(file_path)
         template_context = TemplateContext.build(vars, prefix)
-        compiled_template = SfEruby.new(template).evaluate(template_context)
-        CloudFormationLineFormatter.format(compiled_template)
-      rescue Errno::ENOENT => e
+        CloudFormationInterpolatingEruby.evaluate_file(file_path, template_context)
+      rescue Errno::ENOENT
         Kernel.raise TemplateFileNotFound, "Could not find template file at path: #{file_path}"
       end
     end
