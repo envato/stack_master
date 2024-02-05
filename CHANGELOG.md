@@ -24,7 +24,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 - Introduce `user_data_file`, `user_data_file_as_lines`, and `include_file`
   convenience methods to the YAML ERB template compiler ([#377]).
 
-[2.13.4]: https://github.com/envato/stack_master/compare/v2.13.4...v2.14.0
+[2.14.0]: https://github.com/envato/stack_master/compare/v2.13.4...v2.14.0
 [#375]: https://github.com/envato/stack_master/pull/375
 [#376]: https://github.com/envato/stack_master/pull/376
 [#377]: https://github.com/envato/stack_master/pull/377

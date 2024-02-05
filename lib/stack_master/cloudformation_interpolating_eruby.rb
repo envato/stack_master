@@ -50,10 +50,7 @@ module StackMaster
         lines = lines.to_s if lines.is_a?(Symbol)
         next(lines) unless lines.is_a?(String)
 
-        newlines = Array.new(lines.count("\n"), "\n")
-        newlines = lines.split("\n").map { |line| "#{line}#{newlines.pop}" }
-        newlines.insert(0, "\n") if lines.start_with?("\n")
-        newlines
+        lines.scan(/[^\n]*\n?/).reject { |x| x == '' }
       end
     end
   end
