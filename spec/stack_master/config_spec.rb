@@ -35,6 +35,13 @@ RSpec.describe StackMaster::Config do
       end
     end
 
+    it "gives explicit error on badly indented entries" do
+      Dir.chdir('./spec/fixtures/') do
+        expect { StackMaster::Config.load!('stack_master_wrong_indent.yml') }
+          .to raise_error StackMaster::Config::ConfigParseError
+      end
+    end
+
     it "searches up the tree for stack master yaml" do
       begin
         orig_dir = Dir.pwd

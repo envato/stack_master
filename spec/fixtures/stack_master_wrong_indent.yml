@@ -1,0 +1,4 @@
+stacks:
+  us-east-1:
+    myapp_vpc:
+    template: myapp_vpc.json

@@ -112,6 +112,8 @@ module StackMaster
       stacks.each do |region, stacks_for_region|
         region = Utils.underscore_to_hyphen(region)
         stacks_for_region.each do |stack_name, attributes|
+          raise ConfigParseError.new("Entry for stack #{stack_name} has no attributes") if attributes.nil?
+
           stack_name = Utils.underscore_to_hyphen(stack_name)
           stack_attributes = build_stack_defaults(region).deeper_merge!(attributes).merge(
             'region' => region,
