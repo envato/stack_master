@@ -50,6 +50,8 @@ module StackMaster
       end
       @region_defaults = normalise_region_defaults(config.fetch('region_defaults', {}))
       @stacks = []
+
+      raise ConfigParseError.new("Stack defaults can't be undefined") if @stack_defaults.nil?
       load_template_compilers(config)
       load_config
     end
