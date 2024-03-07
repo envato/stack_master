@@ -10,7 +10,20 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.13.4...HEAD
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.14.1...HEAD
+
+## [2.14.1] - 2024-03-07
+
+### Changed
+
+- Improve the error reporting from invalid format. ([#379], [#380]).
+
+- Internal readability improvement. ([#378]).
+
+[2.14.1]: https://github.com/envato/stack_master/compare/v2.14.0...v2.14.1
+[#378]: https://github.com/envato/stack_master/pull/378
+[#379]: https://github.com/envato/stack_master/pull/379
+[#380]: https://github.com/envato/stack_master/pull/380
 
 ## [2.14.0] - 2024-02-05
 
