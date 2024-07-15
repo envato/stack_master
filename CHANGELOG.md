@@ -10,7 +10,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.14.1...HEAD
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.15.0...HEAD
+
+## [2.15.0] - 2024-07-15
+
+### Changed
+
+- Always report at least a small fragment of the backtrace. ([#381])
+
+[2.15.0]: https://github.com/envato/stack_master/compare/v2.14.1...v2.15.0
+[#381]: https://github.com/envato/stack_master/pull/381
 
 ## [2.14.1] - 2024-03-07
 
