@@ -67,6 +67,15 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
         resolver.resolve("ap-southeast-2:#{value}")
       end
 
+      context 'when the output key has a non-camel name' do
+        let(:value) { 'my-stack/my_Output' }
+        let(:outputs) { [{output_key: 'my_Output', output_value: 'myresolvedvalue'}] }
+
+        it 'resolves the value' do
+          expect(resolved_value).to eq 'myresolvedvalue'
+        end
+      end
+
       context "when different credentials are used" do
         let(:outputs_in_account_2) { [ {output_key: 'MyOutput', output_value: 'resolvedvalueinaccount2'} ] }
         let(:stacks_in_account_2) { [{ stack_name: 'other-stack', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs_in_account_2}] }
