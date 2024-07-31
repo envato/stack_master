@@ -10,7 +10,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.15.0...HEAD
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.16.0...HEAD
+
+## [2.16.0] - 2024-08-01
+
+### Added
+
+- Resolve parameters from stack outputs with non-camel-case names ([#386])
+
+[2.16.0]: https://github.com/envato/stack_master/compare/v2.15.0...v2.16.0
+[#386]: https://github.com/envato/stack_master/pull/386
 
 ## [2.15.0] - 2024-07-15
 
