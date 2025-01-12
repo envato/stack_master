@@ -1,3 +1,4 @@
+require 'ostruct'
 require 'securerandom'
 
 module StackMaster
