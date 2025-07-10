@@ -17,7 +17,6 @@ module StackMaster
     attr_accessor :stacks,
                   :base_dir,
                   :template_dir,
-                  :sso_identity_store_id,
                   :parameters_dir,
                   :stack_defaults,
                   :region_defaults,
@@ -42,7 +41,6 @@ module StackMaster
       @base_dir = base_dir
       @template_dir = config.fetch('template_dir', nil)
       @parameters_dir = config.fetch('parameters_dir', nil)
-      @sso_identity_store_id = config.fetch('sso_identity_store_id',nil)
       @stack_defaults = config.fetch('stack_defaults', {})
       @region_aliases = Utils.underscore_keys_to_hyphen(config.fetch('region_aliases', {}))
       @region_to_aliases = @region_aliases.inject({}) do |hash, (key, value)|
