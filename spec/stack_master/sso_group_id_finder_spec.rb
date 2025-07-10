@@ -17,10 +17,10 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
     end
 
     it 'returns the group ID' do
-      expect(aws_client).to receive(:list_groups).with(
+      expect(aws_client).to receive(:list_groups).with({
         identity_store_id: identity_store_id,
         next_token: nil,
-        max_results: 50
+        max_results: 50}
       ).and_return(response)
 
       result = finder.find(group_name, identity_store_id)
