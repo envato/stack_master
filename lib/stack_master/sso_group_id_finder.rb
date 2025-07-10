@@ -29,7 +29,7 @@ module StackMaster
           puts "Error calling ListGroups: #{e.message}"
       end
 
-      raise SSOGroupNotFound, "No group with name #{reference} found" 
+      raise SSOGroupNotFound, "No group with name #{reference} found"
     end
   end
 end
