@@ -1,100 +1,134 @@
+require 'ostruct'
+
 RSpec.describe StackMaster::SsoGroupIdFinder do
-  let(:region) { 'us-east-1' }
   let(:identity_store_id) { 'd-12345678' }
   let(:group_name) { 'AdminGroup' }
   let(:group_id) { 'abc-123-group-id' }
+  let(:region) { 'us-east-1' }
+  let(:reference) { "#{region}:#{identity_store_id}/#{group_name}" }
 
   let(:aws_client) { instance_double(Aws::IdentityStore::Client) }
 
-  before do
-    allow(Aws::IdentityStore::Client).to receive(:new).with({ region: region }).and_return(aws_client)
-  end
-
   subject(:finder) do
-    described_class.new(region)
+    allow(Aws::IdentityStore::Client).to receive(:new).and_return(aws_client)
+    described_class.new
   end
 
-  context 'when the group is found on the first page' do
-    let(:response) do
-      double(groups: [double(display_name: group_name, group_id: group_id)], next_token: nil)
-    end
+  before do
+    # Stub StackMaster.cloud_formation_driver.region
+    allow(StackMaster).to receive(:cloud_formation_driver).and_return(double(region: region))
+  end
 
+  context 'when group is found on first page' do
     it 'returns the group ID' do
+      page = OpenStruct.new(
+        groups: [OpenStruct.new(display_name: group_name, group_id: group_id)],
+        next_token: nil
+      )
+
       expect(aws_client).to receive(:list_groups).with({
         identity_store_id: identity_store_id,
         next_token: nil,
         max_results: 50}
-      ).and_return(response)
+      ).and_return(page)
 
-      result = finder.find(group_name, identity_store_id)
-      expect(result).to eq(group_id)
+      expect(finder.find(reference)).to eq(group_id)
     end
   end
 
-  context 'when the group is found on the second page' do
-    let(:page_1) do
-      double(groups: [double(display_name: 'OtherGroup', group_id: 'zzz')], next_token: 'page-2')
-    end
+  context 'when region is omitted' do
+    let(:reference) { "#{identity_store_id}/#{group_name}" }
 
-    let(:page_2) do
-      double(groups: [double(display_name: group_name, group_id: group_id)], next_token: nil)
-    end
+    it 'uses region from StackMaster.cloud_formation_driver' do
+      page = OpenStruct.new(
+        groups: [OpenStruct.new(display_name: group_name, group_id: group_id)],
+        next_token: nil
+      )
 
-    it 'returns the group ID after paging' do
       expect(aws_client).to receive(:list_groups).with({
         identity_store_id: identity_store_id,
         next_token: nil,
         max_results: 50}
-      ).and_return(page_1)
+      ).and_return(page)
 
-      expect(aws_client).to receive(:list_groups).with({
-        identity_store_id: identity_store_id,
-        next_token: 'page-2',
-        max_results: 50}
-      ).and_return(page_2)
-
-      result = finder.find(group_name, identity_store_id)
-      expect(result).to eq(group_id)
+      expect(finder.find(reference)).to eq(group_id)
     end
   end
 
-  context 'when the group is not found' do
-    let(:response) do
-      double(groups: [double(display_name: 'AnotherGroup', group_id: 'zzz')], next_token: nil)
-    end
+  context 'when group is found on second page' do
+    it 'paginates and returns the group ID' do
+      page1 = OpenStruct.new(
+        groups: [OpenStruct.new(display_name: 'OtherGroup', group_id: 'wrong')],
+        next_token: 'next123'
+      )
 
+      page2 = OpenStruct.new(
+        groups: [OpenStruct.new(display_name: group_name, group_id: group_id)],
+        next_token: nil
+      )
+
+      expect(aws_client).to receive(:list_groups).with({
+        identity_store_id: identity_store_id,
+        next_token: nil,
+        max_results: 50}
+      ).and_return(page1)
+
+      expect(aws_client).to receive(:list_groups).with({
+        identity_store_id: identity_store_id,
+        next_token: 'next123',
+        max_results: 50}
+      ).and_return(page2)
+
+      expect(finder.find(reference)).to eq(group_id)
+    end
+  end
+
+  context 'when no matching group is found' do
     it 'raises SsoGroupNotFound' do
-      expect(aws_client).to receive(:list_groups).and_return(response)
+      page = OpenStruct.new(
+        groups: [OpenStruct.new(display_name: 'WrongGroup', group_id: 'x')],
+        next_token: nil
+      )
+
+      expect(aws_client).to receive(:list_groups).and_return(page)
 
       expect {
-        finder.find(group_name, identity_store_id)
+        finder.find(reference)
       }.to raise_error(StackMaster::SsoGroupIdFinder::SsoGroupNotFound, /No group with name #{group_name} found/)
     end
   end
 
-  context 'when reference is empty or not a string' do
-    it 'raises ArgumentError for nil' do
+  context 'when input format is invalid' do
+    it 'raises ArgumentError for blank string' do
       expect {
-        finder.find(nil, identity_store_id)
-      }.to raise_error(ArgumentError, /SSO Group Name must be a non-empty string/)
+        finder.find('')
+      }.to raise_error(ArgumentError, /Sso group lookup parameter must be/)
     end
 
-    it 'raises ArgumentError for empty string' do
+    it 'raises ArgumentError for missing slash' do
       expect {
-        finder.find('', identity_store_id)
-      }.to raise_error(ArgumentError, /SSO Group Name must be a non-empty string/)
+        finder.find('region:storeid-and-no-group')
+      }.to raise_error(ArgumentError)
+    end
+
+    it 'raises ArgumentError for non-string input' do
+      expect {
+        finder.find(12345)
+      }.to raise_error(ArgumentError)
     end
   end
 
-  context 'when AWS service error occurs' do
-    it 'rescues and raises SsoGroupNotFound' do
-      error = Aws::IdentityStore::Errors::ServiceError.new(nil, "AWS failure")
-      allow(aws_client).to receive(:list_groups).and_raise(error)
+  context 'when AWS service raises an error' do
+    it 'logs and raises SsoGroupNotFound' do
+      aws_error = Aws::IdentityStore::Errors::ServiceError.new(
+        Seahorse::Client::RequestContext.new, 'AWS failure'
+      )
+
+      allow(aws_client).to receive(:list_groups).and_raise(aws_error)
 
       expect {
-        finder.find(group_name, identity_store_id)
+        finder.find(reference)
       }.to raise_error(StackMaster::SsoGroupIdFinder::SsoGroupNotFound)
     end
   end
 end
-
