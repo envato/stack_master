@@ -7,8 +7,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
   let(:aws_client) { instance_double(Aws::IdentityStore::Client) }
 
   subject(:finder) do
-    # Ruby 3+ keyword args fix: make sure new accepts keyword args
-    allow(Aws::IdentityStore::Client).to receive(:new).with(hash_including(region: region)).and_return(aws_client)
+    allow(Aws::IdentityStore::Client).to receive(:new).with({ region: region }).and_return(aws_client)
     described_class.new(region)
   end
 
@@ -39,16 +38,16 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
     end
 
     it 'returns the group ID after paging' do
-      expect(aws_client).to receive(:list_groups).with(
+      expect(aws_client).to receive(:list_groups).with({
         identity_store_id: identity_store_id,
         next_token: nil,
-        max_results: 50
+        max_results: 50}
       ).and_return(page_1)
 
-      expect(aws_client).to receive(:list_groups).with(
+      expect(aws_client).to receive(:list_groups).with({
         identity_store_id: identity_store_id,
         next_token: 'page-2',
-        max_results: 50
+        max_results: 50}
       ).and_return(page_2)
 
       result = finder.find(group_name, identity_store_id)
