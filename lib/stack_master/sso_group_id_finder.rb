@@ -27,7 +27,7 @@ module StackMaster
           puts "Error calling ListGroups: #{e.message}"
       end
 
-      raise SsoGroupNotFound, "No group with name #{reference} found"
+      raise SsoGroupNotFound, "No group with name #{reference} found in identity store #{identity_store_id}"
     end
   end
 end
