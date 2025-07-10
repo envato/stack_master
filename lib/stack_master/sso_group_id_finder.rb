@@ -12,22 +12,19 @@ module StackMaster
       region = match[:region] || StackMaster.cloud_formation_driver.region
       client = Aws::IdentityStore::Client.new({ region: region })
 
-      next_token = nil
       begin
-        loop do
-          response = client.list_groups({
-            identity_store_id: match[:identity_store_id],
-            next_token: next_token,
-            max_results: 50
-          })
-
-          matching_group = response.groups.find { |group| group.display_name == match[:group_name] }
-          return matching_group.group_id if matching_group
-          break unless response.next_token
-          next_token = response.next_token
-        end
+        response = client.get_group_id({
+          identity_store_id: match[:identity_store_id],
+          alternate_identifier: {
+            unique_attribute: {
+              attribute_path: 'displayName',
+              attribute_value: match[:group_name],
+            },
+          },
+        })
+        return response.group_id
       rescue Aws::IdentityStore::Errors::ServiceError => e
-          puts "Error calling ListGroups: #{e.message}"
+          puts "Error calling GetGroupId: #{e.message}"
       end
 
       raise SsoGroupNotFound, "No group with name #{match[:group_name]} found in identity store #{match[:identity_store_id]} in #{region}"
