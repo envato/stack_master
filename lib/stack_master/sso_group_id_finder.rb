@@ -1,7 +1,6 @@
 module StackMaster
   class SsoGroupIdFinder
-    SSOGroupNotFound = Class.new(StandardError)
-    SSOIdentityStoreInvalid = Class.new(StandardError)
+    SsoGroupNotFound = Class.new(StandardError)
 
     def initialize(region)
       @client = Aws::IdentityStore::Client.new({ region: region })
@@ -11,7 +10,6 @@ module StackMaster
       raise ArgumentError, 'SSO Group Name must be a non-empty string' unless reference.is_a?(String) && !reference.empty?
 
       next_token = nil
-      all_sso_groups = []
       begin
         loop do
           response = @client.list_groups({
@@ -29,7 +27,7 @@ module StackMaster
           puts "Error calling ListGroups: #{e.message}"
       end
 
-      raise SSOGroupNotFound, "No group with name #{reference} found"
+      raise SsoGroupNotFound, "No group with name #{reference} found"
     end
   end
 end
