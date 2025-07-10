@@ -22,7 +22,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
         group_id = 'abc-123-group-id'
 
         response = double(group_id: group_id)
-        expect(aws_client).to receive(:get_group_id).with(
+        expect(aws_client).to receive(:get_group_id).with({
           identity_store_id: identity_store_id,
           alternate_identifier: {
             unique_attribute: {
@@ -30,7 +30,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
               attribute_value: group_name
             }
           }
-        ).and_return(response)
+        }).and_return(response)
 
         expect(finder.find(reference)).to eq(group_id)
       end
@@ -60,7 +60,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
         group_id = 'fallback-region-group-id'
         response = double(group_id: group_id)
 
-        expect(aws_client).to receive(:get_group_id).with(
+        expect(aws_client).to receive(:get_group_id).with({
           identity_store_id: identity_store_id,
           alternate_identifier: {
             unique_attribute: {
@@ -68,7 +68,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
               attribute_value: group_name
             }
           }
-        ).and_return(response)
+        }).and_return(response)
 
         expect(finder.find(reference_without_region)).to eq(group_id)
       end
