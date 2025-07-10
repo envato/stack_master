@@ -6,7 +6,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
 
   let(:aws_client) { instance_double(Aws::IdentityStore::Client) }
 
-  begin do
+  before do
     allow(Aws::IdentityStore::Client).to receive(:new).with({ region: region }).and_return(aws_client)
   end
 
