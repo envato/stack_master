@@ -10,7 +10,18 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.16.0...HEAD
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.17.0...HEAD
+
+## [2.17.0] - 2025-07-11
+
+### Added 
+
+- Add a parameter resolver for AWS SSO/IIC mapping group display name to id ([#390])
+  
+```yaml
+group_id:
+  sso_group_id: "us-east-1:d-123456bf8/SSO Group Display Name""
+```
 
 ## [2.16.0] - 2024-08-01
 
