@@ -7,8 +7,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
   let(:aws_client) { instance_double(Aws::IdentityStore::Client) }
 
   subject(:finder) do
-    # Ruby 3+ keyword args fix: make sure new accepts keyword args
-    allow(Aws::IdentityStore::Client).to receive(:new).with(hash_including(region: region)).and_return(aws_client)
+    allow(Aws::IdentityStore::Client).to receive(:new).with(region: region).and_return(aws_client)
     described_class.new(region)
   end
 
@@ -56,13 +55,27 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
     end
   end
 
-  context 'when the group is not found' do
-    let(:response) do
-      double(groups: [double(display_name: 'AnotherGroup', group_id: 'zzz')], next_token: nil)
+  context 'when the group is not found after paging' do
+    let(:page_1) do
+      double(groups: [double(display_name: 'WrongGroup', group_id: 'aaa')], next_token: 'page-2')
+    end
+
+    let(:page_2) do
+      double(groups: [double(display_name: 'AnotherWrongGroup', group_id: 'bbb')], next_token: nil)
     end
 
     it 'raises SsoGroupNotFound' do
-      expect(aws_client).to receive(:list_groups).and_return(response)
+      expect(aws_client).to receive(:list_groups).with(
+        identity_store_id: identity_store_id,
+        next_token: nil,
+        max_results: 50
+      ).and_return(page_1)
+
+      expect(aws_client).to receive(:list_groups).with(
+        identity_store_id: identity_store_id,
+        next_token: 'page-2',
+        max_results: 50
+      ).and_return(page_2)
 
       expect {
         finder.find(group_name, identity_store_id)
@@ -70,7 +83,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
     end
   end
 
-  context 'when reference is empty or not a string' do
+  context 'when the reference is invalid' do
     it 'raises ArgumentError for nil' do
       expect {
         finder.find(nil, identity_store_id)
@@ -82,17 +95,23 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
         finder.find('', identity_store_id)
       }.to raise_error(ArgumentError, /SSO Group Name must be a non-empty string/)
     end
+
+    it 'raises ArgumentError for non-string type' do
+      expect {
+        finder.find(12345, identity_store_id)
+      }.to raise_error(ArgumentError, /SSO Group Name must be a non-empty string/)
+    end
   end
 
-  context 'when AWS service error occurs' do
-    it 'rescues and raises SsoGroupNotFound' do
-      error = Aws::IdentityStore::Errors::ServiceError.new(nil, "AWS failure")
-      allow(aws_client).to receive(:list_groups).and_raise(error)
+  context 'when AWS raises a service error' do
+    let(:aws_error) { Aws::IdentityStore::Errors::ServiceError.new(nil, "AWS error") }
+
+    it 'raises SsoGroupNotFound' do
+      allow(aws_client).to receive(:list_groups).and_raise(aws_error)
 
       expect {
         finder.find(group_name, identity_store_id)
-      }.to raise_error(StackMaster::SsoGroupIdFinder::SsoGroupNotFound)
+      }.to raise_error(StackMaster::SsoGroupIdFinder::SsoGroupNotFound, /No group with name #{group_name} found/)
     end
   end
 end
-
