@@ -8,7 +8,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
   let(:aws_client) { instance_double(Aws::IdentityStore::Client) }
 
   subject(:finder) do
-    allow(Aws::IdentityStore::Client).to receive(:new).with(region: region).and_return(aws_client)
+    allow(Aws::IdentityStore::Client).to receive(:new).with({region: region}).and_return(aws_client)
     described_class.new
   end
 
@@ -55,7 +55,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
       let(:reference_without_region) { "#{identity_store_id}/#{group_name}" }
 
       it 'uses the fallback region from cloud_formation_driver' do
-        allow(Aws::IdentityStore::Client).to receive(:new).with(region: region).and_return(aws_client)
+        allow(Aws::IdentityStore::Client).to receive(:new).with({region: region}).and_return(aws_client)
 
         group_id = 'fallback-region-group-id'
         response = double(group_id: group_id)
