@@ -6,10 +6,10 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
 
   let(:aws_client) { instance_double(Aws::IdentityStore::Client) }
 
-  subject(:finder) { described_class.new(region) }
-
-  before do
-    allow(Aws::IdentityStore::Client).to receive(:new).with(region: region).and_return(aws_client)
+  subject(:finder) do
+    # Ruby 3+ keyword args fix: make sure new accepts keyword args
+    allow(Aws::IdentityStore::Client).to receive(:new).with(hash_including(region: region)).and_return(aws_client)
+    described_class.new(region)
   end
 
   context 'when the group is found on the first page' do
@@ -86,7 +86,8 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
 
   context 'when AWS service error occurs' do
     it 'rescues and raises SsoGroupNotFound' do
-      allow(aws_client).to receive(:list_groups).and_raise(Aws::IdentityStore::Errors::ServiceError.new(nil, "AWS failure"))
+      error = Aws::IdentityStore::Errors::ServiceError.new(nil, "AWS failure")
+      allow(aws_client).to receive(:list_groups).and_raise(error)
 
       expect {
         finder.find(group_name, identity_store_id)
@@ -94,3 +95,4 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
     end
   end
 end
+
