@@ -40,6 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "aws-sdk-acm", "~> 1"
   spec.add_dependency "aws-sdk-cloudformation", "~> 1"
   spec.add_dependency "aws-sdk-ec2", "~> 1"
+  spec.add_dependency "aws-sdk-identitystore", "~> 1"
   spec.add_dependency "aws-sdk-s3", "~> 1"
   spec.add_dependency "aws-sdk-sns", "~> 1"
   spec.add_dependency "aws-sdk-ssm", "~> 1"

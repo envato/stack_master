@@ -416,6 +416,24 @@ ssh_sg:
     - WebAccessSecurityGroup
 ```
 
+### AWS IIC/SSO Group IDs
+
+Looks up AWS Identity Center group name in the configured Identity Store and returns the ID suitable for use in AWS IIC assignments.
+It is likely that account and role will need to be specified to do the lookup, the region specification is optional it defaults to stack region.
+
+```yaml
+GroupId:
+  sso_group_id: '[region:]identity-store-id/SSO Group Name'
+```
+
+e.g.
+```yaml
+GroupIdNotInStackRegion:
+  sso_group_id: 'us-east-1:d-123456df8:Okta-App-AWS-FooBar'
+GroupIdInStackRegion:
+  sso_group_id: 'd-123456df8:Okta-App-AWS-FooBar'
+```
+
 ### SNS Topic
 
 Looks up an SNS topic by name and returns the ARN.
