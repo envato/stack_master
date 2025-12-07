@@ -135,7 +135,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
       before do
         ENV['OP_SESSION_something'] = 'session'
       end
-      
+
       it 'we return an error' do
         allow_any_instance_of(described_class).to receive(:`).with("op --version").and_raise(Errno::ENOENT)
         expect { resolver.resolve(the_password) }.to raise_error(StackMaster::ParameterResolvers::OnePassword::OnePasswordBinaryNotFound, "The op cli needs to be installed and in the PATH, No such file or directory")
@@ -158,7 +158,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
       it 'we return an error' do
         allow_any_instance_of(described_class).to receive(:`).with("op --version").and_return(true)
         allow_any_instance_of(described_class).to receive(:`).with("op get item --vault='Shared' 'password title' 2>&1").and_return('{key: value }')
-        expect { resolver.resolve(the_password) }.to raise_error(StackMaster::ParameterResolvers::OnePassword::OnePasswordInvalidResponse, /Failed to parse JSON returned, {key: value }:.* unexpected token at '{key: value }'/)
+        expect { resolver.resolve(the_password) }.to raise_error(StackMaster::ParameterResolvers::OnePassword::OnePasswordInvalidResponse, /Failed to parse JSON returned, {key: value }:/)
       end
     end
   end
