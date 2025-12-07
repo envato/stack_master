@@ -794,11 +794,6 @@ CLI directly rather than via a stack update.
 applied in CloudFormation. This can happen if the template or computed parameters have changed in code and the change
 hasn't been applied to this stack.
 
-## Maintainers
-
-- [Steve Hodgkiss](https://github.com/stevehodgkiss)
-- [Glen Stampoultzis](https://github.com/gstamp)
-
 ## License
 
 StackMaster uses the MIT license. See [LICENSE.txt](https://github.com/envato/stack_master/blob/master/LICENSE.txt) for details.
