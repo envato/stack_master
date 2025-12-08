@@ -21,7 +21,10 @@ begin
   RSpec::Core::RakeTask.new(:spec) do |t|
     t.rspec_opts = "--format doc"
   end
+
+  require 'rubocop/rake_task'
+  RuboCop::RakeTask.new('rubocop')
 rescue LoadError
 end
 
-task :default => [:features, :spec]
+task :default => [:features, :spec, :rubocop]
