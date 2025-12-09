@@ -5,6 +5,7 @@ module StackMaster
       OnePasswordNotAbleToAuthenticate = Class.new(StandardError)
       OnePasswordBinaryNotFound = Class.new(StandardError)
       OnePasswordInvalidResponse = Class.new(StandardError)
+      OnePasswordInvalidVersion = Class.new(StandardError)
 
       array_resolver
 
@@ -49,8 +50,9 @@ module StackMaster
 
       def op_get_item(item, vault)
         validate_op_installed?
-        item = %x(op get item --vault='#{vault}' '#{item}' 2>&1)
-        item if validate_response?(item)
+        
+        get_item(item, vault, get_version)
+        
       end
 
       def create_struct(title, vault)
@@ -69,7 +71,13 @@ module StackMaster
       end
 
       def get_secure_note(title, vault)
-        create_struct(title, vault).details.notesPlain
+        version = get_version
+        if version.start_with?("1")
+          return create_struct(title, vault).details.notesPlain
+        end
+        if version.start_with?("2")
+          create_struct(title, vault).fields.first.value
+        end
       end
 
       def get_items(params)
@@ -78,6 +86,21 @@ module StackMaster
           return get_password(params['title'], params['vault'])
         when 'secureNote'
           return get_secure_note(params['title'], params['vault'])
+        end
+      end
+
+      def get_version
+        %x(op --version).strip
+      end
+
+      def get_item(item, vault, version)
+        case version
+        when version.start_with?("1")
+          %x(op get item --vault='#{vault}' '#{item}' 2>&1)
+        when version.start_with?("2")
+          %x(op item get --vault='#{vault}' '#{item}' --format json 2>&1)
+        else
+          raise OnePasswordInvalidVersion, "Unsupported version of 1Password: #{version}"
         end
       end
     end
