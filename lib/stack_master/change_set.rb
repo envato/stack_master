@@ -68,8 +68,11 @@ io.puts "========================================"
     private
 
     def display_resource_change(io, resource_change)
-      action_name = if resource_change.replacement == 'True'
+      action_name = case resource_change.replacement
+                    when 'True'
                       'Replace'
+                    when 'Conditional'
+                      'Conditional replace'
                     else
                       resource_change.action
                     end
@@ -86,6 +89,8 @@ io.puts "========================================"
       detail_messages = [target_name]
       if action_name == 'Replace'
         detail_messages << "#{detail.target.requires_recreation} requires recreation"
+      elsif action_name == 'Conditional replace'
+        detail_messages << "#{detail.target.requires_recreation} may require recreation"
       end
       triggered_by = [detail.change_source, detail.causing_entity].compact.join('.')
       if detail.evaluation != 'Static'
@@ -101,7 +106,7 @@ io.puts "========================================"
         :green
       when 'Modify'
         :yellow
-      when 'Remove', 'Replace'
+      when 'Remove', 'Replace', 'Conditional replace'
         :red
       end
     end
