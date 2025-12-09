@@ -28,7 +28,6 @@ def extract_hash_from_kv_string(string)
   end
 end
 
-
 Given(/^I stub the following stacks:$/) do |table|
   table.hashes.each do |row|
     row.symbolize_keys!
@@ -62,7 +61,9 @@ Given(/^I stub CloudFormation validate calls to pass validation$/) do
 end
 
 Given(/^I stub CloudFormation validate calls to fail validation with message "([^"]*)"$/) do |message|
-  allow(StackMaster.cloud_formation_driver).to receive(:validate_template).and_raise(Aws::CloudFormation::Errors::ValidationError.new('', message))
+  allow(StackMaster.cloud_formation_driver)
+    .to receive(:validate_template)
+    .and_raise(Aws::CloudFormation::Errors::ValidationError.new('', message))
 end
 
 Given(/^I stub the CloudFormation driver$/) do

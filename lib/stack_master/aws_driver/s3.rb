@@ -11,16 +11,20 @@ module StackMaster
       end
 
       def upload_files(bucket: nil, prefix: nil, region: nil, files: {})
-        raise StackMaster::AwsDriver::S3ConfigurationError, 'A bucket must be specified in order to use S3' unless bucket
+        unless bucket
+          raise StackMaster::AwsDriver::S3ConfigurationError, 'A bucket must be specified in order to use S3'
+        end
 
         return if files.empty?
 
         s3 = new_s3_client(region: region)
 
-        current_objects = s3.list_objects({
-          prefix: prefix,
-          bucket: bucket
-        }).map(&:contents).flatten.inject({}){|h,obj|
+        current_objects = s3.list_objects(
+          {
+            prefix: prefix,
+            bucket: bucket
+          }
+        ).map(&:contents).flatten.inject({}) { |h, obj|
           h.merge(obj.key => obj)
         }
 
@@ -35,15 +39,18 @@ module StackMaster
           s3_md5 = current_objects[object_key] ? current_objects[object_key].etag.gsub("\"", '') : nil
 
           next if compiled_template_md5 == s3_md5
+
           s3_uri = "s3://#{bucket}/#{object_key}"
           StackMaster.stdout.print "- #{File.basename(path)} => #{s3_uri} "
 
-          s3.put_object({
-            bucket: bucket,
-            key: object_key,
-            body: body,
-            metadata: { md5: compiled_template_md5 }
-          })
+          s3.put_object(
+            {
+              bucket: bucket,
+              key: object_key,
+              body: body,
+              metadata: { md5: compiled_template_md5 }
+            }
+          )
           StackMaster.stdout.puts "done."
         end
       end

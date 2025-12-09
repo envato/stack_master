@@ -35,11 +35,12 @@ module StackMaster
     end
 
     def stack
-      @stack ||= if validate_template_parameters?
-        Stack.generate(@stack_definition, @config)
-      else
-        Stack.generate_without_parameters(@stack_definition, @config)
-      end
+      @stack ||=
+        if validate_template_parameters?
+          Stack.generate(@stack_definition, @config)
+        else
+          Stack.generate_without_parameters(@stack_definition, @config)
+        end
     end
 
     def parameter_validator

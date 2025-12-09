@@ -10,12 +10,14 @@ module StackMaster
 
     def proposed_template
       return @proposed_stack.template_body unless @proposed_stack.template_format == :json
+
       JSON.pretty_generate(JSON.parse(@proposed_stack.template_body)) + "\n"
     end
 
     def current_template
       return '' unless @current_stack
       return @current_stack.template_body unless @current_stack.template_format == :json
+
       JSON.pretty_generate(TemplateUtils.template_hash(@current_stack.template_body)) + "\n"
     end
 
@@ -81,8 +83,10 @@ module StackMaster
 
     def single_param_update?(param_name)
       return false if param_name.blank? || @current_stack.blank? || body_different?
+
       differences = Hashdiff.diff(@current_stack.parameters_with_defaults, @proposed_stack.parameters_with_defaults)
       return false if differences.count != 1
+
       diff = differences[0]
       diff[0] == "~" && diff[1] == param_name
     end

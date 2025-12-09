@@ -99,7 +99,7 @@ RSpec.describe StackMaster::ParameterResolver do
   end
 
   context 'when assuming a role' do
-    let(:role_assumer) { instance_double(StackMaster::RoleAssumer, assume_role: nil ) }
+    let(:role_assumer) { instance_double(StackMaster::RoleAssumer, assume_role: nil) }
     let(:account) { '1234567890' }
     let(:role) { 'my-role' }
 
@@ -222,9 +222,20 @@ RSpec.describe StackMaster::ParameterResolver do
       end
 
       it "tries to load the plural and singular forms" do
-        expect(parameter_resolver).to receive(:require_parameter_resolver).with("other_dummy_resolvers").once.and_call_original.ordered
-        expect(parameter_resolver).to receive(:require_parameter_resolver).with("other_dummy_resolver").once.ordered
-        expect(parameter_resolver).to receive(:call_resolver).and_return nil
+        expect(parameter_resolver)
+          .to receive(:require_parameter_resolver)
+          .with("other_dummy_resolvers")
+          .once
+          .and_call_original
+          .ordered
+        expect(parameter_resolver)
+          .to receive(:require_parameter_resolver)
+          .with("other_dummy_resolver")
+          .once
+          .ordered
+        expect(parameter_resolver)
+          .to receive(:call_resolver)
+          .and_return nil
 
         parameter_resolver.resolve
       end

@@ -10,7 +10,7 @@ RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
     context 'when a single key-value pair is specified' do
       it 'returns an array with a single hash' do
         expect(resolver.build_filters_from_string('my-attr=my-value', nil)).to eq [
-          { name: 'my-attr', values: ['my-value']}
+          { name: 'my-attr', values: ['my-value'] }
         ]
       end
     end
@@ -18,8 +18,8 @@ RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
     context 'when multiple key-value pairs are specified' do
       it 'returns an array with multiple hashes' do
         expect(resolver.build_filters_from_string('my-attr=my-value,foo=bar', nil)).to eq [
-          { name: 'my-attr', values: ['my-value']},
-          { name: 'foo', values: ['bar']}
+          { name: 'my-attr', values: ['my-value'] },
+          { name: 'foo', values: ['bar'] }
         ]
       end
     end
@@ -27,7 +27,7 @@ RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
     context 'when a prefix is supplied' do
       it 'adds the prefix to the filter' do
         expect(resolver.build_filters_from_string('my-tag=my-value', 'tag')).to eq [
-          { name: 'tag:my-tag', values: ['my-value']}
+          { name: 'tag:my-tag', values: ['my-value'] }
         ]
       end
     end
@@ -35,12 +35,12 @@ RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
 
   describe '#build_filters_from_hash' do
     it 'outputs a hash of values in the format expected by the AWS API' do
-      expect(resolver.build_filters_from_hash({'foo' => 'bacon'})).to eq([{name: 'foo', values: ['bacon']}])
+      expect(resolver.build_filters_from_hash({ 'foo' => 'bacon' })).to eq([{ name: 'foo', values: ['bacon'] }])
     end
   end
 
   describe '#find_latest_ami' do
-    let(:filter) { [{ name: "String", values: ["String"]}] }
+    let(:filter) { [{ name: "String", values: ["String"] }] }
 
     context 'when matches are found' do
       before do

@@ -4,7 +4,6 @@ module StackMaster
   module SparkleFormation
     module CompileTime
       class MaxLengthValidator < ValueValidator
-
         KEY = :max_length
 
         def initialize(name, definition, parameter)
@@ -18,6 +17,7 @@ module StackMaster
         def check_is_valid
           return true unless @definition[:type] == :string
           return true unless @definition.key?(KEY)
+
           invalid_values.empty?
         end
 
@@ -29,7 +29,6 @@ module StackMaster
         def create_error
           "#{@name}:#{invalid_values} must not exceed #{KEY}:#{@definition[KEY]} characters"
         end
-
       end
     end
   end

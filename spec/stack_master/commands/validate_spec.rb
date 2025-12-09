@@ -1,5 +1,4 @@
 RSpec.describe StackMaster::Commands::Validate do
-
   subject(:validate) { described_class.new(config, stack_definition, options) }
   let(:config) { instance_double(StackMaster::Config) }
   let(:region) { "us-east-1" }
@@ -23,5 +22,4 @@ RSpec.describe StackMaster::Commands::Validate do
       end
     end
   end
-
 end

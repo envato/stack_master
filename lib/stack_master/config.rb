@@ -14,14 +14,16 @@ module StackMaster
       raise ConfigParseError, "Unable to parse #{resolved_config_file}: #{error}"
     end
 
-    attr_accessor :stacks,
-                  :base_dir,
-                  :template_dir,
-                  :parameters_dir,
-                  :stack_defaults,
-                  :region_defaults,
-                  :region_aliases,
-                  :template_compilers,
+    attr_accessor(
+      :stacks,
+      :base_dir,
+      :template_dir,
+      :parameters_dir,
+      :stack_defaults,
+      :region_defaults,
+      :region_aliases,
+      :template_compilers
+    )
 
     def self.search_up_and_chdir(config_file)
       return config_file unless File.dirname(config_file) == "."
@@ -52,6 +54,7 @@ module StackMaster
       @stacks = []
 
       raise ConfigParseError.new("Stack defaults can't be undefined") if @stack_defaults.nil?
+
       load_template_compilers(config)
       load_config
     end
@@ -72,6 +75,7 @@ module StackMaster
     end
 
     private
+
     def load_template_compilers(config)
       @template_compilers = {}
       populate_template_compilers(config.fetch('template_compilers', {}))
@@ -92,9 +96,9 @@ module StackMaster
       {
         rb: :sparkle_formation,
         json: :json,
-        yml:  :yaml,
+        yml: :yaml,
         yaml: :yaml,
-        erb:  :yaml_erb,
+        erb: :yaml_erb,
       }
     end
 
@@ -123,7 +127,8 @@ module StackMaster
             'base_dir' => @base_dir,
             'template_dir' => @template_dir,
             'parameters_dir' => @parameters_dir,
-            'additional_parameter_lookup_dirs' => @region_to_aliases[region])
+            'additional_parameter_lookup_dirs' => @region_to_aliases[region]
+          )
           stack_attributes['allowed_accounts'] = attributes['allowed_accounts'] if attributes['allowed_accounts']
           @stacks << StackDefinition.new(stack_attributes)
         end

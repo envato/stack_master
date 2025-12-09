@@ -65,6 +65,7 @@ module StackMaster
 
     def template_file_path
       return unless template
+
       File.expand_path(template, template_dir)
     end
 
@@ -85,6 +86,7 @@ module StackMaster
 
     def s3_template_file_name
       return template if ['.json', '.yaml', '.yml'].include?(File.extname(template))
+
       Utils.change_extension(template, 'json')
     end
 
@@ -101,7 +103,7 @@ module StackMaster
     end
 
     def parameter_file_globs
-      [ default_parameter_glob, region_parameter_glob ] + additional_parameter_lookup_globs
+      [default_parameter_glob, region_parameter_glob] + additional_parameter_lookup_globs
     end
 
     def stack_policy_file_path

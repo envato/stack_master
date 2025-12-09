@@ -47,4 +47,3 @@ RSpec.describe StackMaster::ParameterResolvers::SsoGroupId do
     end
   end
 end
-

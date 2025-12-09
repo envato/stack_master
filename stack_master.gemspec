@@ -1,4 +1,5 @@
 # coding: utf-8
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'stack_master/version'
@@ -9,15 +10,16 @@ Gem::Specification.new do |spec|
   spec.version       = StackMaster::VERSION
   spec.authors       = ["Steve Hodgkiss", "Glen Stampoultzis"]
   spec.email         = ["steve@hodgkiss.me", "gstamp@gmail.com"]
-  spec.summary       = %q{StackMaster is a sure-footed way of creating, updating and keeping track of Amazon (AWS) CloudFormation stacks.}
+  spec.summary       = 'StackMaster is a sure-footed way of creating, updating and keeping track ' \
+                       'of Amazon (AWS) CloudFormation stacks.'
   spec.description   = %q{}
   spec.homepage      = "https://opensource.envato.com/projects/stack_master.html"
   spec.license       = "MIT"
   spec.metadata      = {
-    "bug_tracker_uri"   => "https://github.com/envato/stack_master/issues",
-    "changelog_uri"     => "https://github.com/envato/stack_master/blob/master/CHANGELOG.md",
+    "bug_tracker_uri" => "https://github.com/envato/stack_master/issues",
+    "changelog_uri" => "https://github.com/envato/stack_master/blob/master/CHANGELOG.md",
     "documentation_uri" => "https://www.rubydoc.info/gems/stack_master/#{spec.version}",
-    "source_code_uri"   => "https://github.com/envato/stack_master/tree/v#{spec.version}",
+    "source_code_uri" => "https://github.com/envato/stack_master/tree/v#{spec.version}",
   }
 
   spec.files         = Dir.glob("{bin,lib,stacktemplates}/**/*") + %w(README.md LICENSE.txt)

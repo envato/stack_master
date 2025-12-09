@@ -9,6 +9,7 @@ module StackMaster
 
     def error_message
       return nil unless missing_parameters?
+
       message = "Empty/blank parameters detected. Please provide values for these parameters:\n"
       missing_parameters.each do |parameter_name|
         message << " - #{parameter_name}\n"

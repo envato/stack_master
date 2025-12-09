@@ -11,12 +11,14 @@ RSpec.describe(StackMaster::CloudFormationInterpolatingEruby) do
       SHELL
 
       it 'returns an array of lines' do
-        expect(evaluate).to eq([
-          "#!/bin/bash\n",
-          "\n",
-          "REGION=ap-southeast-2\n",
-          "echo $REGION\n",
-        ])
+        expect(evaluate).to eq(
+          [
+            "#!/bin/bash\n",
+            "\n",
+            "REGION=ap-southeast-2\n",
+            "echo $REGION\n",
+          ]
+        )
       end
     end
 
@@ -27,13 +29,15 @@ RSpec.describe(StackMaster::CloudFormationInterpolatingEruby) do
       SHELL
 
       it 'includes CloudFormation objects in the array' do
-        expect(evaluate).to eq([
-          "#!/bin/bash\n",
-          { 'Ref' => 'Param1' },
-          ' ',
-          { 'Ref' => 'Param2' },
-          "\n",
-        ])
+        expect(evaluate).to eq(
+          [
+            "#!/bin/bash\n",
+            { 'Ref' => 'Param1' },
+            ' ',
+            { 'Ref' => 'Param2' },
+            "\n",
+          ]
+        )
       end
     end
   end
@@ -50,12 +54,14 @@ RSpec.describe(StackMaster::CloudFormationInterpolatingEruby) do
       SHELL
 
       it 'returns an array of lines' do
-        expect(evaluate_file).to eq([
-          "#!/bin/bash\n",
-          "\n",
-          "REGION=ap-southeast-2\n",
-          "echo $REGION\n",
-        ])
+        expect(evaluate_file).to eq(
+          [
+            "#!/bin/bash\n",
+            "\n",
+            "REGION=ap-southeast-2\n",
+            "echo $REGION\n",
+          ]
+        )
       end
     end
   end

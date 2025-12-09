@@ -32,4 +32,3 @@ module StackMaster
     end
   end
 end
-

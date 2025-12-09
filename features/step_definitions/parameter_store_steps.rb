@@ -1,4 +1,5 @@
-Given(/^(?:a|the) SSM parameter(?: named)? "([^"]*)" with value "([^"]*)" in region "([^"]*)"$/) do |parameter_name, parameter_value, parameter_region|
+Given(/^(?:a|the)\ SSM\ parameter(?:\ named)?\ "([^"]*)"
+  \ with\ value\ "([^"]*)"\ in\ region\ "([^"]*)"$/x) do |parameter_name, parameter_value, parameter_region|
   Aws.config[:ssm] = {
     stub_responses: {
       get_parameter: {

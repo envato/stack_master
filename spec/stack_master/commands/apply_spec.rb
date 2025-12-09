@@ -10,7 +10,19 @@ RSpec.describe StackMaster::Commands::Apply do
   let(:template_body) { '{}' }
   let(:template_format) { :json }
   let(:parameters) { { 'param_1' => 'hello' } }
-  let(:proposed_stack) { StackMaster::Stack.new(template_body: template_body, template_format: template_format, tags: { 'environment' => 'production' } , parameters: parameters, role_arn: role_arn, notification_arns: [notification_arn], stack_policy_body: stack_policy_body ) }
+
+  let(:proposed_stack) do
+    StackMaster::Stack.new(
+      template_body: template_body,
+      template_format: template_format,
+      tags: { 'environment' => 'production' },
+      parameters: parameters,
+      role_arn: role_arn,
+      notification_arns: [notification_arn],
+      stack_policy_body: stack_policy_body
+    )
+  end
+
   let(:stack_policy_body) { '{}' }
   let(:change_set) { double(display: true, failed?: false, id: '1') }
   let(:differ) { instance_double(StackMaster::StackDiffer, output_diff: nil, single_param_update?: false) }
@@ -58,7 +70,10 @@ RSpec.describe StackMaster::Commands::Apply do
     it 'streams events' do
       Timecop.freeze(Time.local(1990)) do
         apply
-        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
+
+        expect(StackMaster::StackEvents::Streamer)
+          .to have_received(:stream)
+          .with(stack_name, region, io: STDOUT, from: Time.now)
       end
     end
 
@@ -183,12 +198,8 @@ RSpec.describe StackMaster::Commands::Apply do
         expect(cf).to have_received(:create_stack).with(
           stack_name: stack_name,
           template_body: proposed_stack.template_body,
-          parameters: [
-            { parameter_key: 'param_1', parameter_value: 'hello' }
-          ],
-          tags: [
-            { key: 'environment', value: 'production' }
-          ],
+          parameters: [{ parameter_key: 'param_1', parameter_value: 'hello' }],
+          tags: [{ key: 'environment', value: 'production' }],
           capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM', 'CAPABILITY_AUTO_EXPAND'],
           role_arn: role_arn,
           notification_arns: [notification_arn],
@@ -219,7 +230,10 @@ RSpec.describe StackMaster::Commands::Apply do
     it 'streams events' do
       Timecop.freeze(Time.local(1990)) do
         apply
-        expect(StackMaster::StackEvents::Streamer).to have_received(:stream).with(stack_name, region, io: STDOUT, from: Time.now)
+
+        expect(StackMaster::StackEvents::Streamer)
+          .to have_received(:stream)
+          .with(stack_name, region, io: STDOUT, from: Time.now)
       end
     end
 
@@ -255,16 +269,19 @@ RSpec.describe StackMaster::Commands::Apply do
   end
 
   context 'stack is in review_in_progress' do
-    let(:stack) { StackMaster::Stack.new(stack_id: '1', stack_name: 'mistack', stack_status: 'REVIEW_IN_PROGRESS')}
+    let(:stack) { StackMaster::Stack.new(stack_id: '1', stack_name: 'mistack', stack_status: 'REVIEW_IN_PROGRESS') }
 
     it 'abort and fails with error' do
-      expect{ apply }.to output("Stack currently exists and is in REVIEW_IN_PROGRESS\nYou will need to delete the stack (mistack) before continuing\n").to_stderr
+      expect { apply }.to output(<<~OUTPUT).to_stderr
+        Stack currently exists and is in REVIEW_IN_PROGRESS
+        You will need to delete the stack (mistack) before continuing
+      OUTPUT
     end
   end
 
   context 'one or more parameters are empty' do
     let(:stack) { StackMaster::Stack.new(stack_id: '1', parameters: parameters) }
-    let(:parameters) { {'param1' => nil, 'param2' => nil, 'param3' => true} }
+    let(:parameters) { { 'param1' => nil, 'param2' => nil, 'param3' => true } }
 
     it "doesn't allow apply" do
       expect { apply }.to_not output(/Continue and apply the stack/).to_stdout

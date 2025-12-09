@@ -23,16 +23,19 @@ module StackMaster
 
       def validate_ejson_file_specified
         if @stack_definition.ejson_file.nil?
-          raise ArgumentError, "No ejson_file defined for stack definition #{@stack_definition.stack_name} in #{@stack_definition.region}"
+          raise ArgumentError, 'No ejson_file defined for stack definition ' \
+                               "#{@stack_definition.stack_name} in #{@stack_definition.region}"
         end
       end
 
       def decrypt_ejson_file
         ejson_file_key = credentials_key
         @decrypted_ejson_files.fetch(ejson_file_key) do
-          @decrypted_ejson_files[ejson_file_key] = EJSONWrapper.decrypt(ejson_file_path,
-                                                                        use_kms: @stack_definition.ejson_file_kms,
-                                                                        region: ejson_file_region)
+          @decrypted_ejson_files[ejson_file_key] = EJSONWrapper.decrypt(
+            ejson_file_path,
+            use_kms: @stack_definition.ejson_file_kms,
+            region: ejson_file_region
+          )
         end
       end
 

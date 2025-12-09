@@ -12,7 +12,6 @@ module StackMaster
       end
 
       def perform
-
         return unless check_exists
 
         unless ask?("Really delete stack #{@stack_name} (y/n)? ")
@@ -27,11 +26,11 @@ module StackMaster
       private
 
       def delete_stack
-        cf.delete_stack({stack_name: @stack_name})
+        cf.delete_stack({ stack_name: @stack_name })
       end
 
       def check_exists
-        cf.describe_stacks({stack_name: @stack_name})
+        cf.describe_stacks({ stack_name: @stack_name })
         true
       rescue Aws::CloudFormation::Errors::ValidationError
         failed("Stack does not exist")

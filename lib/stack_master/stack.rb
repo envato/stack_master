@@ -17,10 +17,13 @@ module StackMaster
     include Utils::Initializable
 
     def template_default_parameters
-      TemplateUtils.template_hash(template).fetch('Parameters', {}).inject({}) do |result, (parameter_name, description)|
-        result[parameter_name] = description['Default']&.to_s
-        result
-      end
+      TemplateUtils
+        .template_hash(template)
+        .fetch('Parameters', {})
+        .inject({}) do |result, (parameter_name, description)|
+          result[parameter_name] = description['Default']&.to_s
+          result
+        end
     end
 
     def parameters_with_defaults
@@ -31,6 +34,7 @@ module StackMaster
       cf = StackMaster.cloud_formation_driver
       cf_stack = cf.describe_stacks({ stack_name: stack_name }).stacks.first
       return unless cf_stack
+
       parameters = cf_stack.parameters.inject({}) do |params_hash, param_struct|
         params_hash[param_struct.parameter_key] = param_struct.parameter_value
         params_hash
@@ -56,14 +60,27 @@ module StackMaster
     end
 
     def self.generate(stack_definition, config)
-      parameter_hash = ParameterLoader.load(parameter_files: stack_definition.all_parameter_files, parameters: stack_definition.parameters)
+      parameter_hash = ParameterLoader.load(
+        parameter_files: stack_definition.all_parameter_files,
+        parameters: stack_definition.parameters
+      )
       template_parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash[:template_parameters])
-      compile_time_parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash[:compile_time_parameters])
-      template_body = TemplateCompiler.compile(config, stack_definition.compiler, stack_definition.template_dir, stack_definition.template, compile_time_parameters, stack_definition.compiler_options)
+      compile_time_parameters = ParameterResolver.resolve(
+        config,
+        stack_definition,
+        parameter_hash[:compile_time_parameters]
+      )
+      template_body = TemplateCompiler.compile(
+        config,
+        stack_definition.compiler,
+        stack_definition.template_dir,
+        stack_definition.template,
+        compile_time_parameters,
+        stack_definition.compiler_options
+      )
       template_format = TemplateUtils.identify_template_format(template_body)
-      stack_policy_body = if stack_definition.stack_policy_file_path
-                            File.read(stack_definition.stack_policy_file_path)
-                          end
+      stack_policy_body =
+        (File.read(stack_definition.stack_policy_file_path) if stack_definition.stack_policy_file_path)
       new(region: stack_definition.region,
           stack_name: stack_definition.stack_name,
           tags: stack_definition.tags,
@@ -76,13 +93,26 @@ module StackMaster
     end
 
     def self.generate_without_parameters(stack_definition, config)
-      parameter_hash = ParameterLoader.load(parameter_files: stack_definition.all_parameter_files, parameters: stack_definition.parameters)
-      compile_time_parameters = ParameterResolver.resolve(config, stack_definition, parameter_hash[:compile_time_parameters])
-      template_body = TemplateCompiler.compile(config, stack_definition.compiler, stack_definition.template_dir, stack_definition.template, compile_time_parameters, stack_definition.compiler_options)
+      parameter_hash = ParameterLoader.load(
+        parameter_files: stack_definition.all_parameter_files,
+        parameters: stack_definition.parameters
+      )
+      compile_time_parameters = ParameterResolver.resolve(
+        config,
+        stack_definition,
+        parameter_hash[:compile_time_parameters]
+      )
+      template_body = TemplateCompiler.compile(
+        config,
+        stack_definition.compiler,
+        stack_definition.template_dir,
+        stack_definition.template,
+        compile_time_parameters,
+        stack_definition.compiler_options
+      )
       template_format = TemplateUtils.identify_template_format(template_body)
-      stack_policy_body = if stack_definition.stack_policy_file_path
-                            File.read(stack_definition.stack_policy_file_path)
-                          end
+      stack_policy_body =
+        (File.read(stack_definition.stack_policy_file_path) if stack_definition.stack_policy_file_path)
       new(region: stack_definition.region,
           stack_name: stack_definition.stack_name,
           tags: stack_definition.tags,
@@ -96,6 +126,7 @@ module StackMaster
 
     def max_template_size(use_s3)
       return TemplateUtils::MAX_S3_TEMPLATE_SIZE if use_s3
+
       TemplateUtils::MAX_TEMPLATE_SIZE
     end
 

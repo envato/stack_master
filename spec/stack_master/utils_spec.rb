@@ -1,10 +1,10 @@
 RSpec.describe StackMaster::Utils do
   describe ".hash_to_aws_tags" do
-    let(:tags) { {'environment' => 'production'} }
+    let(:tags) { { 'environment' => 'production' } }
     subject(:aws_tags) { StackMaster::Utils.hash_to_aws_tags(tags) }
 
     it "converts the tags attribute to aws format" do
-      expect(aws_tags).to eq([{key: 'environment', value: 'production'}])
+      expect(aws_tags).to eq([{ key: 'environment', value: 'production' }])
     end
 
     context "tags is nil" do
@@ -21,10 +21,12 @@ RSpec.describe StackMaster::Utils do
     subject(:aws_params) { StackMaster::Utils.hash_to_aws_parameters(params) }
 
     it "converts to aws parameters" do
-      expect(aws_params).to eq([
-        { parameter_key: 'param1', parameter_value: 'value1' },
-        { parameter_key: 'param2', parameter_value: 'value2' }
-      ])
+      expect(aws_params).to eq(
+        [
+          { parameter_key: 'param1', parameter_value: 'value1' },
+          { parameter_key: 'param2', parameter_value: 'value2' }
+        ]
+      )
     end
   end
 end

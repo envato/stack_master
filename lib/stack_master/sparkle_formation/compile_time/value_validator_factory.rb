@@ -12,17 +12,16 @@ module StackMaster
   module SparkleFormation
     module CompileTime
       class ValueValidatorFactory
-
         VALIDATORS_TYPES = [
-            EmptyValidator,
-            StringValidator,
-            NumberValidator,
-            AllowedValuesValidator,
-            AllowedPatternValidator,
-            MaxLengthValidator,
-            MinLengthValidator,
-            MaxSizeValidator,
-            MinSizeValidator
+          EmptyValidator,
+          StringValidator,
+          NumberValidator,
+          AllowedValuesValidator,
+          AllowedPatternValidator,
+          MaxLengthValidator,
+          MinLengthValidator,
+          MaxSizeValidator,
+          MinSizeValidator
         ]
 
         def initialize(name, definition, parameter)
@@ -32,9 +31,8 @@ module StackMaster
         end
 
         def build
-          VALIDATORS_TYPES.map { |validator| validator.new(@name, @definition, @parameter)}
+          VALIDATORS_TYPES.map { |validator| validator.new(@name, @definition, @parameter) }
         end
-
       end
     end
   end

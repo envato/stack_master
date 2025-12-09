@@ -4,7 +4,6 @@ module StackMaster
   module SparkleFormation
     module CompileTime
       class EmptyValidator < ValueValidator
-
         def initialize(name, definition, parameter)
           @name = name
           @definition = definition
@@ -25,7 +24,6 @@ module StackMaster
         def create_error
           "#{@name} cannot contain empty parameters:#{@parameter.inspect}"
         end
-
       end
     end
   end

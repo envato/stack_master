@@ -22,7 +22,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestAmi do
     end
 
     it 'returns the latest one' do
-      expect(resolver.resolve('filters' => {'name' => 'foo'})).to eq '2'
+      expect(resolver.resolve('filters' => { 'name' => 'foo' })).to eq '2'
     end
   end
 
@@ -32,7 +32,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestAmi do
     end
 
     it 'returns nil' do
-      expect(resolver.resolve('filters' => {'name' => 'foo'})).to be_nil
+      expect(resolver.resolve('filters' => { 'name' => 'foo' })).to be_nil
     end
   end
 
@@ -44,8 +44,8 @@ RSpec.describe StackMaster::ParameterResolvers::LatestAmi do
     end
 
     it 'calls find_latest_ami with the owner and filters' do
-      expect(ami_finder).to receive(:find_latest_ami).with([{name: 'foo', values: ['bacon']}], ['123456'])
-      resolver.resolve({'owners' => 123456, 'filters' => {'foo' => 'bacon'} })
+      expect(ami_finder).to receive(:find_latest_ami).with([{ name: 'foo', values: ['bacon'] }], ['123456'])
+      resolver.resolve({ 'owners' => 123456, 'filters' => { 'foo' => 'bacon' } })
     end
   end
 end

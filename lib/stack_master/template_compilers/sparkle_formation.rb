@@ -4,7 +4,6 @@ require 'stack_master/sparkle_formation/compile_time/state_builder'
 
 module StackMaster::TemplateCompilers
   class SparkleFormation
-
     CompileTime = StackMaster::SparkleFormation::CompileTime
 
     def self.require_dependencies
@@ -28,11 +27,12 @@ module StackMaster::TemplateCompilers
     private
 
     def self.compile_sparkle_template(template_dir, template, compiler_options)
-      sparkle_path = if compiler_options['sparkle_path']
-        File.expand_path(compiler_options['sparkle_path'])
-      else
-        template_dir
-      end
+      sparkle_path =
+        if compiler_options['sparkle_path']
+          File.expand_path(compiler_options['sparkle_path'])
+        else
+          template_dir
+        end
 
       collection = ::SparkleFormation::SparkleCollection.new
       root_pack = ::SparkleFormation::Sparkle.new(
@@ -48,7 +48,10 @@ module StackMaster::TemplateCompilers
       end
 
       if compiler_options['sparkle_pack_template']
-        raise ArgumentError.new("Template #{template.inspect} not found in any sparkle pack") unless collection.templates['aws'].include? template
+        unless collection.templates['aws'].include? template
+          raise ArgumentError.new("Template #{template.inspect} not found in any sparkle pack")
+        end
+
         template_file_path = collection.templates['aws'][template].top['path']
       else
         template_file_path = File.join(template_dir, template)

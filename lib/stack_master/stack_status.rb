@@ -39,6 +39,7 @@ module StackMaster
 
     def stack
       return @stack if defined?(@stack)
+
       StackMaster.cloud_formation_driver.set_region(stack_definition.region)
       @stack = find_stack
     end

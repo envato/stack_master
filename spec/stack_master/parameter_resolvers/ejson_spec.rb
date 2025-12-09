@@ -3,7 +3,15 @@ RSpec.describe StackMaster::ParameterResolvers::Ejson do
   let(:config) { double(base_dir: base_dir) }
   let(:ejson_file) { 'staging.ejson' }
   let(:ejson_file_region) { 'ap-southeast-2' }
-  let(:stack_definition) { double(ejson_file: ejson_file, ejson_file_region: ejson_file_region, stack_name: 'mystack', region: 'us-east-1', ejson_file_kms: true) }
+  let(:stack_definition) do
+    double(
+      ejson_file: ejson_file,
+      ejson_file_region: ejson_file_region,
+      stack_name: 'mystack',
+      region: 'us-east-1',
+      ejson_file_kms: true
+    )
+  end
   subject(:ejson) { described_class.new(config, stack_definition) }
   let(:secrets) { { secret_a: 'value_a', secret_b: 'value_b' } }
 
@@ -26,7 +34,9 @@ RSpec.describe StackMaster::ParameterResolvers::Ejson do
 
     it 'decrypts with the correct file path' do
       ejson.resolve('secret_a')
-      expect(EJSONWrapper).to have_received(:decrypt).with('/base_dir/secrets/staging.ejson', use_kms: true, region: StackMaster.cloud_formation_driver.region)
+      expect(EJSONWrapper)
+        .to have_received(:decrypt)
+        .with('/base_dir/secrets/staging.ejson', use_kms: true, region: StackMaster.cloud_formation_driver.region)
     end
   end
 
@@ -35,7 +45,9 @@ RSpec.describe StackMaster::ParameterResolvers::Ejson do
 
     it 'decrypts with the correct file path' do
       ejson.resolve('secret_a')
-      expect(EJSONWrapper).to have_received(:decrypt).with('/base_dir/secrets/staging.ejson', use_kms: true, region: 'ap-southeast-2')
+      expect(EJSONWrapper)
+        .to have_received(:decrypt)
+        .with('/base_dir/secrets/staging.ejson', use_kms: true, region: 'ap-southeast-2')
     end
   end
 

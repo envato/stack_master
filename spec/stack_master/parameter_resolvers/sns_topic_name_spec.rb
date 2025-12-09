@@ -10,7 +10,7 @@ RSpec.describe StackMaster::ParameterResolvers::SnsTopicName do
   subject(:resolved_value) { resolve(value) }
 
   context 'when given a hash' do
-    let(:value) { { not_expected: 1} }
+    let(:value) { { not_expected: 1 } }
 
     it 'raises an error' do
       expect {

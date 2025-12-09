@@ -9,13 +9,13 @@ RSpec.describe StackMaster::ParameterValidator do
     subject { parameter_validator.missing_parameters? }
 
     context 'when a parameter has a nil value' do
-      let(:parameters) { {'my_param' => nil} }
+      let(:parameters) { { 'my_param' => nil } }
 
       it { should eq true }
     end
 
     context 'when no parameers have a nil value' do
-      let(:parameters) { {'my_param' => '1'} }
+      let(:parameters) { { 'my_param' => '1' } }
 
       it { should eq false }
     end
@@ -25,7 +25,7 @@ RSpec.describe StackMaster::ParameterValidator do
     subject(:error_message) { parameter_validator.error_message }
 
     context 'when a parameter has a nil value' do
-      let(:parameters) { {'Param1' => true, 'Param2' => nil, 'Param3' => 'string', 'Param4' => nil} }
+      let(:parameters) { { 'Param1' => true, 'Param2' => nil, 'Param3' => 'string', 'Param4' => nil } }
 
       it 'returns a descriptive message' do
         expect(error_message).to eq(<<~MESSAGE)
@@ -40,7 +40,7 @@ RSpec.describe StackMaster::ParameterValidator do
     end
 
     context 'when the stack definition is using explicit parameter files' do
-      let(:parameters) { {'Param1' => true, 'Param2' => nil, 'Param3' => 'string', 'Param4' => nil} }
+      let(:parameters) { { 'Param1' => true, 'Param2' => nil, 'Param3' => 'string', 'Param4' => nil } }
       let(:parameter_files) { ["params.yml"] }
 
       it 'returns a descriptive message' do
@@ -50,12 +50,12 @@ RSpec.describe StackMaster::ParameterValidator do
            - Param4
           Parameters are configured to be read from the following files:
            - /base_dir/parameters/params.yml
-         MESSAGE
+        MESSAGE
       end
     end
 
     context 'when no parameers have a nil value' do
-      let(:parameters) { {'Param' => '1'} }
+      let(:parameters) { { 'Param' => '1' } }
 
       it { should eq nil }
     end

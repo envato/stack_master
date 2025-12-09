@@ -1,7 +1,6 @@
 RSpec.describe StackMaster::Validator do
-
   subject(:validator) { described_class.new(stack_definition, config, options) }
-  let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
+  let(:config) { StackMaster::Config.new({ 'stacks' => {} }, '/base_dir') }
   let(:options) { Commander::Command::Options.new }
   let(:stack_name) { 'myapp_vpc' }
   let(:template_file) { 'myapp_vpc.json' }
@@ -10,13 +9,16 @@ RSpec.describe StackMaster::Validator do
       region: 'us-east-1',
       stack_name: stack_name,
       template: template_file,
-      tags: {'environment' => 'production'},
+      tags: { 'environment' => 'production' },
       base_dir: File.expand_path('spec/fixtures'),
     )
   end
   let(:cf) { spy(Aws::CloudFormation::Client, validate_template: nil) }
-  let(:parameter_hash) { {template_parameters: {}, compile_time_parameters: {'DbPassword' => {'secret' => 'db_password'}}} }
-  let(:resolved_parameters) { {'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium'} }
+  let(:parameter_hash) do
+    { template_parameters: {}, compile_time_parameters: { 'DbPassword' => { 'secret' => 'db_password' } } }
+  end
+  let(:resolved_parameters) { { 'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium' } }
+
   before do
     allow(Aws::CloudFormation::Client).to receive(:new).and_return cf
     allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
@@ -32,7 +34,9 @@ RSpec.describe StackMaster::Validator do
 
     context "invalid template body" do
       before do
-        allow(cf).to receive(:validate_template).and_raise(Aws::CloudFormation::Errors::ValidationError.new('a', 'Problem'))
+        allow(cf)
+          .to receive(:validate_template)
+          .and_raise(Aws::CloudFormation::Errors::ValidationError.new('a', 'Problem'))
       end
 
       it "informs the user of their stupdity" do
@@ -68,5 +72,4 @@ RSpec.describe StackMaster::Validator do
       end
     end
   end
-
 end

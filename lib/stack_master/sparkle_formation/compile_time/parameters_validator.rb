@@ -4,7 +4,6 @@ module StackMaster
   module SparkleFormation
     module CompileTime
       class ParametersValidator
-
         def initialize(definitions, parameters)
           @definitions = definitions
           @parameters = parameters

@@ -28,11 +28,12 @@ module StackMaster
         @region_parameters_filename = File.join("parameters", @region, "#{@stack_name}.yml")
 
         if !@options.overwrite
-          [@stack_master_filename, @stack_json_filename, @parameters_filename, @region_parameters_filename].each do |filename|
-            if File.exist?(filename)
-              StackMaster.stderr.puts("Aborting: #{filename} already exists. Use --overwrite to force overwriting file.")
-              return false
-            end
+          [@stack_master_filename, @stack_json_filename, @parameters_filename,
+           @region_parameters_filename].each do |filename|
+            next unless File.exist?(filename)
+
+            StackMaster.stderr.puts("Aborting: #{filename} already exists. Use --overwrite to force overwriting file.")
+            return false
           end
         end
         true

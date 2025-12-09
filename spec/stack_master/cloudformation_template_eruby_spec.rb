@@ -6,7 +6,7 @@ RSpec.describe(StackMaster::CloudFormationTemplateEruby) do
 
   describe('.user_data_file') do
     context('given a template that loads a simple user data script file') do
-      let(:template) { <<~YAML}
+      let(:template) { <<~YAML }
         Resources:
           LaunchConfig:
             Type: 'AWS::AutoScaling::LaunchConfiguration'
@@ -47,7 +47,7 @@ RSpec.describe(StackMaster::CloudFormationTemplateEruby) do
     end
 
     context('given a template that loads a user data script file that includes another file') do
-      let(:template) { <<~YAML}
+      let(:template) { <<~YAML }
         Resources:
           LaunchConfig:
             Type: 'AWS::AutoScaling::LaunchConfiguration'
@@ -92,7 +92,7 @@ RSpec.describe(StackMaster::CloudFormationTemplateEruby) do
 
   describe('.include_file') do
     context('given a template that loads a lambda script') do
-      let(:template) { <<~YAML}
+      let(:template) { <<~YAML }
         Resources:
           Function:
             Type: 'AWS::Lambda::Function'

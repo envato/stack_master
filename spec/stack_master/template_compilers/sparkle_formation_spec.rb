@@ -28,17 +28,31 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
     end
 
     let(:stack_definition) {
-      instance_double(StackMaster::StackDefinition,
+      instance_double(
+        StackMaster::StackDefinition,
         template: template,
-        template_dir: template_dir)
+        template_dir: template_dir
+      )
     }
-    let(:compile_time_parameters) { {'Ip' => '10.0.0.0', 'Name' => 'Something'} }
+    let(:compile_time_parameters) { { 'Ip' => '10.0.0.0', 'Name' => 'Something' } }
     let(:compiler_options) { {} }
     let(:template) { 'template.rb' }
 
     context 'without sparkle packs' do
       it 'compiles with sparkleformation' do
-        expect(compile).to eq("{\n  \"Description\": \"A test VPC template\",\n  \"Resources\": {\n    \"Vpc\": {\n      \"Type\": \"AWS::EC2::VPC\",\n      \"Properties\": {\n        \"CidrBlock\": \"10.200.0.0/16\"\n      }\n    }\n  }\n}")
+        expect(compile).to eq(<<~JSON.chomp)
+          {
+            "Description": "A test VPC template",
+            "Resources": {
+              "Vpc": {
+                "Type": "AWS::EC2::VPC",
+                "Properties": {
+                  "CidrBlock": "10.200.0.0/16"
+                }
+              }
+            }
+          }
+        JSON
       end
 
       it 'sets the appropriate sparkle_path' do
@@ -49,21 +63,30 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       context 'compile time parameters validations' do
         it 'should validate the compile time definitions' do
           definitions_validator = instance_double(StackMaster::SparkleFormation::CompileTime::DefinitionsValidator)
-          expect(StackMaster::SparkleFormation::CompileTime::DefinitionsValidator).to receive(:new).with(compile_time_parameter_definitions).and_return(definitions_validator)
+          expect(StackMaster::SparkleFormation::CompileTime::DefinitionsValidator)
+            .to receive(:new)
+            .with(compile_time_parameter_definitions)
+            .and_return(definitions_validator)
           expect(definitions_validator).to receive(:validate)
           compile
         end
 
         it 'should validate the parameters against any compile time definitions' do
           parameters_validator = instance_double(StackMaster::SparkleFormation::CompileTime::ParametersValidator)
-          expect(StackMaster::SparkleFormation::CompileTime::ParametersValidator).to receive(:new).with(compile_time_parameter_definitions, compile_time_parameters).and_return(parameters_validator)
+          expect(StackMaster::SparkleFormation::CompileTime::ParametersValidator)
+            .to receive(:new)
+            .with(compile_time_parameter_definitions, compile_time_parameters)
+            .and_return(parameters_validator)
           expect(parameters_validator).to receive(:validate)
           compile
         end
 
         it 'should create the compile state' do
           state_builder = instance_double(StackMaster::SparkleFormation::CompileTime::StateBuilder)
-          expect(StackMaster::SparkleFormation::CompileTime::StateBuilder).to receive(:new).with(compile_time_parameter_definitions, compile_time_parameters).and_return(state_builder)
+          expect(StackMaster::SparkleFormation::CompileTime::StateBuilder)
+            .to receive(:new)
+            .with(compile_time_parameter_definitions, compile_time_parameters)
+            .and_return(state_builder)
           expect(state_builder).to receive(:build)
           compile
         end
@@ -71,7 +94,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
     end
 
     context 'with a custom sparkle_path' do
-      let(:compiler_options) { {'sparkle_path' => sparkle_pack_dir} }
+      let(:compiler_options) { { 'sparkle_path' => sparkle_pack_dir } }
 
       it 'expands the given path' do
         compile
@@ -81,29 +104,46 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
     context 'with sparkle packs' do
       let(:compile_time_parameters) { {} }
-      let(:compiler_options) { {"sparkle_packs" => ["my_sparkle_pack"]} }
+      let(:compiler_options) { { "sparkle_packs" => ["my_sparkle_pack"] } }
 
       before do
-        lib = File.join(File.dirname(__FILE__), "..", "..", "fixtures", "sparkle_pack_integration", "my_sparkle_pack", "lib")
+        lib = File.join(File.dirname(__FILE__), "..", "..", "fixtures", "sparkle_pack_integration", "my_sparkle_pack",
+                        "lib")
         $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
       end
 
       context 'compiling a sparkle pack dynamic' do
         let(:template) { 'template_with_dynamic_from_pack' }
-        let(:compiler_options) { {"sparkle_packs" => ["my_sparkle_pack"], "sparkle_pack_template" => true} }
+        let(:compiler_options) { { "sparkle_packs" => ["my_sparkle_pack"], "sparkle_pack_template" => true } }
 
         it 'pulls the dynamic from the sparkle pack' do
-          expect(compile).to eq(%Q({\n  \"Outputs\": {\n    \"Foo\": {\n      \"Value\": \"bar\"\n    }\n  }\n}))
+          expect(compile).to eq(<<~JSON.chomp)
+            {
+              "Outputs": {
+                "Foo": {
+                  "Value": "bar"
+                }
+              }
+            }
+          JSON
         end
       end
 
       context 'compiling a sparkle pack template' do
         let(:template) { 'template_with_dynamic' }
-        let(:compiler_options) { {"sparkle_packs" => ["my_sparkle_pack"], "sparkle_pack_template" => true} }
+        let(:compiler_options) { { "sparkle_packs" => ["my_sparkle_pack"], "sparkle_pack_template" => true } }
 
         context 'when template is found' do
           it 'resolves template location' do
-            expect(compile).to eq("{\n  \"Outputs\": {\n    \"Bar\": {\n      \"Value\": \"local_dynamic\"\n    }\n  }\n}")
+            expect(compile).to eq(<<~JSON.chomp)
+              {
+                "Outputs": {
+                  "Bar": {
+                    "Value": "local_dynamic"
+                  }
+                }
+              }
+            JSON
           end
         end
 

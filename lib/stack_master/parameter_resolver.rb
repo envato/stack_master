@@ -49,6 +49,7 @@ module StackMaster
       return parameter_value.to_s if Numeric === parameter_value || parameter_value == true || parameter_value == false
       return resolve_array_parameter_values(key, parameter_value).join(',') if Array === parameter_value
       return parameter_value unless Hash === parameter_value
+
       resolve_parameter_resolver_hash(key, parameter_value)
     rescue Aws::CloudFormation::Errors::ValidationError
       raise InvalidParameter, $!.message
@@ -77,6 +78,7 @@ module StackMaster
       if account.nil? || role.nil?
         raise InvalidParameter, "Both 'account' and 'role' are required to assume role for parameter '#{key}'"
       end
+
       role_assumer.assume_role(account, role) do
         yield
       end
@@ -105,7 +107,8 @@ module StackMaster
         begin
           @resolvers[class_name] = resolver_class_const(class_name).new(@config, @stack_definition)
         rescue NameError
-          raise ResolverNotFound, "Could not find parameter resolver called #{class_name}, please double check your configuration"
+          raise ResolverNotFound,
+                "Could not find parameter resolver called #{class_name}, please double check your configuration"
         end
       end
     end

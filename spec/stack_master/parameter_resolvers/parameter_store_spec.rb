@@ -1,7 +1,5 @@
 RSpec.describe StackMaster::ParameterResolvers::ParameterStore do
-
   describe '#resolve' do
-
     let(:config) { double(base_dir: '/base') }
     let(:stack_definition) { double(stack_name: 'mystack', region: 'us-east-1') }
     subject(:resolver) { described_class.new(config, stack_definition) }
@@ -9,7 +7,6 @@ RSpec.describe StackMaster::ParameterResolvers::ParameterStore do
     let(:parameter_value) { 'TEST' }
     let(:unknown_parameter_name) { 'NOTEST' }
     let(:unencryptable_parameter_name) { 'SECRETTEST' }
-
 
     context 'the parameter is defined' do
       before do
@@ -26,7 +23,7 @@ RSpec.describe StackMaster::ParameterResolvers::ParameterStore do
           }
         }
       end
-  
+
       it 'should return the parameter value' do
         expect(resolver.resolve(parameter_name)).to eq parameter_value
       end
@@ -36,14 +33,20 @@ RSpec.describe StackMaster::ParameterResolvers::ParameterStore do
       before do
         Aws.config[:ssm] = {
           stub_responses: {
-            get_parameter: 
-              Aws::SSM::Errors::ParameterNotFound.new(unknown_parameter_name, "Parameter #{unknown_parameter_name} not found")
+            get_parameter:
+              Aws::SSM::Errors::ParameterNotFound.new(
+                unknown_parameter_name,
+                "Parameter #{unknown_parameter_name} not found"
+              )
           }
         }
       end
       it 'should raise and error' do
         expect { resolver.resolve(unknown_parameter_name) }
-            .to raise_error(StackMaster::ParameterResolvers::ParameterStore::ParameterNotFound, "Unable to find #{unknown_parameter_name} in Parameter Store")
+          .to raise_error(
+            StackMaster::ParameterResolvers::ParameterStore::ParameterNotFound,
+            "Unable to find #{unknown_parameter_name} in Parameter Store"
+          )
       end
     end
   end

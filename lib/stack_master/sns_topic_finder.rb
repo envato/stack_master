@@ -7,7 +7,9 @@ module StackMaster
     end
 
     def find(reference)
-      raise ArgumentError, 'SNS topic references must be non-empty strings' unless reference.is_a?(String) && !reference.empty?
+      unless reference.is_a?(String) && !reference.empty?
+        raise ArgumentError, 'SNS topic references must be non-empty strings'
+      end
 
       topic = @resource.topics.detect { |t| topic_name_from_arn(t.arn) == reference }
 
@@ -21,6 +23,5 @@ module StackMaster
     def topic_name_from_arn(arn)
       arn.split(":")[5]
     end
-
   end
 end

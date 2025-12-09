@@ -144,6 +144,7 @@ module StackMaster
 
       def upload_files
         return unless use_s3?
+
         s3.upload_files(**s3_options)
       end
 
@@ -153,7 +154,8 @@ module StackMaster
 
       def template_value
         if use_s3?
-          s3.url(bucket: @s3_config['bucket'], prefix: @s3_config['prefix'], region: @s3_config['region'], template: @stack_definition.s3_template_file_name)
+          s3.url(bucket: @s3_config['bucket'], prefix: @s3_config['prefix'], region: @s3_config['region'],
+                 template: @stack_definition.s3_template_file_name)
         else
           proposed_stack.template
         end
@@ -161,6 +163,7 @@ module StackMaster
 
       def files_to_upload
         return {} unless use_s3?
+
         @stack_definition.s3_files.tap do |files|
           files[@stack_definition.s3_template_file_name] = {
             path: @stack_definition.template_file_path,
@@ -218,6 +221,7 @@ module StackMaster
         proposed_policy = proposed_stack.stack_policy_body
         # No need to reset a stack policy if it's nil or not changed
         return if proposed_policy.nil? || proposed_policy == current_policy
+
         StackMaster.stdout.print 'Setting a stack policy...'
         cf.set_stack_policy(
           stack_name: stack_name,

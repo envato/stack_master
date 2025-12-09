@@ -12,7 +12,8 @@ module StackMaster
         sso_group_id_finder.find(value)
       end
 
-    private
+      private
+
       def sso_group_id_finder
         StackMaster::SsoGroupIdFinder.new()
       end
