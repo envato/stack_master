@@ -25,7 +25,7 @@ module StackMaster
       private
 
       def validate_op_installed?
-        %x(op --version)
+        `op --version`
       rescue Errno::ENOENT => exception
         raise OnePasswordBinaryNotFound, "The op cli needs to be installed and in the PATH, #{exception}"
       end
@@ -53,7 +53,7 @@ module StackMaster
 
       def op_get_item(item, vault)
         validate_op_installed?
-        item = %x(op get item --vault='#{vault}' '#{item}' 2>&1)
+        item = `op get item --vault='#{vault}' '#{item}' 2>&1`
         item if validate_response?(item)
       end
 
