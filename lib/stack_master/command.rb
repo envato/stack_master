@@ -43,11 +43,7 @@ module StackMaster
       msg = "#{e.class} #{e.message}"
       msg << "\n Caused by: #{e.cause.class} #{e.cause.message}" if e.cause
       msg << "\n at #{e.cause.backtrace[0..3].join("\n    ")}\n ..." if e.cause && !options.trace
-      if options.trace
-        msg << "\n#{backtrace(e)}"
-      else
-        msg << "\n Use --trace to view backtrace"
-      end
+      msg << (options.trace ? "\n#{backtrace(e)}" : "\n Use --trace to view backtrace")
       msg
     end
 

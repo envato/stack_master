@@ -14,11 +14,7 @@ module StackMaster
       missing_parameters.each do |parameter_name|
         message << " - #{parameter_name}\n"
       end
-      if @stack_definition.parameter_files.empty?
-        message << message_for_parameter_globs
-      else
-        message << message_for_parameter_files
-      end
+      message << (@stack_definition.parameter_files.empty? ? message_for_parameter_globs : message_for_parameter_files)
       message
     end
 

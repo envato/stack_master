@@ -402,14 +402,6 @@ Style/ClassAndModuleChildren:
     - 'lib/stack_master/template_compilers/yaml.rb'
     - 'lib/stack_master/template_compilers/yaml_erb.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, SingleLineConditionsOnly, IncludeTernaryExpressions.
-# SupportedStyles: assign_to_condition, assign_inside_condition
-Style/ConditionalAssignment:
-  Exclude:
-    - 'lib/stack_master/command.rb'
-    - 'lib/stack_master/parameter_validator.rb'
-
 # Configuration parameters: AllowedConstants.
 Style/Documentation:
   Exclude:
