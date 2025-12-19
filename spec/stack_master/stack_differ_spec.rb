@@ -2,7 +2,7 @@ RSpec.describe StackMaster::StackDiffer do
   subject(:differ) { described_class.new(proposed_stack, stack) }
   let(:current_body) { '{}' }
   let(:proposed_body) { "{\"a\": 1}" }
-  let(:current_params) { Hash.new }
+  let(:current_params) { {} }
   let(:proposed_params) { { 'param1' => 'hello' } }
   let(:stack) do
     StackMaster::Stack.new(
