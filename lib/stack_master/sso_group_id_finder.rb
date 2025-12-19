@@ -19,9 +19,9 @@ module StackMaster
             alternate_identifier: {
               unique_attribute: {
                 attribute_path: 'displayName',
-                attribute_value: match[:group_name],
-              },
-            },
+                attribute_value: match[:group_name]
+              }
+            }
           }
         )
         return response.group_id

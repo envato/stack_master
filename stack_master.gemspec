@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
     "bug_tracker_uri" => "https://github.com/envato/stack_master/issues",
     "changelog_uri" => "https://github.com/envato/stack_master/blob/master/CHANGELOG.md",
     "documentation_uri" => "https://www.rubydoc.info/gems/stack_master/#{spec.version}",
-    "source_code_uri" => "https://github.com/envato/stack_master/tree/v#{spec.version}",
+    "source_code_uri" => "https://github.com/envato/stack_master/tree/v#{spec.version}"
   }
 
   spec.files         = Dir.glob("{bin,lib,stacktemplates}/**/*") + %w[README.md LICENSE.txt]

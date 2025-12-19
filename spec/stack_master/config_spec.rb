@@ -112,7 +112,7 @@ RSpec.describe StackMaster::Config do
           json: :json,
           yml: :yaml,
           yaml: :yaml,
-          erb: :yaml_erb,
+          erb: :yaml_erb
         }
       )
   end
@@ -130,7 +130,7 @@ RSpec.describe StackMaster::Config do
           'ap-southeast-2' => {
             'tags' => { 'environment' => 'staging', 'test_override' => 1 },
             'role_arn' => 'test_service_role_arn3',
-            'notification_arns' => ['test_arn_3'],
+            'notification_arns' => ['test_arn_3']
           }
         }
       )

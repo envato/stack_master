@@ -99,7 +99,7 @@ RSpec.describe StackMaster::Commands::Apply do
         stack_definition.s3 = {
           'bucket' => 'my-bucket',
           'prefix' => 'my-prefix',
-          'region' => 'us-east-1',
+          'region' => 'us-east-1'
         }
         stack_definition.template = 'my-template.rb'
         allow(s3).to receive(:list_objects).and_return([])

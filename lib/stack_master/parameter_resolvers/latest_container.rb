@@ -43,8 +43,8 @@ module StackMaster
             registry_id: registry_id,
             next_token: next_token,
             filter: {
-              tag_status: "TAGGED",
-            },
+              tag_status: "TAGGED"
+            }
           }
         )
 

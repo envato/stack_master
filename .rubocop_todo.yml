@@ -697,22 +697,6 @@ Style/SymbolProc:
     - 'spec/support/validator_spec.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, diff_comma, no_comma
-Style/TrailingCommaInHashLiteral:
-  Exclude:
-    - 'lib/stack_master/commands/status.rb'
-    - 'lib/stack_master/config.rb'
-    - 'lib/stack_master/parameter_resolvers/latest_container.rb'
-    - 'lib/stack_master/security_group_finder.rb'
-    - 'lib/stack_master/sso_group_id_finder.rb'
-    - 'spec/integration/drift_spec.rb'
-    - 'spec/stack_master/commands/apply_spec.rb'
-    - 'spec/stack_master/config_spec.rb'
-    - 'spec/stack_master/security_group_finder_spec.rb'
-    - 'stack_master.gemspec'
-
-# This cop supports safe autocorrection (--autocorrect).
 Style/UnlessElse:
   Exclude:
     - 'lib/stack_master/cli.rb'

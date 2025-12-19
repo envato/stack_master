@@ -22,7 +22,7 @@ module StackMaster
             region: stack_definition.region,
             stack_name: stack_definition.stack_name,
             stack_status: running_in_allowed_account?(allowed_accounts) ? stack_status.status : "Disallowed account",
-            different: running_in_allowed_account?(allowed_accounts) ? stack_status.changed_message : "N/A",
+            different: running_in_allowed_account?(allowed_accounts) ? stack_status.changed_message : "N/A"
           }
         end
         tp.set :max_width, window_size

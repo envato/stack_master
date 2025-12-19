@@ -16,9 +16,9 @@ module StackMaster
                                            filters: [
                                              {
                                                name: "group-name",
-                                               values: [reference],
+                                               values: [reference]
                                              }
-                                           ],
+                                           ]
                                          })
 
       raise SecurityGroupNotFound, "No security group with name #{reference} found" unless groups.any?

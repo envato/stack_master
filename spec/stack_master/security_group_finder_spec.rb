@@ -7,9 +7,9 @@ RSpec.describe StackMaster::SecurityGroupFinder do
       filters: [
         {
           name: "group-name",
-          values: [group_name],
+          values: [group_name]
         }
-      ],
+      ]
     }
   end
 

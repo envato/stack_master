@@ -32,7 +32,7 @@ RSpec.describe "drift command", type: :aruba do
               difference_type: 'ADD',
               property_path: '/SecurityGroupIngress/2',
               expected_value: "",
-              actual_value: "",
+              actual_value: ""
             }
           ]
         ]
