@@ -77,10 +77,10 @@ module StackMaster
         c.option('--overwrite', 'Overwrite existing files')
         c.action do |args, options|
           options.default config: default_config_file
-          unless args.size == 2
-            say "Invalid arguments. stack_master init [region] [stack_name]"
-          else
+          if args.size == 2
             StackMaster::Commands::Init.perform(options, *args)
+          else
+            say "Invalid arguments. stack_master init [region] [stack_name]"
           end
         end
       end
