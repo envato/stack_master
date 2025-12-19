@@ -24,7 +24,7 @@ RSpec.describe StackMaster::TemplateCompilers::Json do
 
     context 'extra big json template' do
       before do
-        allow(File).to receive(:read).with(template_file_path).and_return("{ #{' ' * 60000} }")
+        allow(File).to receive(:read).with(template_file_path).and_return("{ #{' ' * 60_000} }")
       end
 
       it "reads from the template file path" do

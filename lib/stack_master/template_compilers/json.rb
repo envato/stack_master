@@ -1,6 +1,6 @@
 module StackMaster::TemplateCompilers
   class Json
-    MAX_TEMPLATE_SIZE = 51200
+    MAX_TEMPLATE_SIZE = 51_200
     private_constant :MAX_TEMPLATE_SIZE
 
     def self.require_dependencies

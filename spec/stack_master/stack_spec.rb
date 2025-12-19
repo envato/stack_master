@@ -321,8 +321,8 @@ RSpec.describe StackMaster::Stack do
   end
 
   describe '#too_big?' do
-    let(:big_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 500000}\"}") }
-    let(:medium_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 60000}\"}") }
+    let(:big_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 500_000}\"}") }
+    let(:medium_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 60_000}\"}") }
     let(:little_stack) { described_class.new(template_body: "{\"a\":\"#{'x' * 1000}\"}") }
 
     context 'when not using S3' do

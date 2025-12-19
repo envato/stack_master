@@ -34,7 +34,7 @@ RSpec.describe StackMaster::TemplateUtils do
     end
 
     context "oversized json" do
-      let(:template_body) { "{#{' ' * 60000}}" }
+      let(:template_body) { "{#{' ' * 60_000}}" }
       it "compresses the json when it's overly bulbous" do
         expect(maybe_compressed_template_body).to eq('{}')
       end

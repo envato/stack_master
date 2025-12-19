@@ -217,7 +217,7 @@ RSpec.describe StackMaster::Commands::Apply do
     end
 
     context 'the stack is too large' do
-      let(:big_string) { 'x' * 60000 }
+      let(:big_string) { 'x' * 60_000 }
       let(:template_body) do
         "{\"a\":\"#{big_string}\"}"
       end
