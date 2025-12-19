@@ -524,11 +524,6 @@ Style/ModuleFunction:
     - 'lib/stack_master/template_utils.rb'
     - 'lib/stack_master/utils.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-Style/MultilineIfModifier:
-  Exclude:
-    - 'lib/stack_master/cli.rb'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: literals, strict

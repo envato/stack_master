@@ -277,10 +277,12 @@ module StackMaster
           show_other_region_candidates(config, stack_name)
           success = false
         end
-        stack_definitions = stack_definitions.select do |stack_definition|
-          running_in_allowed_account?(stack_definition.allowed_accounts) &&
-            StackStatus.new(config, stack_definition).changed?
-        end if options.changed
+        if options.changed
+          stack_definitions = stack_definitions.select do |stack_definition|
+            running_in_allowed_account?(stack_definition.allowed_accounts) &&
+              StackStatus.new(config, stack_definition).changed?
+          end
+        end
         stack_definitions.each do |stack_definition|
           StackMaster.cloud_formation_driver.set_region(stack_definition.region)
           StackMaster.stdout.puts(
