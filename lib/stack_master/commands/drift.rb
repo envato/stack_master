@@ -96,7 +96,7 @@ module StackMaster
           break if DETECTION_COMPLETE_STATES.include?(resp.detection_status)
 
           elapsed_time = Time.now - start_time
-          raise "Timeout waiting for stack drift detection" if elapsed_time > @options.timeout
+          raise 'Timeout waiting for stack drift detection' if elapsed_time > @options.timeout
 
           sleep SLEEP_SECONDS
         end

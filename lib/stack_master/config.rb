@@ -26,13 +26,13 @@ module StackMaster
     )
 
     def self.search_up_and_chdir(config_file)
-      return config_file unless File.dirname(config_file) == "."
+      return config_file unless File.dirname(config_file) == '.'
 
       dir = Dir.pwd
-      parent_dir = File.expand_path("..", Dir.pwd)
+      parent_dir = File.expand_path('..', Dir.pwd)
       while parent_dir != dir && !File.exist?(File.join(dir, config_file))
         dir = parent_dir
-        parent_dir = File.expand_path("..", dir)
+        parent_dir = File.expand_path('..', dir)
       end
 
       File.join(dir, config_file)

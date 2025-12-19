@@ -1,5 +1,5 @@
 SparkleFormation.new(:myapp_vpc_2) do
-  description "A test VPC template"
+  description 'A test VPC template'
 
   resources.vpc do
     type 'AWS::EC2::VPC'

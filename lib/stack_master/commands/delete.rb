@@ -15,7 +15,7 @@ module StackMaster
         return unless check_exists
 
         unless ask?("Really delete stack #{@stack_name} (y/n)? ")
-          StackMaster.stdout.puts "Stack update aborted"
+          StackMaster.stdout.puts 'Stack update aborted'
           return
         end
 
@@ -33,7 +33,7 @@ module StackMaster
         cf.describe_stacks({ stack_name: @stack_name })
         true
       rescue Aws::CloudFormation::Errors::ValidationError
-        failed("Stack does not exist")
+        failed('Stack does not exist')
         false
       end
 
@@ -43,10 +43,10 @@ module StackMaster
 
       def tail_stack_events
         StackEvents::Streamer.stream(@stack_name, @region, io: StackMaster.stdout, from: @from_time)
-        StackMaster.stdout.puts "Stack deleted"
+        StackMaster.stdout.puts 'Stack deleted'
       rescue Aws::CloudFormation::Errors::ValidationError
         # Unfortunately the stack as a tendency of going away before we get the final delete event.
-        StackMaster.stdout.puts "Stack deleted"
+        StackMaster.stdout.puts 'Stack deleted'
       end
     end
   end

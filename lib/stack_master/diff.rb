@@ -10,7 +10,7 @@ module StackMaster
     def display
       stdout.print "#{@name} diff: "
       if diff == ''
-        stdout.puts "No changes"
+        stdout.puts 'No changes'
       else
         stdout.puts
         display_colorized_diff

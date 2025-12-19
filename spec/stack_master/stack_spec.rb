@@ -35,7 +35,7 @@ RSpec.describe StackMaster::Stack do
             ]
           }
         )
-        cf.stub_responses(:get_template, { template_body: "{}" })
+        cf.stub_responses(:get_template, { template_body: '{}' })
         cf.stub_responses(:get_stack_policy, { stack_policy_body: stack_policy_body })
       end
 
@@ -43,8 +43,8 @@ RSpec.describe StackMaster::Stack do
         expect(stack.stack_id).to eq stack_id
       end
 
-      it "returns a template body" do
-        expect(stack.template_body).to eq "{}"
+      it 'returns a template body' do
+        expect(stack.template_body).to eq '{}'
       end
 
       it 'parses parameters into a hash' do

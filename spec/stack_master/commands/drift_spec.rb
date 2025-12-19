@@ -11,12 +11,12 @@ RSpec.describe StackMaster::Commands::Drift do
       stack_drift_detection_id: stack_drift_detection_id
     )
   end
-  let(:stack_drift_status) { "IN_SYNC" }
+  let(:stack_drift_status) { 'IN_SYNC' }
   let(:describe_stack_drift_detection_status_response) do
     Aws::CloudFormation::Types::DescribeStackDriftDetectionStatusOutput.new(
       stack_drift_detection_id: stack_drift_detection_id,
       stack_drift_status: stack_drift_status,
-      detection_status: "DETECTION_COMPLETE"
+      detection_status: 'DETECTION_COMPLETE'
     )
   end
   let(:describe_stack_resource_drifts_response) do
@@ -33,10 +33,10 @@ RSpec.describe StackMaster::Commands::Drift do
   let(:stack_resource_drifts) do
     [
       Aws::CloudFormation::Types::StackResourceDrift.new(
-        stack_resource_drift_status: "IN_SYNC",
-        resource_type: "AWS::EC2::SecurityGroup",
-        logical_resource_id: "SecurityGroup",
-        physical_resource_id: "sg-123456",
+        stack_resource_drift_status: 'IN_SYNC',
+        resource_type: 'AWS::EC2::SecurityGroup',
+        logical_resource_id: 'SecurityGroup',
+        physical_resource_id: 'sg-123456',
         property_differences: [property_difference]
       )
     ]
@@ -77,26 +77,26 @@ RSpec.describe StackMaster::Commands::Drift do
     let(:stack_resource_drifts) do
       [
         Aws::CloudFormation::Types::StackResourceDrift.new(
-          stack_resource_drift_status: "DELETED",
-          resource_type: "AWS::EC2::SecurityGroup",
-          logical_resource_id: "SecurityGroup1",
-          physical_resource_id: "sg-123456",
+          stack_resource_drift_status: 'DELETED',
+          resource_type: 'AWS::EC2::SecurityGroup',
+          logical_resource_id: 'SecurityGroup1',
+          physical_resource_id: 'sg-123456',
           property_differences: [property_difference]
         ),
         Aws::CloudFormation::Types::StackResourceDrift.new(
-          stack_resource_drift_status: "MODIFIED",
-          resource_type: "AWS::EC2::SecurityGroup",
-          logical_resource_id: "SecurityGroup2",
-          physical_resource_id: "sg-789012",
+          stack_resource_drift_status: 'MODIFIED',
+          resource_type: 'AWS::EC2::SecurityGroup',
+          logical_resource_id: 'SecurityGroup2',
+          physical_resource_id: 'sg-789012',
           expected_properties: expected_properties,
           actual_properties: actual_properties,
           property_differences: [property_difference]
         ),
         Aws::CloudFormation::Types::StackResourceDrift.new(
-          stack_resource_drift_status: "IN_SYNC",
-          resource_type: "AWS::EC2::SecurityGroup",
-          logical_resource_id: "SecurityGroup3",
-          physical_resource_id: "sg-345678",
+          stack_resource_drift_status: 'IN_SYNC',
+          resource_type: 'AWS::EC2::SecurityGroup',
+          logical_resource_id: 'SecurityGroup3',
+          physical_resource_id: 'sg-345678',
           property_differences: [property_difference]
         )
       ]

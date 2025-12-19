@@ -17,7 +17,7 @@ module StackMaster
         return false
       end
       cf.validate_template(template_body: TemplateUtils.maybe_compressed_template_body(stack.template_body))
-      StackMaster.stdout.puts "valid"
+      StackMaster.stdout.puts 'valid'
       true
     rescue Aws::CloudFormation::Errors::ValidationError => e
       StackMaster.stdout.puts "invalid. #{e.message}"

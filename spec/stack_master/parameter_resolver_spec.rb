@@ -182,7 +182,7 @@ RSpec.describe StackMaster::ParameterResolver do
   end
 
   context 'resolver class caching' do
-    it "uses the same instance of the resolver for the duration of the resolve run" do
+    it 'uses the same instance of the resolver for the duration of the resolve run' do
       expect(my_resolver).to receive(:new).once.and_call_original
       expect(resolve(param: { my_resolver: 2 }, param2: { my_resolver: 2 })).to eq(param: 10, param2: 10)
     end
@@ -212,23 +212,23 @@ RSpec.describe StackMaster::ParameterResolver do
       parameter_resolver.resolve
     end
 
-    context "using an array resolver" do
+    context 'using an array resolver' do
       let(:params) do
         {
           param: { other_dummy_resolvers: [1, 2] }
         }
       end
 
-      it "tries to load the plural and singular forms" do
+      it 'tries to load the plural and singular forms' do
         expect(parameter_resolver)
           .to receive(:require_parameter_resolver)
-          .with("other_dummy_resolvers")
+          .with('other_dummy_resolvers')
           .once
           .and_call_original
           .ordered
         expect(parameter_resolver)
           .to receive(:require_parameter_resolver)
-          .with("other_dummy_resolver")
+          .with('other_dummy_resolver')
           .once
           .ordered
         expect(parameter_resolver)

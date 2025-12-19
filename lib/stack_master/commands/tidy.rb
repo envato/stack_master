@@ -46,7 +46,7 @@ module StackMaster
         # template directories) this won't find the right directory.
         template_dir = @config.template_dir || File.join(@config.base_dir, 'templates')
 
-        templates = Dir.glob(File.absolute_path(File.join(template_dir, '**', "*.{rb,yaml,yml,json}")))
+        templates = Dir.glob(File.absolute_path(File.join(template_dir, '**', '*.{rb,yaml,yml,json}')))
         dynamics_dir = File.join(template_dir, 'dynamics')
 
         # Exclude sparkleformation dynamics
@@ -58,7 +58,7 @@ module StackMaster
       end
 
       def find_parameter_files
-        Dir.glob(File.absolute_path(File.join(@config.base_dir, "parameters", "*.{yml,yaml}")))
+        Dir.glob(File.absolute_path(File.join(@config.base_dir, 'parameters', '*.{yml,yaml}')))
       end
     end
   end

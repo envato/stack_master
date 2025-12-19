@@ -28,7 +28,7 @@ module StackMaster
           h.merge(obj.key => obj)
         end
 
-        StackMaster.stdout.puts "Uploading files to S3:"
+        StackMaster.stdout.puts 'Uploading files to S3:'
 
         files.each do |template, file|
           body = file.fetch(:body)
@@ -36,7 +36,7 @@ module StackMaster
           object_key = template.dup
           object_key.prepend("#{prefix}/") if prefix
           compiled_template_md5 = Digest::MD5.hexdigest(body).to_s
-          s3_md5 = current_objects[object_key] ? current_objects[object_key].etag.gsub("\"", '') : nil
+          s3_md5 = current_objects[object_key] ? current_objects[object_key].etag.gsub('"', '') : nil
 
           next if compiled_template_md5 == s3_md5
 
@@ -51,14 +51,14 @@ module StackMaster
               metadata: { md5: compiled_template_md5 }
             }
           )
-          StackMaster.stdout.puts "done."
+          StackMaster.stdout.puts 'done.'
         end
       end
 
       def url(bucket:, prefix:, region:, template:)
         if region == 'us-east-1'
-          ["https://s3.amazonaws.com", bucket, prefix, template].compact.join('/')
-        elsif region.start_with? "cn-"
+          ['https://s3.amazonaws.com', bucket, prefix, template].compact.join('/')
+        elsif region.start_with? 'cn-'
           ["https://s3.#{region}.amazonaws.com.cn", bucket, prefix, template].compact.join('/')
         else
           ["https://s3-#{region}.amazonaws.com", bucket, prefix, template].compact.join('/')

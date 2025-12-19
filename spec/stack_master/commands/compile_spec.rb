@@ -23,13 +23,13 @@ RSpec.describe StackMaster::Commands::Compile do
     described_class.perform(config, stack_definition)
   end
 
-  context "with a json stack" do
+  context 'with a json stack' do
     it 'outputs the template' do
       expect { run }.to output(template_body + "\n").to_stdout
     end
   end
 
-  context "with a yaml stack" do
+  context 'with a yaml stack' do
     let(:template_body) { '---' }
     let(:template_format) { :yaml }
 

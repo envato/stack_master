@@ -42,7 +42,7 @@ RSpec.describe StackMaster::StackEvents::Streamer do
     expect(io.string).to include('UPDATE_COMPLETE')
   end
 
-  context "the stack is in a failed state" do
+  context 'the stack is in a failed state' do
     let(:events_second_call) do
       events_first_call + [
         OpenStruct.new(

@@ -44,7 +44,7 @@ module StackMaster
       end
 
       def abort_if_review_in_progress
-        return unless stack_exists? && stack.stack_status == "REVIEW_IN_PROGRESS"
+        return unless stack_exists? && stack.stack_status == 'REVIEW_IN_PROGRESS'
 
         StackMaster.stderr.puts "Stack currently exists and is in #{stack.stack_status}"
         failed! "You will need to delete the stack (#{stack.stack_name}) before continuing"
@@ -111,9 +111,9 @@ module StackMaster
       end
 
       def ask_to_cancel_stack_update
-        return unless ask?("Cancel stack update?")
+        return unless ask?('Cancel stack update?')
 
-        StackMaster.stdout.puts "Attempting to cancel stack update"
+        StackMaster.stdout.puts 'Attempting to cancel stack update'
         cf.cancel_update_stack(stack_name: stack_name)
         tail_stack_events
       end
@@ -136,10 +136,10 @@ module StackMaster
       end
 
       def ask_update_confirmation!
-        return if ask?("Apply change set (y/n)? ")
+        return if ask?('Apply change set (y/n)? ')
 
         ChangeSet.delete(@change_set.id)
-        halt! "Stack update aborted"
+        halt! 'Stack update aborted'
       end
 
       def upload_files

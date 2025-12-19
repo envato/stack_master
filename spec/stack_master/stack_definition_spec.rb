@@ -63,7 +63,7 @@ RSpec.describe StackMaster::StackDefinition do
     it 'returns globs supporting dashes and underscores in the parameter filenames' do
       expect(stack_definition.parameter_file_globs).to eq(
         [
-          "/base_dir/parameters/stack[-_]name.y*ml",
+          '/base_dir/parameters/stack[-_]name.y*ml',
           "/base_dir/parameters/#{region}/stack[-_]name.y*ml"
         ]
       )
@@ -74,7 +74,7 @@ RSpec.describe StackMaster::StackDefinition do
     before do
       stack_definition.additional_parameter_lookup_dirs = ['production']
       allow(Dir).to receive(:glob).with(
-        File.join(base_dir, 'parameters', "production", "#{stack_name}.y*ml")
+        File.join(base_dir, 'parameters', 'production', "#{stack_name}.y*ml")
       ).and_return(
         [
           "/base_dir/parameters/production/#{stack_name}.yaml",
@@ -112,9 +112,9 @@ RSpec.describe StackMaster::StackDefinition do
       it 'returns globs supporting dashes and underscores in the parameter filenames' do
         expect(stack_definition.parameter_file_globs).to eq(
           [
-            "/base_dir/parameters/stack[-_]name.y*ml",
+            '/base_dir/parameters/stack[-_]name.y*ml',
             "/base_dir/parameters/#{region}/stack[-_]name.y*ml",
-            "/base_dir/parameters/production/stack[-_]name.y*ml"
+            '/base_dir/parameters/production/stack[-_]name.y*ml'
           ]
         )
       end
@@ -125,11 +125,11 @@ RSpec.describe StackMaster::StackDefinition do
     expect(stack_definition.ejson_file_kms).to eq true
   end
 
-  context "with explicit parameter_files" do
-    let(:parameter_files) { ["my-stack.yml", "../my-stack.yml"] }
+  context 'with explicit parameter_files' do
+    let(:parameter_files) { ['my-stack.yml', '../my-stack.yml'] }
 
-    it "ignores parameter globs and resolves them relative to parameters_dir" do
-      expect(stack_definition.all_parameter_files).to eq ["/base_dir/parameters/my-stack.yml", "/base_dir/my-stack.yml"]
+    it 'ignores parameter globs and resolves them relative to parameters_dir' do
+      expect(stack_definition.all_parameter_files).to eq ['/base_dir/parameters/my-stack.yml', '/base_dir/my-stack.yml']
     end
   end
 end

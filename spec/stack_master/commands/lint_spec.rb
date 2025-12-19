@@ -22,12 +22,12 @@ RSpec.describe StackMaster::Commands::Lint do
     described_class.perform(config, stack_definition)
   end
 
-  context "when cfn-lint is installed" do
+  context 'when cfn-lint is installed' do
     before do
       expect_any_instance_of(described_class).to receive(:system).once.with('cfn-lint', '--version').and_return(0)
     end
 
-    context "with a json stack" do
+    context 'with a json stack' do
       let(:template_body) { '{}' }
       let(:template_format) { :json }
 
@@ -37,7 +37,7 @@ RSpec.describe StackMaster::Commands::Lint do
       end
     end
 
-    context "with a yaml stack" do
+    context 'with a yaml stack' do
       let(:template_body) { '---' }
       let(:template_format) { :yaml }
 
@@ -48,7 +48,7 @@ RSpec.describe StackMaster::Commands::Lint do
     end
   end
 
-  context "when cfn-lint is missing" do
+  context 'when cfn-lint is missing' do
     let(:template_body) { '' }
     let(:template_format) { :json }
 

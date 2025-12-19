@@ -16,7 +16,7 @@ module StackMaster
       def resolve(params = {})
         if ENV.keys.grep(/OP_SESSION_\w+$/).empty?
           raise OnePasswordNotAbleToAuthenticate,
-                "1password requires the `OP_SESSION_<name>` to be set, (remember to sign in?)"
+                '1password requires the `OP_SESSION_<name>` to be set, (remember to sign in?)'
         end
 
         get_items(params)

@@ -25,32 +25,32 @@ RSpec.describe StackMaster::Validator do
     allow(StackMaster::ParameterResolver).to receive(:resolve).and_return(resolved_parameters)
   end
 
-  describe "#perform" do
-    context "template body is valid" do
-      it "tells the user everything will be fine" do
+  describe '#perform' do
+    context 'template body is valid' do
+      it 'tells the user everything will be fine' do
         expect { validator.perform }.to output(/myapp_vpc: valid/).to_stdout
       end
     end
 
-    context "invalid template body" do
+    context 'invalid template body' do
       before do
         allow(cf)
           .to receive(:validate_template)
           .and_raise(Aws::CloudFormation::Errors::ValidationError.new('a', 'Problem'))
       end
 
-      it "informs the user of their stupdity" do
+      it 'informs the user of their stupdity' do
         expect { validator.perform }.to output(/myapp_vpc: invalid/).to_stdout
       end
     end
 
-    context "missing parameters" do
+    context 'missing parameters' do
       let(:template_file) { 'mystack-with-parameters.yaml' }
 
-      context "--validate-template-parameters" do
+      context '--validate-template-parameters' do
         before { options.validate_template_parameters = true }
 
-        it "informs the user of the problem" do
+        it 'informs the user of the problem' do
           expect { validator.perform }.to output(<<~OUTPUT).to_stdout
             myapp_vpc: invalid
             Empty/blank parameters detected. Please provide values for these parameters:
@@ -63,10 +63,10 @@ RSpec.describe StackMaster::Validator do
         end
       end
 
-      context "--no-validate-template-parameters" do
+      context '--no-validate-template-parameters' do
         before { options.validate_template_parameters = false }
 
-        it "reports the stack as valid" do
+        it 'reports the stack as valid' do
           expect { validator.perform }.to output(/myapp_vpc: valid/).to_stdout
         end
       end

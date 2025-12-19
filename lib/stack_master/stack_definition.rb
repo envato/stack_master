@@ -35,7 +35,7 @@ module StackMaster
       @compiler = nil
       super
       @additional_parameter_lookup_dirs ||= []
-      @base_dir ||= ""
+      @base_dir ||= ''
       @template_dir ||= File.join(@base_dir, 'templates')
       @parameters_dir ||= File.join(@base_dir, 'parameters')
       @allowed_accounts = Array(@allowed_accounts)

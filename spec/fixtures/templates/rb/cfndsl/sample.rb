@@ -1,15 +1,15 @@
 CloudFormation do
-  Description "Test"
+  Description 'Test'
 
-  Parameter("One") do
+  Parameter('One') do
     String
-    Default "Test"
+    Default 'Test'
     MaxLength 15
   end
 
-  Output(:One, FnBase64(Ref("One")))
+  Output(:One, FnBase64(Ref('One')))
 
   EC2_Instance(:MyInstance) do
-    ImageId "ami-12345678"
+    ImageId 'ami-12345678'
   end
 end

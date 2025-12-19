@@ -7,7 +7,7 @@ RSpec.describe StackMaster::Config do
       region_alias: 'production',
       stack_name: 'myapp-vpc',
       template: 'myapp_vpc.json',
-      allowed_accounts: ["555555555"],
+      allowed_accounts: ['555555555'],
       tags: { 'application' => 'my-awesome-blog', 'environment' => 'production' },
       s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
       notification_arns: %w[test_arn test_arn_2],
@@ -19,12 +19,12 @@ RSpec.describe StackMaster::Config do
   end
   let(:bad_yaml) { "a: b\n- c" }
 
-  describe ".load!" do
-    it "fails to load the config if no stack_master.yml in parent directories" do
+  describe '.load!' do
+    it 'fails to load the config if no stack_master.yml in parent directories' do
       expect { StackMaster::Config.load!('stack_master.yml') }.to raise_error Errno::ENOENT
     end
 
-    it "raises exception on invalid yaml" do
+    it 'raises exception on invalid yaml' do
       begin
         orig_dir = Dir.pwd
         Dir.chdir './spec/fixtures/'
@@ -35,21 +35,21 @@ RSpec.describe StackMaster::Config do
       end
     end
 
-    it "gives explicit error on badly indented entries" do
+    it 'gives explicit error on badly indented entries' do
       Dir.chdir('./spec/fixtures/') do
         expect { StackMaster::Config.load!('stack_master_wrong_indent.yml') }
           .to raise_error StackMaster::Config::ConfigParseError
       end
     end
 
-    it "gives explicit error on empty defaults" do
+    it 'gives explicit error on empty defaults' do
       Dir.chdir('./spec/fixtures/') do
         expect { StackMaster::Config.load!('stack_master_empty_default.yml') }
           .to raise_error StackMaster::Config::ConfigParseError
       end
     end
 
-    it "searches up the tree for stack master yaml" do
+    it 'searches up the tree for stack master yaml' do
       begin
         orig_dir = Dir.pwd
         Dir.chdir './spec/fixtures/templates'
@@ -97,7 +97,7 @@ RSpec.describe StackMaster::Config do
     expect(loaded_config.stack_defaults)
       .to eq(
         {
-          'allowed_accounts' => ["555555555"],
+          'allowed_accounts' => ['555555555'],
           'tags' => { 'application' => 'my-awesome-blog' },
           's3' => { 'bucket' => 'my-bucket', 'region' => 'us-east-1' }
         }
@@ -150,7 +150,7 @@ RSpec.describe StackMaster::Config do
           stack_name: 'myapp-vpc',
           region: 'ap-southeast-2',
           region_alias: 'staging',
-          allowed_accounts: ["555555555"],
+          allowed_accounts: ['555555555'],
           tags: { 'application' => 'my-awesome-blog', 'environment' => 'staging', 'test_override' => 1 },
           s3: { 'bucket' => 'my-bucket', 'region' => 'us-east-1' },
           role_arn: 'test_service_role_arn4',

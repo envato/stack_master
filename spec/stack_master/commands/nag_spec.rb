@@ -26,7 +26,7 @@ RSpec.describe StackMaster::Commands::Nag do
     described_class.perform(config, stack_definition)
   end
 
-  context "with a json stack" do
+  context 'with a json stack' do
     it 'calls the nag gem' do
       expect_any_instance_of(File).to receive(:write).once
       expect_any_instance_of(File).to receive(:flush).once
@@ -35,7 +35,7 @@ RSpec.describe StackMaster::Commands::Nag do
     end
   end
 
-  context "with a yaml stack" do
+  context 'with a yaml stack' do
     let(:template_body) { '---' }
     let(:template_format) { :yaml }
 
@@ -47,7 +47,7 @@ RSpec.describe StackMaster::Commands::Nag do
     end
   end
 
-  context "when check is successful" do
+  context 'when check is successful' do
     it 'exits with a zero exit status' do
       expect_any_instance_of(described_class).to receive(:system).once.with('cfn_nag', /.*\.json/)
       result = run
@@ -55,7 +55,7 @@ RSpec.describe StackMaster::Commands::Nag do
     end
   end
 
-  context "when check fails" do
+  context 'when check fails' do
     let(:exitstatus) { 1 }
     it 'exits with non-zero exit status' do
       expect_any_instance_of(described_class).to receive(:system).once.with('cfn_nag', /.*\.json/)

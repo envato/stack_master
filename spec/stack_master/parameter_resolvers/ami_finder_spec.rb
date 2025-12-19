@@ -40,7 +40,7 @@ RSpec.describe StackMaster::ParameterResolvers::AmiFinder do
   end
 
   describe '#find_latest_ami' do
-    let(:filter) { [{ name: "String", values: ["String"] }] }
+    let(:filter) { [{ name: 'String', values: ['String'] }] }
 
     context 'when matches are found' do
       before do

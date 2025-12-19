@@ -161,7 +161,7 @@ RSpec.describe StackMaster::Commands::Apply do
         allow(differ).to receive(:single_param_update?).with(yes_param).and_return(true)
       end
 
-      it "skips asking for confirmation on single param updates" do
+      it 'skips asking for confirmation on single param updates' do
         expect(StackMaster::ChangeSet).to receive(:execute).with(change_set.id, stack_name)
         StackMaster::Commands::Apply.perform(config, stack_definition, options)
       end
@@ -261,7 +261,7 @@ RSpec.describe StackMaster::Commands::Apply do
         allow(StackMaster::ChangeSet).to receive(:create).and_raise(StackMaster::CtrlC)
       end
 
-      it "deletes the stack" do
+      it 'deletes the stack' do
         expect(cf).to receive(:delete_stack).with({ stack_name: stack_name })
         expect { apply }.to raise_error(StackMaster::CtrlC)
       end

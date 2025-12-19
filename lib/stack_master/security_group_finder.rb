@@ -15,7 +15,7 @@ module StackMaster
       groups = @resource.security_groups({
                                            filters: [
                                              {
-                                               name: "group-name",
+                                               name: 'group-name',
                                                values: [reference]
                                              }
                                            ]

@@ -23,13 +23,13 @@ RSpec.describe StackMaster::Commands::Status do
     allow(Aws::CloudFormation::Client).to receive(:new).with(region: 'us-east-1').and_return cf
   end
 
-  context "#perform" do
+  context '#perform' do
     before do
       allow(StackMaster::Stack).to receive(:find).and_return stack1, stack2
       allow(StackMaster::Stack).to receive(:generate).and_return proposed_stack1, proposed_stack2
     end
 
-    context "some parameters are different" do
+    context 'some parameters are different' do
       let(:stack1) do
         double(
           :stack1,
@@ -53,14 +53,14 @@ RSpec.describe StackMaster::Commands::Status do
       end
 
       let(:proposed_stack1) do
-        double(:proposed_stack1, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+        double(:proposed_stack1, template_body: '{}', template_format: :json, parameters_with_defaults: { a: 1 })
       end
 
       let(:proposed_stack2) do
-        double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+        double(:proposed_stack2, template_body: '{}', template_format: :json, parameters_with_defaults: { a: 1 })
       end
 
-      it "returns the status of call stacks" do
+      it 'returns the status of call stacks' do
         out = <<~OUTPUT
           REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT
           ----------|------------|-----------------|----------
@@ -72,7 +72,7 @@ RSpec.describe StackMaster::Commands::Status do
       end
     end
 
-    context "some templates are different" do
+    context 'some templates are different' do
       let(:stack1) do
         double(
           :stack1,
@@ -96,14 +96,14 @@ RSpec.describe StackMaster::Commands::Status do
       end
 
       let(:proposed_stack1) do
-        double(:proposed_stack1, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+        double(:proposed_stack1, template_body: '{}', template_format: :json, parameters_with_defaults: { a: 1 })
       end
 
       let(:proposed_stack2) do
-        double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+        double(:proposed_stack2, template_body: '{}', template_format: :json, parameters_with_defaults: { a: 1 })
       end
 
-      it "returns the status of call stacks" do
+      it 'returns the status of call stacks' do
         out = <<~OUTPUT
           REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT
           ----------|------------|-----------------|----------
@@ -145,11 +145,11 @@ RSpec.describe StackMaster::Commands::Status do
       end
 
       let(:proposed_stack1) do
-        double(:proposed_stack1, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+        double(:proposed_stack1, template_body: '{}', template_format: :json, parameters_with_defaults: { a: 1 })
       end
 
       let(:proposed_stack2) do
-        double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+        double(:proposed_stack2, template_body: '{}', template_format: :json, parameters_with_defaults: { a: 1 })
       end
 
       before do
@@ -184,7 +184,7 @@ RSpec.describe StackMaster::Commands::Status do
           StackMaster.reset_flags
         end
 
-        it "returns the status of call stacks" do
+        it 'returns the status of call stacks' do
           out = <<~OUTPUT
             REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT
             ----------|------------|-----------------|----------

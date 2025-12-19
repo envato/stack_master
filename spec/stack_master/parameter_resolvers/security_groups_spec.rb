@@ -1,5 +1,5 @@
 RSpec.describe StackMaster::ParameterResolvers::SecurityGroups do
-  describe "#resolve" do
+  describe '#resolve' do
     subject(:resolver) { described_class.new(nil, double(region: 'us-east-1')) }
     let(:finder) { instance_double(StackMaster::SecurityGroupFinder) }
     let(:sg_id) { 'sg-id' }
@@ -11,7 +11,7 @@ RSpec.describe StackMaster::ParameterResolvers::SecurityGroups do
     end
 
     context 'when given a single SG name' do
-      it "resolves the security group" do
+      it 'resolves the security group' do
         expect(resolver.resolve(sg_name)).to eq sg_id
       end
     end
@@ -24,7 +24,7 @@ RSpec.describe StackMaster::ParameterResolvers::SecurityGroups do
         expect(finder).to receive(:find).once.with(sg_name2).and_return sg_id2
       end
 
-      it "resolves the security groups" do
+      it 'resolves the security groups' do
         expect(resolver.resolve([sg_name, sg_name2])).to eq "#{sg_id},#{sg_id2}"
       end
     end

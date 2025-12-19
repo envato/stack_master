@@ -50,7 +50,7 @@ module StackMaster
       @response.changes.each do |change|
         display_resource_change(io, change.resource_change)
       end
-      io.puts "========================================"
+      io.puts '========================================'
     end
 
     def failed?

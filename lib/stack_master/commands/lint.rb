@@ -19,7 +19,7 @@ module StackMaster
           f.write(proposed_stack.template_body)
           f.flush
           system('cfn-lint', f.path)
-          puts "cfn-lint run complete"
+          puts 'cfn-lint run complete'
         end
       end
 

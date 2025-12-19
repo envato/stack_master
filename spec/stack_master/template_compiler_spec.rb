@@ -48,7 +48,7 @@ RSpec.describe StackMaster::TemplateCompiler do
       end
 
       it 'passes compile_options to the template compiler' do
-        opts = { foo: 1, bar: true, baz: "meh" }
+        opts = { foo: 1, bar: true, baz: 'meh' }
         expect(TestTemplateCompiler).to receive(:compile).with(nil, template, compile_time_parameters, opts)
         StackMaster::TemplateCompiler.compile(config, nil, nil, template, compile_time_parameters, opts)
       end

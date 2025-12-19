@@ -1,5 +1,5 @@
-require "diffy"
-require "hashdiff"
+require 'diffy'
+require 'hashdiff'
 
 module StackMaster
   class StackDiffer
@@ -34,7 +34,7 @@ module StackMaster
       params = @proposed_stack.parameters_with_defaults
       if @current_stack
         noecho_keys.each do |key|
-          params[key] = "****"
+          params[key] = '****'
         end
       end
       YAML.dump(sort_params(params))
@@ -65,14 +65,14 @@ module StackMaster
       body_diff.display
       parameters_diff.display
 
-      StackMaster.stdout.puts " * can not tell if NoEcho parameters are different." unless noecho_keys.empty?
-      StackMaster.stdout.puts "No stack found" if @current_stack.nil?
+      StackMaster.stdout.puts ' * can not tell if NoEcho parameters are different.' unless noecho_keys.empty?
+      StackMaster.stdout.puts 'No stack found' if @current_stack.nil?
     end
 
     def noecho_keys
       if @current_stack
         @current_stack.parameters_with_defaults.select do |key, value|
-          value == "****"
+          value == '****'
         end.keys
       else
         []
@@ -86,7 +86,7 @@ module StackMaster
       return false if differences.count != 1
 
       diff = differences[0]
-      diff[0] == "~" && diff[1] == param_name
+      diff[0] == '~' && diff[1] == param_name
     end
 
     private

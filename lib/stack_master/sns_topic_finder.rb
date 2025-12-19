@@ -21,7 +21,7 @@ module StackMaster
     private
 
     def topic_name_from_arn(arn)
-      arn.split(":")[5]
+      arn.split(':')[5]
     end
   end
 end

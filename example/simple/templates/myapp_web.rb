@@ -1,5 +1,5 @@
 SparkleFormation.new(:myapp_web) do
-  description "Test web template"
+  description 'Test web template'
 
   parameters.vpc_id do
     description 'VPC ID'

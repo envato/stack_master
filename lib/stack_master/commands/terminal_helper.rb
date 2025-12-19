@@ -4,9 +4,9 @@ module StackMaster
   module Commands
     module TerminalHelper
       def window_size
-        size = ENV.fetch("COLUMNS") { OS.windows? ? windows_window_size : unix_window_size }
+        size = ENV.fetch('COLUMNS') { OS.windows? ? windows_window_size : unix_window_size }
 
-        if size.nil? || size == ""
+        if size.nil? || size == ''
           80
         else
           size.to_i

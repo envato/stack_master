@@ -10,7 +10,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Resolve style issues identified by RuboCop ([#396])
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.17.1...HEAD
+[#396]: https://github.com/envato/stack_master/pull/396
 
 ## [2.17.1] - 2025-12-19
 
