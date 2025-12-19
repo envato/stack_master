@@ -696,13 +696,6 @@ Style/SymbolProc:
     - 'lib/stack_master/command.rb'
     - 'spec/support/validator_spec.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: WordRegex.
-# SupportedStyles: percent, brackets
-Style/WordArray:
-  EnforcedStyle: percent
-  MinSize: 4
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/ZeroLengthPredicate:
   Exclude:

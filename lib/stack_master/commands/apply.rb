@@ -177,7 +177,7 @@ module StackMaster
           stack_name: stack_name,
           parameters: proposed_stack.aws_parameters,
           tags: proposed_stack.aws_tags,
-          capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM', 'CAPABILITY_AUTO_EXPAND'],
+          capabilities: %w[CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND],
           role_arn: proposed_stack.role_arn,
           notification_arns: proposed_stack.notification_arns,
           template_method => template_value

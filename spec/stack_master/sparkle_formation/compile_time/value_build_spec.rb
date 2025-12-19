@@ -7,8 +7,8 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::ValueBuilder do
     { definition: { type: :string, default: 'a' }, parameter: nil, expected: 'a' },
 
     { definition: { type: :string, multiple: true }, parameter: 'a', expected: ['a'] },
-    { definition: { type: :string, multiple: true }, parameter: 'a,b', expected: ['a', 'b'] },
-    { definition: { type: :string, multiple: true }, parameter: 'a, b', expected: ['a', 'b'] },
+    { definition: { type: :string, multiple: true }, parameter: 'a,b', expected: %w[a b] },
+    { definition: { type: :string, multiple: true }, parameter: 'a, b', expected: %w[a b] },
 
     { definition: { type: :string, multiple: true, default: 'a' }, parameter: nil, expected: ['a'] },
 

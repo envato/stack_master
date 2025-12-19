@@ -7,7 +7,7 @@ RSpec.describe StackMaster::TestDriver::CloudFormation do
     it 'creates and describes stacks' do
       test_cf_driver.create_stack(stack_id: "1", stack_name: 'stack-1')
       test_cf_driver.create_stack(stack_id: "2", stack_name: 'stack-2')
-      expect(test_cf_driver.describe_stacks.stacks.map(&:stack_id)).to eq(["1", "2"])
+      expect(test_cf_driver.describe_stacks.stacks.map(&:stack_id)).to eq(%w[1 2])
     end
 
     it 'adds and gets stack events' do
@@ -15,7 +15,7 @@ RSpec.describe StackMaster::TestDriver::CloudFormation do
       test_cf_driver.add_stack_event(stack_name: 'stack-1', resource_status: "UPDATE_COMPLETE")
       test_cf_driver.add_stack_event(stack_name: 'stack-2')
       expect(test_cf_driver.describe_stack_events(stack_name: 'stack-1').stack_events.map(&:stack_name))
-        .to eq(['stack-1', 'stack-1'])
+        .to eq(%w[stack-1 stack-1])
     end
 
     it 'sets and gets templates' do
@@ -59,7 +59,7 @@ RSpec.describe StackMaster::TestDriver::CloudFormation do
       )
       test_cf_driver.execute_change_set(change_set_name: change_set1.id)
       test_cf_driver.execute_change_set(change_set_name: change_set2.id)
-      expect(test_cf_driver.describe_stacks.stacks.map(&:stack_name)).to eq(['stack-1', 'stack-2'])
+      expect(test_cf_driver.describe_stacks.stacks.map(&:stack_name)).to eq(%w[stack-1 stack-2])
     end
   end
 

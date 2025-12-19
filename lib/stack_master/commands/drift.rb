@@ -6,9 +6,9 @@ module StackMaster
       include Command
       include Commander::UI
 
-      DETECTION_COMPLETE_STATES = [
-        'DETECTION_COMPLETE',
-        'DETECTION_FAILED'
+      DETECTION_COMPLETE_STATES = %w[
+        DETECTION_COMPLETE
+        DETECTION_FAILED
       ]
 
       def perform

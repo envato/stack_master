@@ -1,9 +1,9 @@
 module StackMaster
   class ChangeSet
-    END_STATES = [
-      'CREATE_COMPLETE',
-      'DELETE_COMPLETE',
-      'FAILED'
+    END_STATES = %w[
+      CREATE_COMPLETE
+      DELETE_COMPLETE
+      FAILED
     ]
 
     def self.generate_change_set_name(stack_name)
