@@ -49,14 +49,14 @@ module StackMaster
       def _joined_file(file_name, vars = {})
         join!(Template.render('joined_file', file_name, vars))
       end
-      alias_method :joined_file!, :_joined_file
+      alias joined_file! _joined_file
     end
 
     module UserDataFile
       def _user_data_file(file_name, vars = {})
         base64!(join!(Template.render('user_data', file_name, vars)))
       end
-      alias_method :user_data_file!, :_user_data_file
+      alias user_data_file! _user_data_file
     end
   end
 end

@@ -382,13 +382,6 @@ Security/YAMLLoad:
     - 'lib/stack_master/parameter_loader.rb'
     - 'lib/stack_master/template_utils.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: prefer_alias, prefer_alias_method
-Style/Alias:
-  Exclude:
-    - 'lib/stack_master/sparkle_formation/template_file.rb'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: always, conditionals
