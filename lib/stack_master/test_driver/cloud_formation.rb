@@ -28,6 +28,14 @@ module StackMaster
                          parameter_value: hash[:parameter_value])
         end
       end
+
+      def tags
+        return [] if @tags.nil?
+
+        @tags.map do |hash|
+          OpenStruct.new(key: hash[:key], value: hash[:value])
+        end
+      end
     end
 
     class StackEvent

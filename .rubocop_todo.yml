@@ -257,6 +257,7 @@ Metrics/CyclomaticComplexity:
     - 'lib/stack_master/aws_driver/s3.rb'
     - 'lib/stack_master/cli.rb'
     - 'lib/stack_master/parameter_resolvers/latest_container.rb'
+    - 'lib/stack_master/stack.rb'
     - 'lib/stack_master/stack_definition.rb'
     - 'lib/stack_master/stack_events/streamer.rb'
 
@@ -276,8 +277,6 @@ Metrics/MethodLength:
     - 'lib/stack_master/config.rb'
     - 'lib/stack_master/paged_response_accumulator.rb'
     - 'lib/stack_master/parameter_resolvers/latest_container.rb'
-    - 'lib/stack_master/parameter_resolvers/stack_output.rb'
-    - 'lib/stack_master/parameter_validator.rb'
     - 'lib/stack_master/prompter.rb'
     - 'lib/stack_master/security_group_finder.rb'
     - 'lib/stack_master/sso_group_id_finder.rb'
@@ -306,6 +305,7 @@ Metrics/PerceivedComplexity:
   Exclude:
     - 'lib/stack_master/aws_driver/s3.rb'
     - 'lib/stack_master/cli.rb'
+    - 'lib/stack_master/stack.rb'
     - 'lib/stack_master/stack_definition.rb'
 
 Naming/AccessorMethodName:

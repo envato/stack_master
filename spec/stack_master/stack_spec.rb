@@ -29,6 +29,10 @@ RSpec.describe StackMaster::Stack do
                 creation_time: Time.now,
                 stack_status: 'UPDATE_COMPLETE',
                 parameters: parameters,
+                tags: [
+                  { key: 'Environment', value: 'staging' },
+                  { key: 'Application', value: 'myapp' }
+                ],
                 notification_arns: ['test_arn'],
                 role_arn: 'test_service_role_arn'
               }
@@ -61,6 +65,10 @@ RSpec.describe StackMaster::Stack do
 
       it 'sets the stack policy' do
         expect(stack.stack_policy_body).to eq stack_policy_body
+      end
+
+      it 'sets tags' do
+        expect(stack.tags).to eq({ 'Environment' => 'staging', 'Application' => 'myapp' })
       end
     end
 

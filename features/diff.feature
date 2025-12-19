@@ -177,3 +177,77 @@ Feature: Diff command
     | +        "GroupDescription": "Test SG 2",          |
     Then the exit status should be 0
 
+  Scenario: Run diff showing tags added when current stack has no tags
+    Given a file named "stack_master.yml" with:
+      """
+      stacks:
+        us_east_1:
+          myapp_vpc:
+            template: myapp_vpc.json
+            tags:
+              Application: myapp
+              Environment: staging
+      """
+    And a directory named "parameters"
+    And a file named "parameters/myapp_vpc.yml" with:
+      """
+      KeyName: my-key
+      """
+    And a directory named "templates"
+    And a file named "templates/myapp_vpc.json" with:
+      """
+      {
+        "Description": "Test template",
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Parameters": {
+          "KeyName": {
+            "Description": "Key Name",
+            "Type": "String"
+          }
+        },
+        "Resources": {
+          "TestSg": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+              "GroupDescription": "Test SG",
+              "VpcId": {
+                "Ref": "VpcId"
+              }
+            }
+          }
+        }
+      }
+      """
+    And I stub the following stacks:
+      | stack_id | stack_name | parameters          | region    |
+      | 1        | myapp-vpc  | KeyName=changed-key | us-east-1 |
+    And I stub a template for the stack "myapp-vpc":
+      """
+      {
+        "Description": "Test template",
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Parameters": {
+          "KeyName": {
+            "Description": "Key Name",
+            "Type": "String"
+          }
+        },
+        "Resources": {
+          "TestSg": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+              "GroupDescription": "Test SG",
+              "VpcId": {
+                "Ref": "VpcId"
+              }
+            }
+          }
+        }
+      }
+      """
+    When I run `stack_master diff us-east-1 myapp-vpc --trace`
+    Then the output should contain all of these lines:
+      | Tags diff: |
+      | +Application: myapp |
+      | +Environment: staging |
+    And the exit status should be 0
