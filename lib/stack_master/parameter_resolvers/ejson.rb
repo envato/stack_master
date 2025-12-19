@@ -22,10 +22,10 @@ module StackMaster
       private
 
       def validate_ejson_file_specified
-        if @stack_definition.ejson_file.nil?
-          raise ArgumentError, 'No ejson_file defined for stack definition ' \
-                               "#{@stack_definition.stack_name} in #{@stack_definition.region}"
-        end
+        return unless @stack_definition.ejson_file.nil?
+
+        raise ArgumentError, 'No ejson_file defined for stack definition ' \
+                             "#{@stack_definition.stack_name} in #{@stack_definition.region}"
       end
 
       def decrypt_ejson_file

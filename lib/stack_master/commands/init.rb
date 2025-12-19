@@ -12,11 +12,11 @@ module StackMaster
       end
 
       def perform
-        if check_files
-          create_stack_master_yml
-          create_stack_json_yml
-          create_parameters_yml
-        end
+        return unless check_files
+
+        create_stack_master_yml
+        create_stack_json_yml
+        create_parameters_yml
       end
 
       private

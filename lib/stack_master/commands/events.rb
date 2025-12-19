@@ -9,9 +9,9 @@ module StackMaster
         filter_events(events).each do |event|
           StackEvents::Presenter.print_event(StackMaster.stdout, event)
         end
-        if @options.tail
-          StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout)
-        end
+        return unless @options.tail
+
+        StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout)
       end
 
       private

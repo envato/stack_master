@@ -29,11 +29,9 @@ module StackMaster
     def require_parameter_resolver(file_name)
       require "stack_master/parameter_resolvers/#{file_name}"
     rescue LoadError
-      if file_name == file_name.singularize
-        raise ResolverNotFound.new(file_name)
-      else
-        require_parameter_resolver(file_name.singularize)
-      end
+      raise ResolverNotFound.new(file_name) if file_name == file_name.singularize
+
+      require_parameter_resolver(file_name.singularize)
     end
 
     def load_parameter_resolver(class_name)
@@ -113,9 +111,9 @@ module StackMaster
     end
 
     def validate_parameter_value!(key, parameter_value)
-      if parameter_value.keys.size != 1
-        raise InvalidParameter, "#{key} hash contained more than one key: #{parameter_value.inspect}"
-      end
+      return if parameter_value.keys.size == 1
+
+      raise InvalidParameter, "#{key} hash contained more than one key: #{parameter_value.inspect}"
     end
 
     def role_assumer

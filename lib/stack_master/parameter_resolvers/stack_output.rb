@@ -17,18 +17,14 @@ module StackMaster
       def resolve(value)
         region, stack_name, output_name = parse!(value)
         stack = find_stack(stack_name, region)
-        if stack
-          output = stack.outputs.find do |stack_output|
-            stack_output.output_key == output_name.camelize || stack_output.output_key == output_name
-          end
-          if output
-            output.output_value
-          else
-            raise StackOutputNotFound, "Stack exists (#{stack_name}), but output does not: #{output_name}"
-          end
-        else
-          raise StackNotFound, "Stack in StackOutput not found: #{value}"
+        raise StackNotFound, "Stack in StackOutput not found: #{value}" unless stack
+
+        output = stack.outputs.find do |stack_output|
+          stack_output.output_key == output_name.camelize || stack_output.output_key == output_name
         end
+        raise StackOutputNotFound, "Stack exists (#{stack_name}), but output does not: #{output_name}" unless output
+
+        output.output_value
       end
 
       private
