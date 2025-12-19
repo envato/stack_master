@@ -85,7 +85,7 @@ module StackMaster
       @template_compilers = default_template_compilers.merge(@template_compilers)
     end
 
-    def populate_template_compilers user_defined_compilers
+    def populate_template_compilers(user_defined_compilers)
       user_defined_compilers.each do |key, val|
         @template_compilers[key.to_sym] = val.to_sym
       end
