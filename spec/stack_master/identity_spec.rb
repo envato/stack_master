@@ -97,7 +97,7 @@ RSpec.describe StackMaster::Identity do
       end
 
       context 'with a combination of account id and alias' do
-        let(:allowed_accounts) { %w(192837471659 allowed-account another-account) }
+        let(:allowed_accounts) { %w[192837471659 allowed-account another-account] }
 
         it 'returns true' do
           expect(running_in_allowed_account).to eq(true)
@@ -148,14 +148,14 @@ RSpec.describe StackMaster::Identity do
       iam.stub_responses(
         :list_account_aliases,
         {
-          account_aliases: %w(my-account new-account-name),
+          account_aliases: %w[my-account new-account-name],
           is_truncated: false
         }
       )
     end
 
     it 'returns the current identity account aliases' do
-      expect(identity.account_aliases).to eq(%w(my-account new-account-name))
+      expect(identity.account_aliases).to eq(%w[my-account new-account-name])
     end
 
     context "when identity doesn't have the required iam permissions" do

@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["steve@hodgkiss.me", "gstamp@gmail.com"]
   spec.summary       = 'StackMaster is a sure-footed way of creating, updating and keeping track ' \
                        'of Amazon (AWS) CloudFormation stacks.'
-  spec.description   = %q{}
+  spec.description   = %q()
   spec.homepage      = "https://opensource.envato.com/projects/stack_master.html"
   spec.license       = "MIT"
   spec.metadata      = {
@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
     "source_code_uri" => "https://github.com/envato/stack_master/tree/v#{spec.version}",
   }
 
-  spec.files         = Dir.glob("{bin,lib,stacktemplates}/**/*") + %w(README.md LICENSE.txt)
+  spec.files         = Dir.glob("{bin,lib,stacktemplates}/**/*") + %w[README.md LICENSE.txt]
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
