@@ -38,7 +38,7 @@ RSpec.describe StackMaster::StackEvents::Fetcher do
     let(:events) do
       [
         OpenStruct.new(event_id: '1', stack_id: '1', stack_name: 'blah', timestamp: two_pm),
-        OpenStruct.new(event_id: '2', stack_id: '1', stack_name: 'blah', timestamp: four_pm),
+        OpenStruct.new(event_id: '2', stack_id: '1', stack_name: 'blah', timestamp: four_pm)
       ]
     end
 

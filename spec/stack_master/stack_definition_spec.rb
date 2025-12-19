@@ -23,7 +23,7 @@ RSpec.describe StackMaster::StackDefinition do
     ).and_return(
       [
         "/base_dir/parameters/#{stack_name}.yaml",
-        "/base_dir/parameters/#{stack_name}.yml",
+        "/base_dir/parameters/#{stack_name}.yml"
       ]
     )
 
@@ -32,7 +32,7 @@ RSpec.describe StackMaster::StackDefinition do
     ).and_return(
       [
         "/base_dir/parameters/#{region}/#{stack_name}.yaml",
-        "/base_dir/parameters/#{region}/#{stack_name}.yml",
+        "/base_dir/parameters/#{region}/#{stack_name}.yml"
       ]
     )
   end
@@ -43,7 +43,7 @@ RSpec.describe StackMaster::StackDefinition do
         "/base_dir/parameters/#{stack_name}.yaml",
         "/base_dir/parameters/#{stack_name}.yml",
         "/base_dir/parameters/#{region}/#{stack_name}.yaml",
-        "/base_dir/parameters/#{region}/#{stack_name}.yml",
+        "/base_dir/parameters/#{region}/#{stack_name}.yml"
       ]
     )
   end
@@ -52,7 +52,7 @@ RSpec.describe StackMaster::StackDefinition do
     expect(stack_definition.parameter_file_globs).to eq(
       [
         "/base_dir/parameters/#{stack_name}.y*ml",
-        "/base_dir/parameters/#{region}/#{stack_name}.y*ml",
+        "/base_dir/parameters/#{region}/#{stack_name}.y*ml"
       ]
     )
   end
@@ -64,7 +64,7 @@ RSpec.describe StackMaster::StackDefinition do
       expect(stack_definition.parameter_file_globs).to eq(
         [
           "/base_dir/parameters/stack[-_]name.y*ml",
-          "/base_dir/parameters/#{region}/stack[-_]name.y*ml",
+          "/base_dir/parameters/#{region}/stack[-_]name.y*ml"
         ]
       )
     end
@@ -78,7 +78,7 @@ RSpec.describe StackMaster::StackDefinition do
       ).and_return(
         [
           "/base_dir/parameters/production/#{stack_name}.yaml",
-          "/base_dir/parameters/production/#{stack_name}.yml",
+          "/base_dir/parameters/production/#{stack_name}.yml"
         ]
       )
     end
@@ -91,7 +91,7 @@ RSpec.describe StackMaster::StackDefinition do
           "/base_dir/parameters/#{region}/#{stack_name}.yaml",
           "/base_dir/parameters/#{region}/#{stack_name}.yml",
           "/base_dir/parameters/production/#{stack_name}.yaml",
-          "/base_dir/parameters/production/#{stack_name}.yml",
+          "/base_dir/parameters/production/#{stack_name}.yml"
         ]
       )
     end
@@ -101,7 +101,7 @@ RSpec.describe StackMaster::StackDefinition do
         [
           "/base_dir/parameters/#{stack_name}.y*ml",
           "/base_dir/parameters/#{region}/#{stack_name}.y*ml",
-          "/base_dir/parameters/production/#{stack_name}.y*ml",
+          "/base_dir/parameters/production/#{stack_name}.y*ml"
         ]
       )
     end
@@ -114,7 +114,7 @@ RSpec.describe StackMaster::StackDefinition do
           [
             "/base_dir/parameters/stack[-_]name.y*ml",
             "/base_dir/parameters/#{region}/stack[-_]name.y*ml",
-            "/base_dir/parameters/production/stack[-_]name.y*ml",
+            "/base_dir/parameters/production/stack[-_]name.y*ml"
           ]
         )
       end

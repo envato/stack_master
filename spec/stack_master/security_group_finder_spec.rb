@@ -8,7 +8,7 @@ RSpec.describe StackMaster::SecurityGroupFinder do
         {
           name: "group-name",
           values: [group_name],
-        },
+        }
       ],
     }
   end
@@ -33,7 +33,7 @@ RSpec.describe StackMaster::SecurityGroupFinder do
       let(:security_groups) do
         [
           double(id: 'sg-a7d2ccc0'),
-          double(id: 'sg-a7d2ccc2'),
+          double(id: 'sg-a7d2ccc2')
         ]
       end
       it "returns the id" do

@@ -73,7 +73,7 @@ RSpec.describe "drift command", type: :aruba do
 
     it 'outputs stack drift information' do
       [
-        "Drift Status: IN_SYNC",
+        "Drift Status: IN_SYNC"
       ].each do |line|
         expect(last_command_stopped).to have_output an_output_string_matching(line)
       end

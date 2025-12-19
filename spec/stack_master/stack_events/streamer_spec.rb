@@ -3,7 +3,7 @@ RSpec.describe StackMaster::StackEvents::Streamer do
     [
       OpenStruct.new(event_id: '1', resource_status: 'BLAH', timestamp: Time.now),
       OpenStruct.new(event_id: '2', resource_status: 'BLAH', timestamp: Time.now),
-      OpenStruct.new(event_id: '3', resource_status: 'BLAH', timestamp: Time.now),
+      OpenStruct.new(event_id: '3', resource_status: 'BLAH', timestamp: Time.now)
     ]
   end
   let(:events_second_call) do

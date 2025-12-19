@@ -17,7 +17,7 @@ module StackMaster
                                              {
                                                name: "group-name",
                                                values: [reference],
-                                             },
+                                             }
                                            ],
                                          })
 

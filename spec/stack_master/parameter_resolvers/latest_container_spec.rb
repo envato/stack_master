@@ -99,7 +99,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
               image_digest: 'sha256:decafc0ffee',
               image_pushed_at: Time.utc(2015, 1, 2, 0, 0),
               image_tags: ['v1']
-            },
+            }
           ]
         }
       )
