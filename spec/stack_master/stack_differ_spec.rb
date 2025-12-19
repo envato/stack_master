@@ -43,16 +43,16 @@ RSpec.describe StackMaster::StackDiffer do
       let(:stack) { nil }
 
       it "outputs the entire stack" do
-        expect { differ.output_diff }.to output(/\+  \"a\"\: 1/).to_stdout
-        expect { differ.output_diff }.to output(/param1\: hello/).to_stdout
+        expect { differ.output_diff }.to output(/\+  "a": 1/).to_stdout
+        expect { differ.output_diff }.to output(/param1: hello/).to_stdout
         expect { differ.output_diff }.to output(/No stack found/).to_stdout
       end
     end
 
     context "stack update" do
       it "outputs the stack diff" do
-        expect { differ.output_diff }.to output(/\+  \"a\"\: 1/).to_stdout
-        expect { differ.output_diff }.to output(/param1\: hello/).to_stdout
+        expect { differ.output_diff }.to output(/\+  "a": 1/).to_stdout
+        expect { differ.output_diff }.to output(/param1: hello/).to_stdout
         expect { differ.output_diff }.to_not output(/No stack found/).to_stdout
       end
     end
