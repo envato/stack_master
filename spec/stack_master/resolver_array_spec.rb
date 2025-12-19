@@ -16,7 +16,7 @@ RSpec.describe 'StackMaster::ParameterResolvers::Resolver' do
 
   describe '.array_resolver' do
     context 'when using a default name' do
-      before do 
+      before do
         class TestResolver < StackMaster::ParameterResolvers::Resolver
           array_resolver
         end
@@ -28,12 +28,12 @@ RSpec.describe 'StackMaster::ParameterResolvers::Resolver' do
     end
 
     context 'when using a specific name' do
-      before do 
+      before do
         class TestResolver < StackMaster::ParameterResolvers::Resolver
           array_resolver class_name: 'SpecificResolver'
         end
       end
-      
+
       let(:array_resolver_class) { StackMaster::ParameterResolvers::SpecificResolver }
 
       it_behaves_like 'a resolver'

@@ -8,7 +8,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
   let(:aws_client) { instance_double(Aws::IdentityStore::Client) }
 
   subject(:finder) do
-    allow(Aws::IdentityStore::Client).to receive(:new).with({region: region}).and_return(aws_client)
+    allow(Aws::IdentityStore::Client).to receive(:new).with({ region: region }).and_return(aws_client)
     described_class.new
   end
 
@@ -22,15 +22,20 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
         group_id = 'abc-123-group-id'
 
         response = double(group_id: group_id)
-        expect(aws_client).to receive(:get_group_id).with({
-          identity_store_id: identity_store_id,
-          alternate_identifier: {
-            unique_attribute: {
-              attribute_path: 'displayName',
-              attribute_value: group_name
+        expect(aws_client)
+          .to receive(:get_group_id)
+          .with(
+            {
+              identity_store_id: identity_store_id,
+              alternate_identifier: {
+                unique_attribute: {
+                  attribute_path: 'displayName',
+                  attribute_value: group_name
+                }
+              }
             }
-          }
-        }).and_return(response)
+          )
+          .and_return(response)
 
         expect(finder.find(reference)).to eq(group_id)
       end
@@ -45,9 +50,8 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
 
         expect(aws_client).to receive(:get_group_id).and_raise(error)
 
-        expect {
-          finder.find(reference)
-        }.to raise_error(StackMaster::SsoGroupIdFinder::SsoGroupNotFound, /No group with name #{group_name} found/)
+        expect { finder.find(reference) }
+          .to raise_error(StackMaster::SsoGroupIdFinder::SsoGroupNotFound, /No group with name #{group_name} found/)
       end
     end
 
@@ -55,20 +59,25 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
       let(:reference_without_region) { "#{identity_store_id}/#{group_name}" }
 
       it 'uses the fallback region from cloud_formation_driver' do
-        allow(Aws::IdentityStore::Client).to receive(:new).with({region: region}).and_return(aws_client)
+        allow(Aws::IdentityStore::Client).to receive(:new).with({ region: region }).and_return(aws_client)
 
         group_id = 'fallback-region-group-id'
         response = double(group_id: group_id)
 
-        expect(aws_client).to receive(:get_group_id).with({
-          identity_store_id: identity_store_id,
-          alternate_identifier: {
-            unique_attribute: {
-              attribute_path: 'displayName',
-              attribute_value: group_name
+        expect(aws_client)
+          .to receive(:get_group_id)
+          .with(
+            {
+              identity_store_id: identity_store_id,
+              alternate_identifier: {
+                unique_attribute: {
+                  attribute_path: 'displayName',
+                  attribute_value: group_name
+                }
+              }
             }
-          }
-        }).and_return(response)
+          )
+          .and_return(response)
 
         expect(finder.find(reference_without_region)).to eq(group_id)
       end
@@ -76,9 +85,8 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
 
     context 'when input is not a string' do
       it 'raises ArgumentError' do
-        expect {
-          finder.find(123)
-        }.to raise_error(ArgumentError, /Sso group lookup parameter must be in the form/)
+        expect { finder.find(123) }
+          .to raise_error(ArgumentError, /Sso group lookup parameter must be in the form/)
       end
     end
 
@@ -86,9 +94,8 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
       it 'raises ArgumentError' do
         invalid_reference = 'badformat'
 
-        expect {
-          finder.find(invalid_reference)
-        }.to raise_error(ArgumentError, /Sso group lookup parameter must be in the form/)
+        expect { finder.find(invalid_reference) }
+          .to raise_error(ArgumentError, /Sso group lookup parameter must be in the form/)
       end
     end
   end

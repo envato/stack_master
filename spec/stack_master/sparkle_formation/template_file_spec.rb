@@ -2,17 +2,17 @@ require 'stack_master/sparkle_formation/template_file'
 
 RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#user_data_file!' do
   let(:user_data) do
-    <<-EOS
-#!/bin/bash
+    <<~EOS
+      #!/bin/bash
 
-REGION=<%= region! %>
-echo $REGION
-<%= ref!(:test) %> <%= ref!(:test_2) %>
-<%= has_var?(:test) ? "echo 'yes'" : "echo 'no'" %>
+      REGION=<%= region! %>
+      echo $REGION
+      <%= ref!(:test) %> <%= ref!(:test_2) %>
+      <%= has_var?(:test) ? "echo 'yes'" : "echo 'no'" %>
     EOS
   end
   let(:expected_hash) do
-    {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n", "\n", "REGION=", {"Ref"=>"AWS::Region"}, "\n", "echo $REGION\n", {"Ref"=>"Test"}, " ", {"Ref"=>"Test2"}, "\n", "echo 'no'", "\n"]]}}
+    { "Fn::Base64" => { "Fn::Join" => ["", ["#!/bin/bash\n", "\n", "REGION=", { "Ref" => "AWS::Region" }, "\n", "echo $REGION\n", { "Ref" => "Test" }, " ", { "Ref" => "Test2" }, "\n", "echo 'no'", "\n"]] } }
   end
 
   before do
@@ -41,14 +41,14 @@ echo $REGION
 
     context 'with custom vars' do
       let(:user_data) do
-        <<-EOS
-#!/bin/bash
-<%= my_custom_var %>
-<%= has_var?(:my_custom_var) ? "yes" : "no" %>
+        <<~EOS
+          #!/bin/bash
+          <%= my_custom_var %>
+          <%= has_var?(:my_custom_var) ? "yes" : "no" %>
         EOS
       end
       let(:expected_hash) do
-        {"Fn::Base64"=>{"Fn::Join"=>["", ["#!/bin/bash\n", "test_var", "\n", "yes", "\n"]]}}
+        { "Fn::Base64" => { "Fn::Join" => ["", ["#!/bin/bash\n", "test_var", "\n", "yes", "\n"]] } }
       end
 
       it 'compiles the file and returns a joined version' do
@@ -72,29 +72,23 @@ echo $REGION
 
   context 'with nested templates' do
     let(:inner_user_data) do
-      <<-EOS
-REGION=<%= region! %>
-<%= test1 %>
-<%= has_var?(:test2) ? 'yes' : 'no' %>
+      <<~EOS
+        REGION=<%= region! %>
+        <%= test1 %>
+        <%= has_var?(:test2) ? 'yes' : 'no' %>
       EOS
     end
 
     let(:outer_user_data) do
-      <<-EOS
-#!/bin/bash
-<%= test1 %> <%= test2 %>
-<%= render 'inner.sh.erb', test1: 'inner1' %>
+      <<~EOS
+        #!/bin/bash
+        <%= test1 %> <%= test2 %>
+        <%= render 'inner.sh.erb', test1: 'inner1' %>
       EOS
     end
 
     let(:expected_hash) do
-      {"Fn::Base64"=>{"Fn::Join"=>["", [
-        "#!/bin/bash\n",
-        "outer1", " ", "outer2", "\n",
-        "REGION=", {"Ref"=>"AWS::Region"}, "\n",
-        "inner1", "\n",
-        "no", "\n", "\n"
-      ]]}}
+      { "Fn::Base64" => { "Fn::Join" => ["", ["#!/bin/bash\n", "outer1", " ", "outer2", "\n", "REGION=", { "Ref" => "AWS::Region" }, "\n", "inner1", "\n", "no", "\n", "\n"]] } }
     end
 
     before do
@@ -111,13 +105,13 @@ end
 
 RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#joined_file!' do
   let(:config) do
-    <<-EOS
-variable=<%= ref!(:test) %>
+    <<~EOS
+      variable=<%= ref!(:test) %>
     EOS
   end
 
   let(:expected_hash) do
-    {"Fn::Join"=>["", ["variable=", {"Ref"=>"Test"}, "\n"]]}
+    { "Fn::Join" => ["", ["variable=", { "Ref" => "Test" }, "\n"]] }
   end
 
   before do

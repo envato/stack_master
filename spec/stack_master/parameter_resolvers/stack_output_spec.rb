@@ -22,7 +22,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
   end
 
   context 'when given a hash' do
-    let(:value) { { not_expected: 1} }
+    let(:value) { { not_expected: 1 } }
 
     it 'raises an error' do
       expect {
@@ -33,7 +33,9 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
 
   context 'when given a valid string value' do
     let(:value) { 'my-stack/MyOutput' }
-    let(:stacks) { [{ stack_name: 'blah', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs}] }
+    let(:stacks) {
+      [{ stack_name: 'blah', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs }]
+    }
     let(:outputs) { [] }
 
     before do
@@ -43,7 +45,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
     end
 
     context 'the stack and output exist' do
-      let(:outputs) { [{output_key: 'MyOutput', output_value: 'myresolvedvalue'}] }
+      let(:outputs) { [{ output_key: 'MyOutput', output_value: 'myresolvedvalue' }] }
 
       before do
         allow(config).to receive(:unalias_region).with('ap-southeast-2').and_return('ap-southeast-2')
@@ -69,7 +71,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
 
       context 'when the output key has a non-camel name' do
         let(:value) { 'my-stack/my_Output' }
-        let(:outputs) { [{output_key: 'my_Output', output_value: 'myresolvedvalue'}] }
+        let(:outputs) { [{ output_key: 'my_Output', output_value: 'myresolvedvalue' }] }
 
         it 'resolves the value' do
           expect(resolved_value).to eq 'myresolvedvalue'
@@ -77,8 +79,17 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
       end
 
       context "when different credentials are used" do
-        let(:outputs_in_account_2) { [ {output_key: 'MyOutput', output_value: 'resolvedvalueinaccount2'} ] }
-        let(:stacks_in_account_2) { [{ stack_name: 'other-stack', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs_in_account_2}] }
+        let(:outputs_in_account_2) { [{ output_key: 'MyOutput', output_value: 'resolvedvalueinaccount2' }] }
+        let(:stacks_in_account_2) {
+          [
+            {
+              stack_name: 'other-stack',
+              creation_time: Time.now,
+              stack_status: 'CREATE_COMPLETE',
+              outputs: outputs_in_account_2
+            }
+          ]
+        }
 
         before do
           cf.stub_responses(
@@ -137,7 +148,9 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
 
   context 'when given a valid string value including region' do
     let(:value) { 'us-east-1:my-stack/MyOutput' }
-    let(:stacks) { [{ stack_name: 'my-stack', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs}] }
+    let(:stacks) {
+      [{ stack_name: 'my-stack', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs }]
+    }
     let(:outputs) { [] }
 
     before do
@@ -146,7 +159,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
     end
 
     context 'the stack and output exist' do
-      let(:outputs) { [{output_key: 'MyOutput', output_value: 'myresolvedvalue'}] }
+      let(:outputs) { [{ output_key: 'MyOutput', output_value: 'myresolvedvalue' }] }
 
       it 'resolves the value' do
         expect(resolved_value).to eq 'myresolvedvalue'
@@ -155,8 +168,17 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
       context 'the stack and output exist in a different region with the same name' do
         let(:value_in_region_alias) { 'global:my-stack/MyOutput' }
         let(:value_in_region_2) { 'ap-southeast-2:my-stack/MyOutput' }
-        let(:outputs_in_region_2) { [{output_key: 'MyOutput', output_value: 'myresolvedvalue2'}] }
-        let(:stacks_in_region_2) { [{ stack_name: 'my-stack', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs_in_region_2}] }
+        let(:outputs_in_region_2) { [{ output_key: 'MyOutput', output_value: 'myresolvedvalue2' }] }
+        let(:stacks_in_region_2) {
+          [
+            {
+              stack_name: 'my-stack',
+              creation_time: Time.now,
+              stack_status: 'CREATE_COMPLETE',
+              outputs: outputs_in_region_2
+            }
+          ]
+        }
 
         before do
           cf.stub_responses(

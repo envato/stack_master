@@ -44,11 +44,13 @@ module StackMaster
     def assume_role_credentials(account, role)
       credentials_key = "#{account}:#{role}"
       @credentials.fetch(credentials_key) do
-        @credentials[credentials_key] = Aws::AssumeRoleCredentials.new({
-          region: StackMaster.cloud_formation_driver.region,
-          role_arn: "arn:aws:iam::#{account}:role/#{role}",
-          role_session_name: "stack-master-role-assumer"
-        })
+        @credentials[credentials_key] = Aws::AssumeRoleCredentials.new(
+          {
+            region: StackMaster.cloud_formation_driver.region,
+            role_arn: "arn:aws:iam::#{account}:role/#{role}",
+            role_session_name: "stack-master-role-assumer"
+          }
+        )
       end
     end
   end

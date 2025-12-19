@@ -8,7 +8,15 @@ module StackMaster
 
       def perform
         if stack_resources
-          tp stack_resources, :logical_resource_id, :resource_type, :timestamp, :resource_status, :resource_status_reason, :description
+          tp(
+            stack_resources,
+            :logical_resource_id,
+            :resource_type,
+            :timestamp,
+            :resource_status,
+            :resource_status_reason,
+            :description
+          )
         else
           failed("Stack doesn't exist")
         end

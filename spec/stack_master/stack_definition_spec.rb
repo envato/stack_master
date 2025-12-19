@@ -6,13 +6,14 @@ RSpec.describe StackMaster::StackDefinition do
       template: template,
       tags: tags,
       base_dir: base_dir,
-      parameter_files: parameter_files)
+      parameter_files: parameter_files
+    )
   end
 
   let(:region) { 'us-east-1' }
   let(:stack_name) { 'stack_name' }
   let(:template) { 'template.json' }
-  let(:tags) { {'environment' => 'production'} }
+  let(:tags) { { 'environment' => 'production' } }
   let(:base_dir) { '/base_dir' }
   let(:parameter_files) { nil }
 
@@ -37,29 +38,35 @@ RSpec.describe StackMaster::StackDefinition do
   end
 
   it 'has default and region specific parameter file locations' do
-    expect(stack_definition.all_parameter_files).to eq([
-      "/base_dir/parameters/#{stack_name}.yaml",
-      "/base_dir/parameters/#{stack_name}.yml",
-      "/base_dir/parameters/#{region}/#{stack_name}.yaml",
-      "/base_dir/parameters/#{region}/#{stack_name}.yml",
-    ])
+    expect(stack_definition.all_parameter_files).to eq(
+      [
+        "/base_dir/parameters/#{stack_name}.yaml",
+        "/base_dir/parameters/#{stack_name}.yml",
+        "/base_dir/parameters/#{region}/#{stack_name}.yaml",
+        "/base_dir/parameters/#{region}/#{stack_name}.yml",
+      ]
+    )
   end
 
   it 'returns all globs' do
-    expect(stack_definition.parameter_file_globs).to eq([
-      "/base_dir/parameters/#{stack_name}.y*ml",
-      "/base_dir/parameters/#{region}/#{stack_name}.y*ml",
-    ])
+    expect(stack_definition.parameter_file_globs).to eq(
+      [
+        "/base_dir/parameters/#{stack_name}.y*ml",
+        "/base_dir/parameters/#{region}/#{stack_name}.y*ml",
+      ]
+    )
   end
 
   context 'given a stack_name with a dash' do
     let(:stack_name) { 'stack-name' }
 
     it 'returns globs supporting dashes and underscores in the parameter filenames' do
-      expect(stack_definition.parameter_file_globs).to eq([
-        "/base_dir/parameters/stack[-_]name.y*ml",
-        "/base_dir/parameters/#{region}/stack[-_]name.y*ml",
-      ])
+      expect(stack_definition.parameter_file_globs).to eq(
+        [
+          "/base_dir/parameters/stack[-_]name.y*ml",
+          "/base_dir/parameters/#{region}/stack[-_]name.y*ml",
+        ]
+      )
     end
   end
 
@@ -77,33 +84,39 @@ RSpec.describe StackMaster::StackDefinition do
     end
 
     it 'includes a parameter lookup dir for it' do
-      expect(stack_definition.all_parameter_files).to eq([
-        "/base_dir/parameters/#{stack_name}.yaml",
-        "/base_dir/parameters/#{stack_name}.yml",
-        "/base_dir/parameters/#{region}/#{stack_name}.yaml",
-        "/base_dir/parameters/#{region}/#{stack_name}.yml",
-        "/base_dir/parameters/production/#{stack_name}.yaml",
-        "/base_dir/parameters/production/#{stack_name}.yml",
-      ])
+      expect(stack_definition.all_parameter_files).to eq(
+        [
+          "/base_dir/parameters/#{stack_name}.yaml",
+          "/base_dir/parameters/#{stack_name}.yml",
+          "/base_dir/parameters/#{region}/#{stack_name}.yaml",
+          "/base_dir/parameters/#{region}/#{stack_name}.yml",
+          "/base_dir/parameters/production/#{stack_name}.yaml",
+          "/base_dir/parameters/production/#{stack_name}.yml",
+        ]
+      )
     end
 
     it 'returns all globs' do
-      expect(stack_definition.parameter_file_globs).to eq([
-        "/base_dir/parameters/#{stack_name}.y*ml",
-        "/base_dir/parameters/#{region}/#{stack_name}.y*ml",
-        "/base_dir/parameters/production/#{stack_name}.y*ml",
-      ])
+      expect(stack_definition.parameter_file_globs).to eq(
+        [
+          "/base_dir/parameters/#{stack_name}.y*ml",
+          "/base_dir/parameters/#{region}/#{stack_name}.y*ml",
+          "/base_dir/parameters/production/#{stack_name}.y*ml",
+        ]
+      )
     end
 
     context 'given a stack_name with a dash' do
       let(:stack_name) { 'stack-name' }
 
       it 'returns globs supporting dashes and underscores in the parameter filenames' do
-        expect(stack_definition.parameter_file_globs).to eq([
-          "/base_dir/parameters/stack[-_]name.y*ml",
-          "/base_dir/parameters/#{region}/stack[-_]name.y*ml",
-          "/base_dir/parameters/production/stack[-_]name.y*ml",
-        ])
+        expect(stack_definition.parameter_file_globs).to eq(
+          [
+            "/base_dir/parameters/stack[-_]name.y*ml",
+            "/base_dir/parameters/#{region}/stack[-_]name.y*ml",
+            "/base_dir/parameters/production/stack[-_]name.y*ml",
+          ]
+        )
       end
     end
   end

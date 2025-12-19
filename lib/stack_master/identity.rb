@@ -21,7 +21,8 @@ module StackMaster
     def account_aliases
       @aliases ||= iam.list_account_aliases.account_aliases
     rescue Aws::IAM::Errors::AccessDenied
-      raise MissingIamPermissionsError, 'Failed to retrieve account aliases. Missing required IAM permission: iam:ListAccountAliases'
+      raise MissingIamPermissionsError,
+            'Failed to retrieve account aliases. Missing required IAM permission: iam:ListAccountAliases'
     end
 
     private

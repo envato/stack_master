@@ -2,8 +2,21 @@ RSpec.describe StackMaster::Commands::Status do
   subject(:status) { described_class.new(config, Commander::Command::Options.new, false) }
   let(:config) { instance_double(StackMaster::Config, stacks: stacks) }
   let(:stacks) { [stack_definition_1, stack_definition_2] }
-  let(:stack_definition_1) { double(:stack_definition_1, region: 'us-east-1', stack_name: 'stack1', allowed_accounts: []) }
-  let(:stack_definition_2) { double(:stack_definition_2, region: 'us-east-1', stack_name: 'stack2', stack_status: 'CREATE_COMPLETE', allowed_accounts: []) }
+
+  let(:stack_definition_1) do
+    double(:stack_definition_1, region: 'us-east-1', stack_name: 'stack1', allowed_accounts: [])
+  end
+
+  let(:stack_definition_2) do
+    double(
+      :stack_definition_2,
+      region: 'us-east-1',
+      stack_name: 'stack2',
+      stack_status: 'CREATE_COMPLETE',
+      allowed_accounts: []
+    )
+  end
+
   let(:cf) { Aws::CloudFormation::Client.new(region: 'us-east-1') }
 
   before do
@@ -17,10 +30,35 @@ RSpec.describe StackMaster::Commands::Status do
     end
 
     context "some parameters are different" do
-      let(:stack1) { double(:stack1, template_body: '{}', template_hash: {}, template_format: :json, parameters_with_defaults: {a: 1}, stack_status: 'UPDATE_COMPLETE') }
-      let(:stack2) { double(:stack2, template_body: '{}', template_hash: {}, template_format: :json, parameters_with_defaults: {a: 2}, stack_status: 'CREATE_COMPLETE') }
-      let(:proposed_stack1) { double(:proposed_stack1, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
-      let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
+      let(:stack1) do
+        double(
+          :stack1,
+          template_body: '{}',
+          template_hash: {},
+          template_format: :json,
+          parameters_with_defaults: { a: 1 },
+          stack_status: 'UPDATE_COMPLETE'
+        )
+      end
+
+      let(:stack2) do
+        double(
+          :stack2,
+          template_body: '{}',
+          template_hash: {},
+          template_format: :json,
+          parameters_with_defaults: { a: 2 },
+          stack_status: 'CREATE_COMPLETE'
+        )
+      end
+
+      let(:proposed_stack1) do
+        double(:proposed_stack1, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+      end
+
+      let(:proposed_stack2) do
+        double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+      end
 
       it "returns the status of call stacks" do
         out = <<~OUTPUT
@@ -35,10 +73,35 @@ RSpec.describe StackMaster::Commands::Status do
     end
 
     context "some templates are different" do
-      let(:stack1) { double(:stack1, template_body: '{"foo": "bar"}', template_hash: {foo: 'bar'}, template_format: :json, parameters_with_defaults: {a: 1}, stack_status: 'UPDATE_COMPLETE') }
-      let(:stack2) { double(:stack2, template_body: '{}', template_hash: {}, template_format: :json, parameters_with_defaults: {a: 1}, stack_status: 'CREATE_COMPLETE') }
-      let(:proposed_stack1) { double(:proposed_stack1, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
-      let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
+      let(:stack1) do
+        double(
+          :stack1,
+          template_body: '{"foo": "bar"}',
+          template_hash: { foo: 'bar' },
+          template_format: :json,
+          parameters_with_defaults: { a: 1 },
+          stack_status: 'UPDATE_COMPLETE'
+        )
+      end
+
+      let(:stack2) do
+        double(
+          :stack2,
+          template_body: '{}',
+          template_hash: {},
+          template_format: :json,
+          parameters_with_defaults: { a: 1 },
+          stack_status: 'CREATE_COMPLETE'
+        )
+      end
+
+      let(:proposed_stack1) do
+        double(:proposed_stack1, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+      end
+
+      let(:proposed_stack2) do
+        double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+      end
 
       it "returns the status of call stacks" do
         out = <<~OUTPUT
@@ -54,19 +117,51 @@ RSpec.describe StackMaster::Commands::Status do
 
     context 'when identity account is not allowed' do
       let(:sts) { Aws::STS::Client.new(stub_responses: true) }
-      let(:stack_definition_1) { double(:stack_definition_1, region: 'us-east-1', stack_name: 'stack1', allowed_accounts: ['not-account-id']) }
-      let(:stack1) { double(:stack1, template_body: '{"foo": "bar"}', template_hash: {foo: 'bar'}, template_format: :json, parameters_with_defaults: {a: 1}, stack_status: 'UPDATE_COMPLETE') }
-      let(:stack2) { double(:stack2, template_body: '{}', template_hash: {}, template_format: :json, parameters_with_defaults: {a: 1}, stack_status: 'CREATE_COMPLETE') }
-      let(:proposed_stack1) { double(:proposed_stack1, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
-      let(:proposed_stack2) { double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: {a: 1}) }
+
+      let(:stack_definition_1) do
+        double(:stack_definition_1, region: 'us-east-1', stack_name: 'stack1', allowed_accounts: ['not-account-id'])
+      end
+
+      let(:stack1) do
+        double(
+          :stack1,
+          template_body: '{"foo": "bar"}',
+          template_hash: { foo: 'bar' },
+          template_format: :json,
+          parameters_with_defaults: { a: 1 },
+          stack_status: 'UPDATE_COMPLETE'
+        )
+      end
+
+      let(:stack2) do
+        double(
+          :stack2,
+          template_body: '{}',
+          template_hash: {},
+          template_format: :json,
+          parameters_with_defaults: { a: 1 },
+          stack_status: 'CREATE_COMPLETE'
+        )
+      end
+
+      let(:proposed_stack1) do
+        double(:proposed_stack1, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+      end
+
+      let(:proposed_stack2) do
+        double(:proposed_stack2, template_body: "{}", template_format: :json, parameters_with_defaults: { a: 1 })
+      end
 
       before do
         allow(Aws::STS::Client).to receive(:new).and_return(sts)
-        sts.stub_responses(:get_caller_identity, {
-          account: 'account-id',
-          arn: 'an-arn',
-          user_id: 'a-user-id'
-        })
+        sts.stub_responses(
+          :get_caller_identity,
+          {
+            account: 'account-id',
+            arn: 'an-arn',
+            user_id: 'a-user-id'
+          }
+        )
       end
 
       it 'sets stack status and different fields accordingly' do
@@ -91,16 +186,15 @@ RSpec.describe StackMaster::Commands::Status do
 
         it "returns the status of call stacks" do
           out = <<~OUTPUT
-          REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT
-          ----------|------------|-----------------|----------
-          us-east-1 | stack1     | UPDATE_COMPLETE | Yes      
-          us-east-1 | stack2     | CREATE_COMPLETE | No       
-           * No echo parameters can't be diffed
+            REGION    | STACK_NAME | STACK_STATUS    | DIFFERENT
+            ----------|------------|-----------------|----------
+            us-east-1 | stack1     | UPDATE_COMPLETE | Yes      
+            us-east-1 | stack2     | CREATE_COMPLETE | No       
+             * No echo parameters can't be diffed
           OUTPUT
           expect { status.perform }.to output(out).to_stdout
         end
       end
     end
   end
-
 end

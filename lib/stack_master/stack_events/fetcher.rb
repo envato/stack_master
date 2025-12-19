@@ -31,7 +31,9 @@ module StackMaster
       end
 
       def fetch_events
-        PagedResponseAccumulator.call(cf, :describe_stack_events, { stack_name: @stack_name }, :stack_events).stack_events
+        PagedResponseAccumulator
+          .call(cf, :describe_stack_events, { stack_name: @stack_name }, :stack_events)
+          .stack_events
       end
     end
   end

@@ -5,7 +5,7 @@ module StackMaster
   class CLI
     include Commander::Methods
 
-    def initialize(argv, stdin=STDIN, stdout=STDOUT, stderr=STDERR, kernel=Kernel)
+    def initialize(argv, stdin = STDIN, stdout = STDOUT, stderr = STDERR, kernel = Kernel)
       @argv, @stdin, @stdout, @stderr, @kernel = argv, stdin, stdout, stderr, kernel
       Commander::Runner.instance_variable_set('@instance', Commander::Runner.new(argv))
       StackMaster.stdout = @stdout
@@ -41,9 +41,14 @@ module StackMaster
       command :apply do |c|
         c.syntax = 'stack_master apply [region_or_alias] [stack_name]'
         c.summary = 'Creates or updates a stack'
-        c.description = "Creates or updates a stack. Shows a diff of the proposed stack's template and parameters. Tails stack events until CloudFormation has completed."
+        c.description = "Creates or updates a stack. Shows a diff of the proposed stack's template and parameters. " \
+                        'Tails stack events until CloudFormation has completed.'
         c.example 'update a stack named myapp-vpc in us-east-1', 'stack_master apply us-east-1 myapp-vpc'
-        c.option '--on-failure ACTION', String, "Action to take on CREATE_FAILURE. Valid Values: [ DO_NOTHING | ROLLBACK | DELETE ]. Default: ROLLBACK\nNote: You cannot use this option with Serverless Application Model (SAM) templates."
+        c.option '--on-failure ACTION', String,
+                 'Action to take on CREATE_FAILURE. ' \
+                 'Valid Values: [ DO_NOTHING | ROLLBACK | DELETE ]. ' \
+                 "Default: ROLLBACK\n" \
+                 'Note: You cannot use this option with Serverless Application Model (SAM) templates.'
         c.option '--yes-param PARAM_NAME', String, "Auto-approve stack updates when only parameter PARAM_NAME changes"
         c.action do |args, options|
           options.default config: default_config_file
@@ -171,11 +176,13 @@ module StackMaster
       command :status do |c|
         c.syntax = 'stack_master status'
         c.summary = 'Check the current status stacks.'
-        c.description = 'Checks the status of all stacks defined in the stack_master.yml file. Warning this operation can be somewhat slow.'
+        c.description = 'Checks the status of all stacks defined in the stack_master.yml file. ' \
+                        'Warning this operation can be somewhat slow.'
         c.example 'description', 'Check the status of all stack definitions'
         c.action do |args, options|
           options.default config: default_config_file
           say "Invalid arguments. stack_master status" and return unless args.size == 0
+
           config = load_config(options.config)
           StackMaster::Commands::Status.perform(config, nil, options)
         end
@@ -184,11 +191,13 @@ module StackMaster
       command :tidy do |c|
         c.syntax = 'stack_master tidy'
         c.summary = 'Try to identify extra & missing files.'
-        c.description = 'Cross references stack_master.yml with the template and parameter directories to identify extra or missing files.'
+        c.description = 'Cross references stack_master.yml with the template ' \
+                        'and parameter directories to identify extra or missing files.'
         c.example 'description', 'Check for missing or extra files'
         c.action do |args, options|
           options.default config: default_config_file
           say "Invalid arguments. stack_master tidy" and return unless args.size == 0
+
           config = load_config(options.config)
           StackMaster::Commands::Tidy.perform(config, nil, options)
         end
@@ -269,11 +278,14 @@ module StackMaster
           success = false
         end
         stack_definitions = stack_definitions.select do |stack_definition|
-          running_in_allowed_account?(stack_definition.allowed_accounts) && StackStatus.new(config, stack_definition).changed?
+          running_in_allowed_account?(stack_definition.allowed_accounts) &&
+            StackStatus.new(config, stack_definition).changed?
         end if options.changed
         stack_definitions.each do |stack_definition|
           StackMaster.cloud_formation_driver.set_region(stack_definition.region)
-          StackMaster.stdout.puts "Executing #{command.command_name} on #{stack_definition.stack_name} in #{stack_definition.region}"
+          StackMaster.stdout.puts(
+            "Executing #{command.command_name} on #{stack_definition.stack_name} in #{stack_definition.region}"
+          )
           success = execute_if_allowed_account(stack_definition.allowed_accounts) do
             command.perform(config, stack_definition, options).success?
           end
@@ -283,7 +295,7 @@ module StackMaster
     end
 
     def show_other_region_candidates(config, stack_name)
-      candidates = config.filter(region="", stack_name=stack_name)
+      candidates = config.filter(region = "", stack_name = stack_name)
       return if candidates.empty?
 
       StackMaster.stdout.puts "Stack name #{stack_name} exists in regions: #{candidates.map(&:region).join(', ')}"
@@ -291,12 +303,15 @@ module StackMaster
 
     def execute_if_allowed_account(allowed_accounts, &block)
       raise ArgumentError, "Block required to execute this method" unless block_given?
+
       if running_in_allowed_account?(allowed_accounts)
         block.call
       else
         account_text = "'#{identity.account}'"
         account_text << " (#{identity.account_aliases.join(', ')})" if identity.account_aliases.any?
-        StackMaster.stdout.puts "Account #{account_text} is not an allowed account. Allowed accounts are #{allowed_accounts}."
+        StackMaster.stdout.puts(
+          "Account #{account_text} is not an allowed account. Allowed accounts are #{allowed_accounts}."
+        )
         false
       end
     end

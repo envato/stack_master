@@ -8,7 +8,8 @@ RSpec.describe StackMaster::Commands::Compile do
     StackMaster::Stack.new(
       template_body: template_body,
       template_format: template_format,
-      parameters: parameters)
+      parameters: parameters
+    )
   }
 
   let(:template_body) { '{}' }

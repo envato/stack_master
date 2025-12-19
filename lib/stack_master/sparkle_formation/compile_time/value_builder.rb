@@ -2,7 +2,6 @@ module StackMaster
   module SparkleFormation
     module CompileTime
       class ValueBuilder
-
         def initialize(definition, parameter)
           @definition = definition
           @parameter = parameter
@@ -33,7 +32,6 @@ module StackMaster
             @value = @value.map { |item| item.is_a?(String) ? item.to_f : item } if @value.is_a?(Array)
           end
         end
-
       end
     end
   end

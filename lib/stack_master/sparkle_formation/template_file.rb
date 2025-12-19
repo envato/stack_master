@@ -17,7 +17,6 @@ module StackMaster
               value
             end
           end
-
         end.new(vars, prefix)
       end
 
@@ -64,4 +63,3 @@ end
 
 SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::UserDataFile)
 SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::JoinedFile)
-

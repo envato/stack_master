@@ -15,7 +15,8 @@ module StackMaster
         detect_stack_drift_result = cf.detect_stack_drift(stack_name: stack_name)
         drift_results = wait_for_drift_results(detect_stack_drift_result.stack_drift_detection_id)
 
-        puts colorize("Drift Status: #{drift_results.stack_drift_status}", stack_drift_status_color(drift_results.stack_drift_status))
+        puts colorize("Drift Status: #{drift_results.stack_drift_status}",
+                      stack_drift_status_color(drift_results.stack_drift_status))
         return if drift_results.stack_drift_status == 'IN_SYNC'
 
         failed
@@ -51,8 +52,10 @@ module StackMaster
       end
 
       def display_resource_drift(drift)
-        diff = ::StackMaster::Diff.new(before: prettify_json(drift.expected_properties),
-                        after: prettify_json(drift.actual_properties))
+        diff = ::StackMaster::Diff.new(
+          before: prettify_json(drift.expected_properties),
+          after: prettify_json(drift.actual_properties)
+        )
         diff.display_colorized_diff
       end
 

@@ -7,7 +7,8 @@ module StackMaster
         new(stack_name, region, **args, &block).stream
       end
 
-      def initialize(stack_name, region, from: Time.now, break_on_finish_state: true, sleep_between_fetches: 1, io: nil, &block)
+      def initialize(stack_name, region, from: Time.now, break_on_finish_state: true, sleep_between_fetches: 1,
+                     io: nil, &block)
         @stack_name = stack_name
         @region = region
         @block = block
@@ -42,6 +43,7 @@ module StackMaster
         [].tap do |unseen_events|
           events.each do |event|
             next if @seen_events.include?(event.event_id)
+
             @seen_events << event.event_id
             unseen_events << event
           end

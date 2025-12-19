@@ -4,7 +4,6 @@ module StackMaster
   module SparkleFormation
     module CompileTime
       class NumberValidator < ValueValidator
-
         def initialize(name, definition, parameter)
           @name = name
           @definition = definition
@@ -15,6 +14,7 @@ module StackMaster
 
         def check_is_valid
           return true unless @definition[:type] == :number
+
           invalid_values.empty?
         end
 
@@ -28,7 +28,6 @@ module StackMaster
         def create_error
           "#{@name}:#{invalid_values} are not Numbers"
         end
-
       end
     end
   end

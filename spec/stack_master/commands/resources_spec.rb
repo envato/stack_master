@@ -37,7 +37,8 @@ RSpec.describe StackMaster::Commands::Resources do
 
     context 'given the stack does not exist' do
       before do
-        allow(cf).to receive(:describe_stack_resources).and_raise(Aws::CloudFormation::Errors::ValidationError.new('x', 'y'))
+        allow(cf).to receive(:describe_stack_resources).and_raise(Aws::CloudFormation::Errors::ValidationError.new('x',
+                                                                                                                   'y'))
       end
 
       specify 'the command is not successful' do

@@ -14,7 +14,8 @@ RSpec.describe StackMaster::TestDriver::CloudFormation do
       test_cf_driver.add_stack_event(stack_name: 'stack-1', resource_status: "UPDATE_COMPLETE")
       test_cf_driver.add_stack_event(stack_name: 'stack-1', resource_status: "UPDATE_COMPLETE")
       test_cf_driver.add_stack_event(stack_name: 'stack-2')
-      expect(test_cf_driver.describe_stack_events(stack_name: 'stack-1').stack_events.map(&:stack_name)).to eq ['stack-1', 'stack-1']
+      expect(test_cf_driver.describe_stack_events(stack_name: 'stack-1').stack_events.map(&:stack_name))
+        .to eq(['stack-1', 'stack-1'])
     end
 
     it 'sets and gets templates' do
@@ -35,7 +36,7 @@ RSpec.describe StackMaster::TestDriver::CloudFormation do
         stack_name: 'stack-1',
         change_set_name: 'change-set-1',
         template_body: '{}',
-        parameters: [{ paramater_key: 'param_1', parameter_value: 'value_1'}]
+        parameters: [{ paramater_key: 'param_1', parameter_value: 'value_1' }]
       ).id
       change_set = test_cf_driver.describe_change_set(change_set_name: change_set_id)
       expect(change_set.change_set_id).to eq change_set_id
@@ -46,8 +47,16 @@ RSpec.describe StackMaster::TestDriver::CloudFormation do
     end
 
     it 'creates stacks using change sets and describes stacks' do
-      change_set1 = test_cf_driver.create_change_set(change_set_name: 'change-set-1', stack_name: 'stack-1', change_set_type: 'CREATE')
-      change_set2 = test_cf_driver.create_change_set(change_set_name: 'change-set-2', stack_name: 'stack-2', change_set_type: 'CREATE')
+      change_set1 = test_cf_driver.create_change_set(
+        change_set_name: 'change-set-1',
+        stack_name: 'stack-1',
+        change_set_type: 'CREATE'
+      )
+      change_set2 = test_cf_driver.create_change_set(
+        change_set_name: 'change-set-2',
+        stack_name: 'stack-2',
+        change_set_type: 'CREATE'
+      )
       test_cf_driver.execute_change_set(change_set_name: change_set1.id)
       test_cf_driver.execute_change_set(change_set_name: change_set2.id)
       expect(test_cf_driver.describe_stacks.stacks.map(&:stack_name)).to eq(['stack-1', 'stack-2'])

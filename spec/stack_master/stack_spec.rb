@@ -14,8 +14,8 @@ RSpec.describe StackMaster::Stack do
     context 'when the stack exists in AWS' do
       let(:parameters) {
         [
-            {parameter_key: 'param1', parameter_value: 'value1'},
-            {parameter_key: 'param2', parameter_value: 'value2'}
+          { parameter_key: 'param1', parameter_value: 'value1' },
+          { parameter_key: 'param2', parameter_value: 'value2' }
         ]
       }
       before do
@@ -48,7 +48,7 @@ RSpec.describe StackMaster::Stack do
       end
 
       it 'parses parameters into a hash' do
-        expect(stack.parameters).to eq({'param1' => 'value1', 'param2' => 'value2'})
+        expect(stack.parameters).to eq({ 'param1' => 'value1', 'param2' => 'value2' })
       end
 
       it 'sets role_arn' do
@@ -88,11 +88,28 @@ RSpec.describe StackMaster::Stack do
   end
 
   describe '.generate_without_parameters' do
-    let(:tags) { {'tag1' => 'value1'} }
-    let(:stack_definition) { StackMaster::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn', stack_policy_file: 'no_replace_rds.json') }
-    let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
+    let(:tags) { { 'tag1' => 'value1' } }
+
+    let(:stack_definition) do
+      StackMaster::StackDefinition.new(
+        region: region,
+        stack_name: stack_name,
+        tags: tags,
+        base_dir: '/base_dir',
+        template: template_file_name,
+        notification_arns: ['test_arn'],
+        role_arn: 'test_service_role_arn',
+        stack_policy_file: 'no_replace_rds.json'
+      )
+    end
+
+    let(:config) { StackMaster::Config.new({ 'stacks' => {} }, '/base_dir') }
+
     subject(:stack) { StackMaster::Stack.generate_without_parameters(stack_definition, config) }
-    let(:parameter_hash) { {template_parameters: {'DbPassword' => {'secret' => 'db_password'}}, compile_time_parameters: {}} }
+
+    let(:parameter_hash) do
+      { template_parameters: { 'DbPassword' => { 'secret' => 'db_password' } }, compile_time_parameters: {} }
+    end
     let(:resolved_compile_time_parameters) { {} }
     let(:template_file_name) { 'template.rb' }
     let(:template_body) { <<~JSON }
@@ -116,17 +133,28 @@ RSpec.describe StackMaster::Stack do
     let(:stack_policy_body) { '{}' }
 
     before do
-      allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
-      allow(StackMaster::ParameterResolver).to receive(:resolve).with(config,stack_definition,parameter_hash[:compile_time_parameters]).and_return(resolved_compile_time_parameters)
-      allow(StackMaster::TemplateCompiler).to receive(:compile).with(
-        config,
-        stack_definition.compiler,
-        stack_definition.template_dir,
-        stack_definition.template,
-        resolved_compile_time_parameters,
-        stack_definition.compiler_options
-      ).and_return(template_body)
-      allow(File).to receive(:read).with(stack_definition.stack_policy_file_path).and_return(stack_policy_body)
+      allow(StackMaster::ParameterLoader)
+        .to receive(:load)
+        .and_return(parameter_hash)
+      allow(StackMaster::ParameterResolver)
+        .to receive(:resolve)
+        .with(config, stack_definition, parameter_hash[:compile_time_parameters])
+        .and_return(resolved_compile_time_parameters)
+      allow(StackMaster::TemplateCompiler)
+        .to receive(:compile)
+        .with(
+          config,
+          stack_definition.compiler,
+          stack_definition.template_dir,
+          stack_definition.template,
+          resolved_compile_time_parameters,
+          stack_definition.compiler_options
+        )
+        .and_return(template_body)
+      allow(File)
+        .to receive(:read)
+        .with(stack_definition.stack_policy_file_path)
+        .and_return(stack_policy_body)
     end
 
     it 'has the stack definitions region' do
@@ -180,12 +208,16 @@ RSpec.describe StackMaster::Stack do
   end
 
   describe '.generate' do
-    let(:tags) { {'tag1' => 'value1'} }
+    let(:tags) { { 'tag1' => 'value1' } }
     let(:stack_definition) { StackMaster::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn', stack_policy_file: 'no_replace_rds.json') }
-    let(:config) { StackMaster::Config.new({'stacks' => {}}, '/base_dir') }
+    let(:config) { StackMaster::Config.new({ 'stacks' => {} }, '/base_dir') }
     subject(:stack) { StackMaster::Stack.generate(stack_definition, config) }
-    let(:parameter_hash) { {template_parameters: {'DbPassword' => {'secret' => 'db_password'}}, compile_time_parameters: {}} }
-    let(:resolved_template_parameters) { {'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium'} }
+    let(:parameter_hash) {
+      { template_parameters: { 'DbPassword' => { 'secret' => 'db_password' } }, compile_time_parameters: {} }
+    }
+    let(:resolved_template_parameters) {
+      { 'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium' }
+    }
     let(:resolved_compile_time_parameters) { {} }
     let(:template_file_name) { 'template.rb' }
     let(:template_body) { <<~JSON }
@@ -209,18 +241,32 @@ RSpec.describe StackMaster::Stack do
     let(:stack_policy_body) { '{}' }
 
     before do
-      allow(StackMaster::ParameterLoader).to receive(:load).and_return(parameter_hash)
-      allow(StackMaster::ParameterResolver).to receive(:resolve).with(config,stack_definition,parameter_hash[:template_parameters]).and_return(resolved_template_parameters)
-      allow(StackMaster::ParameterResolver).to receive(:resolve).with(config,stack_definition,parameter_hash[:compile_time_parameters]).and_return(resolved_compile_time_parameters)
-      allow(StackMaster::TemplateCompiler).to receive(:compile).with(
-        config,
-        stack_definition.compiler,
-        stack_definition.template_dir,
-        stack_definition.template,
-        resolved_compile_time_parameters,
-        stack_definition.compiler_options
-      ).and_return(template_body)
-      allow(File).to receive(:read).with(stack_definition.stack_policy_file_path).and_return(stack_policy_body)
+      allow(StackMaster::ParameterLoader)
+        .to receive(:load)
+        .and_return(parameter_hash)
+      allow(StackMaster::ParameterResolver)
+        .to receive(:resolve)
+        .with(config, stack_definition, parameter_hash[:template_parameters])
+        .and_return(resolved_template_parameters)
+      allow(StackMaster::ParameterResolver)
+        .to receive(:resolve)
+        .with(config, stack_definition, parameter_hash[:compile_time_parameters])
+        .and_return(resolved_compile_time_parameters)
+      allow(StackMaster::TemplateCompiler)
+        .to receive(:compile)
+        .with(
+          config,
+          stack_definition.compiler,
+          stack_definition.template_dir,
+          stack_definition.template,
+          resolved_compile_time_parameters,
+          stack_definition.compiler_options
+        )
+        .and_return(template_body)
+      allow(File)
+        .to receive(:read)
+        .with(stack_definition.stack_policy_file_path)
+        .and_return(stack_policy_body)
     end
 
     it 'has the stack definitions region' do

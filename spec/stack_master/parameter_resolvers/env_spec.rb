@@ -1,7 +1,5 @@
 RSpec.describe StackMaster::ParameterResolvers::Env do
-
   describe '#resolve' do
-
     subject(:resolver) { described_class.new(nil, double(region: 'us-east-1')) }
     let(:environment_variable_name) { 'TEST' }
     let(:error) { "The environment variable #{environment_variable_name} is not set" }
@@ -20,7 +18,7 @@ RSpec.describe StackMaster::ParameterResolvers::Env do
     context 'the environment variable is undefined' do
       it 'should raise and error' do
         expect { resolver.resolve(environment_variable_name) }
-            .to raise_error(ArgumentError, error)
+          .to raise_error(ArgumentError, error)
       end
     end
 
@@ -30,6 +28,5 @@ RSpec.describe StackMaster::ParameterResolvers::Env do
         expect(resolver.resolve(environment_variable_name)).to eq ''
       end
     end
-
   end
 end

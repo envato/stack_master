@@ -8,7 +8,9 @@ module StackMaster
     end
 
     def find(reference)
-      raise ArgumentError, 'Security group references must be non-empty strings' unless reference.is_a?(String) && !reference.empty?
+      unless reference.is_a?(String) && !reference.empty?
+        raise ArgumentError, 'Security group references must be non-empty strings'
+      end
 
       groups = @resource.security_groups({
                                            filters: [

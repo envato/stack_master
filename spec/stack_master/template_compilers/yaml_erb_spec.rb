@@ -49,7 +49,7 @@ RSpec.describe StackMaster::TemplateCompilers::YamlErb do
                 VpcId: !Ref Vpc
                 CidrBlock: 10.0.2.0/28
                 AvailabilityZone: ap-southeast-1
-          YAML
+        YAML
       end
     end
 

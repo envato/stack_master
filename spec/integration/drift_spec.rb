@@ -6,10 +6,10 @@ RSpec.describe "drift command", type: :aruba do
   before do
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cfn)
     write_file("stack_master.yml", <<~FILE)
-    stacks:
-      us-east-1:
-        myapp-web:
-          template: myapp_web.rb
+      stacks:
+        us-east-1:
+          myapp-web:
+            template: myapp_web.rb
     FILE
   end
 

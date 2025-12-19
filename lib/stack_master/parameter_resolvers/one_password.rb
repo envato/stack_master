@@ -13,8 +13,12 @@ module StackMaster
         @stack_definition = stack_definition
       end
 
-      def resolve(params={})
-        raise OnePasswordNotAbleToAuthenticate, "1password requires the `OP_SESSION_<name>` to be set, (remember to sign in?)" if ENV.keys.grep(/OP_SESSION_\w+$/).empty?    
+      def resolve(params = {})
+        if ENV.keys.grep(/OP_SESSION_\w+$/).empty?
+          raise OnePasswordNotAbleToAuthenticate,
+                "1password requires the `OP_SESSION_<name>` to be set, (remember to sign in?)"
+        end
+
         get_items(params)
       end
 
@@ -40,7 +44,7 @@ module StackMaster
       end
 
       def password_item(data)
-        data.details.password 
+        data.details.password
       end
 
       def login_item(data)

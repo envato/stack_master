@@ -140,6 +140,7 @@ module StackMaster
 
   def debug(message)
     return unless debug?
+
     stderr.puts Rainbow("[DEBUG] #{message}").color(:green)
   end
 
@@ -167,6 +168,7 @@ module StackMaster
   end
 
   attr_accessor :non_interactive_answer
+
   @non_interactive_answer = 'y'
 
   def base_dir

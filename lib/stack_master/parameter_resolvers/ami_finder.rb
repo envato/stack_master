@@ -15,7 +15,7 @@ module StackMaster
       end
 
       def build_filters_from_hash(hash)
-        hash.map { |key, value| {name: key, values: Array(value.to_s)}}
+        hash.map { |key, value| { name: key, values: Array(value.to_s) } }
       end
 
       def find_latest_ami(filters, owners = ['self'])

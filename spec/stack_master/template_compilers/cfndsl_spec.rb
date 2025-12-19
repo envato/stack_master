@@ -1,6 +1,5 @@
 RSpec.describe StackMaster::TemplateCompilers::Cfndsl do
-
-  let(:compile_time_parameters) { {'InstanceType' => 't2.medium'} }
+  let(:compile_time_parameters) { { 'InstanceType' => 't2.medium' } }
 
   before(:all) { described_class.require_dependencies }
   let(:template_dir) { 'spec/fixtures/templates/rb/cfndsl/' }
@@ -30,13 +29,14 @@ RSpec.describe StackMaster::TemplateCompilers::Cfndsl do
       end
 
       context 'compiling multiple times' do
-        let(:compile_time_parameters) { {'InstanceType' => 't2.medium', 'DisableApiTermination' => 'true'} }
+        let(:compile_time_parameters) { { 'InstanceType' => 't2.medium', 'DisableApiTermination' => 'true' } }
         let(:template) { 'sample-ctp-repeated.rb' }
 
         it 'does not leak compile time params across invocations' do
-          expect {
-            compile_time_parameters.delete("DisableApiTermination")
-          }.to change { JSON.parse(compile)["Resources"]["MyInstance"]["Properties"]["DisableApiTermination"] }.from('true').to('false')
+          expect { compile_time_parameters.delete("DisableApiTermination") }
+            .to change { JSON.parse(compile)["Resources"]["MyInstance"]["Properties"]["DisableApiTermination"] }
+            .from('true')
+            .to('false')
         end
       end
     end

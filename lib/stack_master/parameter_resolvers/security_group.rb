@@ -12,7 +12,7 @@ module StackMaster
         security_group_finder.find(value)
       end
 
-    private
+      private
 
       def security_group_finder
         StackMaster::SecurityGroupFinder.new(@stack_definition.region)

@@ -30,6 +30,7 @@ module StackMaster
 
     def hash_to_aws_tags(tags)
       return [] if tags.nil?
+
       tags.inject([]) do |aws_tags, (key, value)|
         aws_tags << { key: key, value: value }
         aws_tags

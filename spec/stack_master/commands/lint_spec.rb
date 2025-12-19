@@ -8,7 +8,8 @@ RSpec.describe StackMaster::Commands::Lint do
     StackMaster::Stack.new(
       template_body: template_body,
       template_format: template_format,
-      parameters: parameters)
+      parameters: parameters
+    )
   }
   let(:tempfile) { double(:tempfile) }
   let(:path) { double(:path) }
@@ -17,7 +18,7 @@ RSpec.describe StackMaster::Commands::Lint do
     allow(StackMaster::Stack).to receive(:generate).with(stack_definition, config).and_return(proposed_stack)
   end
 
-  def run 
+  def run
     described_class.perform(config, stack_definition)
   end
 
@@ -49,7 +50,7 @@ RSpec.describe StackMaster::Commands::Lint do
 
   context "when cfn-lint is missing" do
     let(:template_body) { '' }
-    let(:template_format) { :json}
+    let(:template_format) { :json }
 
     it 'outputs a warning' do
       expect_any_instance_of(described_class).to receive(:system).once.with('cfn-lint', '--version').and_return(nil)

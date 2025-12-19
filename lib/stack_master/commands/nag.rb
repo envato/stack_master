@@ -24,7 +24,6 @@ module StackMaster
       def proposed_stack
         @proposed_stack ||= Stack.generate(stack_definition, @config)
       end
-
     end
   end
 end

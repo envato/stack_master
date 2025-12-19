@@ -28,7 +28,8 @@ module StackMaster
         latest_image = images.first
 
         # aws_account_id.dkr.ecr.region.amazonaws.com/repository@sha256:digest
-        "#{latest_image.registry_id}.dkr.ecr.#{@region}.amazonaws.com/#{parameters['repository_name']}@#{latest_image.image_digest}"
+        "#{latest_image.registry_id}.dkr.ecr.#{@region}.amazonaws.com/#{parameters['repository_name']}@" \
+        "#{latest_image.image_digest}"
       end
 
       private
@@ -36,15 +37,16 @@ module StackMaster
       def fetch_images(repository_name, registry_id, ecr)
         images = []
         next_token = nil
-        while
-          resp = ecr.describe_images({
+        while resp = ecr.describe_images(
+          {
             repository_name: repository_name,
             registry_id: registry_id,
             next_token: next_token,
             filter: {
               tag_status: "TAGGED",
             },
-          })
+          }
+        )
 
           images += resp.image_details
           next_token = resp.next_token

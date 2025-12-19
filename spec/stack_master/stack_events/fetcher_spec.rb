@@ -5,14 +5,24 @@ RSpec.describe StackMaster::StackEvents::Fetcher do
   before do
     allow(Aws::CloudFormation::Client).to receive(:new).and_return(cf)
     allow(StackMaster::StackEvents::Streamer).to receive(:stream)
-    allow(StackMaster::PagedResponseAccumulator).to receive(:call).with(StackMaster.cloud_formation_driver, :describe_stack_events, { stack_name: stack_name }, :stack_events).and_return(OpenStruct.new(stack_events: events))
+    allow(StackMaster::PagedResponseAccumulator)
+      .to receive(:call)
+      .with(
+        StackMaster.cloud_formation_driver,
+        :describe_stack_events,
+        { stack_name: stack_name },
+        :stack_events
+      )
+      .and_return(OpenStruct.new(stack_events: events))
   end
 
   context 'with 2 stack events' do
-    let(:events) { [
-      OpenStruct.new(event_id: '1', stack_id: '1', stack_name: 'blah', timestamp: Time.now),
-      OpenStruct.new(event_id: '2', stack_id: '1', stack_name: 'blah', timestamp: Time.now)
-    ] }
+    let(:events) {
+      [
+        OpenStruct.new(event_id: '1', stack_id: '1', stack_name: 'blah', timestamp: Time.now),
+        OpenStruct.new(event_id: '2', stack_id: '1', stack_name: 'blah', timestamp: Time.now)
+      ]
+    }
 
     it 'returns stack events' do
       events = StackMaster::StackEvents::Fetcher.fetch(stack_name, 'us-east-1')

@@ -17,7 +17,7 @@ RSpec.describe StackMaster::TemplateUtils do
     context "with a non-json template body" do
       let(:template_body) { 'AWSTemplateFormatVersion: 2010-09-09' }
 
-        it { is_expected.to eq(:yaml) }
+      it { is_expected.to eq(:yaml) }
     end
   end
 

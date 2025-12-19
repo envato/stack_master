@@ -8,7 +8,8 @@ RSpec.describe StackMaster::Commands::Nag do
     StackMaster::Stack.new(
       template_body: template_body,
       template_format: template_format,
-      parameters: parameters)
+      parameters: parameters
+    )
   }
   let(:tempfile) { double(Tempfile) }
   let(:path) { double(String) }
@@ -62,5 +63,4 @@ RSpec.describe StackMaster::Commands::Nag do
       expect(result.success?).to eq false
     end
   end
-
 end

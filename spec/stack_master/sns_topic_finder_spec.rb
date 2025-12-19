@@ -1,5 +1,4 @@
 RSpec.describe StackMaster::SnsTopicFinder do
-
   subject(:finder) { described_class.new(region) }
   let(:region) { 'us-east-1' }
   let(:topics) do

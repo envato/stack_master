@@ -2,7 +2,6 @@ module StackMaster
   module SparkleFormation
     module CompileTime
       class ValueValidator
-
         attr_reader :is_valid, :error
 
         def validate
@@ -31,9 +30,9 @@ module StackMaster
           if definition[:multiple] && parameter.is_a?(String)
             return parameter.split(',').map(&:strip)
           end
+
           parameter.is_a?(Array) ? parameter : [parameter]
         end
-
       end
     end
   end

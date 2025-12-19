@@ -10,7 +10,12 @@ module StackMaster
       end
 
       def print_event(event)
-        @io.puts Rainbow("#{event.timestamp.localtime} #{event.logical_resource_id} #{event.resource_type} #{event.resource_status} #{event.resource_status_reason}").color(event_colour(event))
+        @io.puts(
+          Rainbow(
+            "#{event.timestamp.localtime} #{event.logical_resource_id} #{event.resource_type} " \
+            "#{event.resource_status} #{event.resource_status_reason}"
+          ).color(event_colour(event))
+        )
       end
 
       def event_colour(event)

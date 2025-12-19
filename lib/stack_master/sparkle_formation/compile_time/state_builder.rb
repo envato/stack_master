@@ -4,7 +4,6 @@ module StackMaster
   module SparkleFormation
     module CompileTime
       class StateBuilder
-
         def initialize(definitions, parameters)
           @definitions = definitions
           @parameters = parameters
@@ -25,7 +24,6 @@ module StackMaster
         def create_value(definition, parameter)
           ValueBuilder.new(definition, parameter).build
         end
-
       end
     end
   end

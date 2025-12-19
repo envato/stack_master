@@ -99,11 +99,27 @@ module StackMaster
         change_set_id = options.fetch(:change_set_name)
         change_set = @change_sets.fetch(change_set_id)
         change_details = [
-          OpenStruct.new(evaluation: 'Static', change_source: 'ResourceReference', target: OpenStruct.new(attribute: 'Properties', requires_recreation: 'Always', name: 'blah'))
+          OpenStruct.new(
+            evaluation: 'Static',
+            change_source: 'ResourceReference',
+            target: OpenStruct.new(
+              attribute: 'Properties',
+              requires_recreation: 'Always',
+              name: 'blah'
+            )
+          )
         ]
-        change = OpenStruct.new(action: 'Modify', replacement: 'True', scope: ['Properties'], details: change_details)
+        change = OpenStruct.new(
+          action: 'Modify',
+          replacement: 'True',
+          scope: ['Properties'],
+          details: change_details
+        )
         changes = [
-          OpenStruct.new(type: 'AWS::Resource', resource_change: change)
+          OpenStruct.new(
+            type: 'AWS::Resource',
+            resource_change: change
+          )
         ]
         OpenStruct.new(change_set.merge(changes: changes, status: 'CREATE_COMPLETE'))
       end
@@ -121,15 +137,16 @@ module StackMaster
 
       def describe_stacks(options = {})
         stack_name = options[:stack_name]
-        stacks = if stack_name
-          if @stacks[stack_name]
-            [@stacks[stack_name]]
+        stacks =
+          if stack_name
+            if @stacks[stack_name]
+              [@stacks[stack_name]]
+            else
+              raise Aws::CloudFormation::Errors::ValidationError.new('', 'Stack does not exist')
+            end
           else
-            raise Aws::CloudFormation::Errors::ValidationError.new('', 'Stack does not exist')
+            @stacks.values
           end
-        else
-          @stacks.values
-        end
         OpenStruct.new(stacks: stacks, next_token: nil)
       end
 

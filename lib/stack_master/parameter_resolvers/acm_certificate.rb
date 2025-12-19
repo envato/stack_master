@@ -10,7 +10,10 @@ module StackMaster
 
       def resolve(domain_name)
         cert_arn = find_cert_arn_by_domain_name(domain_name)
-        raise CertificateNotFound, "Could not find certificate #{domain_name} in #{@stack_definition.region}" unless cert_arn
+        unless cert_arn
+          raise CertificateNotFound, "Could not find certificate #{domain_name} in #{@stack_definition.region}"
+        end
+
         cert_arn
       end
 

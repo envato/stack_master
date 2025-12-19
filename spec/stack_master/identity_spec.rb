@@ -50,12 +50,15 @@ RSpec.describe StackMaster::Identity do
 
       context 'without list account aliases permissions' do
         before do
-          allow(iam).to receive(:list_account_aliases).and_raise(
-            Aws::IAM::Errors.error_class('AccessDenied').new(
-              an_instance_of(Seahorse::Client::RequestContext),
-              'User: arn:aws:sts::123456789:assumed-role/my-role/123456789012 is not authorized to perform: iam:ListAccountAliases on resource: *'
+          allow(iam)
+            .to receive(:list_account_aliases)
+            .and_raise(
+              Aws::IAM::Errors.error_class('AccessDenied').new(
+                an_instance_of(Seahorse::Client::RequestContext),
+                'User: arn:aws:sts::123456789:assumed-role/my-role/123456789012 ' \
+                'is not authorized to perform: iam:ListAccountAliases on resource: *'
+              )
             )
-          )
         end
 
         it 'returns false' do
@@ -68,10 +71,13 @@ RSpec.describe StackMaster::Identity do
       let(:account_aliases) { ['allowed-account'] }
 
       before do
-        iam.stub_responses(:list_account_aliases, {
-          account_aliases: account_aliases,
-          is_truncated: false
-        })
+        iam.stub_responses(
+          :list_account_aliases,
+          {
+            account_aliases: account_aliases,
+            is_truncated: false
+          }
+        )
       end
 
       context "when it's allowed" do
@@ -102,12 +108,15 @@ RSpec.describe StackMaster::Identity do
         let(:allowed_accounts) { ['an-account-alias'] }
 
         before do
-          allow(iam).to receive(:list_account_aliases).and_raise(
-            Aws::IAM::Errors.error_class('AccessDenied').new(
-              an_instance_of(Seahorse::Client::RequestContext),
-              'User: arn:aws:sts::123456789:assumed-role/my-role/123456789012 is not authorized to perform: iam:ListAccountAliases on resource: *'
+          allow(iam)
+            .to receive(:list_account_aliases)
+            .and_raise(
+              Aws::IAM::Errors.error_class('AccessDenied').new(
+                an_instance_of(Seahorse::Client::RequestContext),
+                'User: arn:aws:sts::123456789:assumed-role/my-role/123456789012 ' \
+                'is not authorized to perform: iam:ListAccountAliases on resource: *'
+              )
             )
-          )
         end
 
         it 'raises the correct error' do
@@ -119,11 +128,14 @@ RSpec.describe StackMaster::Identity do
 
   describe '#account' do
     before do
-      sts.stub_responses(:get_caller_identity, {
-        account: 'account-id',
-        arn: 'an-arn',
-        user_id: 'a-user-id'
-      })
+      sts.stub_responses(
+        :get_caller_identity,
+        {
+          account: 'account-id',
+          arn: 'an-arn',
+          user_id: 'a-user-id'
+        }
+      )
     end
 
     it 'returns the current identity account' do
@@ -133,10 +145,13 @@ RSpec.describe StackMaster::Identity do
 
   describe '#account_aliases' do
     before do
-      iam.stub_responses(:list_account_aliases, {
-        account_aliases: %w(my-account new-account-name),
-        is_truncated: false
-      })
+      iam.stub_responses(
+        :list_account_aliases,
+        {
+          account_aliases: %w(my-account new-account-name),
+          is_truncated: false
+        }
+      )
     end
 
     it 'returns the current identity account aliases' do
@@ -145,19 +160,23 @@ RSpec.describe StackMaster::Identity do
 
     context "when identity doesn't have the required iam permissions" do
       before do
-        allow(iam).to receive(:list_account_aliases).and_raise(
-          Aws::IAM::Errors.error_class('AccessDenied').new(
-            an_instance_of(Seahorse::Client::RequestContext),
-            'User: arn:aws:sts::123456789:assumed-role/my-role/987654321000 is not authorized to perform: iam:ListAccountAliases on resource: *'
+        allow(iam)
+          .to receive(:list_account_aliases)
+          .and_raise(
+            Aws::IAM::Errors.error_class('AccessDenied').new(
+              an_instance_of(Seahorse::Client::RequestContext),
+              'User: arn:aws:sts::123456789:assumed-role/my-role/987654321000 ' \
+              'is not authorized to perform: iam:ListAccountAliases on resource: *'
+            )
           )
-        )
       end
 
       it 'raises an error' do
-        expect { identity.account_aliases }.to raise_error(
-          StackMaster::Identity::MissingIamPermissionsError,
-          'Failed to retrieve account aliases. Missing required IAM permission: iam:ListAccountAliases'
-        )
+        expect { identity.account_aliases }
+          .to raise_error(
+            StackMaster::Identity::MissingIamPermissionsError,
+            'Failed to retrieve account aliases. Missing required IAM permission: iam:ListAccountAliases'
+          )
       end
     end
   end

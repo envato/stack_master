@@ -12,8 +12,18 @@ RSpec.describe StackMaster::TemplateCompiler do
 
     context 'when a template compiler is explicitly specified' do
       it 'uses it' do
-        expect(StackMaster::TemplateCompilers::SparkleFormation).to receive(:compile).with('/base_dir/templates', 'template', compile_time_parameters, anything)
-        StackMaster::TemplateCompiler.compile(config, :sparkle_formation, '/base_dir/templates', 'template', compile_time_parameters, compile_time_parameters)
+        expect(StackMaster::TemplateCompilers::SparkleFormation)
+          .to receive(:compile)
+          .with('/base_dir/templates', 'template', compile_time_parameters, anything)
+
+        StackMaster::TemplateCompiler.compile(
+          config,
+          :sparkle_formation,
+          '/base_dir/templates',
+          'template',
+          compile_time_parameters,
+          compile_time_parameters
+        )
       end
     end
 
@@ -23,23 +33,40 @@ RSpec.describe StackMaster::TemplateCompiler do
       }
 
       it 'compiles the template using the relevant template compiler' do
-        expect(TestTemplateCompiler).to receive(:compile).with(nil, template, compile_time_parameters, anything)
-        StackMaster::TemplateCompiler.compile(config, nil, nil, template, compile_time_parameters, compile_time_parameters)
+        expect(TestTemplateCompiler)
+          .to receive(:compile)
+          .with(nil, template, compile_time_parameters, anything)
+
+        StackMaster::TemplateCompiler.compile(
+          config,
+          nil,
+          nil,
+          template,
+          compile_time_parameters,
+          compile_time_parameters
+        )
       end
 
       it 'passes compile_options to the template compiler' do
-        opts = {foo: 1, bar: true, baz: "meh"}
+        opts = { foo: 1, bar: true, baz: "meh" }
         expect(TestTemplateCompiler).to receive(:compile).with(nil, template, compile_time_parameters, opts)
-        StackMaster::TemplateCompiler.compile(config, nil, nil, template, compile_time_parameters,opts)
+        StackMaster::TemplateCompiler.compile(config, nil, nil, template, compile_time_parameters, opts)
       end
 
       context 'when template compilation fails' do
         before { allow(TestTemplateCompiler).to receive(:compile).and_raise(RuntimeError) }
 
         it 'raise TemplateCompilationFailed exception' do
-          expect{ StackMaster::TemplateCompiler.compile(config, nil, template_dir, template, compile_time_parameters, compile_time_parameters)
-          }.to raise_error(
-                 StackMaster::TemplateCompiler::TemplateCompilationFailed, /^Failed to compile/)
+          expect {
+            StackMaster::TemplateCompiler.compile(
+              config,
+              nil,
+              template_dir,
+              template,
+              compile_time_parameters,
+              compile_time_parameters
+            )
+          }.to raise_error(StackMaster::TemplateCompiler::TemplateCompilationFailed, /^Failed to compile/)
         end
       end
     end
