@@ -64,7 +64,7 @@ RSpec.describe StackMaster::Command do
         proc do
           begin
             raise 'the cause message'
-          rescue
+          rescue StandardError
             raise StackMaster::TemplateCompiler::TemplateCompilationFailed, 'the message'
           end
         end
