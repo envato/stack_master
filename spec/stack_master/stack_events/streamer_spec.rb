@@ -1,12 +1,12 @@
 RSpec.describe StackMaster::StackEvents::Streamer do
-  let(:events_first_call) {
+  let(:events_first_call) do
     [
       OpenStruct.new(event_id: '1', resource_status: 'BLAH', timestamp: Time.now),
       OpenStruct.new(event_id: '2', resource_status: 'BLAH', timestamp: Time.now),
       OpenStruct.new(event_id: '3', resource_status: 'BLAH', timestamp: Time.now),
     ]
-  }
-  let(:events_second_call) {
+  end
+  let(:events_second_call) do
     events_first_call + [
       OpenStruct.new(
         event_id: '4',
@@ -16,7 +16,7 @@ RSpec.describe StackMaster::StackEvents::Streamer do
         timestamp: Time.now
       )
     ]
-  }
+  end
   let(:stack_name) { 'stack-name' }
   let(:region) { 'us-east-1' }
   let(:now) { Time.now }
@@ -43,7 +43,7 @@ RSpec.describe StackMaster::StackEvents::Streamer do
   end
 
   context "the stack is in a failed state" do
-    let(:events_second_call) {
+    let(:events_second_call) do
       events_first_call + [
         OpenStruct.new(
           event_id: '4',
@@ -53,7 +53,7 @@ RSpec.describe StackMaster::StackEvents::Streamer do
           timestamp: Time.now
         )
       ]
-    }
+    end
 
     it 'raises an error on failure' do
       expect { StackMaster::StackEvents::Streamer.stream(stack_name, region, sleep_between_fetches: 0) }

@@ -15,9 +15,9 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
     let(:value) { 'stack-name-without-output' }
 
     it 'raises an error' do
-      expect {
+      expect do
         resolved_value
-      }.to raise_error(ArgumentError)
+      end.to raise_error(ArgumentError)
     end
   end
 
@@ -25,17 +25,17 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
     let(:value) { { not_expected: 1 } }
 
     it 'raises an error' do
-      expect {
+      expect do
         resolved_value
-      }.to raise_error(ArgumentError)
+      end.to raise_error(ArgumentError)
     end
   end
 
   context 'when given a valid string value' do
     let(:value) { 'my-stack/MyOutput' }
-    let(:stacks) {
+    let(:stacks) do
       [{ stack_name: 'blah', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs }]
-    }
+    end
     let(:outputs) { [] }
 
     before do
@@ -80,7 +80,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
 
       context "when different credentials are used" do
         let(:outputs_in_account_2) { [{ output_key: 'MyOutput', output_value: 'resolvedvalueinaccount2' }] }
-        let(:stacks_in_account_2) {
+        let(:stacks_in_account_2) do
           [
             {
               stack_name: 'other-stack',
@@ -89,7 +89,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
               outputs: outputs_in_account_2
             }
           ]
-        }
+        end
 
         before do
           cf.stub_responses(
@@ -129,9 +129,9 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
       let(:stacks) { nil }
 
       it 'resolves the value' do
-        expect {
+        expect do
           resolved_value
-        }.to raise_error(StackMaster::ParameterResolvers::StackOutput::StackNotFound)
+        end.to raise_error(StackMaster::ParameterResolvers::StackOutput::StackNotFound)
       end
     end
 
@@ -139,18 +139,18 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
       let(:outputs) { [] }
 
       it 'resolves the value' do
-        expect {
+        expect do
           resolved_value
-        }.to raise_error(StackMaster::ParameterResolvers::StackOutput::StackOutputNotFound)
+        end.to raise_error(StackMaster::ParameterResolvers::StackOutput::StackOutputNotFound)
       end
     end
   end
 
   context 'when given a valid string value including region' do
     let(:value) { 'us-east-1:my-stack/MyOutput' }
-    let(:stacks) {
+    let(:stacks) do
       [{ stack_name: 'my-stack', creation_time: Time.now, stack_status: 'CREATE_COMPLETE', outputs: outputs }]
-    }
+    end
     let(:outputs) { [] }
 
     before do
@@ -169,7 +169,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
         let(:value_in_region_alias) { 'global:my-stack/MyOutput' }
         let(:value_in_region_2) { 'ap-southeast-2:my-stack/MyOutput' }
         let(:outputs_in_region_2) { [{ output_key: 'MyOutput', output_value: 'myresolvedvalue2' }] }
-        let(:stacks_in_region_2) {
+        let(:stacks_in_region_2) do
           [
             {
               stack_name: 'my-stack',
@@ -178,7 +178,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
               outputs: outputs_in_region_2
             }
           ]
-        }
+        end
 
         before do
           cf.stub_responses(

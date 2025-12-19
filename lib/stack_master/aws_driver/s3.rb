@@ -24,9 +24,9 @@ module StackMaster
             prefix: prefix,
             bucket: bucket
           }
-        ).map(&:contents).flatten.inject({}) { |h, obj|
+        ).map(&:contents).flatten.inject({}) do |h, obj|
           h.merge(obj.key => obj)
-        }
+        end
 
         StackMaster.stdout.puts "Uploading files to S3:"
 

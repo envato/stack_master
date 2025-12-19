@@ -4,13 +4,13 @@ RSpec.describe StackMaster::Commands::Compile do
   let(:stack_definition) { StackMaster::StackDefinition.new(base_dir: '/base_dir', region: region, stack_name: stack_name) }
   let(:config) { double(find_stack: stack_definition) }
   let(:parameters) { {} }
-  let(:proposed_stack) {
+  let(:proposed_stack) do
     StackMaster::Stack.new(
       template_body: template_body,
       template_format: template_format,
       parameters: parameters
     )
-  }
+  end
 
   let(:template_body) { '{}' }
   let(:template_format) { :json }

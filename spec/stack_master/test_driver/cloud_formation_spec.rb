@@ -66,8 +66,8 @@ RSpec.describe StackMaster::TestDriver::CloudFormation do
   it 'deletes change sets' do
     change_set_id = test_cf_driver.create_change_set(stack_name: '1', change_set_name: '2').id
     test_cf_driver.delete_change_set(change_set_name: change_set_id)
-    expect {
+    expect do
       test_cf_driver.describe_change_set(change_set_name: change_set_id)
-    }.to raise_error(KeyError)
+    end.to raise_error(KeyError)
   end
 end

@@ -1,5 +1,5 @@
 RSpec.describe StackMaster::Command do
-  let(:command_class) {
+  let(:command_class) do
     Class.new do
       include StackMaster::Command
 
@@ -17,7 +17,7 @@ RSpec.describe StackMaster::Command do
         false
       end
     end
-  }
+  end
 
   context 'when failed is not called' do
     it 'is successful' do

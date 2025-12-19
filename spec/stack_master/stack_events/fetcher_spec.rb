@@ -17,12 +17,12 @@ RSpec.describe StackMaster::StackEvents::Fetcher do
   end
 
   context 'with 2 stack events' do
-    let(:events) {
+    let(:events) do
       [
         OpenStruct.new(event_id: '1', stack_id: '1', stack_name: 'blah', timestamp: Time.now),
         OpenStruct.new(event_id: '2', stack_id: '1', stack_name: 'blah', timestamp: Time.now)
       ]
-    }
+    end
 
     it 'returns stack events' do
       events = StackMaster::StackEvents::Fetcher.fetch(stack_name, 'us-east-1')
@@ -35,12 +35,12 @@ RSpec.describe StackMaster::StackEvents::Fetcher do
     let(:three_pm) { Time.parse('2015-10-27 15:00') }
     let(:four_pm) { Time.parse('2015-10-27 16:00') }
 
-    let(:events) {
+    let(:events) do
       [
         OpenStruct.new(event_id: '1', stack_id: '1', stack_name: 'blah', timestamp: two_pm),
         OpenStruct.new(event_id: '2', stack_id: '1', stack_name: 'blah', timestamp: four_pm),
       ]
-    }
+    end
 
     it 'only returns events after the timestamp' do
       events = StackMaster::StackEvents::Fetcher.fetch(stack_name, 'us-east-1', from: three_pm)

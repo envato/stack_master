@@ -1,7 +1,7 @@
 RSpec.describe StackMaster::Config do
   subject(:loaded_config) { StackMaster::Config.load!('spec/fixtures/stack_master.yml') }
   let(:base_dir) { File.expand_path('spec/fixtures') }
-  let(:myapp_vpc_definition) {
+  let(:myapp_vpc_definition) do
     StackMaster::StackDefinition.new(
       region: 'us-east-1',
       region_alias: 'production',
@@ -16,7 +16,7 @@ RSpec.describe StackMaster::Config do
       stack_policy_file: 'my_policy.json',
       additional_parameter_lookup_dirs: ['production']
     )
-  }
+  end
   let(:bad_yaml) { "a: b\n- c" }
 
   describe ".load!" do

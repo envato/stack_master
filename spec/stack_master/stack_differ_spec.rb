@@ -4,7 +4,7 @@ RSpec.describe StackMaster::StackDiffer do
   let(:proposed_body) { "{\"a\": 1}" }
   let(:current_params) { Hash.new }
   let(:proposed_params) { { 'param1' => 'hello' } }
-  let(:stack) {
+  let(:stack) do
     StackMaster::Stack.new(
       stack_name: stack_name,
       region: region,
@@ -13,8 +13,8 @@ RSpec.describe StackMaster::StackDiffer do
       template_format: :json,
       parameters: current_params
     )
-  }
-  let(:proposed_stack) {
+  end
+  let(:proposed_stack) do
     StackMaster::Stack.new(
       stack_name: stack_name,
       region: region,
@@ -22,17 +22,17 @@ RSpec.describe StackMaster::StackDiffer do
       template_body: proposed_body,
       template_format: :json
     )
-  }
+  end
   let(:stack_name) { 'myapp-vpc' }
   let(:region) { 'us-east-1' }
 
   describe "#proposed_parameters" do
-    let(:current_params) {
+    let(:current_params) do
       {
         'param1' => 'hello',
         'param2' => '****'
       }
-    }
+    end
     it "stars out noecho params" do
       expect(differ.proposed_parameters).to eq "---\nparam1: hello\nparam2: \"****\"\n"
     end

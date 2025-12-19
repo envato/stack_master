@@ -7,10 +7,10 @@ RSpec.describe StackMaster::TemplateCompilers::Yaml do
     end
 
     context 'valid YAML template' do
-      let(:stack_definition) {
+      let(:stack_definition) do
         StackMaster::StackDefinition.new(template_dir: 'spec/fixtures/templates/yml',
                                          template: 'valid_myapp_vpc.yml')
-      }
+      end
 
       it 'produces valid YAML' do
         valid_myapp_vpc_yaml = File.read(stack_definition.template_file_path)

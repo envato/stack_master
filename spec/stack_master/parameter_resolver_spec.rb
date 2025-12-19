@@ -7,7 +7,7 @@ RSpec.describe StackMaster::ParameterResolver do
   end
   let(:config) { double }
   let(:region) { 'us-east-1' }
-  let(:my_resolver) {
+  let(:my_resolver) do
     Class.new do
       def initialize(config, region)
       end
@@ -16,8 +16,8 @@ RSpec.describe StackMaster::ParameterResolver do
         value.to_i * 5
       end
     end
-  }
-  let(:bad_resolver) {
+  end
+  let(:bad_resolver) do
     Class.new do
       def initialize(config, region)
       end
@@ -26,7 +26,7 @@ RSpec.describe StackMaster::ParameterResolver do
         raise Aws::CloudFormation::Errors::ValidationError.new(nil, "Can't find stack")
       end
     end
-  }
+  end
 
   before do
     stub_const('StackMaster::ParameterResolvers::MyResolver', my_resolver)
@@ -55,15 +55,15 @@ RSpec.describe StackMaster::ParameterResolver do
   end
 
   it 'it throws an error when the hash contains more than one key' do
-    expect {
+    expect do
       resolve(param: { nested1: 'value1', nested2: 'value2' })
-    }.to raise_error(StackMaster::ParameterResolver::InvalidParameter)
+    end.to raise_error(StackMaster::ParameterResolver::InvalidParameter)
   end
 
   it "doesn't throw an error when given an array" do
-    expect {
+    expect do
       resolve(param: [1, 2])
-    }.to_not raise_error
+    end.to_not raise_error
   end
 
   context 'when array values contain resolver hashes' do
@@ -84,17 +84,17 @@ RSpec.describe StackMaster::ParameterResolver do
 
   context 'when the resolver is unknown' do
     it 'throws an error' do
-      expect {
+      expect do
         resolve(param: { my_unknown_resolver: 2 })
-      }.to raise_error StackMaster::ParameterResolver::ResolverNotFound
+      end.to raise_error StackMaster::ParameterResolver::ResolverNotFound
     end
   end
 
   context 'when the resolver throws a ValidationError' do
     it 'throws a invalid parameter error' do
-      expect {
+      expect do
         resolve(param: { bad_resolver: 2 })
-      }.to raise_error StackMaster::ParameterResolver::InvalidParameter
+      end.to raise_error StackMaster::ParameterResolver::InvalidParameter
     end
   end
 
@@ -166,19 +166,19 @@ RSpec.describe StackMaster::ParameterResolver do
 
     context "with missing 'account' property" do
       it 'raises an invalid parameter error' do
-        expect {
+        expect do
           resolve(param: { 'role' => role, 'my_resolver' => 2 })
-        }.to raise_error StackMaster::ParameterResolver::InvalidParameter,
-                         match("Both 'account' and 'role' are required to assume role for parameter 'param'")
+        end.to raise_error StackMaster::ParameterResolver::InvalidParameter,
+                           match("Both 'account' and 'role' are required to assume role for parameter 'param'")
       end
     end
 
     context "with missing 'role' property" do
       it 'raises an invalid parameter error' do
-        expect {
+        expect do
           resolve(param: { 'account' => account, 'my_resolver' => 2 })
-        }.to raise_error StackMaster::ParameterResolver::InvalidParameter,
-                         match("Both 'account' and 'role' are required to assume role for parameter 'param'")
+        end.to raise_error StackMaster::ParameterResolver::InvalidParameter,
+                           match("Both 'account' and 'role' are required to assume role for parameter 'param'")
       end
     end
   end

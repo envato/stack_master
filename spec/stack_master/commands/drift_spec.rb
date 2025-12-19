@@ -6,31 +6,31 @@ RSpec.describe StackMaster::Commands::Drift do
 
   subject(:drift) { described_class.new(config, stack_definition, options) }
   let(:stack_drift_detection_id) { 123 }
-  let(:detect_stack_drift_response) {
+  let(:detect_stack_drift_response) do
     Aws::CloudFormation::Types::DetectStackDriftOutput.new(
       stack_drift_detection_id: stack_drift_detection_id
     )
-  }
+  end
   let(:stack_drift_status) { "IN_SYNC" }
-  let(:describe_stack_drift_detection_status_response) {
+  let(:describe_stack_drift_detection_status_response) do
     Aws::CloudFormation::Types::DescribeStackDriftDetectionStatusOutput.new(
       stack_drift_detection_id: stack_drift_detection_id,
       stack_drift_status: stack_drift_status,
       detection_status: "DETECTION_COMPLETE"
     )
-  }
-  let(:describe_stack_resource_drifts_response) {
+  end
+  let(:describe_stack_resource_drifts_response) do
     Aws::CloudFormation::Types::DescribeStackResourceDriftsOutput.new(
       stack_resource_drifts: stack_resource_drifts
     )
-  }
-  let(:property_difference) {
+  end
+  let(:property_difference) do
     Aws::CloudFormation::Types::PropertyDifference.new(
       difference_type: 'ADD',
       property_path: '/SecurityGroupIngress/2'
     )
-  }
-  let(:stack_resource_drifts) {
+  end
+  let(:stack_resource_drifts) do
     [
       Aws::CloudFormation::Types::StackResourceDrift.new(
         stack_resource_drift_status: "IN_SYNC",
@@ -40,7 +40,7 @@ RSpec.describe StackMaster::Commands::Drift do
         property_differences: [property_difference]
       )
     ]
-  }
+  end
 
   before do
     options.timeout = 10
@@ -74,7 +74,7 @@ RSpec.describe StackMaster::Commands::Drift do
     let(:stack_drift_status) { 'DRIFTED' }
     let(:expected_properties) { '{"CidrIp":"1.2.3.4/0","FromPort":80,"IpProtocol":"tcp","ToPort":80}' }
     let(:actual_properties) { '{"CidrIp":"5.6.7.8/0","FromPort":80,"IpProtocol":"tcp","ToPort":80}' }
-    let(:stack_resource_drifts) {
+    let(:stack_resource_drifts) do
       [
         Aws::CloudFormation::Types::StackResourceDrift.new(
           stack_resource_drift_status: "DELETED",
@@ -100,7 +100,7 @@ RSpec.describe StackMaster::Commands::Drift do
           property_differences: [property_difference]
         )
       ]
-    }
+    end
 
     it 'outputs drift status' do
       expect { drift.perform }.to output(/Drift Status: DRIFTED/).to_stdout

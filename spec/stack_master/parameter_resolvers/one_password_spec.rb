@@ -4,7 +4,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
     let(:stack_definition) { double(stack_name: 'mystack', region: 'us-east-1') }
     subject(:resolver) { described_class.new(config, stack_definition) }
     let(:op_env_unset) { ENV['OP_SESSION_something'].clear }
-    let(:secureNote) {
+    let(:secureNote) do
       {
         "uuid" => "auuid",
         "vaultUuid" => "avaultuuid",
@@ -27,8 +27,8 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
           ]
         }
       }
-    }
-    let(:login_password) {
+    end
+    let(:login_password) do
       {
         "uuid" => "auuid",
         "vaultUuid" => "avaultuuid",
@@ -64,8 +64,8 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
           ]
         }
       }
-    }
-    let(:password) {
+    end
+    let(:password) do
       {
         "uuid" => "auuid",
         "vaultUuid" => "avaultuuid",
@@ -88,21 +88,21 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
           ]
         }
       }
-    }
-    let(:the_password) {
+    end
+    let(:the_password) do
       {
         'title' => 'password title',
         'type' => 'password',
         'vault' => 'Shared'
       }
-    }
-    let(:the_secureNote) {
+    end
+    let(:the_secureNote) do
       {
         'title' => 'note title',
         'type' => 'secureNote',
         'vault' => 'Shared'
       }
-    }
+    end
 
     context 'when we have set OP_SESSION_ environment' do
       before do

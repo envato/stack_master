@@ -28,9 +28,9 @@ RSpec.describe StackMaster::TemplateCompiler do
     end
 
     context 'when a template compiler is registered for the given file type' do
-      before {
+      before do
         StackMaster::TemplateCompiler.register(:test_template_compiler, TestTemplateCompiler)
-      }
+      end
 
       it 'compiles the template using the relevant template compiler' do
         expect(TestTemplateCompiler)
@@ -57,7 +57,7 @@ RSpec.describe StackMaster::TemplateCompiler do
         before { allow(TestTemplateCompiler).to receive(:compile).and_raise(RuntimeError) }
 
         it 'raise TemplateCompilationFailed exception' do
-          expect {
+          expect do
             StackMaster::TemplateCompiler.compile(
               config,
               nil,
@@ -66,7 +66,7 @@ RSpec.describe StackMaster::TemplateCompiler do
               compile_time_parameters,
               compile_time_parameters
             )
-          }.to raise_error(StackMaster::TemplateCompiler::TemplateCompilationFailed, /^Failed to compile/)
+          end.to raise_error(StackMaster::TemplateCompiler::TemplateCompilationFailed, /^Failed to compile/)
         end
       end
     end

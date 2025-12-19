@@ -71,7 +71,7 @@ RSpec.describe StackMaster::ChangeSet do
   describe '#display' do
     context 'a successful response' do
       let(:target) { OpenStruct.new(name: 'GroupDescription', attribute: 'Properties', requires_recreation: 'Always') }
-      let(:changes) {
+      let(:changes) do
         [
           OpenStruct.new(
             resource_change: OpenStruct.new(
@@ -90,8 +90,8 @@ RSpec.describe StackMaster::ChangeSet do
             )
           )
         ]
-      }
-      let(:cf_response) {
+      end
+      let(:cf_response) do
         double(
           next_token: nil,
           changes: changes,
@@ -100,7 +100,7 @@ RSpec.describe StackMaster::ChangeSet do
           status: 'FAILED',
           status_reason: 'No changes'
         )
-      }
+      end
       let(:io) { StringIO.new }
       subject(:change_set) { StackMaster::ChangeSet.new(cf_response) }
       let(:message) { io.string }

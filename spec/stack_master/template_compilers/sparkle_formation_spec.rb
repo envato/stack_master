@@ -27,13 +27,13 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       described_class.compile(template_dir, template, compile_time_parameters, compiler_options)
     end
 
-    let(:stack_definition) {
+    let(:stack_definition) do
       instance_double(
         StackMaster::StackDefinition,
         template: template,
         template_dir: template_dir
       )
-    }
+    end
     let(:compile_time_parameters) { { 'Ip' => '10.0.0.0', 'Name' => 'Something' } }
     let(:compiler_options) { {} }
     let(:template) { 'template.rb' }

@@ -19,23 +19,23 @@ RSpec.describe StackMaster::SecurityGroupFinder do
     end
 
     context "one sg match" do
-      let(:security_groups) {
+      let(:security_groups) do
         [
           double(id: 'sg-a7d2ccc0')
         ]
-      }
+      end
       it "returns the id" do
         expect(finder.find(group_name)).to eq 'sg-a7d2ccc0'
       end
     end
 
     context "more than one sg matches" do
-      let(:security_groups) {
+      let(:security_groups) do
         [
           double(id: 'sg-a7d2ccc0'),
           double(id: 'sg-a7d2ccc2'),
         ]
-      }
+      end
       it "returns the id" do
         err = StackMaster::SecurityGroupFinder::MultipleSecurityGroupsFound
         expect { finder.find(group_name) }.to raise_error(err)

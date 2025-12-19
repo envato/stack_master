@@ -64,9 +64,9 @@ RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#user_data_file!' do
     end
 
     it 'raises a specific error' do
-      expect {
+      expect do
         @attr.user_data_file!('test.erb')
-      }.to raise_error(StackMaster::SparkleFormation::TemplateFileNotFound)
+      end.to raise_error(StackMaster::SparkleFormation::TemplateFileNotFound)
     end
   end
 

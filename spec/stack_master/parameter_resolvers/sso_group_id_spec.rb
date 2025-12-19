@@ -28,9 +28,9 @@ RSpec.describe StackMaster::ParameterResolvers::SsoGroupId do
       it 'propagates the SsoGroupNotFound error' do
         allow(finder).to receive(:find).and_raise(StackMaster::SsoGroupIdFinder::SsoGroupNotFound)
 
-        expect {
+        expect do
           resolver.resolve(group_reference)
-        }.to raise_error(StackMaster::SsoGroupIdFinder::SsoGroupNotFound)
+        end.to raise_error(StackMaster::SsoGroupIdFinder::SsoGroupNotFound)
       end
     end
 
@@ -40,9 +40,9 @@ RSpec.describe StackMaster::ParameterResolvers::SsoGroupId do
       it 'raises ArgumentError from SsoGroupIdFinder' do
         allow(finder).to receive(:find).and_raise(ArgumentError)
 
-        expect {
+        expect do
           resolver.resolve(invalid_reference)
-        }.to raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
       end
     end
   end

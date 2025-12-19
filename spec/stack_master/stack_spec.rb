@@ -12,12 +12,12 @@ RSpec.describe StackMaster::Stack do
 
   describe '.find' do
     context 'when the stack exists in AWS' do
-      let(:parameters) {
+      let(:parameters) do
         [
           { parameter_key: 'param1', parameter_value: 'value1' },
           { parameter_key: 'param2', parameter_value: 'value2' }
         ]
-      }
+      end
       before do
         cf.stub_responses(
           :describe_stacks,
@@ -212,12 +212,12 @@ RSpec.describe StackMaster::Stack do
     let(:stack_definition) { StackMaster::StackDefinition.new(region: region, stack_name: stack_name, tags: tags, base_dir: '/base_dir', template: template_file_name, notification_arns: ['test_arn'], role_arn: 'test_service_role_arn', stack_policy_file: 'no_replace_rds.json') }
     let(:config) { StackMaster::Config.new({ 'stacks' => {} }, '/base_dir') }
     subject(:stack) { StackMaster::Stack.generate(stack_definition, config) }
-    let(:parameter_hash) {
+    let(:parameter_hash) do
       { template_parameters: { 'DbPassword' => { 'secret' => 'db_password' } }, compile_time_parameters: {} }
-    }
-    let(:resolved_template_parameters) {
+    end
+    let(:resolved_template_parameters) do
       { 'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium' }
-    }
+    end
     let(:resolved_compile_time_parameters) { {} }
     let(:template_file_name) { 'template.rb' }
     let(:template_body) { <<~JSON }
