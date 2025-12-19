@@ -10,7 +10,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Always treat default parameter values from CloudFormation templates as strings. Avoids erroneous diffs being presented. ([#394])
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.17.0...HEAD
+[#394]: https://github.com/envato/stack_master/pull/394
 
 ## [2.17.0] - 2025-07-11
 

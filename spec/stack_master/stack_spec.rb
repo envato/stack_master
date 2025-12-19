@@ -95,7 +95,23 @@ RSpec.describe StackMaster::Stack do
     let(:parameter_hash) { {template_parameters: {'DbPassword' => {'secret' => 'db_password'}}, compile_time_parameters: {}} }
     let(:resolved_compile_time_parameters) { {} }
     let(:template_file_name) { 'template.rb' }
-    let(:template_body) { '{"Parameters": { "VpcId": { "Description": "VPC ID" }, "InstanceType": { "Description": "Instance Type", "Default": "t2.micro" }} }' }
+    let(:template_body) { <<~JSON }
+      {
+        "Parameters": {
+          "VpcId": {
+            "Description": "VPC ID"
+          },
+          "InstanceType": {
+            "Description": "Instance Type",
+            "Default": "t2.micro"
+          },
+          "UltimateAnswer": {
+            "Description": "Life, The Universe, and Everything",
+            "Default": 42
+          }
+        }
+      }
+    JSON
     let(:template_format) { :json }
     let(:stack_policy_body) { '{}' }
 
@@ -146,11 +162,20 @@ RSpec.describe StackMaster::Stack do
     end
 
     it 'extracts default template parameters' do
-      expect(stack.template_default_parameters).to eq('VpcId' => nil, 'InstanceType' => 't2.micro')
+      expect(stack.template_default_parameters).to include('VpcId' => nil, 'InstanceType' => 't2.micro')
+    end
+
+    it 'treats parameter defaults as strings (as the CFN schema expects them to be)' do
+      expect(stack.template_default_parameters).to include('UltimateAnswer' => '42')
     end
 
     specify 'parameters_with_defaults does not resolve parameters (only defaults)' do
-      expect(stack.parameters_with_defaults).to eq('InstanceType' => 't2.micro', 'VpcId' => nil)
+      expect(stack.parameters_with_defaults)
+        .to eq(
+          'VpcId' => nil,
+          'InstanceType' => 't2.micro',
+          'UltimateAnswer' => '42'
+        )
     end
   end
 
@@ -163,7 +188,23 @@ RSpec.describe StackMaster::Stack do
     let(:resolved_template_parameters) { {'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium'} }
     let(:resolved_compile_time_parameters) { {} }
     let(:template_file_name) { 'template.rb' }
-    let(:template_body) { '{"Parameters": { "VpcId": { "Description": "VPC ID" }, "InstanceType": { "Description": "Instance Type", "Default": "t2.micro" }} }' }
+    let(:template_body) { <<~JSON }
+      {
+        "Parameters": {
+          "VpcId": {
+            "Description": "VPC ID"
+          },
+          "InstanceType": {
+            "Description": "Instance Type",
+            "Default": "t2.micro"
+          },
+          "UltimateAnswer": {
+            "Description": "Life, The Universe, and Everything",
+            "Default": 42
+          }
+        }
+      }
+    JSON
     let(:template_format) { :json }
     let(:stack_policy_body) { '{}' }
 
@@ -215,11 +256,21 @@ RSpec.describe StackMaster::Stack do
     end
 
     it 'extracts default template parameters' do
-      expect(stack.template_default_parameters).to eq('VpcId' => nil, 'InstanceType' => 't2.micro')
+      expect(stack.template_default_parameters).to include('VpcId' => nil, 'InstanceType' => 't2.micro')
+    end
+
+    it 'treats parameter defaults as strings (as the CFN schema expects them to be)' do
+      expect(stack.template_default_parameters).to include('UltimateAnswer' => '42')
     end
 
     it 'exposes parameters with defaults taken into account' do
-      expect(stack.parameters_with_defaults).to eq('DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg', 'InstanceType' => 't2.medium', 'VpcId' => nil)
+      expect(stack.parameters_with_defaults)
+        .to eq(
+          'DbPassword' => 'sdfgjkdhlfjkghdflkjghdflkjg',
+          'InstanceType' => 't2.medium',
+          'VpcId' => nil,
+          'UltimateAnswer' => '42'
+        )
     end
   end
 
