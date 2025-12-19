@@ -6,7 +6,11 @@ module StackMaster
     include Commander::Methods
 
     def initialize(argv, stdin = STDIN, stdout = STDOUT, stderr = STDERR, kernel = Kernel)
-      @argv, @stdin, @stdout, @stderr, @kernel = argv, stdin, stdout, stderr, kernel
+      @argv = argv
+      @stdin = stdin
+      @stdout = stdout
+      @stderr = stderr
+      @kernel = kernel
       Commander::Runner.instance_variable_set('@instance', Commander::Runner.new(argv))
       StackMaster.stdout = @stdout
       StackMaster.stderr = @stderr
@@ -49,7 +53,7 @@ module StackMaster
                  'Valid Values: [ DO_NOTHING | ROLLBACK | DELETE ]. ' \
                  "Default: ROLLBACK\n" \
                  'Note: You cannot use this option with Serverless Application Model (SAM) templates.'
-        c.option '--yes-param PARAM_NAME', String, "Auto-approve stack updates when only parameter PARAM_NAME changes"
+        c.option '--yes-param PARAM_NAME', String, 'Auto-approve stack updates when only parameter PARAM_NAME changes'
         c.action do |args, options|
           options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Apply, args, options)
@@ -59,7 +63,7 @@ module StackMaster
       command :outputs do |c|
         c.syntax = 'stack_master outputs [region_or_alias] [stack_name]'
         c.summary = 'Displays outputs for a stack'
-        c.description = "Displays outputs for a stack"
+        c.description = 'Displays outputs for a stack'
         c.action do |args, options|
           options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Outputs, args, options)
@@ -73,10 +77,10 @@ module StackMaster
         c.option('--overwrite', 'Overwrite existing files')
         c.action do |args, options|
           options.default config: default_config_file
-          unless args.size == 2
-            say "Invalid arguments. stack_master init [region] [stack_name]"
-          else
+          if args.size == 2
             StackMaster::Commands::Init.perform(options, *args)
+          else
+            say 'Invalid arguments. stack_master init [region] [stack_name]'
           end
         end
       end
@@ -94,8 +98,8 @@ module StackMaster
 
       command :events do |c|
         c.syntax = 'stack_master events [region_or_alias] [stack_name]'
-        c.summary = "Shows events for a stack"
-        c.description = "Shows events for a stack"
+        c.summary = 'Shows events for a stack'
+        c.description = 'Shows events for a stack'
         c.example 'show events for myapp-vpc in us-east-1', 'stack_master events us-east-1 myapp-vpc'
         c.option '--number Integer', Integer, 'Number of recent events to show'
         c.option '--all', 'Show all events'
@@ -108,8 +112,8 @@ module StackMaster
 
       command :resources do |c|
         c.syntax = 'stack_master resources [region] [stack_name]'
-        c.summary = "Shows stack resources"
-        c.description = "Shows stack resources"
+        c.summary = 'Shows stack resources'
+        c.description = 'Shows stack resources'
         c.action do |args, options|
           options.default config: default_config_file
           execute_stacks_command(StackMaster::Commands::Resources, args, options)
@@ -122,7 +126,7 @@ module StackMaster
         c.description = 'List stack definitions'
         c.action do |args, options|
           options.default config: default_config_file
-          say "Invalid arguments." if args.size > 0
+          say 'Invalid arguments.' if args.size > 0
           config = load_config(options.config)
           StackMaster::Commands::ListStacks.perform(config, nil, options)
         end
@@ -142,8 +146,8 @@ module StackMaster
 
       command :lint do |c|
         c.syntax = 'stack_master lint [region_or_alias] [stack_name]'
-        c.summary = "Check the stack definition locally"
-        c.description = "Runs cfn-lint on the template which would be sent to AWS on apply"
+        c.summary = 'Check the stack definition locally'
+        c.description = 'Runs cfn-lint on the template which would be sent to AWS on apply'
         c.example 'run cfn-lint on stack myapp-vpc with us-east-1 settings', 'stack_master lint us-east-1 myapp-vpc'
         c.action do |args, options|
           options.default config: default_config_file
@@ -154,7 +158,7 @@ module StackMaster
       command :nag do |c|
         c.syntax = 'stack_master nag [region_or_alias] [stack_name]'
         c.summary = "Check this stack's template with cfn_nag"
-        c.description = "Runs SAST scan cfn_nag on the template"
+        c.description = 'Runs SAST scan cfn_nag on the template'
         c.example 'run cfn_nag on stack myapp-vpc with us-east-1 settings', 'stack_master nag us-east-1 myapp-vpc'
         c.action do |args, options|
           options.default config: default_config_file
@@ -164,7 +168,7 @@ module StackMaster
 
       command :compile do |c|
         c.syntax = 'stack_master compile [region_or_alias] [stack_name]'
-        c.summary = "Print the compiled version of a given stack"
+        c.summary = 'Print the compiled version of a given stack'
         c.description = "Processes the stack and prints out a compiled version - same we'd send to AWS"
         c.example 'print compiled stack myapp-vpc with us-east-1 settings', 'stack_master compile us-east-1 myapp-vpc'
         c.action do |args, options|
@@ -181,7 +185,7 @@ module StackMaster
         c.example 'description', 'Check the status of all stack definitions'
         c.action do |args, options|
           options.default config: default_config_file
-          say "Invalid arguments. stack_master status" and return unless args.size == 0
+          say 'Invalid arguments. stack_master status' and return unless args.size == 0
 
           config = load_config(options.config)
           StackMaster::Commands::Status.perform(config, nil, options)
@@ -196,7 +200,7 @@ module StackMaster
         c.example 'description', 'Check for missing or extra files'
         c.action do |args, options|
           options.default config: default_config_file
-          say "Invalid arguments. stack_master tidy" and return unless args.size == 0
+          say 'Invalid arguments. stack_master tidy' and return unless args.size == 0
 
           config = load_config(options.config)
           StackMaster::Commands::Tidy.perform(config, nil, options)
@@ -211,7 +215,7 @@ module StackMaster
         c.action do |args, options|
           options.default config: default_config_file
           unless args.size == 2
-            say "Invalid arguments. stack_master delete [region] [stack_name]"
+            say 'Invalid arguments. stack_master delete [region] [stack_name]'
             return
           end
 
@@ -239,7 +243,7 @@ module StackMaster
         c.syntax = 'stack_master drift [region_or_alias] [stack_name]'
         c.summary = 'Detects and displays stack drift using the CloudFormation Drift API'
         c.description = 'Detects and displays stack drift'
-        c.option '--timeout SECONDS', Integer, "The number of seconds to wait for drift detection to complete"
+        c.option '--timeout SECONDS', Integer, 'The number of seconds to wait for drift detection to complete'
         c.example 'view stack drift for a stack named myapp-vpc in us-east-1', 'stack_master drift us-east-1 myapp-vpc'
         c.action do |args, options|
           options.default config: default_config_file, timeout: 120
@@ -253,7 +257,7 @@ module StackMaster
     private
 
     def default_config_file
-      "stack_master.yml"
+      'stack_master.yml'
     end
 
     def load_config(file)
@@ -277,10 +281,12 @@ module StackMaster
           show_other_region_candidates(config, stack_name)
           success = false
         end
-        stack_definitions = stack_definitions.select do |stack_definition|
-          running_in_allowed_account?(stack_definition.allowed_accounts) &&
-            StackStatus.new(config, stack_definition).changed?
-        end if options.changed
+        if options.changed
+          stack_definitions = stack_definitions.select do |stack_definition|
+            running_in_allowed_account?(stack_definition.allowed_accounts) &&
+              StackStatus.new(config, stack_definition).changed?
+          end
+        end
         stack_definitions.each do |stack_definition|
           StackMaster.cloud_formation_driver.set_region(stack_definition.region)
           StackMaster.stdout.puts(
@@ -295,14 +301,14 @@ module StackMaster
     end
 
     def show_other_region_candidates(config, stack_name)
-      candidates = config.filter(region = "", stack_name = stack_name)
+      candidates = config.filter(region = '', stack_name = stack_name)
       return if candidates.empty?
 
       StackMaster.stdout.puts "Stack name #{stack_name} exists in regions: #{candidates.map(&:region).join(', ')}"
     end
 
     def execute_if_allowed_account(allowed_accounts, &block)
-      raise ArgumentError, "Block required to execute this method" unless block_given?
+      raise ArgumentError, 'Block required to execute this method' unless block_given?
 
       if running_in_allowed_account?(allowed_accounts)
         block.call

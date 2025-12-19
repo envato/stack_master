@@ -4,105 +4,105 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
     let(:stack_definition) { double(stack_name: 'mystack', region: 'us-east-1') }
     subject(:resolver) { described_class.new(config, stack_definition) }
     let(:op_env_unset) { ENV['OP_SESSION_something'].clear }
-    let(:secureNote) {
+    let(:secureNote) do
       {
-        "uuid" => "auuid",
-        "vaultUuid" => "avaultuuid",
-        "templateUuid" => "003",
-        "createdAt" => "2018-01-17 07:28:11 +0000 UTC",
-        "updatedAt" => "2018-01-17 07:28:11 +0000 UTC",
-        "changerUuid" => "anotheruuid",
-        "overview" => {
-          "ainfo" => "begin message",
-          "ps" => 0,
-          "title" => "note title"
+        'uuid' => 'auuid',
+        'vaultUuid' => 'avaultuuid',
+        'templateUuid' => '003',
+        'createdAt' => '2018-01-17 07:28:11 +0000 UTC',
+        'updatedAt' => '2018-01-17 07:28:11 +0000 UTC',
+        'changerUuid' => 'anotheruuid',
+        'overview' => {
+          'ainfo' => 'begin message',
+          'ps' => 0,
+          'title' => 'note title'
         },
-        "details" => {
-          "notesPlain" => "decrypted note",
-          "sections" => [
+        'details' => {
+          'notesPlain' => 'decrypted note',
+          'sections' => [
             {
-              "name" => "linked items",
-              "title" => "Related Items"
+              'name' => 'linked items',
+              'title' => 'Related Items'
             }
           ]
         }
       }
-    }
-    let(:login_password) {
+    end
+    let(:login_password) do
       {
-        "uuid" => "auuid",
-        "vaultUuid" => "avaultuuid",
-        "templateUuid" => "001",
-        "createdAt" => "2018-03-24 01:55:07 +0000 UTC",
-        "updatedAt" => "2018-03-24 01:55:07 +0000 UTC",
-        "changerUuid" => "anotheruuid",
-        "overview" => {
-          "ainfo" => "pi",
-          "ps" => 84,
-          "title" => "password title"
+        'uuid' => 'auuid',
+        'vaultUuid' => 'avaultuuid',
+        'templateUuid' => '001',
+        'createdAt' => '2018-03-24 01:55:07 +0000 UTC',
+        'updatedAt' => '2018-03-24 01:55:07 +0000 UTC',
+        'changerUuid' => 'anotheruuid',
+        'overview' => {
+          'ainfo' => 'pi',
+          'ps' => 84,
+          'title' => 'password title'
         },
-        "details" => {
-          "fields" => [
+        'details' => {
+          'fields' => [
             {
-              "designation" => "username",
-              "name" => "username",
-              "type" => "T",
-              "value" => "theusername"
+              'designation' => 'username',
+              'name' => 'username',
+              'type' => 'T',
+              'value' => 'theusername'
             },
             {
-              "designation" => "password",
-              "name" => "password",
-              "type" => "P",
-              "value" => "thepassword"
+              'designation' => 'password',
+              'name' => 'password',
+              'type' => 'P',
+              'value' => 'thepassword'
             }
           ],
-          "sections" => [
+          'sections' => [
             {
-              "name" => "linked items",
-              "title" => "Related Items"
+              'name' => 'linked items',
+              'title' => 'Related Items'
             }
           ]
         }
       }
-    }
-    let(:password) {
+    end
+    let(:password) do
       {
-        "uuid" => "auuid",
-        "vaultUuid" => "avaultuuid",
-        "templateUuid" => "005",
-        "createdAt" => "2018-04-24 11:07:34 +0000 UTC",
-        "updatedAt" => "2018-04-24 11:07:34 +0000 UTC",
-        "changerUuid" => "antheruuid",
-        "overview" => {
-          "ainfo" => "24 Apr 2018, 9:07:34 pm",
-          "ps" => 100,
-          "title" => "password title"
+        'uuid' => 'auuid',
+        'vaultUuid' => 'avaultuuid',
+        'templateUuid' => '005',
+        'createdAt' => '2018-04-24 11:07:34 +0000 UTC',
+        'updatedAt' => '2018-04-24 11:07:34 +0000 UTC',
+        'changerUuid' => 'antheruuid',
+        'overview' => {
+          'ainfo' => '24 Apr 2018, 9:07:34 pm',
+          'ps' => 100,
+          'title' => 'password title'
         },
-        "details" => {
-          "password" => "thepassword",
-          "sections" => [
+        'details' => {
+          'password' => 'thepassword',
+          'sections' => [
             {
-              "name" => "linked items",
-              "title" => "Related Items"
+              'name' => 'linked items',
+              'title' => 'Related Items'
             }
           ]
         }
       }
-    }
-    let(:the_password) {
+    end
+    let(:the_password) do
       {
         'title' => 'password title',
         'type' => 'password',
         'vault' => 'Shared'
       }
-    }
-    let(:the_secureNote) {
+    end
+    let(:the_secureNote) do
       {
         'title' => 'note title',
         'type' => 'secureNote',
         'vault' => 'Shared'
       }
-    }
+    end
 
     context 'when we have set OP_SESSION_ environment' do
       before do
@@ -113,7 +113,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
         it 'returns the login password' do
           allow_any_instance_of(described_class)
             .to receive(:`)
-            .with("op --version")
+            .with('op --version')
             .and_return(true)
           allow_any_instance_of(described_class)
             .to receive(:`)
@@ -128,7 +128,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
         it 'returns the password' do
           allow_any_instance_of(described_class)
             .to receive(:`)
-            .with("op --version")
+            .with('op --version')
             .and_return(true)
           allow_any_instance_of(described_class)
             .to receive(:`)
@@ -143,7 +143,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
         it 'returns the secureNote' do
           allow_any_instance_of(described_class)
             .to receive(:`)
-            .with("op --version")
+            .with('op --version')
             .and_return(true)
           allow_any_instance_of(described_class)
             .to receive(:`)
@@ -164,7 +164,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
             .and_return([])
           allow_any_instance_of(described_class)
             .to receive(:`)
-            .with("op --version")
+            .with('op --version')
             .and_return(true)
           allow_any_instance_of(described_class)
             .to receive(:`)
@@ -174,7 +174,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
           expect { resolver.resolve(the_password) }
             .to raise_error(
               StackMaster::ParameterResolvers::OnePassword::OnePasswordNotAbleToAuthenticate,
-              "1password requires the `OP_SESSION_<name>` to be set, (remember to sign in?)"
+              '1password requires the `OP_SESSION_<name>` to be set, (remember to sign in?)'
             )
         end
       end
@@ -186,12 +186,12 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
       end
 
       it 'we return an error' do
-        allow_any_instance_of(described_class).to receive(:`).with("op --version").and_raise(Errno::ENOENT)
+        allow_any_instance_of(described_class).to receive(:`).with('op --version').and_raise(Errno::ENOENT)
 
         expect { resolver.resolve(the_password) }
           .to raise_error(
             StackMaster::ParameterResolvers::OnePassword::OnePasswordBinaryNotFound,
-            "The op cli needs to be installed and in the PATH, No such file or directory"
+            'The op cli needs to be installed and in the PATH, No such file or directory'
           )
       end
     end
@@ -204,7 +204,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
       it 'we return an error' do
         allow_any_instance_of(described_class)
           .to receive(:`)
-          .with("op --version")
+          .with('op --version')
           .and_return(true)
         allow_any_instance_of(described_class)
           .to receive(:`)
@@ -227,7 +227,7 @@ RSpec.describe StackMaster::ParameterResolvers::OnePassword do
       it 'we return an error' do
         allow_any_instance_of(described_class)
           .to receive(:`)
-          .with("op --version")
+          .with('op --version')
           .and_return(true)
         allow_any_instance_of(described_class)
           .to receive(:`)

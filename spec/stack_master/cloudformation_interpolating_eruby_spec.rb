@@ -16,7 +16,7 @@ RSpec.describe(StackMaster::CloudFormationInterpolatingEruby) do
             "#!/bin/bash\n",
             "\n",
             "REGION=ap-southeast-2\n",
-            "echo $REGION\n",
+            "echo $REGION\n"
           ]
         )
       end
@@ -35,7 +35,7 @@ RSpec.describe(StackMaster::CloudFormationInterpolatingEruby) do
             { 'Ref' => 'Param1' },
             ' ',
             { 'Ref' => 'Param2' },
-            "\n",
+            "\n"
           ]
         )
       end
@@ -59,7 +59,7 @@ RSpec.describe(StackMaster::CloudFormationInterpolatingEruby) do
             "#!/bin/bash\n",
             "\n",
             "REGION=ap-southeast-2\n",
-            "echo $REGION\n",
+            "echo $REGION\n"
           ]
         )
       end

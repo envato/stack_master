@@ -7,13 +7,12 @@ module StackMaster
     def self.load(parameter_files: [], parameters: {})
       StackMaster.debug 'Searching for parameter files...'
       all_parameters = parameter_files.map { |file_name| load_parameters(file_name) } + [parameters]
-      all_parameters.reduce({ template_parameters: {}, compile_time_parameters: {} }) do |hash, parameters|
+      all_parameters.each_with_object({ template_parameters: {}, compile_time_parameters: {} }) do |parameters, hash|
         template_parameters = create_template_parameters(parameters)
         compile_time_parameters = create_compile_time_parameters(parameters)
 
         merge_and_camelize(hash[:template_parameters], template_parameters)
         merge_and_camelize(hash[:compile_time_parameters], compile_time_parameters)
-        hash
       end
     end
 

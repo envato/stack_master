@@ -45,7 +45,7 @@ RSpec.describe StackMaster::SsoGroupIdFinder do
       it 'raises SsoGroupNotFound' do
         error = Aws::IdentityStore::Errors::ResourceNotFoundException.new(
           Seahorse::Client::RequestContext.new,
-          "Group not found"
+          'Group not found'
         )
 
         expect(aws_client).to receive(:get_group_id).and_raise(error)

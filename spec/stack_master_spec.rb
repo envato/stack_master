@@ -1,6 +1,6 @@
 RSpec.describe StackMaster do
   describe '.debug' do
-    let(:message) { "Doing some stuff" }
+    let(:message) { 'Doing some stuff' }
 
     context 'when debugging' do
       before { allow(StackMaster).to receive(:debug?).and_return(true) }
@@ -14,7 +14,7 @@ RSpec.describe StackMaster do
       before { allow(StackMaster).to receive(:debug?).and_return(false) }
 
       it "doesn't output the message to STDERR" do
-        expect { StackMaster.debug(message) }.to output("").to_stderr
+        expect { StackMaster.debug(message) }.to output('').to_stderr
       end
     end
   end

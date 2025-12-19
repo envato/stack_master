@@ -16,7 +16,7 @@ RSpec.describe StackMaster::ParameterResolvers::ParameterStore do
               parameter: {
                 name: parameter_name,
                 value: parameter_value,
-                type: "SecureString",
+                type: 'SecureString',
                 version: 1
               }
             }

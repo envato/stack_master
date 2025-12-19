@@ -22,5 +22,5 @@ After do
   Timecop.return
 end
 
-lib = File.join(File.dirname(__FILE__), "../../spec/fixtures/sparkle_pack_integration/my_sparkle_pack/lib")
+lib = File.join(File.dirname(__FILE__), '../../spec/fixtures/sparkle_pack_integration/my_sparkle_pack/lib')
 $LOAD_PATH << lib

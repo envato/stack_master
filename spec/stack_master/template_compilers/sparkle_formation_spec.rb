@@ -3,7 +3,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
   let(:compile_time_parameter_definitions) { {} }
 
   def project_path(path)
-    File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", path))
+    File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..', path))
   end
 
   def fixture_template(file)
@@ -11,11 +11,11 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
   end
 
   def template_dir
-    "spec/fixtures/templates/rb/sparkle_formation/templates"
+    'spec/fixtures/templates/rb/sparkle_formation/templates'
   end
 
   def sparkle_pack_dir
-    project_path("spec/fixtures/sparkle_pack_integration/my_sparkle_pack/lib/sparkleformation/templates")
+    project_path('spec/fixtures/sparkle_pack_integration/my_sparkle_pack/lib/sparkleformation/templates')
   end
 
   def sparkle_pack_template(file)
@@ -27,13 +27,13 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
       described_class.compile(template_dir, template, compile_time_parameters, compiler_options)
     end
 
-    let(:stack_definition) {
+    let(:stack_definition) do
       instance_double(
         StackMaster::StackDefinition,
         template: template,
         template_dir: template_dir
       )
-    }
+    end
     let(:compile_time_parameters) { { 'Ip' => '10.0.0.0', 'Name' => 'Something' } }
     let(:compiler_options) { {} }
     let(:template) { 'template.rb' }
@@ -104,17 +104,17 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
     context 'with sparkle packs' do
       let(:compile_time_parameters) { {} }
-      let(:compiler_options) { { "sparkle_packs" => ["my_sparkle_pack"] } }
+      let(:compiler_options) { { 'sparkle_packs' => ['my_sparkle_pack'] } }
 
       before do
-        lib = File.join(File.dirname(__FILE__), "..", "..", "fixtures", "sparkle_pack_integration", "my_sparkle_pack",
-                        "lib")
+        lib = File.join(File.dirname(__FILE__), '..', '..', 'fixtures', 'sparkle_pack_integration', 'my_sparkle_pack',
+                        'lib')
         $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
       end
 
       context 'compiling a sparkle pack dynamic' do
         let(:template) { 'template_with_dynamic_from_pack' }
-        let(:compiler_options) { { "sparkle_packs" => ["my_sparkle_pack"], "sparkle_pack_template" => true } }
+        let(:compiler_options) { { 'sparkle_packs' => ['my_sparkle_pack'], 'sparkle_pack_template' => true } }
 
         it 'pulls the dynamic from the sparkle pack' do
           expect(compile).to eq(<<~JSON.chomp)
@@ -131,7 +131,7 @@ RSpec.describe StackMaster::TemplateCompilers::SparkleFormation do
 
       context 'compiling a sparkle pack template' do
         let(:template) { 'template_with_dynamic' }
-        let(:compiler_options) { { "sparkle_packs" => ["my_sparkle_pack"], "sparkle_pack_template" => true } }
+        let(:compiler_options) { { 'sparkle_packs' => ['my_sparkle_pack'], 'sparkle_pack_template' => true } }
 
         context 'when template is found' do
           it 'resolves template location' do

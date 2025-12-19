@@ -21,11 +21,11 @@ module StackMaster
           {
             region: stack_definition.region,
             stack_name: stack_definition.stack_name,
-            stack_status: running_in_allowed_account?(allowed_accounts) ? stack_status.status : "Disallowed account",
-            different: running_in_allowed_account?(allowed_accounts) ? stack_status.changed_message : "N/A",
+            stack_status: running_in_allowed_account?(allowed_accounts) ? stack_status.status : 'Disallowed account',
+            different: running_in_allowed_account?(allowed_accounts) ? stack_status.changed_message : 'N/A'
           }
         end
-        tp.set :max_width, self.window_size
+        tp.set :max_width, window_size
         tp.set :io, StackMaster.stdout
         tp status
         StackMaster.stdout.puts " * No echo parameters can't be diffed"
@@ -34,7 +34,7 @@ module StackMaster
       private
 
       def progress
-        @progress ||= ProgressBar.create(title: "Fetching stack information",
+        @progress ||= ProgressBar.create(title: 'Fetching stack information',
                                          total: @config.stacks.size,
                                          output: StackMaster.stdout)
       end

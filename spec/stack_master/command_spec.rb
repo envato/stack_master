@@ -1,5 +1,5 @@
 RSpec.describe StackMaster::Command do
-  let(:command_class) {
+  let(:command_class) do
     Class.new do
       include StackMaster::Command
 
@@ -17,7 +17,7 @@ RSpec.describe StackMaster::Command do
         false
       end
     end
-  }
+  end
 
   context 'when failed is not called' do
     it 'is successful' do
@@ -63,8 +63,8 @@ RSpec.describe StackMaster::Command do
       let(:error_proc) do
         proc do
           begin
-            raise RuntimeError, 'the cause message'
-          rescue
+            raise 'the cause message'
+          rescue StandardError
             raise StackMaster::TemplateCompiler::TemplateCompilationFailed, 'the message'
           end
         end
@@ -79,7 +79,7 @@ RSpec.describe StackMaster::Command do
       before { command.instance_variable_set(:@options, spy(trace: true)) }
 
       it 'outputs the backtrace' do
-        expect { command.perform }.to output(%r{spec/stack_master/command_spec.rb:[\d]*:in }).to_stderr
+        expect { command.perform }.to output(%r{spec/stack_master/command_spec.rb:\d*:in }).to_stderr
       end
     end
 
@@ -87,7 +87,7 @@ RSpec.describe StackMaster::Command do
       before { command.instance_variable_set(:@options, spy(trace: nil)) }
 
       it 'does not output the backtrace' do
-        expect { command.perform }.not_to output(%r{spec/stack_master/command_spec.rb:[\d]*:in }).to_stderr
+        expect { command.perform }.not_to output(%r{spec/stack_master/command_spec.rb:\d*:in }).to_stderr
       end
 
       it 'informs to set --trace option to see the backtrace' do

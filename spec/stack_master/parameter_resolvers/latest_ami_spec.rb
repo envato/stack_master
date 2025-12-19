@@ -45,7 +45,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestAmi do
 
     it 'calls find_latest_ami with the owner and filters' do
       expect(ami_finder).to receive(:find_latest_ami).with([{ name: 'foo', values: ['bacon'] }], ['123456'])
-      resolver.resolve({ 'owners' => 123456, 'filters' => { 'foo' => 'bacon' } })
+      resolver.resolve({ 'owners' => 123_456, 'filters' => { 'foo' => 'bacon' } })
     end
   end
 end

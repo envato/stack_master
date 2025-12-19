@@ -20,9 +20,8 @@ module StackMaster
       TemplateUtils
         .template_hash(template)
         .fetch('Parameters', {})
-        .inject({}) do |result, (parameter_name, description)|
+        .each_with_object({}) do |(parameter_name, description), result|
           result[parameter_name] = description['Default']&.to_s
-          result
         end
     end
 
@@ -35,9 +34,8 @@ module StackMaster
       cf_stack = cf.describe_stacks({ stack_name: stack_name }).stacks.first
       return unless cf_stack
 
-      parameters = cf_stack.parameters.inject({}) do |params_hash, param_struct|
+      parameters = cf_stack.parameters.each_with_object({}) do |param_struct, params_hash|
         params_hash[param_struct.parameter_key] = param_struct.parameter_value
-        params_hash
       end
       template_body ||= cf.get_template({ stack_name: stack_name, template_stage: 'Original' }).template_body
       template_format = TemplateUtils.identify_template_format(template_body)

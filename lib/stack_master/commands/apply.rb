@@ -44,10 +44,10 @@ module StackMaster
       end
 
       def abort_if_review_in_progress
-        if stack_exists? && stack.stack_status == "REVIEW_IN_PROGRESS"
-          StackMaster.stderr.puts "Stack currently exists and is in #{stack.stack_status}"
-          failed! "You will need to delete the stack (#{stack.stack_name}) before continuing"
-        end
+        return unless stack_exists? && stack.stack_status == 'REVIEW_IN_PROGRESS'
+
+        StackMaster.stderr.puts "Stack currently exists and is in #{stack.stack_status}"
+        failed! "You will need to delete the stack (#{stack.stack_name}) before continuing"
       end
 
       def use_s3?
@@ -111,11 +111,11 @@ module StackMaster
       end
 
       def ask_to_cancel_stack_update
-        if ask?("Cancel stack update?")
-          StackMaster.stdout.puts "Attempting to cancel stack update"
-          cf.cancel_update_stack(stack_name: stack_name)
-          tail_stack_events
-        end
+        return unless ask?('Cancel stack update?')
+
+        StackMaster.stdout.puts 'Attempting to cancel stack update'
+        cf.cancel_update_stack(stack_name: stack_name)
+        tail_stack_events
       end
 
       def update_stack
@@ -136,10 +136,10 @@ module StackMaster
       end
 
       def ask_update_confirmation!
-        unless ask?("Apply change set (y/n)? ")
-          ChangeSet.delete(@change_set.id)
-          halt! "Stack update aborted"
-        end
+        return if ask?('Apply change set (y/n)? ')
+
+        ChangeSet.delete(@change_set.id)
+        halt! 'Stack update aborted'
       end
 
       def upload_files
@@ -177,7 +177,7 @@ module StackMaster
           stack_name: stack_name,
           parameters: proposed_stack.aws_parameters,
           tags: proposed_stack.aws_tags,
-          capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM', 'CAPABILITY_AUTO_EXPAND'],
+          capabilities: %w[CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND],
           role_arn: proposed_stack.role_arn,
           notification_arns: proposed_stack.notification_arns,
           template_method => template_value
@@ -211,9 +211,9 @@ module StackMaster
       end
 
       def ensure_valid_template_body_size!
-        if proposed_stack.too_big?(use_s3?)
-          failed! TEMPLATE_TOO_LARGE_ERROR_MESSAGE
-        end
+        return unless proposed_stack.too_big?(use_s3?)
+
+        failed! TEMPLATE_TOO_LARGE_ERROR_MESSAGE
       end
 
       def set_stack_policy

@@ -382,63 +382,12 @@ Security/YAMLLoad:
     - 'lib/stack_master/parameter_loader.rb'
     - 'lib/stack_master/template_utils.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: prefer_alias, prefer_alias_method
-Style/Alias:
-  Exclude:
-    - 'lib/stack_master/sparkle_formation/template_file.rb'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: always, conditionals
 Style/AndOr:
   Exclude:
     - 'lib/stack_master/cli.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, AllowedMethods, AllowedPatterns, AllowBracesOnProceduralOneLiners, BracesRequiredMethods.
-# SupportedStyles: line_count_based, semantic, braces_for_chaining, always_braces
-# ProceduralMethods: benchmark, bm, bmbm, create, each_with_object, measure, new, realtime, tap, with_object
-# FunctionalMethods: let, let!, subject, watch
-# AllowedMethods: lambda, proc, it
-Style/BlockDelimiters:
-  Exclude:
-    - 'lib/stack_master/aws_driver/s3.rb'
-    - 'spec/fixtures/templates/rb/cfndsl/sample-ctp-repeated.rb'
-    - 'spec/fixtures/templates/rb/cfndsl/sample-ctp.rb'
-    - 'spec/fixtures/templates/rb/cfndsl/sample.rb'
-    - 'spec/stack_master/change_set_spec.rb'
-    - 'spec/stack_master/command_spec.rb'
-    - 'spec/stack_master/commands/compile_spec.rb'
-    - 'spec/stack_master/commands/drift_spec.rb'
-    - 'spec/stack_master/commands/lint_spec.rb'
-    - 'spec/stack_master/commands/nag_spec.rb'
-    - 'spec/stack_master/config_spec.rb'
-    - 'spec/stack_master/paged_response_accumulator_spec.rb'
-    - 'spec/stack_master/parameter_resolver_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/one_password_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/sns_topic_name_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/sso_group_id_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/stack_output_spec.rb'
-    - 'spec/stack_master/security_group_finder_spec.rb'
-    - 'spec/stack_master/sparkle_formation/template_file_spec.rb'
-    - 'spec/stack_master/stack_differ_spec.rb'
-    - 'spec/stack_master/stack_events/fetcher_spec.rb'
-    - 'spec/stack_master/stack_events/streamer_spec.rb'
-    - 'spec/stack_master/stack_spec.rb'
-    - 'spec/stack_master/template_compiler_spec.rb'
-    - 'spec/stack_master/template_compilers/json_spec.rb'
-    - 'spec/stack_master/template_compilers/sparkle_formation_spec.rb'
-    - 'spec/stack_master/template_compilers/yaml_spec.rb'
-    - 'spec/stack_master/test_driver/cloud_formation_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowOnConstant, AllowOnSelfClass.
-Style/CaseEquality:
-  Exclude:
-    - 'lib/stack_master/parameter_resolver.rb'
-    - 'lib/stack_master/stack_definition.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle, EnforcedStyleForClasses, EnforcedStyleForModules.
@@ -452,21 +401,6 @@ Style/ClassAndModuleChildren:
     - 'lib/stack_master/template_compilers/sparkle_formation.rb'
     - 'lib/stack_master/template_compilers/yaml.rb'
     - 'lib/stack_master/template_compilers/yaml_erb.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, AllowInnerBackticks.
-# SupportedStyles: backticks, percent_x, mixed
-Style/CommandLiteral:
-  Exclude:
-    - 'lib/stack_master/parameter_resolvers/one_password.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, SingleLineConditionsOnly, IncludeTernaryExpressions.
-# SupportedStyles: assign_to_condition, assign_inside_condition
-Style/ConditionalAssignment:
-  Exclude:
-    - 'lib/stack_master/command.rb'
-    - 'lib/stack_master/parameter_validator.rb'
 
 # Configuration parameters: AllowedConstants.
 Style/Documentation:
@@ -557,46 +491,6 @@ Style/Documentation:
     - 'lib/stack_master/utils.rb'
     - 'lib/stack_master/validator.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-Style/EachWithObject:
-  Exclude:
-    - 'features/step_definitions/stack_steps.rb'
-    - 'lib/stack_master/config.rb'
-    - 'lib/stack_master/parameter_loader.rb'
-    - 'lib/stack_master/parameter_resolver.rb'
-    - 'lib/stack_master/stack.rb'
-    - 'lib/stack_master/stack_definition.rb'
-    - 'lib/stack_master/utils.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/EmptyLiteral:
-  Exclude:
-    - 'lib/stack_master/test_driver/s3.rb'
-    - 'spec/stack_master/stack_differ_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: compact, expanded
-Style/EmptyMethod:
-  Exclude:
-    - 'lib/stack_master/test_driver/s3.rb'
-    - 'spec/stack_master/parameter_resolver_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/Encoding:
-  Exclude:
-    - 'stack_master.gemspec'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/ExpandPathArguments:
-  Exclude:
-    - 'stack_master.gemspec'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/ExplicitBlockArgument:
-  Exclude:
-    - 'lib/stack_master/parameter_resolver.rb'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: always, always_true, never
@@ -609,70 +503,16 @@ Style/GlobalStdStream:
     - 'lib/stack_master/cli.rb'
     - 'spec/stack_master/commands/apply_spec.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: MinBodyLength, AllowConsecutiveConditionals.
-Style/GuardClause:
+# This cop supports unsafe autocorrection (--autocorrect-all).
+Style/HashTransformValues:
   Exclude:
-    - 'lib/stack_master/aws_driver/cloud_formation.rb'
-    - 'lib/stack_master/commands/apply.rb'
-    - 'lib/stack_master/commands/events.rb'
-    - 'lib/stack_master/commands/init.rb'
-    - 'lib/stack_master/parameter_resolver.rb'
-    - 'lib/stack_master/parameter_resolvers/ejson.rb'
-    - 'lib/stack_master/parameter_resolvers/stack_output.rb'
-    - 'lib/stack_master/sparkle_formation/compile_time/value_builder.rb'
-    - 'lib/stack_master/test_driver/cloud_formation.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, EnforcedShorthandSyntax, UseHashRocketsWithSymbolValues, PreferHashRocketsForNonAlnumEndingSymbols.
-# SupportedStyles: ruby19, hash_rockets, no_mixed_keys, ruby19_no_mixed_keys
-# SupportedShorthandSyntax: always, never, either, consistent, either_consistent
-Style/HashSyntax:
-  Exclude:
-    - 'Rakefile'
-    - 'lib/stack_master/template_compilers/sparkle_formation.rb'
-    - 'spec/stack_master/aws_driver/s3_spec.rb'
-    - 'spec/stack_master/commands/delete_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/latest_container_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/stack_output_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/IfUnlessModifier:
-  Exclude:
-    - 'bin/stack_master'
-    - 'lib/stack_master/change_set.rb'
-    - 'lib/stack_master/commands/apply.rb'
-    - 'lib/stack_master/commands/drift.rb'
-    - 'lib/stack_master/commands/events.rb'
-    - 'lib/stack_master/sparkle_formation/compile_time/value_builder.rb'
-    - 'lib/stack_master/sparkle_formation/compile_time/value_validator.rb'
-    - 'lib/stack_master/stack_differ.rb'
+    - 'lib/stack_master/stack.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: InverseMethods, InverseBlocks.
 Style/InverseMethods:
   Exclude:
     - 'lib/stack_master/commands/tidy.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/KeywordParametersOrder:
-  Exclude:
-    - 'lib/stack_master/diff.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowedMethods, AllowedPatterns.
-Style/MethodCallWithoutArgsParentheses:
-  Exclude:
-    - 'lib/stack_master/commands/tidy.rb'
-    - 'lib/stack_master/parameter_resolvers/sso_group_id.rb'
-    - 'spec/stack_master/commands/init_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: require_parentheses, require_no_parentheses, require_no_parentheses_except_multiline
-Style/MethodDefParentheses:
-  Exclude:
-    - 'lib/stack_master/config.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle, Autocorrect.
@@ -683,11 +523,6 @@ Style/ModuleFunction:
     - 'lib/stack_master/stack_states.rb'
     - 'lib/stack_master/template_utils.rb'
     - 'lib/stack_master/utils.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/MultilineIfModifier:
-  Exclude:
-    - 'lib/stack_master/cli.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
@@ -700,33 +535,6 @@ Style/MutableConstant:
     - 'lib/stack_master/sparkle_formation/compile_time/definitions_validator.rb'
     - 'lib/stack_master/sparkle_formation/compile_time/value_validator_factory.rb'
     - 'lib/stack_master/version.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: both, prefix, postfix
-Style/NegatedIf:
-  Exclude:
-    - 'lib/stack_master/commands/init.rb'
-    - 'lib/stack_master/commands/tidy.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, MinBodyLength, AllowConsecutiveConditionals.
-# SupportedStyles: skip_modifier_ifs, always
-Style/Next:
-  Exclude:
-    - 'lib/stack_master/commands/tidy.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: MinDigits, Strict, AllowedNumbers, AllowedPatterns.
-Style/NumericLiterals:
-  Exclude:
-    - 'lib/stack_master/template_compilers/json.rb'
-    - 'lib/stack_master/template_utils.rb'
-    - 'spec/stack_master/commands/apply_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/latest_ami_spec.rb'
-    - 'spec/stack_master/stack_spec.rb'
-    - 'spec/stack_master/template_compilers/json_spec.rb'
-    - 'spec/stack_master/template_utils_spec.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle, AllowedMethods, AllowedPatterns.
@@ -745,18 +553,6 @@ Style/OptionalBooleanParameter:
     - 'lib/stack_master/commands/status.rb'
     - 'lib/stack_master/stack.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-Style/ParallelAssignment:
-  Exclude:
-    - 'lib/stack_master/cli.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: PreferredDelimiters.
-Style/PercentLiteralDelimiters:
-  Exclude:
-    - 'spec/stack_master/identity_spec.rb'
-    - 'stack_master.gemspec'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle, AllowedCompactTypes.
 # SupportedStyles: compact, exploded
@@ -769,17 +565,6 @@ Style/RaiseArgs:
     - 'lib/stack_master/sparkle_formation/compile_time/parameters_validator.rb'
     - 'lib/stack_master/template_compilers/sparkle_formation.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantAssignment:
-  Exclude:
-    - 'lib/stack_master/commands/tidy.rb'
-    - 'lib/stack_master/parameter_resolvers/ami_finder.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantException:
-  Exclude:
-    - 'spec/stack_master/command_spec.rb'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/RedundantInterpolation:
   Exclude:
@@ -787,50 +572,6 @@ Style/RedundantInterpolation:
     - 'lib/stack_master/resolver_array.rb'
     - 'lib/stack_master/stack_definition.rb'
     - 'spec/stack_master/stack_definition_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantPercentQ:
-  Exclude:
-    - 'stack_master.gemspec'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantRegexpCharacterClass:
-  Exclude:
-    - 'spec/stack_master/command_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantRegexpEscape:
-  Exclude:
-    - 'spec/stack_master/stack_differ_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowMultipleReturnValues.
-Style/RedundantReturn:
-  Exclude:
-    - 'lib/stack_master/parameter_resolvers/one_password.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantSelf:
-  Exclude:
-    - 'lib/stack_master/commands/list_stacks.rb'
-    - 'lib/stack_master/commands/outputs.rb'
-    - 'lib/stack_master/commands/status.rb'
-    - 'lib/stack_master/resolver_array.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, AllowInnerSlashes.
-# SupportedStyles: slashes, percent_r, mixed
-Style/RegexpLiteral:
-  Exclude:
-    - 'lib/stack_master/commands/terminal_helper.rb'
-    - 'lib/stack_master/sparkle_formation/compile_time/allowed_pattern_validator.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: implicit, explicit
-Style/RescueStandardError:
-  Exclude:
-    - 'spec/stack_master/command_spec.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: ConvertCodeThatCanStartToReturnNil, AllowedMethods, MaxChainLength.
@@ -842,13 +583,6 @@ Style/SafeNavigation:
     - 'lib/stack_master/stack_events/streamer.rb'
     - 'lib/stack_master/stack_status.rb'
     - 'lib/stack_master/template_compilers/sparkle_formation.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: only_raise, only_fail, semantic
-Style/SignalException:
-  Exclude:
-    - 'lib/stack_master/resolver_array.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: RequireEnglish, EnforcedStyle.
@@ -868,98 +602,6 @@ Style/StringConcatenation:
     - 'spec/stack_master/commands/compile_spec.rb'
     - 'spec/stack_master/template_utils_spec.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Exclude:
-    - 'Rakefile'
-    - 'bin/stack_master'
-    - 'example/simple/templates/myapp_vpc.rb'
-    - 'example/simple/templates/myapp_web.rb'
-    - 'features/step_definitions/parameter_store_steps.rb'
-    - 'features/support/env.rb'
-    - 'lib/stack_master.rb'
-    - 'lib/stack_master/aws_driver/s3.rb'
-    - 'lib/stack_master/change_set.rb'
-    - 'lib/stack_master/cli.rb'
-    - 'lib/stack_master/commands/apply.rb'
-    - 'lib/stack_master/commands/delete.rb'
-    - 'lib/stack_master/commands/drift.rb'
-    - 'lib/stack_master/commands/init.rb'
-    - 'lib/stack_master/commands/lint.rb'
-    - 'lib/stack_master/commands/status.rb'
-    - 'lib/stack_master/commands/terminal_helper.rb'
-    - 'lib/stack_master/commands/tidy.rb'
-    - 'lib/stack_master/config.rb'
-    - 'lib/stack_master/diff.rb'
-    - 'lib/stack_master/parameter_resolvers/latest_ami_by_tags.rb'
-    - 'lib/stack_master/parameter_resolvers/latest_container.rb'
-    - 'lib/stack_master/parameter_resolvers/one_password.rb'
-    - 'lib/stack_master/prompter.rb'
-    - 'lib/stack_master/role_assumer.rb'
-    - 'lib/stack_master/security_group_finder.rb'
-    - 'lib/stack_master/sns_topic_finder.rb'
-    - 'lib/stack_master/stack_definition.rb'
-    - 'lib/stack_master/stack_differ.rb'
-    - 'lib/stack_master/validator.rb'
-    - 'lib/stack_master/version.rb'
-    - 'spec/fixtures/sparkle_pack_integration/my_sparkle_pack/lib/sparkleformation/dynamics/my_dynamic.rb'
-    - 'spec/fixtures/sparkle_pack_integration/my_sparkle_pack/lib/sparkleformation/templates/dynamics/local_dynamic.rb'
-    - 'spec/fixtures/templates/rb/cfndsl/sample-ctp-repeated.rb'
-    - 'spec/fixtures/templates/rb/cfndsl/sample-ctp.rb'
-    - 'spec/fixtures/templates/rb/cfndsl/sample.rb'
-    - 'spec/fixtures/templates/rb/sparkle_formation/templates/template.rb'
-    - 'spec/integration/drift_spec.rb'
-    - 'spec/spec_helper.rb'
-    - 'spec/stack_master/aws_driver/s3_spec.rb'
-    - 'spec/stack_master/commands/apply_spec.rb'
-    - 'spec/stack_master/commands/compile_spec.rb'
-    - 'spec/stack_master/commands/delete_spec.rb'
-    - 'spec/stack_master/commands/drift_spec.rb'
-    - 'spec/stack_master/commands/init_spec.rb'
-    - 'spec/stack_master/commands/lint_spec.rb'
-    - 'spec/stack_master/commands/nag_spec.rb'
-    - 'spec/stack_master/commands/status_spec.rb'
-    - 'spec/stack_master/commands/validate_spec.rb'
-    - 'spec/stack_master/config_spec.rb'
-    - 'spec/stack_master/parameter_loader_spec.rb'
-    - 'spec/stack_master/parameter_resolver_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/ami_finder_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/ejson_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/latest_container_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/one_password_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/parameter_store_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/security_group_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/security_groups_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/stack_output_spec.rb'
-    - 'spec/stack_master/parameter_validator_spec.rb'
-    - 'spec/stack_master/security_group_finder_spec.rb'
-    - 'spec/stack_master/sparkle_formation/template_file_spec.rb'
-    - 'spec/stack_master/sso_group_id_finder_spec.rb'
-    - 'spec/stack_master/stack_definition_spec.rb'
-    - 'spec/stack_master/stack_differ_spec.rb'
-    - 'spec/stack_master/stack_events/presenter_spec.rb'
-    - 'spec/stack_master/stack_events/streamer_spec.rb'
-    - 'spec/stack_master/stack_spec.rb'
-    - 'spec/stack_master/template_compiler_spec.rb'
-    - 'spec/stack_master/template_compilers/cfndsl_spec.rb'
-    - 'spec/stack_master/template_compilers/json_spec.rb'
-    - 'spec/stack_master/template_compilers/sparkle_formation_spec.rb'
-    - 'spec/stack_master/template_utils_spec.rb'
-    - 'spec/stack_master/test_driver/cloud_formation_spec.rb'
-    - 'spec/stack_master/utils_spec.rb'
-    - 'spec/stack_master/validator_spec.rb'
-    - 'spec/stack_master_spec.rb'
-    - 'spec/support/aws_stubs.rb'
-    - 'stack_master.gemspec'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: MinSize.
-# SupportedStyles: percent, brackets
-Style/SymbolArray:
-  EnforcedStyle: brackets
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: AllowMethodsWithArguments, AllowedMethods, AllowedPatterns, AllowComments.
 # AllowedMethods: define_method
@@ -967,57 +609,6 @@ Style/SymbolProc:
   Exclude:
     - 'lib/stack_master/command.rb'
     - 'spec/support/validator_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, diff_comma, no_comma
-Style/TrailingCommaInArguments:
-  Exclude:
-    - 'lib/stack_master/template_compilers/sparkle_formation.rb'
-    - 'spec/stack_master/validator_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, diff_comma, no_comma
-Style/TrailingCommaInArrayLiteral:
-  Exclude:
-    - 'lib/stack_master/security_group_finder.rb'
-    - 'spec/integration/drift_spec.rb'
-    - 'spec/stack_master/cloudformation_interpolating_eruby_spec.rb'
-    - 'spec/stack_master/parameter_resolvers/latest_container_spec.rb'
-    - 'spec/stack_master/security_group_finder_spec.rb'
-    - 'spec/stack_master/sns_topic_finder_spec.rb'
-    - 'spec/stack_master/stack_definition_spec.rb'
-    - 'spec/stack_master/stack_events/fetcher_spec.rb'
-    - 'spec/stack_master/stack_events/streamer_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, diff_comma, no_comma
-Style/TrailingCommaInHashLiteral:
-  Exclude:
-    - 'lib/stack_master/commands/status.rb'
-    - 'lib/stack_master/config.rb'
-    - 'lib/stack_master/parameter_resolvers/latest_container.rb'
-    - 'lib/stack_master/security_group_finder.rb'
-    - 'lib/stack_master/sso_group_id_finder.rb'
-    - 'spec/integration/drift_spec.rb'
-    - 'spec/stack_master/commands/apply_spec.rb'
-    - 'spec/stack_master/config_spec.rb'
-    - 'spec/stack_master/security_group_finder_spec.rb'
-    - 'stack_master.gemspec'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/UnlessElse:
-  Exclude:
-    - 'lib/stack_master/cli.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: WordRegex.
-# SupportedStyles: percent, brackets
-Style/WordArray:
-  EnforcedStyle: percent
-  MinSize: 4
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/ZeroLengthPredicate:

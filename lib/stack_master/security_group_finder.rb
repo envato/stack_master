@@ -15,10 +15,10 @@ module StackMaster
       groups = @resource.security_groups({
                                            filters: [
                                              {
-                                               name: "group-name",
-                                               values: [reference],
-                                             },
-                                           ],
+                                               name: 'group-name',
+                                               values: [reference]
+                                             }
+                                           ]
                                          })
 
       raise SecurityGroupNotFound, "No security group with name #{reference} found" unless groups.any?

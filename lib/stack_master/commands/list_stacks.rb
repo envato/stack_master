@@ -8,7 +8,7 @@ module StackMaster
       include StackMaster::Commands::TerminalHelper
 
       def perform
-        tp.set :max_width, self.window_size
+        tp.set :max_width, window_size
         tp @config.stacks, :region, :stack_name
       end
     end

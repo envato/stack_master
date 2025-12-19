@@ -57,9 +57,9 @@ RSpec.describe StackMaster::ParameterLoader do
 
   context 'yml and yaml region parameter files' do
     let(:stack_file_returns) { { exists: false } }
-    let(:region_file_returns) { { exists: true, read: "Param2: value2" } }
+    let(:region_file_returns) { { exists: true, read: 'Param2: value2' } }
     let(:region_yaml_file_returns) { { exists: true, read: "Param1: value1\nParam2: valueX" } }
-    let(:region_yaml_file_name) { "/base_dir/parameters/us-east-1/stack_name.yaml" }
+    let(:region_yaml_file_name) { '/base_dir/parameters/us-east-1/stack_name.yaml' }
 
     subject(:parameters) { StackMaster::ParameterLoader.load(parameter_files: [stack_file_name, region_yaml_file_name, region_file_name]) }
 

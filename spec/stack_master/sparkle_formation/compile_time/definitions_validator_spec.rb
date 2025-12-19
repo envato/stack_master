@@ -5,7 +5,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::DefinitionsValidator 
 
     subject { described_class.new(definition) }
 
-    [:string, :number].each do |type|
+    %i[string number].each do |type|
       context "with :#{type} type definition" do
         let(:type) { type }
 
@@ -22,7 +22,7 @@ RSpec.describe StackMaster::SparkleFormation::CompileTime::DefinitionsValidator 
         expect { subject.validate }
           .to raise_error(
             ArgumentError,
-            "Unknown compile time parameter type: #{key}:#{type} valid types are #{[:string, :number]}"
+            "Unknown compile time parameter type: #{key}:#{type} valid types are #{%i[string number]}"
           )
       end
     end

@@ -48,7 +48,7 @@ module StackMaster
           {
             region: StackMaster.cloud_formation_driver.region,
             role_arn: "arn:aws:iam::#{account}:role/#{role}",
-            role_session_name: "stack-master-role-assumer"
+            role_session_name: 'stack-master-role-assumer'
           }
         )
       end

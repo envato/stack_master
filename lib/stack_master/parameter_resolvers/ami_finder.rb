@@ -6,12 +6,11 @@ module StackMaster
       end
 
       def build_filters_from_string(value, prefix = nil)
-        filters = value.split(',').map do |name_with_value|
+        value.split(',').map do |name_with_value|
           name, value = name_with_value.strip.split('=')
           name = prefix ? "#{prefix}:#{name}" : name
           { name: name, values: [value] }
         end
-        filters
       end
 
       def build_filters_from_hash(hash)

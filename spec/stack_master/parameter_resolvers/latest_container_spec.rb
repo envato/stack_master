@@ -59,7 +59,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
               registry_id: '012345678910',
               image_digest: 'sha256:decafc0ffee',
               image_pushed_at: Time.utc(2015, 1, 2, 0, 0),
-              image_tags: ['v1', 'production']
+              image_tags: %w[v1 production]
             },
             {
               registry_id: '012345678910',
@@ -99,7 +99,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
               image_digest: 'sha256:decafc0ffee',
               image_pushed_at: Time.utc(2015, 1, 2, 0, 0),
               image_tags: ['v1']
-            },
+            }
           ]
         }
       )
@@ -110,10 +110,10 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
         .to receive(:describe_images)
         .with(
           {
-            repository_name: "foo",
-            registry_id: "012345678910",
+            repository_name: 'foo',
+            registry_id: '012345678910',
             next_token: nil,
-            filter: { :tag_status => "TAGGED" }
+            filter: { tag_status: 'TAGGED' }
           }
         )
       resolver.resolve({ 'repository_name' => 'foo', 'registry_id' => '012345678910' })
@@ -137,7 +137,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
                 registry_id: '012345678910',
                 image_digest: 'sha256:deadbeef',
                 image_pushed_at: Time.utc(2015, 1, 3, 0, 0),
-                image_tags: ['latest', 'v2']
+                image_tags: %w[latest v2]
               }
             ]
           },

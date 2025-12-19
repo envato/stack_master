@@ -21,16 +21,16 @@ module StackMaster
         end
 
         def convert_strings_to_array
-          if @definition[:multiple] && @value.is_a?(String)
-            @value = @value.split(',').map(&:strip)
-          end
+          return unless @definition[:multiple] && @value.is_a?(String)
+
+          @value = @value.split(',').map(&:strip)
         end
 
         def convert_strings_to_numbers
-          if @definition[:type] == :number
-            @value = @value.to_f if @value.is_a?(String)
-            @value = @value.map { |item| item.is_a?(String) ? item.to_f : item } if @value.is_a?(Array)
-          end
+          return if @definition[:type] != :number
+
+          @value = @value.to_f if @value.is_a?(String)
+          @value = @value.map { |item| item.is_a?(String) ? item.to_f : item } if @value.is_a?(Array)
         end
       end
     end

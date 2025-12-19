@@ -10,7 +10,7 @@ module StackMaster
 
       def resolve(parameters)
         if parameters['repository_name'].nil?
-          raise ArgumentError, "repository_name parameter is required but was not supplied"
+          raise ArgumentError, 'repository_name parameter is required but was not supplied'
         end
 
         @region = parameters['region'] || @stack_definition.region
@@ -43,8 +43,8 @@ module StackMaster
             registry_id: registry_id,
             next_token: next_token,
             filter: {
-              tag_status: "TAGGED",
-            },
+              tag_status: 'TAGGED'
+            }
           }
         )
 

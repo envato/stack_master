@@ -12,7 +12,7 @@ RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#user_data_file!' do
     EOS
   end
   let(:expected_hash) do
-    { "Fn::Base64" => { "Fn::Join" => ["", ["#!/bin/bash\n", "\n", "REGION=", { "Ref" => "AWS::Region" }, "\n", "echo $REGION\n", { "Ref" => "Test" }, " ", { "Ref" => "Test2" }, "\n", "echo 'no'", "\n"]] } }
+    { 'Fn::Base64' => { 'Fn::Join' => ['', ["#!/bin/bash\n", "\n", 'REGION=', { 'Ref' => 'AWS::Region' }, "\n", "echo $REGION\n", { 'Ref' => 'Test' }, ' ', { 'Ref' => 'Test2' }, "\n", "echo 'no'", "\n"]] } }
   end
 
   before do
@@ -48,7 +48,7 @@ RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#user_data_file!' do
         EOS
       end
       let(:expected_hash) do
-        { "Fn::Base64" => { "Fn::Join" => ["", ["#!/bin/bash\n", "test_var", "\n", "yes", "\n"]] } }
+        { 'Fn::Base64' => { 'Fn::Join' => ['', ["#!/bin/bash\n", 'test_var', "\n", 'yes', "\n"]] } }
       end
 
       it 'compiles the file and returns a joined version' do
@@ -64,9 +64,9 @@ RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#user_data_file!' do
     end
 
     it 'raises a specific error' do
-      expect {
+      expect do
         @attr.user_data_file!('test.erb')
-      }.to raise_error(StackMaster::SparkleFormation::TemplateFileNotFound)
+      end.to raise_error(StackMaster::SparkleFormation::TemplateFileNotFound)
     end
   end
 
@@ -88,7 +88,7 @@ RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#user_data_file!' do
     end
 
     let(:expected_hash) do
-      { "Fn::Base64" => { "Fn::Join" => ["", ["#!/bin/bash\n", "outer1", " ", "outer2", "\n", "REGION=", { "Ref" => "AWS::Region" }, "\n", "inner1", "\n", "no", "\n", "\n"]] } }
+      { 'Fn::Base64' => { 'Fn::Join' => ['', ["#!/bin/bash\n", 'outer1', ' ', 'outer2', "\n", 'REGION=', { 'Ref' => 'AWS::Region' }, "\n", 'inner1', "\n", 'no', "\n", "\n"]] } }
     end
 
     before do
@@ -111,7 +111,7 @@ RSpec.describe SparkleFormation::SparkleAttribute::Aws, '#joined_file!' do
   end
 
   let(:expected_hash) do
-    { "Fn::Join" => ["", ["variable=", { "Ref" => "Test" }, "\n"]] }
+    { 'Fn::Join' => ['', ['variable=', { 'Ref' => 'Test' }, "\n"]] }
   end
 
   before do

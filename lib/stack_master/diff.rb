@@ -1,6 +1,6 @@
 module StackMaster
   class Diff
-    def initialize(name: nil, before:, after:, context: 10_000)
+    def initialize(before:, after:, name: nil, context: 10_000)
       @name = name
       @before = before
       @after = after
@@ -10,7 +10,7 @@ module StackMaster
     def display
       stdout.print "#{@name} diff: "
       if diff == ''
-        stdout.puts "No changes"
+        stdout.puts 'No changes'
       else
         stdout.puts
         display_colorized_diff

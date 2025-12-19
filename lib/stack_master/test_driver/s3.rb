@@ -5,11 +5,10 @@ module StackMaster
         reset
       end
 
-      def set_region(_)
-      end
+      def set_region(_); end
 
       def reset
-        @files = Hash.new { |hash, key| hash[key] = Hash.new }
+        @files = Hash.new { |hash, key| hash[key] = {} }
       end
 
       def upload_files(bucket: nil, prefix: nil, region: nil, files: {})

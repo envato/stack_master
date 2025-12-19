@@ -41,7 +41,7 @@ RSpec.describe StackMaster::ParameterValidator do
 
     context 'when the stack definition is using explicit parameter files' do
       let(:parameters) { { 'Param1' => true, 'Param2' => nil, 'Param3' => 'string', 'Param4' => nil } }
-      let(:parameter_files) { ["params.yml"] }
+      let(:parameter_files) { ['params.yml'] }
 
       it 'returns a descriptive message' do
         expect(error_message).to eq(<<~MESSAGE)

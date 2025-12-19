@@ -8,10 +8,10 @@ module StackMaster
       end
 
       def set_region(value)
-        if region != value
-          @region = value
-          @cf = nil
-        end
+        return if region == value
+
+        @region = value
+        @cf = nil
       end
 
       def_delegators(

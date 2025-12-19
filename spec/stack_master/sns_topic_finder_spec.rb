@@ -4,7 +4,7 @@ RSpec.describe StackMaster::SnsTopicFinder do
   let(:topics) do
     [
       double(arn: 'arn:aws:sns:us-east-1:581634149801:topic1name'),
-      double(arn: 'arn:aws:sns:us-east-1:581634149801:topic2name'),
+      double(arn: 'arn:aws:sns:us-east-1:581634149801:topic2name')
     ]
   end
   before do

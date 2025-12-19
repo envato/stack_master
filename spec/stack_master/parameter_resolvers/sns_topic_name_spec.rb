@@ -13,9 +13,9 @@ RSpec.describe StackMaster::ParameterResolvers::SnsTopicName do
     let(:value) { { not_expected: 1 } }
 
     it 'raises an error' do
-      expect {
+      expect do
         resolved_value
-      }.to raise_error(ArgumentError)
+      end.to raise_error(ArgumentError)
     end
   end
 
@@ -34,9 +34,9 @@ RSpec.describe StackMaster::ParameterResolvers::SnsTopicName do
 
     context "the topic doesn't exist" do
       it 'raises topic not found' do
-        expect {
+        expect do
           resolved_value
-        }.to raise_error(StackMaster::ParameterResolvers::SnsTopicName::TopicNotFound)
+        end.to raise_error(StackMaster::ParameterResolvers::SnsTopicName::TopicNotFound)
       end
     end
   end

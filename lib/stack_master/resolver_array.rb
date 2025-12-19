@@ -13,13 +13,13 @@ module StackMaster
       end
 
       def resolver_class
-        fail "Method resolver_class not implemented on #{self.class}"
+        raise "Method resolver_class not implemented on #{self.class}"
       end
     end
 
     class Resolver
       def self.array_resolver(options = {})
-        resolver_class ||= Object.const_get(self.name)
+        resolver_class ||= Object.const_get(name)
         array_resolver_class_name = options[:class_name] || resolver_class.to_s.demodulize.pluralize
 
         klass = Class.new(ResolverArray) do

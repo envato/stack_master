@@ -9,9 +9,9 @@ module StackMaster
         filter_events(events).each do |event|
           StackEvents::Presenter.print_event(StackMaster.stdout, event)
         end
-        if @options.tail
-          StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout)
-        end
+        return unless @options.tail
+
+        StackEvents::Streamer.stream(@stack_definition.stack_name, @stack_definition.region, io: StackMaster.stdout)
       end
 
       private
@@ -22,9 +22,7 @@ module StackMaster
         else
           n = @options.number || 25
           from = events.count - n
-          if from < 0
-            from = 0
-          end
+          from = 0 if from < 0
           events[from..-1]
         end
       end

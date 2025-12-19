@@ -16,7 +16,7 @@ module StackMaster
       def resolve(params = {})
         if ENV.keys.grep(/OP_SESSION_\w+$/).empty?
           raise OnePasswordNotAbleToAuthenticate,
-                "1password requires the `OP_SESSION_<name>` to be set, (remember to sign in?)"
+                '1password requires the `OP_SESSION_<name>` to be set, (remember to sign in?)'
         end
 
         get_items(params)
@@ -25,7 +25,7 @@ module StackMaster
       private
 
       def validate_op_installed?
-        %x(op --version)
+        `op --version`
       rescue Errno::ENOENT => exception
         raise OnePasswordBinaryNotFound, "The op cli needs to be installed and in the PATH, #{exception}"
       end
@@ -53,7 +53,7 @@ module StackMaster
 
       def op_get_item(item, vault)
         validate_op_installed?
-        item = %x(op get item --vault='#{vault}' '#{item}' 2>&1)
+        item = `op get item --vault='#{vault}' '#{item}' 2>&1`
         item if validate_response?(item)
       end
 
@@ -79,9 +79,9 @@ module StackMaster
       def get_items(params)
         case params['type']
         when 'password'
-          return get_password(params['title'], params['vault'])
+          get_password(params['title'], params['vault'])
         when 'secureNote'
-          return get_secure_note(params['title'], params['vault'])
+          get_secure_note(params['title'], params['vault'])
         end
       end
     end

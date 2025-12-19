@@ -139,11 +139,11 @@ module StackMaster
         stack_name = options[:stack_name]
         stacks =
           if stack_name
-            if @stacks[stack_name]
-              [@stacks[stack_name]]
-            else
+            unless @stacks[stack_name]
               raise Aws::CloudFormation::Errors::ValidationError.new('', 'Stack does not exist')
             end
+
+            [@stacks[stack_name]]
           else
             @stacks.values
           end

@@ -61,7 +61,7 @@ RSpec.describe StackMaster::Commands::Apply do
         tags: [
           { key: 'environment', value: 'production' }
         ],
-        capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM', 'CAPABILITY_AUTO_EXPAND'],
+        capabilities: %w[CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND],
         role_arn: role_arn,
         notification_arns: [notification_arn]
       )
@@ -99,7 +99,7 @@ RSpec.describe StackMaster::Commands::Apply do
         stack_definition.s3 = {
           'bucket' => 'my-bucket',
           'prefix' => 'my-prefix',
-          'region' => 'us-east-1',
+          'region' => 'us-east-1'
         }
         stack_definition.template = 'my-template.rb'
         allow(s3).to receive(:list_objects).and_return([])
@@ -161,7 +161,7 @@ RSpec.describe StackMaster::Commands::Apply do
         allow(differ).to receive(:single_param_update?).with(yes_param).and_return(true)
       end
 
-      it "skips asking for confirmation on single param updates" do
+      it 'skips asking for confirmation on single param updates' do
         expect(StackMaster::ChangeSet).to receive(:execute).with(change_set.id, stack_name)
         StackMaster::Commands::Apply.perform(config, stack_definition, options)
       end
@@ -182,7 +182,7 @@ RSpec.describe StackMaster::Commands::Apply do
         tags: [
           { key: 'environment', value: 'production' }
         ],
-        capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM', 'CAPABILITY_AUTO_EXPAND'],
+        capabilities: %w[CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND],
         role_arn: role_arn,
         notification_arns: [notification_arn],
         change_set_type: 'CREATE'
@@ -200,7 +200,7 @@ RSpec.describe StackMaster::Commands::Apply do
           template_body: proposed_stack.template_body,
           parameters: [{ parameter_key: 'param_1', parameter_value: 'hello' }],
           tags: [{ key: 'environment', value: 'production' }],
-          capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM', 'CAPABILITY_AUTO_EXPAND'],
+          capabilities: %w[CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND],
           role_arn: role_arn,
           notification_arns: [notification_arn],
           on_failure: 'ROLLBACK'
@@ -217,7 +217,7 @@ RSpec.describe StackMaster::Commands::Apply do
     end
 
     context 'the stack is too large' do
-      let(:big_string) { 'x' * 60000 }
+      let(:big_string) { 'x' * 60_000 }
       let(:template_body) do
         "{\"a\":\"#{big_string}\"}"
       end
@@ -261,7 +261,7 @@ RSpec.describe StackMaster::Commands::Apply do
         allow(StackMaster::ChangeSet).to receive(:create).and_raise(StackMaster::CtrlC)
       end
 
-      it "deletes the stack" do
+      it 'deletes the stack' do
         expect(cf).to receive(:delete_stack).with({ stack_name: stack_name })
         expect { apply }.to raise_error(StackMaster::CtrlC)
       end

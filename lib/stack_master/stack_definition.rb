@@ -35,7 +35,7 @@ module StackMaster
       @compiler = nil
       super
       @additional_parameter_lookup_dirs ||= []
-      @base_dir ||= ""
+      @base_dir ||= ''
       @template_dir ||= File.join(@base_dir, 'templates')
       @parameters_dir ||= File.join(@base_dir, 'parameters')
       @allowed_accounts = Array(@allowed_accounts)
@@ -44,7 +44,7 @@ module StackMaster
     end
 
     def ==(other)
-      self.class === other &&
+      other.is_a?(self.class) &&
         @region == other.region &&
         @stack_name == other.stack_name &&
         @template == other.template &&
@@ -74,13 +74,12 @@ module StackMaster
     end
 
     def s3_files
-      files.inject({}) do |hash, file|
+      files.each_with_object({}) do |file, hash|
         path = File.join(files_dir, file)
         hash[file] = {
           path: path,
           body: File.read(path)
         }
-        hash
       end
     end
 

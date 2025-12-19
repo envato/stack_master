@@ -172,7 +172,7 @@ module StackMaster
   @non_interactive_answer = 'y'
 
   def base_dir
-    File.expand_path(File.join(File.dirname(__FILE__), ".."))
+    File.expand_path(File.join(File.dirname(__FILE__), '..'))
   end
 
   def cloud_formation_driver

@@ -1,4 +1,4 @@
-require "erb"
+require 'erb'
 
 module StackMaster
   module Commands
@@ -12,22 +12,22 @@ module StackMaster
       end
 
       def perform
-        if check_files
-          create_stack_master_yml
-          create_stack_json_yml
-          create_parameters_yml
-        end
+        return unless check_files
+
+        create_stack_master_yml
+        create_stack_json_yml
+        create_parameters_yml
       end
 
       private
 
       def check_files
-        @stack_master_filename = "stack_master.yml"
+        @stack_master_filename = 'stack_master.yml'
         @stack_json_filename = "templates/#{@stack_name}.json"
-        @parameters_filename = File.join("parameters", "#{@stack_name}.yml")
-        @region_parameters_filename = File.join("parameters", @region, "#{@stack_name}.yml")
+        @parameters_filename = File.join('parameters', "#{@stack_name}.yml")
+        @region_parameters_filename = File.join('parameters', @region, "#{@stack_name}.yml")
 
-        if !@options.overwrite
+        unless @options.overwrite
           [@stack_master_filename, @stack_json_filename, @parameters_filename,
            @region_parameters_filename].each do |filename|
             next unless File.exist?(filename)
@@ -50,7 +50,7 @@ module StackMaster
       end
 
       def stack_json_template
-        File.join(StackMaster.base_dir, "stacktemplates", "stack.json.erb")
+        File.join(StackMaster.base_dir, 'stacktemplates', 'stack.json.erb')
       end
 
       def create_stack_master_yml
@@ -63,7 +63,7 @@ module StackMaster
       end
 
       def stack_master_template
-        File.join(StackMaster.base_dir, "stacktemplates", "stack_master.yml.erb")
+        File.join(StackMaster.base_dir, 'stacktemplates', 'stack_master.yml.erb')
       end
 
       def create_parameters_yml
@@ -83,11 +83,11 @@ module StackMaster
       end
 
       def parameter_stack_name_template
-        File.join(StackMaster.base_dir, "stacktemplates", "parameter_stack_name.yml")
+        File.join(StackMaster.base_dir, 'stacktemplates', 'parameter_stack_name.yml')
       end
 
       def parameter_region_template
-        File.join(StackMaster.base_dir, "stacktemplates", "parameter_region.yml")
+        File.join(StackMaster.base_dir, 'stacktemplates', 'parameter_region.yml')
       end
 
       def render(renderer)

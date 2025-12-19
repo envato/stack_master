@@ -33,8 +33,8 @@ RSpec.describe StackMaster::TemplateCompilers::Cfndsl do
         let(:template) { 'sample-ctp-repeated.rb' }
 
         it 'does not leak compile time params across invocations' do
-          expect { compile_time_parameters.delete("DisableApiTermination") }
-            .to change { JSON.parse(compile)["Resources"]["MyInstance"]["Properties"]["DisableApiTermination"] }
+          expect { compile_time_parameters.delete('DisableApiTermination') }
+            .to change { JSON.parse(compile)['Resources']['MyInstance']['Properties']['DisableApiTermination'] }
             .from('true')
             .to('false')
         end

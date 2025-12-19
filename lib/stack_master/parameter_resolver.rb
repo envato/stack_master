@@ -15,13 +15,12 @@ module StackMaster
     end
 
     def resolve
-      @parameters.reduce({}) do |parameters, (key, value)|
+      @parameters.each_with_object({}) do |(key, value), parameters|
         begin
           parameters[key] = resolve_parameter_value(key, value)
         rescue InvalidParameter
           raise InvalidParameter, "Unable to resolve parameter #{key.inspect} value causing error: #{$!.message}"
         end
-        parameters
       end
     end
 
@@ -30,11 +29,9 @@ module StackMaster
     def require_parameter_resolver(file_name)
       require "stack_master/parameter_resolvers/#{file_name}"
     rescue LoadError
-      if file_name == file_name.singularize
-        raise ResolverNotFound.new(file_name)
-      else
-        require_parameter_resolver(file_name.singularize)
-      end
+      raise ResolverNotFound.new(file_name) if file_name == file_name.singularize
+
+      require_parameter_resolver(file_name.singularize)
     end
 
     def load_parameter_resolver(class_name)
@@ -46,9 +43,11 @@ module StackMaster
     end
 
     def resolve_parameter_value(key, parameter_value)
-      return parameter_value.to_s if Numeric === parameter_value || parameter_value == true || parameter_value == false
-      return resolve_array_parameter_values(key, parameter_value).join(',') if Array === parameter_value
-      return parameter_value unless Hash === parameter_value
+      if parameter_value.is_a?(Numeric) || parameter_value == true || parameter_value == false
+        return parameter_value.to_s
+      end
+      return resolve_array_parameter_values(key, parameter_value).join(',') if parameter_value.is_a?(Array)
+      return parameter_value unless parameter_value.is_a?(Hash)
 
       resolve_parameter_resolver_hash(key, parameter_value)
     rescue Aws::CloudFormation::Errors::ValidationError
@@ -73,15 +72,13 @@ module StackMaster
       end
     end
 
-    def assume_role_if_present(account, role, key)
+    def assume_role_if_present(account, role, key, &block)
       return yield if account.nil? && role.nil?
       if account.nil? || role.nil?
         raise InvalidParameter, "Both 'account' and 'role' are required to assume role for parameter '#{key}'"
       end
 
-      role_assumer.assume_role(account, role) do
-        yield
-      end
+      role_assumer.assume_role(account, role, &block)
     end
 
     def resolve_array_parameter_values(key, parameter_values)
@@ -114,9 +111,9 @@ module StackMaster
     end
 
     def validate_parameter_value!(key, parameter_value)
-      if parameter_value.keys.size != 1
-        raise InvalidParameter, "#{key} hash contained more than one key: #{parameter_value.inspect}"
-      end
+      return if parameter_value.keys.size == 1
+
+      raise InvalidParameter, "#{key} hash contained more than one key: #{parameter_value.inspect}"
     end
 
     def role_assumer

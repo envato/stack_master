@@ -69,12 +69,12 @@ RSpec.describe StackMaster::ParameterResolvers::Ejson do
     end
   end
 
-  context "when different credentials are used" do
+  context 'when different credentials are used' do
     it 'caches the decrypted file by credentials' do
       expect(EJSONWrapper).to receive(:decrypt).twice
       ejson.resolve('secret_a')
       ejson.resolve('secret_b')
-      Aws.config[:credentials] = "my-credentials"
+      Aws.config[:credentials] = 'my-credentials'
       ejson.resolve('secret_a')
       ejson.resolve('secret_b')
       Aws.config.delete(:credentials)
