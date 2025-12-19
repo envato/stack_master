@@ -113,7 +113,7 @@ RSpec.describe StackMaster::ParameterResolvers::LatestContainer do
             repository_name: "foo",
             registry_id: "012345678910",
             next_token: nil,
-            filter: { :tag_status => "TAGGED" }
+            filter: { tag_status: "TAGGED" }
           }
         )
       resolver.resolve({ 'repository_name' => 'foo', 'registry_id' => '012345678910' })

@@ -58,8 +58,8 @@ RSpec.describe StackMaster::AwsDriver::S3 do
           bucket: 'bucket',
           region: 'region',
           files: { 'template' => {
-            :path => 'spec/fixtures/templates/myapp_vpc.json',
-            :body => 'file content'
+            path: 'spec/fixtures/templates/myapp_vpc.json',
+            body: 'file content'
           } }
         }
       end
@@ -86,8 +86,8 @@ RSpec.describe StackMaster::AwsDriver::S3 do
           region: 'region',
           prefix: 'prefix',
           files: { 'template' => {
-            :path => 'spec/fixtures/templates/myapp_vpc.json',
-            :body => 'file content'
+            path: 'spec/fixtures/templates/myapp_vpc.json',
+            body: 'file content'
           } }
         }
       end
@@ -114,12 +114,12 @@ RSpec.describe StackMaster::AwsDriver::S3 do
           region: 'region',
           files: {
             'template1' => {
-              :path => 'spec/fixtures/templates/myapp_vpc.json',
-              :body => 'file content'
+              path: 'spec/fixtures/templates/myapp_vpc.json',
+              body: 'file content'
             },
             'template2' => {
-              :path => 'spec/fixtures/templates/myapp_vpc.json',
-              :body => 'file content'
+              path: 'spec/fixtures/templates/myapp_vpc.json',
+              body: 'file content'
             }
           }
         }

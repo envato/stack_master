@@ -3,7 +3,7 @@ RSpec.describe StackMaster::ParameterResolvers::StackOutput do
   let(:stack_name) { 'my-stack' }
   let(:resolver) { described_class.new(config, double(region: 'us-east-1')) }
   let(:cf) { Aws::CloudFormation::Client.new }
-  let(:config) { double(:unalias_region => region) }
+  let(:config) { double(unalias_region: region) }
 
   def resolve(value)
     resolver.resolve(value)

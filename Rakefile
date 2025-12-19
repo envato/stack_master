@@ -5,7 +5,7 @@ task :environment do
   require 'stack_master'
 end
 
-task :console => :environment do
+task console: :environment do
   require 'pry'
   binding.pry
 end
@@ -27,4 +27,4 @@ begin
 rescue LoadError
 end
 
-task :default => [:features, :spec, :rubocop]
+task default: [:features, :spec, :rubocop]

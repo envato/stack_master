@@ -33,7 +33,7 @@ RSpec.describe StackMaster::Commands::Delete do
       end
       it "deletes the stack and tails the events" do
         delete.perform
-        expect(cf).to have_received(:delete_stack).with({ :stack_name => region })
+        expect(cf).to have_received(:delete_stack).with({ stack_name: region })
         expect(StackMaster::StackEvents::Streamer).to have_received(:stream)
       end
     end
