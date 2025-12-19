@@ -10,12 +10,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.17.1...HEAD
+
+## [2.17.1] - 2025-12-19
+
 ### Changed
 
 - Always treat default parameter values from CloudFormation templates as strings. Avoids erroneous diffs being presented. ([#394])
 - Resolve layout issues identified by RuboCop ([#393])
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.17.0...HEAD
+[2.17.1]: https://github.com/envato/stack_master/compare/v2.17.0...v2.17.1
 [#394]: https://github.com/envato/stack_master/pull/394
 [#393]: https://github.com/envato/stack_master/pull/393
 
@@ -29,6 +33,9 @@ The format is based on [Keep a Changelog], and this project adheres to
 group_id:
   sso_group_id: "us-east-1:d-123456bf8/SSO Group Display Name"
 ```
+
+[2.17.0]: https://github.com/envato/stack_master/compare/v2.16.0...v2.17.0
+[#390]: https://github.com/envato/stack_master/pull/390
 
 ## [2.16.0] - 2024-08-01
 
