@@ -61,9 +61,34 @@ module StackMaster
                                after: proposed_parameters)
     end
 
+    def tags_different?
+      tags_diff.different?
+    end
+
+    def tags_diff
+      @tags_diff ||= Diff.new(name: 'Tags',
+                              before: current_tags,
+                              after: proposed_tags)
+    end
+
+    def current_tags
+      tags_hash = @current_stack&.tags
+      return '' if tags_hash.nil? || tags_hash.empty?
+
+      YAML.dump(sort_params(tags_hash))
+    end
+
+    def proposed_tags
+      tags_hash = @proposed_stack.tags
+      return '' if tags_hash.nil? || tags_hash.empty?
+
+      YAML.dump(sort_params(tags_hash))
+    end
+
     def output_diff
       body_diff.display
       parameters_diff.display
+      tags_diff.display
 
       StackMaster.stdout.puts ' * can not tell if NoEcho parameters are different.' unless noecho_keys.empty?
       StackMaster.stdout.puts 'No stack found' if @current_stack.nil?

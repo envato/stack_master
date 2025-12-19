@@ -12,10 +12,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Changed
 
-- Resolve style issues identified by RuboCop ([#396])
+- Display Tags diff (stack tags) in `stack_master diff` and `stack_master apply` commands. ([#397])
+- Resolve style issues identified by RuboCop. ([#396])
 
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.17.1...HEAD
 [#396]: https://github.com/envato/stack_master/pull/396
+[#397]: https://github.com/envato/stack_master/pull/397
 
 ## [2.17.1] - 2025-12-19
 

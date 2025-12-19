@@ -41,11 +41,15 @@ module StackMaster
       template_format = TemplateUtils.identify_template_format(template_body)
       stack_policy_body ||= cf.get_stack_policy({ stack_name: stack_name }).stack_policy_body
       outputs = cf_stack.outputs
+      tags = cf_stack.tags&.each_with_object({}) do |tag_struct, tags_hash|
+        tags_hash[tag_struct.key] = tag_struct.value
+      end || {}
 
       new(region: region,
           stack_name: stack_name,
           stack_id: cf_stack.stack_id,
           parameters: parameters,
+          tags: tags,
           template_body: template_body,
           template_format: template_format,
           outputs: outputs,

@@ -31,6 +31,7 @@ Given(/^I stub the following stacks:$/) do |table|
   table.hashes.each do |row|
     row.symbolize_keys!
     row[:parameters] = StackMaster::Utils.hash_to_aws_parameters(extract_hash_from_kv_string(row[:parameters]))
+    row[:tags] = StackMaster::Utils.hash_to_aws_tags(extract_hash_from_kv_string(row[:tags])) if row.key?(:tags)
     outputs = extract_hash_from_kv_string(row[:outputs]).each_with_object([]) do |(k, v), array|
       array << OpenStruct.new(output_key: k, output_value: v)
     end
