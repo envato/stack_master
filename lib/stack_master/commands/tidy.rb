@@ -18,7 +18,7 @@ module StackMaster
           if template
             templates.delete(template)
 
-            if !File.exist?(template)
+            unless File.exist?(template)
               StackMaster.stdout.puts(
                 "Stack \"#{stack_definition.stack_name}\" in \"#{stack_definition.region}\" " \
                 "missing template \"#{rel_path(template)}\""

@@ -27,7 +27,7 @@ module StackMaster
         @parameters_filename = File.join("parameters", "#{@stack_name}.yml")
         @region_parameters_filename = File.join("parameters", @region, "#{@stack_name}.yml")
 
-        if !@options.overwrite
+        unless @options.overwrite
           [@stack_master_filename, @stack_json_filename, @parameters_filename,
            @region_parameters_filename].each do |filename|
             next unless File.exist?(filename)

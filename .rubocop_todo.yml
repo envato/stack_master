@@ -537,14 +537,6 @@ Style/MutableConstant:
     - 'lib/stack_master/version.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: both, prefix, postfix
-Style/NegatedIf:
-  Exclude:
-    - 'lib/stack_master/commands/init.rb'
-    - 'lib/stack_master/commands/tidy.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, MinBodyLength, AllowConsecutiveConditionals.
 # SupportedStyles: skip_modifier_ifs, always
 Style/Next:
