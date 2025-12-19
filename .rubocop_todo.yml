@@ -492,17 +492,6 @@ Style/Documentation:
     - 'lib/stack_master/validator.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-Style/EachWithObject:
-  Exclude:
-    - 'features/step_definitions/stack_steps.rb'
-    - 'lib/stack_master/config.rb'
-    - 'lib/stack_master/parameter_loader.rb'
-    - 'lib/stack_master/parameter_resolver.rb'
-    - 'lib/stack_master/stack.rb'
-    - 'lib/stack_master/stack_definition.rb'
-    - 'lib/stack_master/utils.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
 Style/EmptyLiteral:
   Exclude:
     - 'lib/stack_master/test_driver/s3.rb'
@@ -569,6 +558,11 @@ Style/HashSyntax:
     - 'spec/stack_master/commands/delete_spec.rb'
     - 'spec/stack_master/parameter_resolvers/latest_container_spec.rb'
     - 'spec/stack_master/parameter_resolvers/stack_output_spec.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+Style/HashTransformValues:
+  Exclude:
+    - 'lib/stack_master/stack.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
 Style/IfUnlessModifier:

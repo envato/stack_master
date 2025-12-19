@@ -74,13 +74,12 @@ module StackMaster
     end
 
     def s3_files
-      files.inject({}) do |hash, file|
+      files.each_with_object({}) do |file, hash|
         path = File.join(files_dir, file)
         hash[file] = {
           path: path,
           body: File.read(path)
         }
-        hash
       end
     end
 

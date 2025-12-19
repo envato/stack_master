@@ -45,10 +45,9 @@ module StackMaster
       @parameters_dir = config.fetch('parameters_dir', nil)
       @stack_defaults = config.fetch('stack_defaults', {})
       @region_aliases = Utils.underscore_keys_to_hyphen(config.fetch('region_aliases', {}))
-      @region_to_aliases = @region_aliases.inject({}) do |hash, (key, value)|
+      @region_to_aliases = @region_aliases.each_with_object({}) do |(key, value), hash|
         hash[value] ||= []
         hash[value] << key
-        hash
       end
       @region_defaults = normalise_region_defaults(config.fetch('region_defaults', {}))
       @stacks = []
@@ -108,9 +107,8 @@ module StackMaster
     end
 
     def resolve_region_aliases(stacks)
-      stacks.inject({}) do |hash, (region, attributes)|
+      stacks.each_with_object({}) do |(region, attributes), hash|
         hash[unalias_region(region)] = attributes
-        hash
       end
     end
 
@@ -141,10 +139,9 @@ module StackMaster
     end
 
     def normalise_region_defaults(region_defaults)
-      region_defaults.inject({}) do |normalised_aliases, (region_or_alias, value)|
+      region_defaults.each_with_object({}) do |(region_or_alias, value), normalised_aliases|
         region = unalias_region(region_or_alias)
         normalised_aliases[Utils.underscore_to_hyphen(region)] = value
-        normalised_aliases
       end
     end
   end

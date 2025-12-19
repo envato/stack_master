@@ -15,13 +15,12 @@ module StackMaster
     end
 
     def resolve
-      @parameters.reduce({}) do |parameters, (key, value)|
+      @parameters.each_with_object({}) do |(key, value), parameters|
         begin
           parameters[key] = resolve_parameter_value(key, value)
         rescue InvalidParameter
           raise InvalidParameter, "Unable to resolve parameter #{key.inspect} value causing error: #{$!.message}"
         end
-        parameters
       end
     end
 
