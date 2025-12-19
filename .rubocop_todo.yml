@@ -699,14 +699,6 @@ Style/SymbolProc:
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyleForMultiline.
 # SupportedStylesForMultiline: comma, consistent_comma, diff_comma, no_comma
-Style/TrailingCommaInArguments:
-  Exclude:
-    - 'lib/stack_master/template_compilers/sparkle_formation.rb'
-    - 'spec/stack_master/validator_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, diff_comma, no_comma
 Style/TrailingCommaInArrayLiteral:
   Exclude:
     - 'lib/stack_master/security_group_finder.rb'

@@ -10,7 +10,7 @@ RSpec.describe StackMaster::Validator do
       stack_name: stack_name,
       template: template_file,
       tags: { 'environment' => 'production' },
-      base_dir: File.expand_path('spec/fixtures'),
+      base_dir: File.expand_path('spec/fixtures')
     )
   end
   let(:cf) { spy(Aws::CloudFormation::Client, validate_template: nil) }

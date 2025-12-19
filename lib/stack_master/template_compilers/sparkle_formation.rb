@@ -36,7 +36,7 @@ module StackMaster::TemplateCompilers
 
       collection = ::SparkleFormation::SparkleCollection.new
       root_pack = ::SparkleFormation::Sparkle.new(
-        root: sparkle_path,
+        root: sparkle_path
       )
       collection.set_root(root_pack)
       if compiler_options['sparkle_packs']
