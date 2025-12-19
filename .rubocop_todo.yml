@@ -492,11 +492,6 @@ Style/Documentation:
     - 'lib/stack_master/validator.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-Style/Encoding:
-  Exclude:
-    - 'stack_master.gemspec'
-
-# This cop supports safe autocorrection (--autocorrect).
 Style/ExpandPathArguments:
   Exclude:
     - 'stack_master.gemspec'
