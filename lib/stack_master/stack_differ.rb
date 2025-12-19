@@ -65,9 +65,7 @@ module StackMaster
       body_diff.display
       parameters_diff.display
 
-      unless noecho_keys.empty?
-        StackMaster.stdout.puts " * can not tell if NoEcho parameters are different."
-      end
+      StackMaster.stdout.puts " * can not tell if NoEcho parameters are different." unless noecho_keys.empty?
       StackMaster.stdout.puts "No stack found" if @current_stack.nil?
     end
 

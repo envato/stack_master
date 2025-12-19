@@ -2,9 +2,7 @@
 
 require 'stack_master'
 
-if ENV['STUB_AWS'] == 'true'
-  require 'stack_master/testing'
-end
+require 'stack_master/testing' if ENV['STUB_AWS'] == 'true'
 
 trap("SIGINT") { raise StackMaster::CtrlC }
 

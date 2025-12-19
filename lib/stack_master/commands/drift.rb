@@ -41,9 +41,7 @@ module StackMaster
                        drift.physical_resource_id].join(' '), color)
         return unless drift.stack_resource_drift_status == 'MODIFIED'
 
-        unless drift.property_differences.empty?
-          puts colorize('  Property differences:', color)
-        end
+        puts colorize('  Property differences:', color) unless drift.property_differences.empty?
         drift.property_differences.each do |property_difference|
           puts colorize("  - #{property_difference.difference_type} #{property_difference.property_path}", color)
         end
@@ -98,9 +96,7 @@ module StackMaster
           break if DETECTION_COMPLETE_STATES.include?(resp.detection_status)
 
           elapsed_time = Time.now - start_time
-          if elapsed_time > @options.timeout
-            raise "Timeout waiting for stack drift detection"
-          end
+          raise "Timeout waiting for stack drift detection" if elapsed_time > @options.timeout
 
           sleep SLEEP_SECONDS
         end

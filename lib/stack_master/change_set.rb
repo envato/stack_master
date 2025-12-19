@@ -84,13 +84,9 @@ module StackMaster
     def display_resource_change_detail(io, action_name, color, detail)
       target_name = [detail.target.attribute, detail.target.name].compact.join('.')
       detail_messages = [target_name]
-      if action_name == 'Replace'
-        detail_messages << "#{detail.target.requires_recreation} requires recreation"
-      end
+      detail_messages << "#{detail.target.requires_recreation} requires recreation" if action_name == 'Replace'
       triggered_by = [detail.change_source, detail.causing_entity].compact.join('.')
-      if detail.evaluation != 'Static'
-        triggered_by << "(#{detail.evaluation})"
-      end
+      triggered_by << "(#{detail.evaluation})" if detail.evaluation != 'Static'
       detail_messages << "Triggered by: #{triggered_by}"
       io.puts Rainbow("- #{detail_messages.join('. ')}. ").color(color)
     end

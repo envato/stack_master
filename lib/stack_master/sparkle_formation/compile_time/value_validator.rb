@@ -27,9 +27,7 @@ module StackMaster
         private
 
         def convert_to_array(definition, parameter)
-          if definition[:multiple] && parameter.is_a?(String)
-            return parameter.split(',').map(&:strip)
-          end
+          return parameter.split(',').map(&:strip) if definition[:multiple] && parameter.is_a?(String)
 
           parameter.is_a?(Array) ? parameter : [parameter]
         end

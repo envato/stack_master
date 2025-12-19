@@ -22,9 +22,7 @@ module StackMaster
         else
           n = @options.number || 25
           from = events.count - n
-          if from < 0
-            from = 0
-          end
+          from = 0 if from < 0
           events[from..-1]
         end
       end
