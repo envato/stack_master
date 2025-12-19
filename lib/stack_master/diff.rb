@@ -1,6 +1,6 @@
 module StackMaster
   class Diff
-    def initialize(name: nil, before:, after:, context: 10_000)
+    def initialize(before:, after:, name: nil, context: 10_000)
       @name = name
       @before = before
       @after = after
