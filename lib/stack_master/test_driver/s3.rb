@@ -5,8 +5,7 @@ module StackMaster
         reset
       end
 
-      def set_region(_)
-      end
+      def set_region(_); end
 
       def reset
         @files = Hash.new { |hash, key| hash[key] = {} }

@@ -9,8 +9,7 @@ RSpec.describe StackMaster::ParameterResolver do
   let(:region) { 'us-east-1' }
   let(:my_resolver) do
     Class.new do
-      def initialize(config, region)
-      end
+      def initialize(config, region); end
 
       def resolve(value)
         value.to_i * 5
@@ -19,8 +18,7 @@ RSpec.describe StackMaster::ParameterResolver do
   end
   let(:bad_resolver) do
     Class.new do
-      def initialize(config, region)
-      end
+      def initialize(config, region); end
 
       def resolve(value)
         raise Aws::CloudFormation::Errors::ValidationError.new(nil, "Can't find stack")

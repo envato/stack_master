@@ -492,14 +492,6 @@ Style/Documentation:
     - 'lib/stack_master/validator.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: compact, expanded
-Style/EmptyMethod:
-  Exclude:
-    - 'lib/stack_master/test_driver/s3.rb'
-    - 'spec/stack_master/parameter_resolver_spec.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
 Style/Encoding:
   Exclude:
     - 'stack_master.gemspec'
