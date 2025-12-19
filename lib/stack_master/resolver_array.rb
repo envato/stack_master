@@ -19,7 +19,7 @@ module StackMaster
 
     class Resolver
       def self.array_resolver(options = {})
-        resolver_class ||= Object.const_get(self.name)
+        resolver_class ||= Object.const_get(name)
         array_resolver_class_name = options[:class_name] || resolver_class.to_s.demodulize.pluralize
 
         klass = Class.new(ResolverArray) do

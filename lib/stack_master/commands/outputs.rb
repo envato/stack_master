@@ -9,7 +9,7 @@ module StackMaster
 
       def perform
         if stack
-          tp.set :max_width, self.window_size
+          tp.set :max_width, window_size
           tp stack.outputs, :output_key, :output_value, :description
         else
           failed("Stack doesn't exist")
