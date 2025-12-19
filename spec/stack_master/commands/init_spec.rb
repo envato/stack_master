@@ -58,7 +58,7 @@ RSpec.describe StackMaster::Commands::Init do
           }
         JSON
 
-      init_command.perform()
+      init_command.perform
     end
   end
 end
