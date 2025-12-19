@@ -13,7 +13,7 @@ module StackMaster
       end
 
       def resolver_class
-        fail "Method resolver_class not implemented on #{self.class}"
+        raise "Method resolver_class not implemented on #{self.class}"
       end
     end
 

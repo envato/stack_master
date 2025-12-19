@@ -584,13 +584,6 @@ Style/SafeNavigation:
     - 'lib/stack_master/stack_status.rb'
     - 'lib/stack_master/template_compilers/sparkle_formation.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: only_raise, only_fail, semantic
-Style/SignalException:
-  Exclude:
-    - 'lib/stack_master/resolver_array.rb'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: RequireEnglish, EnforcedStyle.
 # SupportedStyles: use_perl_names, use_english_names, use_builtin_english_names
