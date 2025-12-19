@@ -79,7 +79,7 @@ RSpec.describe StackMaster::Command do
       before { command.instance_variable_set(:@options, spy(trace: true)) }
 
       it 'outputs the backtrace' do
-        expect { command.perform }.to output(%r{spec/stack_master/command_spec.rb:[\d]*:in }).to_stderr
+        expect { command.perform }.to output(%r{spec/stack_master/command_spec.rb:\d*:in }).to_stderr
       end
     end
 
@@ -87,7 +87,7 @@ RSpec.describe StackMaster::Command do
       before { command.instance_variable_set(:@options, spy(trace: nil)) }
 
       it 'does not output the backtrace' do
-        expect { command.perform }.not_to output(%r{spec/stack_master/command_spec.rb:[\d]*:in }).to_stderr
+        expect { command.perform }.not_to output(%r{spec/stack_master/command_spec.rb:\d*:in }).to_stderr
       end
 
       it 'informs to set --trace option to see the backtrace' do
