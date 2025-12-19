@@ -574,14 +574,6 @@ Style/RedundantInterpolation:
     - 'spec/stack_master/stack_definition_spec.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, AllowInnerSlashes.
-# SupportedStyles: slashes, percent_r, mixed
-Style/RegexpLiteral:
-  Exclude:
-    - 'lib/stack_master/commands/terminal_helper.rb'
-    - 'lib/stack_master/sparkle_formation/compile_time/allowed_pattern_validator.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: implicit, explicit
 Style/RescueStandardError:

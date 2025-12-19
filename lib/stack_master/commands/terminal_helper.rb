@@ -18,7 +18,7 @@ module StackMaster
       end
 
       def windows_window_size
-        columns_regex = %r{^\s+Columns:\s+([0-9]+)$}
+        columns_regex = /^\s+Columns:\s+([0-9]+)$/
         output = `mode con`
         columns_line = output.split("\n").select { |line| line.match(columns_regex) }.last
         columns_line.match(columns_regex)[1]
