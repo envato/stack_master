@@ -44,7 +44,7 @@ module StackMaster
     end
 
     def ==(other)
-      self.class === other &&
+      other.is_a?(self.class) &&
         @region == other.region &&
         @stack_name == other.stack_name &&
         @template == other.template &&

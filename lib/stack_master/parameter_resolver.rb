@@ -46,9 +46,11 @@ module StackMaster
     end
 
     def resolve_parameter_value(key, parameter_value)
-      return parameter_value.to_s if Numeric === parameter_value || parameter_value == true || parameter_value == false
-      return resolve_array_parameter_values(key, parameter_value).join(',') if Array === parameter_value
-      return parameter_value unless Hash === parameter_value
+      if parameter_value.is_a?(Numeric) || parameter_value == true || parameter_value == false
+        return parameter_value.to_s
+      end
+      return resolve_array_parameter_values(key, parameter_value).join(',') if parameter_value.is_a?(Array)
+      return parameter_value unless parameter_value.is_a?(Hash)
 
       resolve_parameter_resolver_hash(key, parameter_value)
     rescue Aws::CloudFormation::Errors::ValidationError

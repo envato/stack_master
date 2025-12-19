@@ -389,13 +389,6 @@ Style/AndOr:
   Exclude:
     - 'lib/stack_master/cli.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowOnConstant, AllowOnSelfClass.
-Style/CaseEquality:
-  Exclude:
-    - 'lib/stack_master/parameter_resolver.rb'
-    - 'lib/stack_master/stack_definition.rb'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle, EnforcedStyleForClasses, EnforcedStyleForModules.
 # SupportedStyles: nested, compact
