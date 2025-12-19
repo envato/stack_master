@@ -15,16 +15,16 @@ module StackMaster
           parameter_files.subtract(stack_definition.parameter_files_from_globs)
           template = File.absolute_path(stack_definition.template_file_path)
 
-          if template
-            templates.delete(template)
+          next unless template
 
-            unless File.exist?(template)
-              StackMaster.stdout.puts(
-                "Stack \"#{stack_definition.stack_name}\" in \"#{stack_definition.region}\" " \
-                "missing template \"#{rel_path(template)}\""
-              )
-            end
-          end
+          templates.delete(template)
+
+          next if File.exist?(template)
+
+          StackMaster.stdout.puts(
+            "Stack \"#{stack_definition.stack_name}\" in \"#{stack_definition.region}\" " \
+            "missing template \"#{rel_path(template)}\""
+          )
         end
 
         templates.each do |path|
