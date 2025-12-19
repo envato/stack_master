@@ -574,11 +574,6 @@ Style/RedundantInterpolation:
     - 'spec/stack_master/stack_definition_spec.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-Style/RedundantPercentQ:
-  Exclude:
-    - 'stack_master.gemspec'
-
-# This cop supports safe autocorrection (--autocorrect).
 Style/RedundantRegexpCharacterClass:
   Exclude:
     - 'spec/stack_master/command_spec.rb'

@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["steve@hodgkiss.me", "gstamp@gmail.com"]
   spec.summary       = 'StackMaster is a sure-footed way of creating, updating and keeping track ' \
                        'of Amazon (AWS) CloudFormation stacks.'
-  spec.description   = %q()
+  spec.description   = ''
   spec.homepage      = "https://opensource.envato.com/projects/stack_master.html"
   spec.license       = "MIT"
   spec.metadata      = {
