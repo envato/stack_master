@@ -79,9 +79,9 @@ module StackMaster
       def get_items(params)
         case params['type']
         when 'password'
-          return get_password(params['title'], params['vault'])
+          get_password(params['title'], params['vault'])
         when 'secureNote'
-          return get_secure_note(params['title'], params['vault'])
+          get_secure_note(params['title'], params['vault'])
         end
       end
     end
