@@ -18,7 +18,7 @@ module StackMaster
 
     def template_default_parameters
       TemplateUtils.template_hash(template).fetch('Parameters', {}).inject({}) do |result, (parameter_name, description)|
-        result[parameter_name] = description['Default']
+        result[parameter_name] = description['Default']&.to_s
         result
       end
     end
