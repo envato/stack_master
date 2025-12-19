@@ -74,15 +74,13 @@ module StackMaster
       end
     end
 
-    def assume_role_if_present(account, role, key)
+    def assume_role_if_present(account, role, key, &block)
       return yield if account.nil? && role.nil?
       if account.nil? || role.nil?
         raise InvalidParameter, "Both 'account' and 'role' are required to assume role for parameter '#{key}'"
       end
 
-      role_assumer.assume_role(account, role) do
-        yield
-      end
+      role_assumer.assume_role(account, role, &block)
     end
 
     def resolve_array_parameter_values(key, parameter_values)

@@ -491,11 +491,6 @@ Style/Documentation:
     - 'lib/stack_master/utils.rb'
     - 'lib/stack_master/validator.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-Style/ExplicitBlockArgument:
-  Exclude:
-    - 'lib/stack_master/parameter_resolver.rb'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: always, always_true, never
