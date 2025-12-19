@@ -27,4 +27,4 @@ begin
 rescue LoadError
 end
 
-task default: [:features, :spec, :rubocop]
+task default: %i[features spec rubocop]

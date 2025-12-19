@@ -4,7 +4,7 @@ module StackMaster
   module SparkleFormation
     module CompileTime
       class DefinitionsValidator
-        VALID_TYPES = [:string, :number]
+        VALID_TYPES = %i[string number]
         def initialize(definitions)
           @definitions = definitions
         end
