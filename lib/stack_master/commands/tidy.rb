@@ -52,11 +52,9 @@ module StackMaster
         # Exclude sparkleformation dynamics
         # TODO: Should this filter out anything with 'dynamics', not just the first
         # subdirectory?
-        templates = templates.select do |path|
+        templates.select do |path|
           !path.start_with?(dynamics_dir)
         end
-
-        templates
       end
 
       def find_parameter_files

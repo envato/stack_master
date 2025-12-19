@@ -566,12 +566,6 @@ Style/RaiseArgs:
     - 'lib/stack_master/template_compilers/sparkle_formation.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-Style/RedundantAssignment:
-  Exclude:
-    - 'lib/stack_master/commands/tidy.rb'
-    - 'lib/stack_master/parameter_resolvers/ami_finder.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
 Style/RedundantException:
   Exclude:
     - 'spec/stack_master/command_spec.rb'
