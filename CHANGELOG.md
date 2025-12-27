@@ -16,12 +16,14 @@ The format is based on [Keep a Changelog], and this project adheres to
 - Display Tags diff (stack tags) in `stack_master diff` and `stack_master apply` commands. ([#397])
 - Resolve style issues identified by RuboCop. ([#396])
 - Test on Ruby 4.0 in the CI build ([#399]).
+- Minor fixups in gem metadata ([#400]).
 
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.17.1...HEAD
 [#396]: https://github.com/envato/stack_master/pull/396
 [#397]: https://github.com/envato/stack_master/pull/397
 [#398]: https://github.com/envato/stack_master/pull/398
 [#399]: https://github.com/envato/stack_master/pull/399
+[#400]: https://github.com/envato/stack_master/pull/400
 
 ## [2.17.1] - 2025-12-19
 
