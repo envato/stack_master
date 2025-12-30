@@ -56,6 +56,94 @@ RSpec.describe StackMaster::StackDiffer do
         expect { differ.output_diff }.to_not output(/No stack found/).to_stdout
       end
     end
+
+    context 'tags diff' do
+      context 'when tags are added on a new proposal' do
+        let(:stack) do
+          StackMaster::Stack.new(
+            stack_name: stack_name,
+            region: region,
+            template_body: '{}',
+            template_format: :json,
+            parameters: {},
+            tags: {}
+          )
+        end
+        let(:proposed_stack) do
+          StackMaster::Stack.new(
+            stack_name: stack_name,
+            region: region,
+            template_body: '{}',
+            template_format: :json,
+            parameters: {},
+            tags: { 'Application' => 'myapp', 'Environment' => 'staging' }
+          )
+        end
+
+        it 'prints a tags diff header and one-line additions for each tag' do
+          expect { differ.output_diff }.to output(/Tags diff:/).to_stdout
+          expect { differ.output_diff }.to output(/\+Application: myapp/).to_stdout
+          expect { differ.output_diff }.to output(/\+Environment: staging/).to_stdout
+        end
+      end
+
+      context 'when tags are unchanged and empty' do
+        let(:stack) do
+          StackMaster::Stack.new(
+            stack_name: stack_name,
+            region: region,
+            template_body: '{}',
+            template_format: :json,
+            parameters: {},
+            tags: {}
+          )
+        end
+        let(:proposed_stack) do
+          StackMaster::Stack.new(
+            stack_name: stack_name,
+            region: region,
+            template_body: '{}',
+            template_format: :json,
+            parameters: {},
+            tags: {}
+          )
+        end
+
+        it 'prints Tags diff: No changes' do
+          expect { differ.output_diff }.to output(/Tags diff: No changes/).to_stdout
+        end
+      end
+
+      context 'when tags are modified with additions and removals' do
+        let(:stack) do
+          StackMaster::Stack.new(
+            stack_name: stack_name,
+            region: region,
+            template_body: '{}',
+            template_format: :json,
+            parameters: {},
+            tags: { 'Application' => 'old', 'Environment' => 'staging' }
+          )
+        end
+        let(:proposed_stack) do
+          StackMaster::Stack.new(
+            stack_name: stack_name,
+            region: region,
+            template_body: '{}',
+            template_format: :json,
+            parameters: {},
+            tags: { 'Application' => 'new', 'Owner' => 'team' }
+          )
+        end
+
+        it 'prints +/- lines for changed/added/removed tags, one per line' do
+          expect { differ.output_diff }.to output(/-Application: old/).to_stdout
+          expect { differ.output_diff }.to output(/\+Application: new/).to_stdout
+          expect { differ.output_diff }.to output(/-Environment: staging/).to_stdout
+          expect { differ.output_diff }.to output(/\+Owner: team/).to_stdout
+        end
+      end
+    end
   end
 
   describe '#single_param_update?' do
