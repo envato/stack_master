@@ -127,11 +127,42 @@ RSpec.describe StackMaster::Commands::Apply do
       before do
         allow(StackMaster::ChangeSet).to receive(:delete)
         allow(change_set).to receive(:failed?).and_return(true)
-        allow(change_set).to receive(:status_reason).and_return('reason')
       end
 
-      it 'outputs the status reason' do
-        expect { apply }.to output(/reason/).to_stdout
+      context 'with a generic error' do
+        before do
+          allow(change_set).to receive(:status_reason).and_return('reason')
+        end
+
+        it 'outputs the status reason' do
+          expect { apply }.to output(/reason/).to_stdout
+        end
+      end
+
+      context 'with a "no changes" error from CloudFormation' do
+        before do
+          allow(change_set)
+            .to receive(:status_reason)
+            .and_return("The submitted information didn't contain changes. " \
+                        'Submit different information to create a change set.')
+        end
+
+        it 'outputs a user-friendly explanation' do
+          expect { apply }.to output(/The submitted information didn't contain changes/).to_stdout
+          expect { apply }.to output(/no actual resource changes are needed/).to_stdout
+          expect { apply }.to output(/stack is already in the desired state/).to_stdout
+        end
+      end
+
+      context 'with alternative "no changes" error message' do
+        before do
+          allow(change_set).to receive(:status_reason).and_return('No updates are to be performed.')
+        end
+
+        it 'outputs a user-friendly explanation' do
+          expect { apply }.to output(/No updates are to be performed/).to_stdout
+          expect { apply }.to output(/no actual resource changes are needed/).to_stdout
+        end
       end
     end
 

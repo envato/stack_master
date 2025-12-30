@@ -89,7 +89,7 @@ module StackMaster
           @change_set = ChangeSet.create(stack_options.merge(change_set_type: 'CREATE'))
           if @change_set.failed?
             ChangeSet.delete(@change_set.id)
-            halt!(@change_set.status_reason)
+            halt!(user_friendly_changeset_error(@change_set.status_reason))
           end
 
           @change_set.display(StackMaster.stdout)
@@ -123,7 +123,7 @@ module StackMaster
         @change_set = ChangeSet.create(stack_options)
         if @change_set.failed?
           ChangeSet.delete(@change_set.id)
-          halt!(@change_set.status_reason)
+          halt!(user_friendly_changeset_error(@change_set.status_reason))
         end
 
         @change_set.display(StackMaster.stdout)
@@ -228,6 +228,21 @@ module StackMaster
           stack_policy_body: proposed_policy
         )
         StackMaster.stdout.puts 'done.'
+      end
+
+      def user_friendly_changeset_error(status_reason)
+        # CloudFormation returns various messages when there are no changes to apply
+        if status_reason =~ /didn'?t contain changes|no changes|no updates are to be performed/i
+          <<~MESSAGE.chomp
+            #{status_reason}
+
+            While there may be differences in the template file (e.g., whitespace, comments, or
+            formatting), CloudFormation has determined that no actual resource changes are needed.
+            The stack is already in the desired state.
+          MESSAGE
+        else
+          status_reason
+        end
       end
 
       extend Forwardable
