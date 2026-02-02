@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.18.0...HEAD
+
+## [2.18.0] - 2026-02-02
+
 ### Changed
 
 - Improve message when CloudFormation claims there are no changes to apply, even when a template diff is present. ([#398])
@@ -18,7 +22,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 - Test on Ruby 4.0 in the CI build ([#399]).
 - Minor fixups in gem metadata ([#400]).
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.17.1...HEAD
+[2.18.0]: https://github.com/envato/stack_master/compare/v2.17.1...v2.18.0
 [#396]: https://github.com/envato/stack_master/pull/396
 [#397]: https://github.com/envato/stack_master/pull/397
 [#398]: https://github.com/envato/stack_master/pull/398
