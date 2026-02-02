@@ -11,13 +11,14 @@ Gem::Specification.new do |spec|
   spec.summary       = 'StackMaster is a sure-footed way of creating, updating and keeping track ' \
                        'of Amazon (AWS) CloudFormation stacks.'
   spec.description   = ''
-  spec.homepage      = 'https://opensource.envato.com/projects/stack_master.html'
+  spec.homepage      = "https://github.com/envato/#{spec.name}"
   spec.license       = 'MIT'
   spec.metadata      = {
-    'bug_tracker_uri' => 'https://github.com/envato/stack_master/issues',
-    'changelog_uri' => 'https://github.com/envato/stack_master/blob/master/CHANGELOG.md',
-    'documentation_uri' => "https://www.rubydoc.info/gems/stack_master/#{spec.version}",
-    'source_code_uri' => "https://github.com/envato/stack_master/tree/v#{spec.version}"
+    'allowed_push_host' => 'https://rubygems.org',
+    'bug_tracker_uri' => "#{spec.homepage}/issues",
+    'changelog_uri' => "#{spec.homepage}/blob/master/CHANGELOG.md",
+    'documentation_uri' => "https://www.rubydoc.info/gems/#{spec.name}/#{spec.version}",
+    'source_code_uri' => "#{spec.homepage}/tree/v#{spec.version}"
   }
 
   spec.files         = Dir.glob('{bin,lib,stacktemplates}/**/*') + %w[README.md LICENSE.txt]
