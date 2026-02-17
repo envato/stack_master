@@ -96,13 +96,6 @@ Lint/SuppressedException:
     - 'lib/stack_master/stack_status.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: IgnoreEmptyBlocks, AllowUnusedKeywordArguments.
-Lint/UnusedBlockArgument:
-  Exclude:
-    - 'features/step_definitions/parameter_store_steps.rb'
-    - 'lib/stack_master/stack_differ.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods, IgnoreNotImplementedMethods, NotImplementedExceptions.
 # NotImplementedExceptions: NotImplementedError
 Lint/UnusedMethodArgument:
