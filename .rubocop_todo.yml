@@ -18,12 +18,6 @@ Layout/TrailingWhitespace:
   Exclude:
     - 'spec/stack_master/commands/status_spec.rb'
 
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: AllowSafeAssignment.
-Lint/AssignmentInCondition:
-  Exclude:
-    - 'lib/stack_master/parameter_resolvers/latest_container.rb'
-
 # Configuration parameters: AllowedMethods.
 # AllowedMethods: enums
 Lint/ConstantDefinitionInBlock:
