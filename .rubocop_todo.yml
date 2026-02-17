@@ -35,11 +35,6 @@ Lint/DuplicateMethods:
     - 'lib/stack_master/stack_definition.rb'
     - 'lib/stack_master/test_driver/cloud_formation.rb'
 
-Lint/IneffectiveAccessModifier:
-  Exclude:
-    - 'lib/stack_master/parameter_loader.rb'
-    - 'lib/stack_master/template_compilers/sparkle_formation.rb'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: standard_error, runtime_error
