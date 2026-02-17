@@ -5,13 +5,10 @@ module StackMaster
       include StackMaster::Commands::TerminalHelper
 
       def perform
-        used_templates = []
-        used_parameter_files = []
-
         templates = Set.new(find_templates)
         parameter_files = Set.new(find_parameter_files)
 
-        status = @config.stacks.each do |stack_definition|
+        @config.stacks.each do |stack_definition|
           parameter_files.subtract(stack_definition.parameter_files_from_globs)
           template = File.absolute_path(stack_definition.template_file_path)
 

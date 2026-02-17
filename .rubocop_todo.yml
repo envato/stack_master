@@ -111,14 +111,6 @@ Lint/UselessAccessModifier:
     - 'lib/stack_master/template_compilers/sparkle_formation.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-Lint/UselessAssignment:
-  Exclude:
-    - 'lib/stack_master/cli.rb'
-    - 'lib/stack_master/commands/tidy.rb'
-    - 'lib/stack_master/parameter_resolvers/latest_ami_by_tags.rb'
-    - 'lib/stack_master/template_compiler.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: CheckForMethodsWithNoSideEffects.
 Lint/Void:
   Exclude:
