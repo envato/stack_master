@@ -88,11 +88,6 @@ Lint/SelfAssignment:
   Exclude:
     - 'lib/stack_master/cli.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-Lint/SendWithMixinArgument:
-  Exclude:
-    - 'lib/stack_master/sparkle_formation/template_file.rb'
-
 # Configuration parameters: AllowComments, AllowNil.
 Lint/SuppressedException:
   Exclude:
