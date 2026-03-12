@@ -37,7 +37,7 @@ module StackMaster
       def fetch_images(repository_name, registry_id, ecr)
         images = []
         next_token = nil
-        while resp = ecr.describe_images(
+        while (resp = ecr.describe_images(
           {
             repository_name: repository_name,
             registry_id: registry_id,
@@ -46,7 +46,7 @@ module StackMaster
               tag_status: 'TAGGED'
             }
           }
-        )
+        ))
 
           images += resp.image_details
           next_token = resp.next_token

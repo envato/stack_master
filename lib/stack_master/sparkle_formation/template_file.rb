@@ -61,5 +61,5 @@ module StackMaster
   end
 end
 
-SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::UserDataFile)
-SparkleFormation::SparkleAttribute::Aws.send(:include, StackMaster::SparkleFormation::JoinedFile)
+SparkleFormation::SparkleAttribute::Aws.include StackMaster::SparkleFormation::UserDataFile
+SparkleFormation::SparkleAttribute::Aws.include StackMaster::SparkleFormation::JoinedFile

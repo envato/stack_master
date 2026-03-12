@@ -20,7 +20,7 @@ RSpec.describe StackMaster::ParameterResolver do
     Class.new do
       def initialize(config, region); end
 
-      def resolve(value)
+      def resolve(_value)
         raise Aws::CloudFormation::Errors::ValidationError.new(nil, "Can't find stack")
       end
     end

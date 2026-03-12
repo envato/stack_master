@@ -10,7 +10,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Resolve lint issues identified by RuboCop. ([#401])
+
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.18.0...HEAD
+[#401]: https://github.com/envato/stack_master/pull/401
 
 ## [2.18.0] - 2026-02-02
 

@@ -263,7 +263,7 @@ module StackMaster
     def load_config(file)
       stack_file = file || default_config_file
       StackMaster::Config.load!(stack_file)
-    rescue Errno::ENOENT => e
+    rescue Errno::ENOENT
       say "Failed to load config file #{stack_file}"
       @kernel.exit false
     end
@@ -301,7 +301,7 @@ module StackMaster
     end
 
     def show_other_region_candidates(config, stack_name)
-      candidates = config.filter(region = '', stack_name = stack_name)
+      candidates = config.filter('', stack_name = stack_name)
       return if candidates.empty?
 
       StackMaster.stdout.puts "Stack name #{stack_name} exists in regions: #{candidates.map(&:region).join(', ')}"

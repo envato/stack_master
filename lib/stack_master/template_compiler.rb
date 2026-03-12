@@ -10,7 +10,7 @@ module StackMaster
                  end
       compiler.require_dependencies
       compiler.compile(template_dir, template, compile_time_parameters, compiler_options)
-    rescue StandardError => e
+    rescue StandardError
       raise TemplateCompilationFailed, "Failed to compile #{template}"
     end
 

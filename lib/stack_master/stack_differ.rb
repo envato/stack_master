@@ -96,7 +96,7 @@ module StackMaster
 
     def noecho_keys
       if @current_stack
-        @current_stack.parameters_with_defaults.select do |key, value|
+        @current_stack.parameters_with_defaults.select do |_key, value|
           value == '****'
         end.keys
       else

@@ -192,7 +192,7 @@ module StackMaster
         @stacks.delete(stack_name)
       end
 
-      def validate_template(options)
+      def validate_template(_options)
         true
       end
 
