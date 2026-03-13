@@ -19,9 +19,13 @@ module StackMaster
                       stack_drift_status_color(drift_results.stack_drift_status))
         return if drift_results.stack_drift_status == 'IN_SYNC'
 
-        failed
-
         resp = cf.describe_stack_resource_drifts(stack_name: stack_name)
+        actionable_drifts = resp.stack_resource_drifts.reject do |drift|
+          ignore_resource_types.include?(drift.resource_type)
+        end
+
+        failed unless actionable_drifts.empty?
+
         resp.stack_resource_drifts.each do |drift|
           display_drift(drift)
         end
@@ -108,7 +112,7 @@ module StackMaster
       end
 
       extend Forwardable
-      def_delegators :@stack_definition, :stack_name, :region
+      def_delegators :@stack_definition, :stack_name, :region, :ignore_resource_types
       def_delegators :StackMaster, :colorize
 
       SLEEP_SECONDS = 1

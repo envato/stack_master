@@ -19,7 +19,8 @@ module StackMaster
                   :compiler_options,
                   :parameters_dir,
                   :parameters,
-                  :parameter_files
+                  :parameter_files,
+                  :ignore_resource_types
 
     attr_reader :compiler
 
@@ -41,6 +42,7 @@ module StackMaster
       @allowed_accounts = Array(@allowed_accounts)
       @parameters ||= {}
       @parameter_files ||= []
+      @ignore_resource_types ||= []
     end
 
     def ==(other)

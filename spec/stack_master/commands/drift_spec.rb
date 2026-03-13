@@ -2,7 +2,8 @@ RSpec.describe StackMaster::Commands::Drift do
   let(:cf) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(StackMaster::Config) }
   let(:options) { Commander::Command::Options.new }
-  let(:stack_definition) { instance_double(StackMaster::StackDefinition, stack_name: 'myapp', region: 'us-east-1') }
+  let(:ignore_resource_types) { [] }
+  let(:stack_definition) { instance_double(StackMaster::StackDefinition, stack_name: 'myapp', region: 'us-east-1', ignore_resource_types: ignore_resource_types) }
 
   subject(:drift) { described_class.new(config, stack_definition, options) }
   let(:stack_drift_detection_id) { 123 }
@@ -115,6 +116,59 @@ RSpec.describe StackMaster::Commands::Drift do
     it 'exits with failure' do
       drift.perform
       expect(drift).to_not be_success
+    end
+  end
+
+  context 'when all drifted resources are in the ignore list' do
+    let(:stack_drift_status) { 'DRIFTED' }
+    let(:ignore_resource_types) { ['AWS::ElastiCache::ParameterGroup'] }
+    let(:stack_resource_drifts) do
+      [
+        Aws::CloudFormation::Types::StackResourceDrift.new(
+          stack_resource_drift_status: 'MODIFIED',
+          resource_type: 'AWS::ElastiCache::ParameterGroup',
+          logical_resource_id: 'CacheParams',
+          physical_resource_id: 'params-1',
+          property_differences: []
+        )
+      ]
+    end
+
+    it 'exits with success' do
+      drift.perform
+      expect(drift).to be_success
+    end
+
+    it 'still displays the drift for visibility' do
+      expect { drift.perform }.to output(/MODIFIED AWS::ElastiCache::ParameterGroup CacheParams params-1/).to_stdout
+    end
+  end
+
+  context 'when only some drifted resources are in the ignore list' do
+    let(:stack_drift_status) { 'DRIFTED' }
+    let(:ignore_resource_types) { ['AWS::ElastiCache::ParameterGroup'] }
+    let(:stack_resource_drifts) do
+      [
+        Aws::CloudFormation::Types::StackResourceDrift.new(
+          stack_resource_drift_status: 'MODIFIED',
+          resource_type: 'AWS::ElastiCache::ParameterGroup',
+          logical_resource_id: 'CacheParams',
+          physical_resource_id: 'params-1',
+          property_differences: []
+        ),
+        Aws::CloudFormation::Types::StackResourceDrift.new(
+          stack_resource_drift_status: 'MODIFIED',
+          resource_type: 'AWS::EC2::SecurityGroup',
+          logical_resource_id: 'SecurityGroup',
+          physical_resource_id: 'sg-123456',
+          property_differences: [property_difference]
+        )
+      ]
+    end
+
+    it 'exits with failure' do
+      drift.perform
+      expect(drift).not_to be_success
     end
   end
 
