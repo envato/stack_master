@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/envato/stack_master/compare/v2.19.0...HEAD
+
+## [2.19.0] - 2026-08-10
+
 ### Added
 
 - Allow the use of [commander](https://github.com/commander-rb/commander)
@@ -19,7 +23,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Resolve lint issues identified by RuboCop. ([#401])
 
-[Unreleased]: https://github.com/envato/stack_master/compare/v2.18.0...HEAD
+[2.19.0]: https://github.com/envato/stack_master/compare/v2.18.0...v2.19.0
 [#401]: https://github.com/envato/stack_master/pull/401
 [#403]: https://github.com/envato/stack_master/pull/403
 
