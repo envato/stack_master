@@ -10,12 +10,18 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Allow the use of [commander](https://github.com/commander-rb/commander)
+  major version 6 ([#403]).
+
 ### Fixed
 
 - Resolve lint issues identified by RuboCop. ([#401])
 
 [Unreleased]: https://github.com/envato/stack_master/compare/v2.18.0...HEAD
 [#401]: https://github.com/envato/stack_master/pull/401
+[#403]: https://github.com/envato/stack_master/pull/403
 
 ## [2.18.0] - 2026-02-02
 

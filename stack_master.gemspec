@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop'
   spec.add_dependency 'os'
   spec.add_dependency 'ruby-progressbar'
-  spec.add_dependency 'commander', '>= 4.6.0', '< 6'
+  spec.add_dependency 'commander', '>= 4.6.0', '< 7'
   spec.add_dependency 'aws-sdk-acm', '~> 1'
   spec.add_dependency 'aws-sdk-cloudformation', '~> 1'
   spec.add_dependency 'aws-sdk-ec2', '~> 1'
